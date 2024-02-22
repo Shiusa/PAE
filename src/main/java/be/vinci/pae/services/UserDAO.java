@@ -1,5 +1,5 @@
 package be.vinci.pae.services;
 
-public class Architecture {
+public interface UserDAO {
 
 }
