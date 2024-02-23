@@ -13,8 +13,6 @@ public class DalServiceImpl implements DalService {
 
   private Connection connection = null;
 
-  private PreparedStatement getOneUserByEmail;
-
   /**
    * Create connection to database.
    */
