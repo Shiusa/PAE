@@ -5,6 +5,9 @@ import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.services.utils.DalServiceImpl;
 import jakarta.inject.Inject;
 
+/**
+ * Implementation of UserDAO.
+ */
 public class UserDAOImpl implements UserDAO {
 
   /**

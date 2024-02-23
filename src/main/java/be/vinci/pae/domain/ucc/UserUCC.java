@@ -7,7 +7,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
- * User UCC
+ * User UCC.
  */
 public class UserUCC {
 

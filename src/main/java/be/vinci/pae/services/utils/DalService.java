@@ -3,7 +3,7 @@ package be.vinci.pae.services.utils;
 import java.sql.Connection;
 
 /**
- * DalService Interface
+ * DalService Interface.
  */
 public interface DalService {
 

@@ -1,7 +1,7 @@
 package be.vinci.pae.utils;
 
 /**
- * Utils class
+ * Utils class.
  */
 public class Utils {
 

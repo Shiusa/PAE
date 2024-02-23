@@ -7,7 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
- * Implementation of DalService
+ * Implementation of DalService.
  */
 public class DalServiceImpl implements DalService {
 
@@ -16,7 +16,7 @@ public class DalServiceImpl implements DalService {
   private PreparedStatement getOneUserByEmail;
 
   /**
-   * Create connection to database
+   * Create connection to database.
    */
   public DalServiceImpl() {
     try {
