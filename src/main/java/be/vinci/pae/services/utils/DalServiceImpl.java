@@ -6,12 +6,18 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+/**
+ * Implementation of DalService
+ */
 public class DalServiceImpl implements DalService {
 
   private Connection connection = null;
 
   private PreparedStatement getOneUserByEmail;
 
+  /**
+   * Create connection to database
+   */
   public DalServiceImpl() {
     try {
       this.connection = DriverManager.getConnection(Config.getProperty("postgresUrl"),
@@ -22,6 +28,12 @@ public class DalServiceImpl implements DalService {
     }
   }
 
+  /**
+   * Get a prepared statement.
+   *
+   * @param query an sql request.
+   * @return a prepared statement.
+   */
   public PreparedStatement getPreparedStatement(String query) {
     try {
       return connection.prepareStatement(query);

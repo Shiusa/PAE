@@ -6,6 +6,9 @@ import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
+/**
+ * User UCC
+ */
 public class UserUCC {
 
   private UserDAO userDAO;

@@ -7,6 +7,9 @@ import jakarta.inject.Inject;
 
 public class UserDAOImpl implements UserDAO {
 
+  /**
+   * Implementation of UserDAO class.
+   */
   @Inject
   private DalServiceImpl dalService;
 
@@ -14,7 +17,8 @@ public class UserDAOImpl implements UserDAO {
   public UserDTO getOneUserByEmail(String email) {
     /*UserDTO userDTO;
     String requestSql = """
-        SELECT id_utilisateur, nom, prenom, telephone, mot_de_passe, date_inscription, annee_academique, role
+        SELECT id_utilisateur, nom, prenom, telephone, mot_de_passe,
+        date_inscription, annee_academique, role
         FROM utilisateurs
         WHERE email = ?
         """;
