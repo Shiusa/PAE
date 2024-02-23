@@ -3,6 +3,9 @@ package be.vinci.pae.domain;
 import java.time.LocalDate;
 import org.mindrot.jbcrypt.BCrypt;
 
+/**
+ * Implementation of User.
+ */
 public class UserImpl implements User {
 
   private int id;
@@ -110,5 +113,8 @@ public class UserImpl implements User {
     return BCrypt.checkpw(motDePasse, getMotDePasse());
   }
 
-
+  @Override
+  public void hasherMotDePasse() {
+    this.motDePasse = BCrypt.hashpw(this.motDePasse, BCrypt.gensalt());
+  }
 }
