@@ -1,7 +1,9 @@
 package be.vinci.pae.domain.ucc;
 
+import be.vinci.pae.domain.User;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.services.dao.UserDAO;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -11,6 +13,7 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public class UserUCC {
 
+  @Inject
   private UserDAO userDAO;
 
   /**
@@ -21,13 +24,12 @@ public class UserUCC {
    * @return a UserDTO if existing user and correct password;.
    */
   public UserDTO login(String email, String motDePasse) {
-    UserDTO user;
-    user = userDAO.getOneUserByEmail(email);
-    if (user == null) {
+    User user = (User) userDAO.getOneUserByEmail(email);
+
+    if (user == null || !user.checkMotDePasse(motDePasse)) {
       throw new WebApplicationException(Response.status(Status.BAD_REQUEST)
           .entity("Ressource not found").type("text/plain").build());
     }
     return user;
   }
-
 }
