@@ -1,6 +1,7 @@
 package be.vinci.pae.domain.ucc;
 
 import be.vinci.pae.domain.User;
+import be.vinci.pae.domain.UserImpl;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.services.dao.UserDAO;
 import jakarta.inject.Inject;
@@ -25,7 +26,11 @@ public class UserUCCImpl implements UserUCC {
    */
   @Override
   public UserDTO login(String email, String motDePasse) {
-    User user = (User) userDAO.getOneUserByEmail(email);
+
+    UserDTO userDTO = new UserImpl(); //factory ?
+    userDTO.setEmail(email);
+
+    User user = (User) userDAO.getOneUserByEmail(userDTO);
 
     if (user == null || !user.checkMotDePasse(motDePasse)) {
       throw new WebApplicationException(Response.status(Status.BAD_REQUEST)
