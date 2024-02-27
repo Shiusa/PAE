@@ -1,6 +1,6 @@
 package be.vinci.pae.domain;
 
-import java.time.LocalDate;
+import java.sql.Date;
 import org.mindrot.jbcrypt.BCrypt;
 
 /**
@@ -14,7 +14,7 @@ public class UserImpl implements User {
   private String prenom;
   private String telephone;
   private String motDePasse;
-  private LocalDate dateInscription;
+  private Date dateInscription;
   private String anneeAcademique;
   private String role;
 
@@ -79,12 +79,12 @@ public class UserImpl implements User {
   }
 
   @Override
-  public LocalDate getDateInscription() {
+  public Date getDateInscription() {
     return this.dateInscription;
   }
 
   @Override
-  public void setDateInscription(LocalDate dateInscription) {
+  public void setDateInscription(Date dateInscription) {
     this.dateInscription = dateInscription;
   }
 
