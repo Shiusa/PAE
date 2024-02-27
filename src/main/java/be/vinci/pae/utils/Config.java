@@ -62,3 +62,4 @@ public class Config {
     return Boolean.parseBoolean(props.getProperty(key));
   }
 }
+

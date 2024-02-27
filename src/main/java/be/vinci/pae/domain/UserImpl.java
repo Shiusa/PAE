@@ -117,4 +117,6 @@ public class UserImpl implements User {
   public void hasherMotDePasse() {
     this.motDePasse = BCrypt.hashpw(this.motDePasse, BCrypt.gensalt());
   }
+
+
 }
