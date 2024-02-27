@@ -1,8 +1,14 @@
 package be.vinci.pae.services;
 
+import be.vinci.pae.domain.User;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.services.utils.DalServiceImpl;
+import be.vinci.pae.utils.Config;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.inject.Inject;
 
 /**
@@ -10,6 +16,8 @@ import jakarta.inject.Inject;
  */
 public class UserDAOImpl implements UserDAO {
 
+  private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
+  private final ObjectMapper jsonMapper = new ObjectMapper();
   /**
    * Implementation of UserDAO class.
    */
@@ -38,5 +46,22 @@ public class UserDAOImpl implements UserDAO {
 
     return userDTO;*/
     return null;
+  }
+
+  public ObjectNode login(User user) {
+    String token;
+    try {
+      token = JWT.create().withIssuer("auth0")
+          .withClaim("user", user.getId()).sign(this.jwtAlgorithm);
+      ObjectNode publicUser = jsonMapper.createObjectNode()
+          .put("token", token)
+          .put("id", user.getId())
+          .put("email", user.getEmail());
+      return publicUser;
+    } catch (Exception e) {
+      System.out.println("Error during token creation");
+      return null;
+    }
+
   }
 }
