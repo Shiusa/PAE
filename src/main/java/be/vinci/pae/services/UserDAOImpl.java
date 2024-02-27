@@ -1,6 +1,5 @@
 package be.vinci.pae.services;
 
-import be.vinci.pae.domain.UserImpl;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.services.utils.DalServiceImpl;
@@ -21,8 +20,9 @@ public class UserDAOImpl implements UserDAO {
   private DalServiceImpl dalService;
 
   /**
-   * Get one user by email then set the userDTO if user exist
-   * @param user user's userDTO object
+   * Get one user by email then set the userDTO if user exist.
+   *
+   * @param user user's userDTO object.
    * @return userDTO with setter corresponding to the email, null otherwise.
    */
   @Override
