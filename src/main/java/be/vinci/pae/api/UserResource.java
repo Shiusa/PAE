@@ -1,6 +1,5 @@
 package be.vinci.pae.api;
 
-import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.domain.ucc.UserUCC;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,7 +34,6 @@ public class UserResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode login(JsonNode json) {
-    UserDTO userDTO;
 
     if (!json.hasNonNull("email") || !json.hasNonNull("password")) {
       throw new WebApplicationException("email or password required", Response.Status.BAD_REQUEST);
@@ -43,10 +41,10 @@ public class UserResource {
     String email = json.get("email").asText();
     String password = json.get("password").asText();
 
-    userDTO = userUCC.login(email, password);
+    ObjectNode userToken = userUCC.login(email, password);
 
     ObjectNode publicUser = jsonMapper.createObjectNode()
-        .putPOJO("user", userDTO);
+        .putPOJO("user", userToken);
     return publicUser;
   }
 }
