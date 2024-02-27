@@ -29,13 +29,14 @@ public class UserUCCImpl implements UserUCC {
 
     UserDTO userDTO = new UserImpl(); //factory ?
     userDTO.setEmail(email);
+    UserDTO userDTOFound = userDAO.getOneUserByEmail(userDTO);
 
-    User user = (User) userDAO.getOneUserByEmail(userDTO);
+    User user = (User) userDTOFound;
 
     if (user == null || !user.checkMotDePasse(motDePasse)) {
       throw new WebApplicationException(Response.status(Status.BAD_REQUEST)
           .entity("Ressource not found").type("text/plain").build());
     }
-    return user;
+    return userDTOFound;
   }
 }
