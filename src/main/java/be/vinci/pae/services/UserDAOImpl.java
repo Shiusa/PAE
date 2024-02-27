@@ -48,6 +48,13 @@ public class UserDAOImpl implements UserDAO {
     return null;
   }
 
+  /**
+   * Create a token with the informations of the user. The token is made of the user id and his
+   * email.
+   *
+   * @param user
+   * @return the token in ObjectNode
+   */
   public ObjectNode login(User user) {
     String token;
     try {
