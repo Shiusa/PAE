@@ -11,6 +11,6 @@ public interface UserDAO {
 
   UserDTO getOneUserByEmail(String email);
 
-  public ObjectNode login(User user);
+  ObjectNode login(User user);
 
 }
