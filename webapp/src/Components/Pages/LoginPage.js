@@ -12,12 +12,11 @@ import {
 } from "../../utils/session";
 
 const onUserLogin = async (userData) => {
-  const user = { ...userData, isAutenticated: true };
   if (document.getElementById("stayconnected").checked) {
-    setUserStorageData(user)
+    setUserStorageData(userData)
   }
   else {
-    setUserSessionData(user);
+    setUserSessionData(userData);
   }
   // re-render the navbar for the authenticated user
   Navbar();
@@ -59,8 +58,6 @@ async function login(e){
       }
 
       const user = await response.json(); // json() returns a promise => we wait for the data
-
-      Navbar({ isAuthenticated: true }) ;
 
       // eslint-disable-next-line no-use-before-define
       await onUserLogin(user);

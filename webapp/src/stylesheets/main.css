@@ -3,6 +3,25 @@
   --ma-couleur-opacité: #119cb8c7;
 }
 
+/* temp */
+
+.temp {
+  text-align: center;
+  margin-top: 10%;
+
+  h1 {
+    color: var(--ma-couleur);
+  }
+
+  p {
+    cursor: pointer;
+    background: var(--ma-couleur);
+    color: white;
+    padding: 10px 25px;
+    border-radius: 10px;
+  }
+}
+
 /* bootstrap settings */
 
 .form-control {
