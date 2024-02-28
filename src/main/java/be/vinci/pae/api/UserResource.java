@@ -64,6 +64,12 @@ public class UserResource {
     }
   }
 
+  /**
+   * Let a user automatically reconnect
+   *
+   * @param json the previous token containing user's informations
+   * @return the new user token with his informations
+   */
   @POST
   @Path("logged")
   @Consumes(MediaType.APPLICATION_JSON)
