@@ -1,6 +1,5 @@
 package be.vinci.pae.domain.dto;
 
-import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -97,7 +96,7 @@ public interface UserDTO {
    *
    * @return the user's register date.
    */
-  LocalDate getDateInscription();
+  Date getDateInscription();
 
   /**
    * Set the user's register date.
