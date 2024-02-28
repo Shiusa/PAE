@@ -7,6 +7,6 @@ import be.vinci.pae.domain.dto.UserDTO;
  */
 public interface UserDAO {
 
-  UserDTO getOneUserByEmail(String email);
+  UserDTO getOneUserByEmail(UserDTO user);
 
 }

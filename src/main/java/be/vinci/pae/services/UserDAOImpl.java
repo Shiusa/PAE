@@ -1,6 +1,5 @@
 package be.vinci.pae.services;
 
-import be.vinci.pae.domain.UserImpl;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.services.utils.DalServiceImpl;
@@ -21,14 +20,14 @@ public class UserDAOImpl implements UserDAO {
   private DalServiceImpl dalService;
 
   /**
+   * Get one user by email then set the userDTO if user exist.
    *
-   * @param email user's email
-   * @return userDTO corresponding to the email, null otherwise.
+   * @param user user's userDTO object.
+   * @return userDTO with setter corresponding to the email, null otherwise.
    */
   @Override
-  public UserDTO getOneUserByEmail(String email) {
+  public UserDTO getOneUserByEmail(UserDTO user) {
 
-    UserDTO userDTO = new UserImpl(); //factory ?
     String requestSql = """
         SELECT id_utilisateur, nom, prenom, telephone, mot_de_passe,
         date_inscription, annee_academique, role
@@ -37,22 +36,21 @@ public class UserDAOImpl implements UserDAO {
         """;
     PreparedStatement ps = dalService.getPreparedStatement(requestSql);
     try {
-      ps.setString(1, email);
+      ps.setString(1, user.getEmail());
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
 
     try (ResultSet rs = ps.executeQuery()) {
-      userDTO.setId(rs.getInt("id_utilisateur"));
-      userDTO.setEmail(email);
-      userDTO.setNom(rs.getString("nom"));
-      userDTO.setPrenom(rs.getString("prenom"));
-      userDTO.setTelephone(rs.getString("telephone"));
-      userDTO.setMotDePasse(rs.getString("mot_de_passe"));
-      userDTO.setDateInscription(rs.getDate("date_inscription"));
-      userDTO.setAnneeAcademique(rs.getString("annee_academique"));
-      userDTO.setRole(rs.getString("role"));
-      return userDTO;
+      user.setId(rs.getInt("id_utilisateur"));
+      user.setNom(rs.getString("nom"));
+      user.setPrenom(rs.getString("prenom"));
+      user.setTelephone(rs.getString("telephone"));
+      user.setMotDePasse(rs.getString("mot_de_passe"));
+      user.setDateInscription(rs.getDate("date_inscription"));
+      user.setAnneeAcademique(rs.getString("annee_academique"));
+      user.setRole(rs.getString("role"));
+      return user;
     } catch (SQLException throwables) {
       throwables.printStackTrace();
     } finally {

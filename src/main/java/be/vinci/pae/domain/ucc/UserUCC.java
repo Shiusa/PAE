@@ -2,6 +2,9 @@ package be.vinci.pae.domain.ucc;
 
 import be.vinci.pae.domain.dto.UserDTO;
 
+/**
+ * UserUCC Interface.
+ */
 public interface UserUCC {
 
   /**
