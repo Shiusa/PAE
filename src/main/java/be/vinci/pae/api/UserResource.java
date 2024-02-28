@@ -63,5 +63,34 @@ public class UserResource {
       return null;
     }
   }
+
+  @POST
+  @Path("logged")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  public ObjectNode logged(JsonNode json) {
+    ObjectNode publicUser = jsonMapper.createObjectNode();
+
+    if (json == null || json.get("token") == null) {
+      publicUser.put("error", "Token not valid");
+      return publicUser;
+    }
+
+    String newToken;
+
+    try {
+      newToken = JWT.create().withIssuer("auth0")
+          .withClaim("user", json.get("id").asInt()).sign(this.jwtAlgorithm);
+      publicUser.put("token", newToken)
+          .put("id", json.get("id").asInt())
+          .put("email", json.get("email").asText());
+      return publicUser;
+    } catch (Exception e) {
+      System.out.println("Error while creating token");
+      return null;
+    }
+
+  }
+
 }
 
