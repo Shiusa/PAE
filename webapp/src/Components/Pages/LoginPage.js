@@ -6,7 +6,7 @@ import Navbar from "../Navbar/Navbar";
 
 // eslint-disable-next-line import/no-cycle
 import {
-  getCurrentUser, getUserSessionData,
+  getUserSessionData,
   setUserSessionData,
   setUserStorageData
 } from "../../utils/session";
@@ -19,7 +19,6 @@ const onUserLogin = async (userData) => {
   else {
     setUserSessionData(user);
   }
-  await getCurrentUser();
   // re-render the navbar for the authenticated user
   Navbar();
   Redirect("/");
@@ -94,7 +93,13 @@ const LoginPage = () => {
                 <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-key"></i></span>
                 <input type="password" class="form-control" id="input-pwd" placeholder="Mot de passe" aria-label="Mot de passe" aria-describedby="basic-addon1">
               </div>
-              <h2 id="error-message">L'adresse email ou le mot de passe est incorrect !</h2>
+              <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" value="" id="stayconnected">
+                <label class="form-check-label" for="stayconnected">
+                  Se souvenir de moi
+                </label>
+              </div>
+              <h2 id="error-message">L'adresse email ou<br>le mot de passe est incorrect !</h2>
               <p class="btn-login" id="login-btn">Se connecter</p>
             </div>
           </div>
