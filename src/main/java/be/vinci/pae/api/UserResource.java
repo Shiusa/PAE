@@ -42,7 +42,7 @@ public class UserResource {
     }
     String email = json.get("email").asText();
     String password = json.get("password").asText();
-
+  
     userDTO = userUCC.login(email, password);
 
     ObjectNode publicUser = jsonMapper.createObjectNode()
