@@ -1,6 +1,7 @@
 package be.vinci.pae.domain.dto;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 /**
  * UserDTO interface containing only getters and setters of a User.
@@ -103,7 +104,7 @@ public interface UserDTO {
    *
    * @param dateInscription password to set.
    */
-  void setDateInscription(LocalDate dateInscription);
+  void setDateInscription(Date dateInscription);
 
   /**
    * Get the user's academic year.
