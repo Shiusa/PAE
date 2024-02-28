@@ -4,7 +4,6 @@
 
 ### IntelliJ ###
 .idea/
-dev.properties
 
 ### Eclipse ###
 .metadata
