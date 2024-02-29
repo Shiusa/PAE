@@ -3,7 +3,7 @@ package be.vinci.pae.domain;
 import be.vinci.pae.domain.dto.UserDTO;
 
 /**
- * Implements UserFactory interface
+ * Implements UserFactory interface.
  */
 public class UserFactoryImpl implements UserFactory {
 

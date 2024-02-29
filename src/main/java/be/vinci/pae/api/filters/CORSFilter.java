@@ -13,10 +13,11 @@ import java.io.IOException;
 public class CORSFilter implements ContainerResponseFilter {
 
   /**
-   * Allow connection from http://localhost:8080
-   * @param requestContext the requestContext
-   * @param responseContext the responseContext
-   * @throws IOException exception
+   * Allow connection from http://localhost:8080.
+   *
+   * @param requestContext the requestContext.
+   * @param responseContext the responseContext.
+   * @throws IOException exception.
    */
   @Override
   public void filter(ContainerRequestContext requestContext,
