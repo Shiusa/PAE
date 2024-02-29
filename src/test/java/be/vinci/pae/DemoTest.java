@@ -1,11 +1,22 @@
 package be.vinci.pae;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import be.vinci.pae.domain.User;
+import be.vinci.pae.domain.UserFactory;
+import be.vinci.pae.domain.UserFactoryImpl;
+import be.vinci.pae.domain.UserImpl;
 import be.vinci.pae.domain.ucc.UserUCC;
+import be.vinci.pae.domain.ucc.UserUCCImpl;
+import be.vinci.pae.services.UserDAOImpl;
+import be.vinci.pae.services.dao.UserDAO;
+import be.vinci.pae.services.utils.DalService;
+import be.vinci.pae.services.utils.DalServiceImpl;
 import be.vinci.pae.utils.ApplicationBinder;
 import be.vinci.pae.utils.Config;
+import jakarta.inject.Singleton;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,12 +28,20 @@ import org.junit.jupiter.api.Test;
  */
 public class DemoTest {
   private UserUCC userUCC;
-
   @BeforeEach
   void initAll() {
     Config.load("dev.properties");
     ServiceLocator locator = ServiceLocatorUtilities.bind(new
-        ApplicationBinderTest());
+        ApplicationBinder() {
+          @Override
+          protected void configure() {
+            bind(UserImpl.class).to(User.class).in(Singleton.class);
+            bind(UserDAOImpl.class).to(UserDAO.class).in(Singleton.class);
+            bind(DalServiceImpl.class).to(DalService.class).in(Singleton.class);
+            bind(UserFactoryImpl.class).to(UserFactory.class).in(Singleton.class);
+            bind(UserUCCImpl.class).to(UserUCC.class).in(Singleton.class);
+          }
+        });
     this.userUCC = locator.getService(UserUCC.class);
   }
   @Test
@@ -30,4 +49,5 @@ public class DemoTest {
     assertNotNull(this.userUCC);
   }
 }
+
 
