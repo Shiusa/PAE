@@ -78,7 +78,8 @@ public class UserUCCImplTest {
   @Test
   @DisplayName("Test 3 : test login with wrong email")
   public void testLoginWrongEmail() {
-    Mockito.when(userDAOMock.getOneUserByEmail(defaultEmail)).thenThrow(WebApplicationException.class);
+    Mockito.when(userDAOMock.getOneUserByEmail(defaultEmail))
+        .thenThrow(WebApplicationException.class);
 
     assertThrows(WebApplicationException.class,
         () -> userUCC.login(defaultEmail, defaultPassword),

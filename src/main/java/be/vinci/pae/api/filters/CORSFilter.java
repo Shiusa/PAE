@@ -6,9 +6,19 @@ import jakarta.ws.rs.container.ContainerResponseFilter;
 import jakarta.ws.rs.ext.Provider;
 import java.io.IOException;
 
+/**
+ * Class that allows API connections.
+ */
 @Provider
 public class CORSFilter implements ContainerResponseFilter {
 
+  /**
+   * Allow connection from http://localhost:8080.
+   *
+   * @param requestContext the requestContext.
+   * @param responseContext the responseContext.
+   * @throws IOException exception.
+   */
   @Override
   public void filter(ContainerRequestContext requestContext,
       ContainerResponseContext responseContext) throws IOException {

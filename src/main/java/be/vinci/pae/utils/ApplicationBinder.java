@@ -6,8 +6,8 @@ import be.vinci.pae.domain.UserFactoryImpl;
 import be.vinci.pae.domain.UserImpl;
 import be.vinci.pae.domain.ucc.UserUCC;
 import be.vinci.pae.domain.ucc.UserUCCImpl;
-import be.vinci.pae.services.dao.UserDAOImpl;
 import be.vinci.pae.services.dao.UserDAO;
+import be.vinci.pae.services.dao.UserDAOImpl;
 import be.vinci.pae.services.utils.DalService;
 import be.vinci.pae.services.utils.DalServiceImpl;
 import jakarta.inject.Singleton;
@@ -20,6 +20,9 @@ import org.glassfish.hk2.utilities.binding.AbstractBinder;
 @Provider
 public class ApplicationBinder extends AbstractBinder {
 
+  /**
+   * Binds implementations to their interface.
+   */
   @Override
   protected void configure() {
     bind(UserImpl.class).to(User.class).in(Singleton.class);
