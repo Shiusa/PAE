@@ -25,7 +25,7 @@ public class UserDAOImpl implements UserDAO {
   /**
    * Get one user by email then set the userDTO if user exist.
    *
-   * @param user user's userDTO object.
+   * @param email user' email.
    * @return userDTO with setter corresponding to the email, null otherwise.
    */
   @Override
