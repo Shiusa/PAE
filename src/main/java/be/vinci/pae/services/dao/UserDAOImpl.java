@@ -1,5 +1,6 @@
-package be.vinci.pae.services;
+package be.vinci.pae.services.dao;
 
+import be.vinci.pae.domain.UserFactory;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.services.utils.DalService;
@@ -18,6 +19,8 @@ public class UserDAOImpl implements UserDAO {
    */
   @Inject
   private DalService dalService;
+  @Inject
+  private UserFactory userFactory;
 
   /**
    * Get one user by email then set the userDTO if user exist.
@@ -26,7 +29,7 @@ public class UserDAOImpl implements UserDAO {
    * @return userDTO with setter corresponding to the email, null otherwise.
    */
   @Override
-  public UserDTO getOneUserByEmail(UserDTO user) {
+  public UserDTO getOneUserByEmail(String email) {
 
     String requestSql = """
         SELECT id_utilisateur, nom, prenom, telephone, mot_de_passe,
@@ -36,10 +39,12 @@ public class UserDAOImpl implements UserDAO {
         """;
     PreparedStatement ps = dalService.getPreparedStatement(requestSql);
     try {
-      ps.setString(1, user.getEmail());
+      ps.setString(1, email);
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
+
+    UserDTO user = userFactory.getUserDTO();
 
     try (ResultSet rs = ps.executeQuery()) {
       if (rs.next()) {
