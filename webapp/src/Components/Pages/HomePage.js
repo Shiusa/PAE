@@ -1,0 +1,31 @@
+// eslint-disable-next-line import/no-cycle
+import { Redirect } from "../Router/Router";
+
+const HomePage = () => {
+
+  const main = document.querySelector('main');
+  main.innerHTML = `
+
+        <div class="temp">
+          <h1>Bienvenue sur proStage</h1>
+          <p class="con">Clique ici pour te connecter</p>
+        </div>
+  `;
+
+  document.querySelector(".con").addEventListener("click", () => {
+    Redirect("/login");
+  });
+
+
+  const allNav = document.querySelectorAll(".nav-btn");
+
+  allNav.forEach((nav) => {
+    const newNav = nav;
+    newNav.style.boxShadow = "0px 0px 0px";
+  });
+
+  const homeNav = document.getElementById("home");
+  homeNav.style.boxShadow = "8px 8px 0px var(--ma-couleur)";
+};
+
+export default HomePage;
