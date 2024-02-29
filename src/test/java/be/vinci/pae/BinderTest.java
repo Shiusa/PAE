@@ -10,8 +10,14 @@ import jakarta.inject.Singleton;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.mockito.Mockito;
 
+/**
+ * BinderTest class.
+ */
 public class BinderTest extends AbstractBinder {
 
+  /**
+   * Binds mocks and class to interfaces
+   */
   @Override
   protected void configure() {
     bind(UserUCCImpl.class).to(UserUCC.class).in(Singleton.class);
