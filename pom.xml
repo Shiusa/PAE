@@ -67,6 +67,11 @@
 			<artifactId>junit-platform-launcher</artifactId>
 			<version>1.10.1</version>
 		</dependency>
+		<dependency>
+			<artifactId>mockito-junit-jupiter</artifactId>
+			<groupId>org.mockito</groupId>
+			<version>5.10.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>
