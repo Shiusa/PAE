@@ -1,13 +1,16 @@
 // eslint-disable-next-line import/no-cycle
 import { Redirect } from "../Router/Router";
+import {getUserSessionData} from "../../utils/session";
 
 const HomePage = () => {
 
-  const main = document.querySelector('main');
-  main.innerHTML = `
+  const user = getUserSessionData();
 
+  const main = document.querySelector('main');
+
+  main.innerHTML = `
         <div class="temp">
-          <h1>Bienvenue sur proStage</h1>
+          <h1>Bienvenue sur proStage<span id="test-email"></span></h1>
           <p class="con">Clique ici pour te connecter</p>
         </div>
   `;
@@ -15,6 +18,16 @@ const HomePage = () => {
   document.querySelector(".con").addEventListener("click", () => {
     Redirect("/login");
   });
+
+
+
+  const emailSpan = document.getElementById("test-email");
+  const lienCon = document.querySelector(".con");
+
+  if(user) {
+    emailSpan.innerHTML = ", " + user.email;
+    lienCon.style.display = "none";
+  }
 
 
   const allNav = document.querySelectorAll(".nav-btn");
