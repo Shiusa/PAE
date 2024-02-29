@@ -2,12 +2,14 @@ const Navbar = async () => {
 
   const navbarWrapper = document.querySelector("#navbarWrapper");
 
+  const tokenLocalStorage = localStorage.getItem('accessToken');
+  const tokenSessionStorage = sessionStorage.getItem('accessToken');
 
-  let role = true;
+  const isConnected = !!tokenLocalStorage || !!tokenSessionStorage;
+
   let navbar = ``;
-  role = false;
 
-  if(role) {
+  if(isConnected) {
     navbar = `
       <nav class="d-flex justify-content-center align-items-center">
         <a class="nav-link nav-btn d-flex justify-content-center align-items-center" id="home" href="#" data-uri="/">
