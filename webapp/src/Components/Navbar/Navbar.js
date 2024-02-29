@@ -1,11 +1,10 @@
+import {getUserSessionData} from "../../utils/session";
+
 const Navbar = async () => {
 
   const navbarWrapper = document.querySelector("#navbarWrapper");
 
-  const tokenLocalStorage = localStorage.getItem('accessToken');
-  const tokenSessionStorage = sessionStorage.getItem('accessToken');
-
-  const isConnected = !!tokenLocalStorage || !!tokenSessionStorage;
+  const isConnected = getUserSessionData();
 
   let navbar = ``;
 
@@ -15,8 +14,8 @@ const Navbar = async () => {
         <a class="nav-link nav-btn d-flex justify-content-center align-items-center" id="home" href="#" data-uri="/">
           <p data-uri="/">Accueil</p>
         </a>
-        <a class="nav-link nav-logout d-flex justify-content-center align-items-center" href="#" data-uri="/">
-          <p data-uri="/"><i class="fa-solid fa-arrow-right-from-bracket" data-uri="/"></i></p>
+        <a class="nav-link nav-logout d-flex justify-content-center align-items-center" href="#" data-uri="/logout">
+          <p data-uri="/logout"><i class="fa-solid fa-arrow-right-from-bracket" data-uri="/"></i></p>
         </a>
       </nav>
     `;
