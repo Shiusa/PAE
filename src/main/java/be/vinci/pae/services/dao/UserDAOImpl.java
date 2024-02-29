@@ -31,7 +31,7 @@ public class UserDAOImpl implements UserDAO {
   public UserDTO getOneUserByEmail(String email) {
 
     String requestSql = """
-        SELECT id_utilisateur, nom, prenom, telephone, mot_de_passe,
+        SELECT id_utilisateur, email, nom, prenom, telephone, mot_de_passe,
         date_inscription, annee_academique, role
         FROM prostage.utilisateurs
         WHERE email = ?
@@ -48,6 +48,7 @@ public class UserDAOImpl implements UserDAO {
     try (ResultSet rs = ps.executeQuery()) {
       if (rs.next()) {
         user.setId(rs.getInt("id_utilisateur"));
+        user.setEmail(rs.getString("email"));
         user.setNom(rs.getString("nom"));
         user.setPrenom(rs.getString("prenom"));
         user.setTelephone(rs.getString("telephone"));
