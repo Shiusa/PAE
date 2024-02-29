@@ -1,10 +1,8 @@
-
-
 const Navbar = async () => {
 
   const navbarWrapper = document.querySelector("#navbarWrapper");
 
-  
+
   let role = true;
   let navbar = ``;
   role = false;
@@ -12,34 +10,30 @@ const Navbar = async () => {
   if(role) {
     navbar = `
       <nav class="d-flex justify-content-center align-items-center">
-        <a class="nav-link" href="#" data-uri="/"><div class="nav-btn d-flex justify-content-center align-items-center" id="home">
-          <p>Acceuil</p>
-        </div></a>
-        <div class="nav-logout d-flex justify-content-center align-items-center">
-          <p><i class="fa-solid fa-arrow-right-from-bracket"></i></p>
-        </div>
+        <a class="nav-link nav-btn d-flex justify-content-center align-items-center" id="home" href="#" data-uri="/">
+          <p data-uri="/">Accueil</p>
+        </a>
+        <a class="nav-link nav-logout d-flex justify-content-center align-items-center" href="#" data-uri="/">
+          <p data-uri="/"><i class="fa-solid fa-arrow-right-from-bracket" data-uri="/"></i></p>
+        </a>
       </nav>
     `;
 
   } else {
     navbar = `
       <nav class="d-flex justify-content-center align-items-center">
-        <a class="nav-link" href="#" data-uri="/"><div class="nav-btn d-flex justify-content-center align-items-center" id="home">
-          <p>Acceuil</p>
-        </div></a>
-        <a class="nav-link" href="#" data-uri="/login"><div class="nav-btn d-flex justify-content-center align-items-center" id="login">
-          <p>Connexion</p>
-        </div></a>
-        <a class="nav-link" href="#" data-uri="/register"><div class="nav-btn d-flex justify-content-center align-items-center" id="register">
-          <p>Inscription</p>
-        </div></a> 
+        <a class="nav-link nav-btn d-flex justify-content-center align-items-center" id="home" href="#" data-uri="/">
+          <p data-uri="/">Accueil</p>
+        </a>
+        <a class="nav-link nav-btn d-flex justify-content-center align-items-center" id="login" href="#" data-uri="/login">
+          <p data-uri="/login">Connexion</p>
+        </a>
+        <a class="nav-link nav-btn d-flex justify-content-center align-items-center" id="register" href="#" data-uri="/register">
+          <p data-uri="/register">Inscription</p>
+        </a> 
       </nav>
     `;
   }
-
-
-  
-
   navbarWrapper.innerHTML = navbar;
 
 };
