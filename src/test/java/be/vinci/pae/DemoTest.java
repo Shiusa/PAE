@@ -28,20 +28,12 @@ import org.junit.jupiter.api.Test;
  */
 public class DemoTest {
   private UserUCC userUCC;
+
   @BeforeEach
   void initAll() {
     Config.load("dev.properties");
     ServiceLocator locator = ServiceLocatorUtilities.bind(new
-        ApplicationBinder() {
-          @Override
-          protected void configure() {
-            bind(UserImpl.class).to(User.class).in(Singleton.class);
-            bind(UserDAOImpl.class).to(UserDAO.class).in(Singleton.class);
-            bind(DalServiceImpl.class).to(DalService.class).in(Singleton.class);
-            bind(UserFactoryImpl.class).to(UserFactory.class).in(Singleton.class);
-            bind(UserUCCImpl.class).to(UserUCC.class).in(Singleton.class);
-          }
-        });
+        ApplicationBinderTest());
     this.userUCC = locator.getService(UserUCC.class);
   }
   @Test
