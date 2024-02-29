@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import be.vinci.pae.domain.ucc.UserUCC;
 import be.vinci.pae.utils.ApplicationBinder;
+import be.vinci.pae.utils.Config;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,10 +17,12 @@ import org.junit.jupiter.api.Test;
  */
 public class DemoTest {
   private UserUCC userUCC;
+
   @BeforeEach
   void initAll() {
+    Config.load("dev.properties");
     ServiceLocator locator = ServiceLocatorUtilities.bind(new
-        ApplicationBinder());
+        ApplicationBinderTest());
     this.userUCC = locator.getService(UserUCC.class);
   }
   @Test
