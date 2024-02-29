@@ -57,8 +57,7 @@ public class UserResource {
           .withClaim("user", userDTO.getId()).sign(this.jwtAlgorithm);
       ObjectNode publicUser = jsonMapper.createObjectNode()
           .put("token", token)
-          .put("id", userDTO.getId())
-          .put("email", userDTO.getEmail());
+          .putPOJO("user", userDTO);
       return publicUser;
     } catch (Exception e) {
       System.out.println("Error while creating token");
