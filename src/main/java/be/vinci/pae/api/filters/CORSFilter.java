@@ -7,7 +7,7 @@ import jakarta.ws.rs.ext.Provider;
 import java.io.IOException;
 
 /**
- * Class that allows API connections
+ * Class that allows API connections.
  */
 @Provider
 public class CORSFilter implements ContainerResponseFilter {
