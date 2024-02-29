@@ -13,6 +13,7 @@ CREATE TABLE proStage.utilisateurs (
     role VARCHAR(13) NOT NULL
 );
 
-INSERT INTO proStage.utilisateurs VALUES(DEFAULT, 'alice.dubois@vinci.be', 'Dubois', 'Alice', '+32471234567', '123', '2023-08-20', '2023-2024', 'administratif');
-INSERT INTO proStage.utilisateurs VALUES(DEFAULT, 'hugo.leroy@vinci.be', 'Leroy', 'Hugo', '+32478987654', '123', '2023-11-09', '2023-2024', 'professeur');
-INSERT INTO proStage.utilisateurs VALUES(DEFAULT, 'eleonore.martin@vinci.be', 'Martin', 'Éléonore', '+32 485 12 34 56', '123', CURRENT_DATE, '2023-2024', 'etudiant');
+-- MDP : 123
+INSERT INTO proStage.utilisateurs VALUES(DEFAULT, 'alice.dubois@vinci.be', 'Dubois', 'Alice', '+32471234567', '$2a$10$PO9RaYGTTyCohyiydzsyOuYMVZr7coRXYw8v4pmknkzGcKKLM/eAO', '2023-08-20', '2023-2024', 'administratif');
+INSERT INTO proStage.utilisateurs VALUES(DEFAULT, 'hugo.leroy@vinci.be', 'Leroy', 'Hugo', '+32478987654', '$2a$10$PO9RaYGTTyCohyiydzsyOuYMVZr7coRXYw8v4pmknkzGcKKLM/eAO', '2023-11-09', '2023-2024', 'professeur');
+INSERT INTO proStage.utilisateurs VALUES(DEFAULT, 'eleonore.martin@vinci.be', 'Martin', 'Éléonore', '+32485123456', '$2a$10$PO9RaYGTTyCohyiydzsyOuYMVZr7coRXYw8v4pmknkzGcKKLM/eAO', CURRENT_DATE, '2023-2024', 'etudiant');

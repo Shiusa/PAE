@@ -16,7 +16,6 @@ public class UserUCCImpl implements UserUCC {
 
   @Inject
   private UserDAO userDAO;
-
   @Inject
   private UserFactory userFactory;
 
@@ -29,7 +28,6 @@ public class UserUCCImpl implements UserUCC {
    */
   @Override
   public UserDTO login(String email, String motDePasse) {
-
     UserDTO userDTO = userFactory.getUserDTO();
     userDTO.setEmail(email);
     UserDTO userDTOFound = userDAO.getOneUserByEmail(userDTO);
