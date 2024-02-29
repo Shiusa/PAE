@@ -49,7 +49,7 @@ async function login(e){
         },
       };
 
-      const response = await fetch("http://localhost:3000/users/login", options); // fetch return a promise => we wait for the response
+      const response = await fetch("/api/users/login", options); // fetch return a promise => we wait for the response
 
       if (!response.ok) {
         throw new Error(
@@ -65,7 +65,6 @@ async function login(e){
     } catch (error) {
         errorMessage = document.getElementById("error-message");
         errorMessage.style.display="block";
-        console.error("LoginPage::error: ", error);
 
 
     }
@@ -116,7 +115,7 @@ const LoginPage = () => {
     });
 
     const logNav = document.getElementById("login");
-    logNav.style.boxShadow = "8px 8px 0px var(--ma-couleur)";
+    logNav.style.boxShadow = "8px 8px 0px var(red)";
 
     const loginBtn = document.getElementById("login-btn");
 

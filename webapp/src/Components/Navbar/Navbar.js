@@ -1,20 +1,21 @@
+import {getUserSessionData} from "../../utils/session";
+
 const Navbar = async () => {
 
   const navbarWrapper = document.querySelector("#navbarWrapper");
 
+  const isConnected = getUserSessionData();
 
-  let role = true;
   let navbar = ``;
-  role = false;
 
-  if(role) {
+  if(isConnected) {
     navbar = `
       <nav class="d-flex justify-content-center align-items-center">
         <a class="nav-link nav-btn d-flex justify-content-center align-items-center" id="home" href="#" data-uri="/">
           <p data-uri="/">Accueil</p>
         </a>
-        <a class="nav-link nav-logout d-flex justify-content-center align-items-center" href="#" data-uri="/">
-          <p data-uri="/"><i class="fa-solid fa-arrow-right-from-bracket" data-uri="/"></i></p>
+        <a class="nav-link nav-logout d-flex justify-content-center align-items-center" href="#" data-uri="/logout">
+          <p data-uri="/logout"><i class="fa-solid fa-arrow-right-from-bracket" data-uri="/"></i></p>
         </a>
       </nav>
     `;
