@@ -16,7 +16,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 /**
- * UserResource class
+ * UserResource class.
  */
 @Singleton
 @Path("/users")
@@ -27,8 +27,10 @@ public class UserResource {
   private UserUCC userUCC;
 
   /**
-   * @param json object containing login and password
-   * @return a User and their token as a JsonNode
+   * Login route.
+   *
+   * @param json object containing login and password.
+   * @return a User and their token as a JsonNode.
    */
   @POST
   @Path("login")
