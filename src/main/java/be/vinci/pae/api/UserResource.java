@@ -2,6 +2,9 @@ package be.vinci.pae.api;
 
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.domain.ucc.UserUCC;
+import be.vinci.pae.utils.Config;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -16,19 +19,22 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 /**
- * UserResource class
+ * UserResource class.
  */
 @Singleton
 @Path("/users")
 public class UserResource {
 
+  private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
   private final ObjectMapper jsonMapper = new ObjectMapper();
   @Inject
   private UserUCC userUCC;
 
   /**
-   * @param json object containing login and password
-   * @return a User and their token as a JsonNode
+   * Login route.
+   *
+   * @param json object containing login and password.
+   * @return a User and their token as a JsonNode.
    */
   @POST
   @Path("login")
@@ -42,11 +48,22 @@ public class UserResource {
     }
     String email = json.get("email").asText();
     String password = json.get("password").asText();
-  
+
+    String token;
     userDTO = userUCC.login(email, password);
 
-    ObjectNode publicUser = jsonMapper.createObjectNode()
-        .putPOJO("user", userDTO);
-    return publicUser;
+    try {
+      token = JWT.create().withIssuer("auth0")
+          .withClaim("user", userDTO.getId()).sign(this.jwtAlgorithm);
+      ObjectNode publicUser = jsonMapper.createObjectNode()
+          .put("token", token)
+          .put("id", userDTO.getId())
+          .put("email", userDTO.getEmail());
+      return publicUser;
+    } catch (Exception e) {
+      System.out.println("Error while creating token");
+      return null;
+    }
   }
 }
+

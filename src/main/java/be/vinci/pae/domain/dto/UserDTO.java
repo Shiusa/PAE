@@ -1,6 +1,6 @@
 package be.vinci.pae.domain.dto;
 
-import java.sql.Date;
+import java.util.Date;
 
 /**
  * UserDTO interface containing only getters and setters of a User.

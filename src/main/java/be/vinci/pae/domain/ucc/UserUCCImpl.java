@@ -1,7 +1,7 @@
 package be.vinci.pae.domain.ucc;
 
 import be.vinci.pae.domain.User;
-import be.vinci.pae.domain.UserImpl;
+import be.vinci.pae.domain.UserFactory;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.services.dao.UserDAO;
 import jakarta.inject.Inject;
@@ -16,6 +16,8 @@ public class UserUCCImpl implements UserUCC {
 
   @Inject
   private UserDAO userDAO;
+  @Inject
+  private UserFactory userFactory;
 
   /**
    * Get a user associated with an email and check their password with the password entered.
@@ -26,8 +28,7 @@ public class UserUCCImpl implements UserUCC {
    */
   @Override
   public UserDTO login(String email, String motDePasse) {
-
-    UserDTO userDTO = new UserImpl(); //factory ?
+    UserDTO userDTO = userFactory.getUserDTO();
     userDTO.setEmail(email);
     UserDTO userDTOFound = userDAO.getOneUserByEmail(userDTO);
 

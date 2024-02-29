@@ -2,7 +2,7 @@ package be.vinci.pae.services;
 
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.services.dao.UserDAO;
-import be.vinci.pae.services.utils.DalServiceImpl;
+import be.vinci.pae.services.utils.DalService;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,7 +17,7 @@ public class UserDAOImpl implements UserDAO {
    * Implementation of UserDAO class.
    */
   @Inject
-  private DalServiceImpl dalService;
+  private DalService dalService;
 
   /**
    * Get one user by email then set the userDTO if user exist.
@@ -42,15 +42,18 @@ public class UserDAOImpl implements UserDAO {
     }
 
     try (ResultSet rs = ps.executeQuery()) {
-      user.setId(rs.getInt("id_utilisateur"));
-      user.setNom(rs.getString("nom"));
-      user.setPrenom(rs.getString("prenom"));
-      user.setTelephone(rs.getString("telephone"));
-      user.setMotDePasse(rs.getString("mot_de_passe"));
-      user.setDateInscription(rs.getDate("date_inscription"));
-      user.setAnneeAcademique(rs.getString("annee_academique"));
-      user.setRole(rs.getString("role"));
-      return user;
+      if (rs.next()) {
+        user.setId(rs.getInt("id_utilisateur"));
+        user.setNom(rs.getString("nom"));
+        user.setPrenom(rs.getString("prenom"));
+        user.setTelephone(rs.getString("telephone"));
+        user.setMotDePasse(rs.getString("mot_de_passe"));
+        user.setDateInscription(rs.getDate("date_inscription"));
+        user.setAnneeAcademique(rs.getString("annee_academique"));
+        user.setRole(rs.getString("role"));
+        return user;
+      }
+      return null;
     } catch (SQLException throwables) {
       throwables.printStackTrace();
     } finally {

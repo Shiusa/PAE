@@ -1,6 +1,6 @@
 package be.vinci.pae.domain;
 
-import java.sql.Date;
+import java.util.Date;
 import org.mindrot.jbcrypt.BCrypt;
 
 /**
