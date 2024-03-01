@@ -55,12 +55,12 @@ public class UserUCCImplTest {
   @Test
   @DisplayName("Test 1 : test login with correct email and password")
   public void testLoginCorrectEmailAndPassword() {
-    Mockito.when(userMock.checkMotDePasse(defaultPassword)).thenReturn(true);
+    Mockito.when(userMock.checkPassword(defaultPassword)).thenReturn(true);
 
     UserDTO actualUser = userUCC.login(defaultEmail, defaultPassword);
 
     Mockito.verify(userDAOMock).getOneUserByEmail(defaultEmail);
-    Mockito.verify(userMock).checkMotDePasse(defaultPassword);
+    Mockito.verify(userMock).checkPassword(defaultPassword);
 
     assertEquals(userMock, actualUser);
   }
@@ -68,7 +68,7 @@ public class UserUCCImplTest {
   @Test
   @DisplayName("Test 2 : test login with good email and wrong password")
   public void testLoginCorrectEmailAndWrongPassword() {
-    Mockito.when(userMock.checkMotDePasse(defaultPassword)).thenReturn(false);
+    Mockito.when(userMock.checkPassword(defaultPassword)).thenReturn(false);
 
     assertThrows(WebApplicationException.class,
         () -> userUCC.login(defaultEmail, defaultPassword),

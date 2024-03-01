@@ -40,84 +40,84 @@ public interface UserDTO {
    *
    * @return the user's lastname.
    */
-  String getNom();
+  String getLastname();
 
   /**
    * Set the user's lastname.
    *
-   * @param nom lastname to set.
+   * @param lastname lastname to set.
    */
-  void setNom(String nom);
+  void setLastname(String lastname);
 
   /**
    * Get the user's firstname.
    *
    * @return the user's firstname.
    */
-  String getPrenom();
+  String getFirstname();
 
   /**
    * Set the user's firstname.
    *
-   * @param prenom firstname to set.
+   * @param firstname firstname to set.
    */
-  void setPrenom(String prenom);
+  void setFirstname(String firstname);
 
   /**
    * Get the user's phone number.
    *
    * @return the user's phone number.
    */
-  String getTelephone();
+  String getPhoneNumber();
 
   /**
    * Set the user's phone number.
    *
-   * @param telephone phone number to set.
+   * @param phoneNumber phone number to set.
    */
-  void setTelephone(String telephone);
+  void setPhoneNumber(String phoneNumber);
 
   /**
    * Get the user's password.
    *
    * @return the user's password.
    */
-  String getMotDePasse();
+  String getPassword();
 
   /**
    * Set the user's password.
    *
-   * @param motDePasse password to set.
+   * @param password password to set.
    */
-  void setMotDePasse(String motDePasse);
+  void setPassword(String password);
 
   /**
    * Get the user's password.
    *
    * @return the user's register date.
    */
-  Date getDateInscription();
+  Date getInscriptionDate();
 
   /**
    * Set the user's register date.
    *
-   * @param dateInscription password to set.
+   * @param inscriptionDate password to set.
    */
-  void setDateInscription(Date dateInscription);
+  void setInscriptionDate(Date inscriptionDate);
 
   /**
    * Get the user's academic year.
    *
    * @return the user's register date.
    */
-  String getAnneeAcademique();
+  String getSchoolYear();
 
   /**
    * Set the user's academic year.
    *
-   * @param anneeAcademique password to set.
+   * @param schoolYear password to set.
    */
-  void setAnneeAcademique(String anneeAcademique);
+  void setSchoolYear(String schoolYear);
 
   /**
    * Get the user's role.
