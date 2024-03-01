@@ -2,7 +2,7 @@ package be.vinci.pae.services.dao;
 
 import be.vinci.pae.domain.UserFactory;
 import be.vinci.pae.domain.dto.UserDTO;
-import be.vinci.pae.services.utils.DalService;
+import be.vinci.pae.services.dal.DalService;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

@@ -6,15 +6,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import be.vinci.pae.domain.User;
-import be.vinci.pae.domain.UserFactory;
-import be.vinci.pae.domain.UserFactoryImpl;
 import be.vinci.pae.domain.UserImpl;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.domain.ucc.UserUCC;
-import be.vinci.pae.domain.ucc.UserUCCImpl;
 import be.vinci.pae.services.dao.UserDAO;
-import be.vinci.pae.services.utils.DalService;
-import be.vinci.pae.utils.ApplicationBinder;
 import jakarta.ws.rs.WebApplicationException;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
