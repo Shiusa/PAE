@@ -10,14 +10,14 @@ public interface User extends UserDTO {
   /**
    * Compare a raw password with a User's encrypted password.
    *
-   * @param motDePasse encrypted password.
+   * @param password encrypted password.
    * @return true if the passwords are matching; else false.
    */
-  boolean checkMotDePasse(String motDePasse);
+  boolean checkPassword(String password);
 
   /**
    * Hashes user's password.
    */
-  void hasherMotDePasse();
+  void hashPassword();
 
 }
