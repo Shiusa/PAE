@@ -46,6 +46,12 @@ public class UserResource {
     if (!json.hasNonNull("email") || !json.hasNonNull("password")) {
       throw new WebApplicationException("email or password required", Response.Status.BAD_REQUEST);
     }
+    if (json.get("email").asText().isBlank()) {
+      throw new WebApplicationException("email required", Response.Status.BAD_REQUEST);
+    }
+    if (json.get("password").asText().isBlank()) {
+      throw new WebApplicationException("password required", Response.Status.BAD_REQUEST);
+    }
     String email = json.get("email").asText();
     String password = json.get("password").asText();
 
@@ -61,7 +67,7 @@ public class UserResource {
       return publicUser;
     } catch (Exception e) {
       System.out.println("Error while creating token");
-      return null;
+      throw new WebApplicationException("error while creating token", Response.Status.UNAUTHORIZED);
     }
   }
 }
