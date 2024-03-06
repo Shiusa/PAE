@@ -56,6 +56,7 @@ public class UserDAOImpl implements UserDAO {
         user.setDateInscription(rs.getDate("date_inscription"));
         user.setAnneeAcademique(rs.getString("annee_academique"));
         user.setRole(rs.getString("role"));
+        rs.close();
         return user;
       }
       return null;
@@ -68,8 +69,6 @@ public class UserDAOImpl implements UserDAO {
         e.printStackTrace();
       }
     }
-
     return null;
-
   }
 }
