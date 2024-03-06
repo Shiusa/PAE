@@ -6,7 +6,7 @@ import org.mindrot.jbcrypt.BCrypt;
 /**
  * Implementation of User.
  */
-public class UserImpl implements User {
+class UserImpl implements User {
 
   private int id;
   private String email;
