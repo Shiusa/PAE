@@ -4,9 +4,6 @@ import be.vinci.pae.domain.User;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.services.dao.UserDAO;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
 
 /**
  * User UCC.
@@ -30,8 +27,7 @@ public class UserUCCImpl implements UserUCC {
     User user = (User) userDTOFound;
 
     if (user == null || !user.checkMotDePasse(motDePasse)) {
-      throw new WebApplicationException(Response.status(Status.BAD_REQUEST)
-          .entity("Ressource not found").type("text/plain").build());
+      return null;
     }
     return userDTOFound;
   }
