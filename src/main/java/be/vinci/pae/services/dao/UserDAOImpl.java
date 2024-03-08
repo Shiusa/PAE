@@ -2,7 +2,7 @@ package be.vinci.pae.services.dao;
 
 import be.vinci.pae.domain.UserFactory;
 import be.vinci.pae.domain.dto.UserDTO;
-import be.vinci.pae.services.dal.DalService;
+import be.vinci.pae.services.dal.DalServices;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,7 +17,7 @@ public class UserDAOImpl implements UserDAO {
    * Implementation of UserDAO class.
    */
   @Inject
-  private DalService dalService;
+  private DalServices dalServices;
   @Inject
   private UserFactory userFactory;
 
@@ -36,7 +36,7 @@ public class UserDAOImpl implements UserDAO {
         FROM prostage.users
         WHERE email = ?
         """;
-    PreparedStatement ps = dalService.getPreparedStatement(requestSql);
+    PreparedStatement ps = dalServices.getPreparedStatement(requestSql);
     try {
       ps.setString(1, email);
     } catch (SQLException e) {

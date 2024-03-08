@@ -9,14 +9,16 @@ import java.sql.SQLException;
 /**
  * Implementation of DalService.
  */
-public class DalServiceImpl implements DalService {
+public class DalServicesImpl implements DalServices, DalServicesConnection {
 
-  private Connection connection = null;
+  Connection connection = null;
+  private ThreadLocal<Connection> connections;
 
   /**
    * Create connection to database.
    */
-  public DalServiceImpl() {
+  public DalServicesImpl() {
+    this.connections = new ThreadLocal<>();
     try {
       this.connection = DriverManager.getConnection(Config.getProperty("postgresUrl"),
           Config.getProperty("postgresUser"),
@@ -38,5 +40,20 @@ public class DalServiceImpl implements DalService {
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  @Override
+  public void startTransaction() {
+
+  }
+
+  @Override
+  public void commitTransaction() {
+
+  }
+
+  @Override
+  public void rollbackTransaction() {
+
   }
 }

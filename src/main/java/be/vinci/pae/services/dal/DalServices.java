@@ -5,7 +5,7 @@ import java.sql.PreparedStatement;
 /**
  * DalService Interface.
  */
-public interface DalService {
+public interface DalServices {
 
   PreparedStatement getPreparedStatement(String sql);
 }
