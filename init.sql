@@ -2,36 +2,36 @@ DROP SCHEMA IF EXISTS proStage CASCADE;
 CREATE SCHEMA proStage;
 
 CREATE TABLE proStage.users (
-                                user_id SERIAL PRIMARY KEY,
-                                email TEXT NOT NULL,
-                                lastname TEXT NOT NULL,
-                                firstname TEXT NOT NULL,
-                                phone_number TEXT NOT NULL,
-                                password TEXT NOT NULL,
-                                inscription_date DATE NOT NULL,
-                                school_year TEXT NOT NULL,
-                                role TEXT NOT NULL
+    user_id SERIAL PRIMARY KEY,
+    email TEXT NOT NULL,
+    lastname TEXT NOT NULL,
+    firstname TEXT NOT NULL,
+    phone_number TEXT NOT NULL,
+    password TEXT NOT NULL,
+    registration_date DATE NOT NULL,
+    school_year TEXT NOT NULL,
+    role TEXT NOT NULL
 );
 
 CREATE TABLE proStage.companies (
-                                    company_id SERIAL PRIMARY KEY,
-                                    name TEXT,
-                                    designation TEXT,
-                                    address TEXT NOT NULL,
-                                    phone_number TEXT,
-                                    email TEXT,
-                                    is_blacklisted BOOLEAN NOT NULL,
-                                    blacklist_motivation TEXT
+    company_id SERIAL PRIMARY KEY,
+    name TEXT,
+    designation TEXT,
+    address TEXT NOT NULL,
+    phone_number TEXT,
+    email TEXT,
+    is_blacklisted BOOLEAN NOT NULL,
+    blacklist_motivation TEXT
 );
 
 CREATE TABLE proStage.contacts (
-                                   contact_id SERIAL PRIMARY KEY,
-                                   company INTEGER NOT NULL REFERENCES proStage.companies (company_id),
-                                   student INTEGER NOT NULL REFERENCES proStage.users (user_id),
-                                   meeting TEXT,
-                                   contact_state TEXT NOT NULL,
-                                   reason_for_refusal TEXT,
-                                   school_year TEXT NOT NULL
+    contact_id SERIAL PRIMARY KEY,
+    company INTEGER NOT NULL REFERENCES proStage.companies (company_id),
+    student INTEGER NOT NULL REFERENCES proStage.users (user_id),
+    meeting TEXT,
+    contact_state TEXT NOT NULL,
+    reason_for_refusal TEXT,
+    school_year TEXT NOT NULL
 );
 
 
