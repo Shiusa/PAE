@@ -101,7 +101,6 @@ public interface UserDTO {
   /**
    * Set the user's registration date.
    *
-<<<<<<< HEAD
    * @param registrationDate registration date to set.
    */
   void setRegistrationDate(Date registrationDate);
@@ -116,11 +115,7 @@ public interface UserDTO {
   /**
    * Set the user's school year.
    *
-<<<<<<< HEAD
    * @param schoolYear school year to set.
-=======
-   * @param schoolYear password to set.
->>>>>>> 09fff7cd749b760183c60ec4124bafa8daf1b8c7
    */
   void setSchoolYear(String schoolYear);
 
