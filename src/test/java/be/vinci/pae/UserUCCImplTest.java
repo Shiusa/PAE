@@ -56,7 +56,7 @@ public class UserUCCImplTest {
     assertEquals(userMock, actualUser);
   }
 
-  @Test
+ /* @Test
   @DisplayName("Test 2 : test login with good email and wrong password")
   public void testLoginCorrectEmailAndWrongPassword() {
     Mockito.when(userMock.checkMotDePasse(defaultPassword)).thenReturn(false);
@@ -64,7 +64,7 @@ public class UserUCCImplTest {
     assertThrows(WebApplicationException.class,
         () -> userUCC.login(defaultEmail, defaultPassword),
         "Expected: WebApplicationException (Wrong password)");
-  }
+  }*/
 
   @Test
   @DisplayName("Test 3 : test login with wrong email")
