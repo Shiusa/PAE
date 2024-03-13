@@ -36,9 +36,9 @@ CREATE TABLE proStage.contacts (
 
 
 -- MDP : 123
-INSERT INTO proStage.users VALUES(DEFAULT, 'alice.dubois@vinci.be', 'Dubois', 'Alice', '+32471234567', '$2a$10$PO9RaYGTTyCohyiydzsyOuYMVZr7coRXYw8v4pmknkzGcKKLM/eAO', '2023-08-20', '2023-2024', 'administratif');
-INSERT INTO proStage.users VALUES(DEFAULT, 'hugo.leroy@vinci.be', 'Leroy', 'Hugo', '+32478987654', '$2a$10$PO9RaYGTTyCohyiydzsyOuYMVZr7coRXYw8v4pmknkzGcKKLM/eAO', '2023-11-09', '2023-2024', 'professeur');
-INSERT INTO proStage.users VALUES(DEFAULT, 'eleonore.martin@vinci.be', 'Martin', 'Éléonore', '+32485123456', '$2a$10$PO9RaYGTTyCohyiydzsyOuYMVZr7coRXYw8v4pmknkzGcKKLM/eAO', CURRENT_DATE, '2023-2024', 'etudiant');
+INSERT INTO proStage.users VALUES(DEFAULT, 'alice.dubois@vinci.be', 'Dubois', 'Alice', '+32471234567', '$2a$10$PO9RaYGTTyCohyiydzsyOuYMVZr7coRXYw8v4pmknkzGcKKLM/eAO', '2023-08-20', '2023-2024', 'administrative employe');
+INSERT INTO proStage.users VALUES(DEFAULT, 'hugo.leroy@vinci.be', 'Leroy', 'Hugo', '+32478987654', '$2a$10$PO9RaYGTTyCohyiydzsyOuYMVZr7coRXYw8v4pmknkzGcKKLM/eAO', '2023-11-09', '2023-2024', 'teacher');
+INSERT INTO proStage.users VALUES(DEFAULT, 'eleonore.martin@vinci.be', 'Martin', 'Éléonore', '+32485123456', '$2a$10$PO9RaYGTTyCohyiydzsyOuYMVZr7coRXYw8v4pmknkzGcKKLM/eAO', CURRENT_DATE, '2023-2024', 'student');
 
 
 INSERT INTO proStage.companies VALUES(DEFAULT, 'DasInfo', NULL, 'Avenue des marais 80, Scharbeek 1500', '0412345678', 'das@auto.com', FALSE, NULL);
@@ -47,4 +47,4 @@ INSERT INTO proStage.companies VALUES(DEFAULT, 'LSCustom', 'Anvers', 'Avenue des
 
 
 INSERT INTO proStage.contacts VALUES(DEFAULT, 1, 1, NULL, 'started', NULL, '2023-2024');
-INSERT INTO proStage.contacts VALUES(DEFAULT, 3, 2, 'remote', 'turned down', 'Student has not answered fast enough', '2023-2024');
+INSERT INTO proStage.contacts VALUES(DEFAULT, 3, 2, 'remote', 'turned down', 'Etudiant trop lent', '2023-2024');

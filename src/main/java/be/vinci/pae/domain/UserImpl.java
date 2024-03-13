@@ -6,7 +6,7 @@ import org.mindrot.jbcrypt.BCrypt;
 /**
  * Implementation of User.
  */
-public class UserImpl implements User {
+class UserImpl implements User {
 
   private int id;
   private String email;
@@ -14,7 +14,7 @@ public class UserImpl implements User {
   private String firstname;
   private String phoneNumber;
   private String password;
-  private Date inscriptionDate;
+  private Date registrationDate;
   private String schoolYear;
   private String role;
 
@@ -78,14 +78,13 @@ public class UserImpl implements User {
     this.password = password;
   }
 
-  @Override
-  public Date getInscriptionDate() {
-    return this.inscriptionDate;
+  public Date getRegistrationDate() {
+    return this.registrationDate;
   }
 
   @Override
-  public void setInscriptionDate(Date inscriptionDate) {
-    this.inscriptionDate = inscriptionDate;
+  public void setRegistrationDate(Date registrationDate) {
+    this.registrationDate = registrationDate;
   }
 
   @Override
