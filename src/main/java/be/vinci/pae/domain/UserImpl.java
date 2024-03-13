@@ -15,7 +15,7 @@ class UserImpl implements User {
   private String phoneNumber;
   private String password;
   private Date registrationDate;
-  private String schoolyear;
+  private String schoolYear;
   private String role;
 
   @Override
@@ -78,7 +78,6 @@ class UserImpl implements User {
     this.password = password;
   }
 
-  @Override
   public Date getRegistrationDate() {
     return this.registrationDate;
   }
@@ -90,12 +89,12 @@ class UserImpl implements User {
 
   @Override
   public String getSchoolYear() {
-    return this.schoolyear;
+    return this.schoolYear;
   }
 
   @Override
-  public void setSchoolYear(String schoolyear) {
-    this.schoolyear = schoolyear;
+  public void setSchoolYear(String schoolYear) {
+    this.schoolYear = schoolYear;
   }
 
   @Override
@@ -110,7 +109,7 @@ class UserImpl implements User {
 
   @Override
   public boolean checkPassword(String password) {
-    return BCrypt.checkpw(password, getPassword());
+    return BCrypt.checkpw(password, this.password);
   }
 
   @Override

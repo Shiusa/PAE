@@ -50,6 +50,7 @@ public class UserResource {
     if (json.get("password").asText().isBlank()) {
       throw new WebApplicationException("password required", Response.Status.BAD_REQUEST);
     }
+
     String email = json.get("email").asText();
     String password = json.get("password").asText();
 
