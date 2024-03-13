@@ -29,6 +29,8 @@ public class UserUCCImpl implements UserUCC {
     if (user == null || !user.checkPassword(password)) {
       return null;
     }
+
+    userDTOFound.setPassword(null);
     return userDTOFound;
   }
 }
