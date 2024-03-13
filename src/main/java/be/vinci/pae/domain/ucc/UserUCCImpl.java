@@ -17,16 +17,16 @@ public class UserUCCImpl implements UserUCC {
    * Get a user associated with an email and check their password with the password entered.
    *
    * @param email      the user's email.
-   * @param motDePasse the user's hashed password.
+   * @param password the user's hashed password.
    * @return a UserDTO if existing user and correct password;.
    */
   @Override
-  public UserDTO login(String email, String motDePasse) {
+  public UserDTO login(String email, String password) {
     UserDTO userDTOFound = userDAO.getOneUserByEmail(email);
 
     User user = (User) userDTOFound;
 
-    if (user == null || !user.checkMotDePasse(motDePasse)) {
+    if (user == null || !user.checkPassword(password)) {
       return null;
     }
     return userDTOFound;

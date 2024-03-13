@@ -31,9 +31,9 @@ public class UserDAOImpl implements UserDAO {
   public UserDTO getOneUserByEmail(String email) {
 
     String requestSql = """
-        SELECT id_utilisateur, email, nom, prenom, telephone, mot_de_passe,
-        date_inscription, annee_academique, role
-        FROM prostage.utilisateurs
+        SELECT user_id, email, lastname, firstname, phone_number, password,
+        registration_date, school_year, role
+        FROM prostage.users
         WHERE email = ?
         """;
     PreparedStatement ps = dalService.getPreparedStatement(requestSql);
@@ -47,14 +47,14 @@ public class UserDAOImpl implements UserDAO {
 
     try (ResultSet rs = ps.executeQuery()) {
       if (rs.next()) {
-        user.setId(rs.getInt("id_utilisateur"));
+        user.setId(rs.getInt("user_id"));
         user.setEmail(rs.getString("email"));
-        user.setNom(rs.getString("nom"));
-        user.setPrenom(rs.getString("prenom"));
-        user.setTelephone(rs.getString("telephone"));
-        user.setMotDePasse(rs.getString("mot_de_passe"));
-        user.setDateInscription(rs.getDate("date_inscription"));
-        user.setAnneeAcademique(rs.getString("annee_academique"));
+        user.setLastname(rs.getString("lastname"));
+        user.setFirstname(rs.getString("firstname"));
+        user.setPhoneNumber(rs.getString("phone_number"));
+        user.setPassword(rs.getString("password"));
+        user.setRegistrationDate(rs.getDate("registration_date"));
+        user.setSchoolYear(rs.getString("school_year"));
         user.setRole(rs.getString("role"));
         rs.close();
         return user;
