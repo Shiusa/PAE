@@ -10,12 +10,12 @@ class UserImpl implements User {
 
   private int id;
   private String email;
-  private String nom;
-  private String prenom;
-  private String telephone;
-  private String motDePasse;
-  private Date dateInscription;
-  private String anneeAcademique;
+  private String lastname;
+  private String firstname;
+  private String phoneNumber;
+  private String password;
+  private Date inscriptionDate;
+  private String schoolYear;
   private String role;
 
   @Override
@@ -39,63 +39,63 @@ class UserImpl implements User {
   }
 
   @Override
-  public String getNom() {
-    return this.nom;
+  public String getLastname() {
+    return this.lastname;
   }
 
   @Override
-  public void setNom(String nom) {
-    this.nom = nom;
+  public void setLastname(String lastname) {
+    this.lastname = lastname;
   }
 
   @Override
-  public String getPrenom() {
-    return this.prenom;
+  public String getFirstname() {
+    return this.firstname;
   }
 
   @Override
-  public void setPrenom(String prenom) {
-    this.prenom = prenom;
+  public void setFirstname(String firstname) {
+    this.firstname = firstname;
   }
 
   @Override
-  public String getTelephone() {
-    return this.telephone;
+  public String getPhoneNumber() {
+    return this.phoneNumber;
   }
 
   @Override
-  public void setTelephone(String telephone) {
-    this.telephone = telephone;
+  public void setPhoneNumber(String phoneNumber) {
+    this.phoneNumber = phoneNumber;
   }
 
   @Override
-  public String getMotDePasse() {
-    return this.motDePasse;
+  public String getPassword() {
+    return this.password;
   }
 
   @Override
-  public void setMotDePasse(String motDePasse) {
-    this.motDePasse = motDePasse;
+  public void setPassword(String password) {
+    this.password = password;
   }
 
   @Override
-  public Date getDateInscription() {
-    return this.dateInscription;
+  public Date getInscriptionDate() {
+    return this.inscriptionDate;
   }
 
   @Override
-  public void setDateInscription(Date dateInscription) {
-    this.dateInscription = dateInscription;
+  public void setInscriptionDate(Date inscriptionDate) {
+    this.inscriptionDate = inscriptionDate;
   }
 
   @Override
-  public String getAnneeAcademique() {
-    return this.anneeAcademique;
+  public String getSchoolYear() {
+    return this.schoolYear;
   }
 
   @Override
-  public void setAnneeAcademique(String anneeAcademique) {
-    this.anneeAcademique = anneeAcademique;
+  public void setSchoolYear(String schoolYear) {
+    this.schoolYear = schoolYear;
   }
 
   @Override
@@ -109,13 +109,13 @@ class UserImpl implements User {
   }
 
   @Override
-  public boolean checkMotDePasse(String motDePasse) {
-    return BCrypt.checkpw(motDePasse, getMotDePasse());
+  public boolean checkPassword(String password) {
+    return BCrypt.checkpw(password, this.password);
   }
 
   @Override
-  public void hasherMotDePasse() {
-    this.motDePasse = BCrypt.hashpw(this.motDePasse, BCrypt.gensalt());
+  public void hashPassword() {
+    this.password = BCrypt.hashpw(this.password, BCrypt.gensalt());
   }
 
 
