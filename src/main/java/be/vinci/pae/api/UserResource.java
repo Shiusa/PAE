@@ -41,7 +41,6 @@ public class UserResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode login(JsonNode json) {
-    UserDTO userDTO;
 
     if (!json.hasNonNull("email") || !json.hasNonNull("password")) {
       throw new WebApplicationException("email or password required", Response.Status.BAD_REQUEST);
@@ -52,9 +51,11 @@ public class UserResource {
     if (json.get("password").asText().isBlank()) {
       throw new WebApplicationException("password required", Response.Status.BAD_REQUEST);
     }
+
     String email = json.get("email").asText();
     String password = json.get("password").asText();
 
+    UserDTO userDTO;
     String token;
     userDTO = userUCC.login(email, password);
 
