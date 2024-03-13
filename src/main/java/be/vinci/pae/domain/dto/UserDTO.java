@@ -92,44 +92,44 @@ public interface UserDTO {
   void setPassword(String password);
 
   /**
-   * Get the user's password.
+   * Get the user's registration date.
    *
-   * @return the user's register date.
+   * @return the user's registration date.
    */
-  Date getInscriptionDate();
+  Date getRegistrationDate();
 
   /**
-   * Set the user's register date.
+   * Set the user's registration date.
    *
-   * @param inscriptionDate password to set.
+   * @param registrationDate registration date to set.
    */
-  void setInscriptionDate(Date inscriptionDate);
+  void setRegistrationDate(Date registrationDate);
 
   /**
-   * Get the user's academic year.
+   * Get the user's school year.
    *
-   * @return the user's register date.
+   * @return the user's school year.
    */
   String getSchoolYear();
 
   /**
-   * Set the user's academic year.
+   * Set the user's school year.
    *
-   * @param schoolYear password to set.
+   * @param schoolYear school year to set.
    */
   void setSchoolYear(String schoolYear);
 
   /**
    * Get the user's role.
    *
-   * @return the user's register date.
+   * @return the user's role.
    */
   String getRole();
 
   /**
    * Set the user's role.
    *
-   * @param role password to set.
+   * @param role role to set.
    */
   void setRole(String role);
 }

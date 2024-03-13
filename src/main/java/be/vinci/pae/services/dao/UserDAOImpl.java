@@ -32,7 +32,7 @@ public class UserDAOImpl implements UserDAO {
 
     String requestSql = """
         SELECT user_id, email, lastname, firstname, phone_number, password,
-        inscription_date, school_year, role
+        registration_date, school_year, role
         FROM prostage.users
         WHERE email = ?
         """;
@@ -53,9 +53,10 @@ public class UserDAOImpl implements UserDAO {
         user.setFirstname(rs.getString("firstname"));
         user.setPhoneNumber(rs.getString("phone_number"));
         user.setPassword(rs.getString("password"));
-        user.setInscriptionDate(rs.getDate("inscription_date"));
+        user.setRegistrationDate(rs.getDate("registration_date"));
         user.setSchoolYear(rs.getString("school_year"));
         user.setRole(rs.getString("role"));
+        rs.close();
         return user;
       }
       return null;
@@ -68,8 +69,6 @@ public class UserDAOImpl implements UserDAO {
         e.printStackTrace();
       }
     }
-
     return null;
-
   }
 }
