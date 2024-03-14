@@ -9,7 +9,7 @@ import be.vinci.pae.domain.ucc.UserUCCImpl;
 import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.services.dao.UserDAOImpl;
 import be.vinci.pae.services.utils.DalBackendServices;
-import be.vinci.pae.services.utils.DalServiceImpl;
+import be.vinci.pae.services.utils.DalServicesImpl;
 import be.vinci.pae.services.utils.DalServices;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.ext.Provider;
@@ -28,8 +28,8 @@ public class ApplicationBinder extends AbstractBinder {
   protected void configure() {
     bind(UserImpl.class).to(User.class).in(Singleton.class);
     bind(UserDAOImpl.class).to(UserDAO.class).in(Singleton.class);
-    bind(DalServiceImpl.class).to(DalServices.class).to(DalBackendServices.class)
-        .in(Singleton.class);
+    bind(DalServicesImpl.class).to(DalServices.class).in(Singleton.class);
+    bind(DalServicesImpl.class).to(DalBackendServices.class).in(Singleton.class);
     bind(UserFactoryImpl.class).to(UserFactory.class).in(Singleton.class);
     bind(UserUCCImpl.class).to(UserUCC.class).in(Singleton.class);
   }

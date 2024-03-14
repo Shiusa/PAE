@@ -4,7 +4,7 @@ import be.vinci.pae.domain.ucc.UserUCC;
 import be.vinci.pae.domain.ucc.UserUCCImpl;
 import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.services.dao.UserDAOImpl;
-import be.vinci.pae.services.utils.DalServiceImpl;
+import be.vinci.pae.services.utils.DalServicesImpl;
 import be.vinci.pae.services.utils.DalServices;
 import jakarta.inject.Singleton;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
@@ -22,6 +22,6 @@ public class BinderTest extends AbstractBinder {
   protected void configure() {
     bind(UserUCCImpl.class).to(UserUCC.class).in(Singleton.class);
     bind(Mockito.mock(UserDAOImpl.class)).to(UserDAO.class);
-    bind(Mockito.mock(DalServiceImpl.class)).to(DalServices.class);
+    bind(Mockito.mock(DalServicesImpl.class)).to(DalServices.class);
   }
 }
