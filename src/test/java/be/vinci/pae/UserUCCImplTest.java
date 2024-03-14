@@ -4,10 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import be.vinci.pae.domain.User;
-<<<<<<< HEAD
-import be.vinci.pae.domain.UserImpl;
-=======
->>>>>>> master
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.domain.ucc.UserUCC;
 import be.vinci.pae.services.dao.UserDAO;
