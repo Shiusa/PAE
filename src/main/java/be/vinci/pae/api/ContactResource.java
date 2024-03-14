@@ -20,7 +20,10 @@ public class ContactResource {
   @Path("start")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public ObjectNode start(JsonNode jsonNode){
+  public ObjectNode start(JsonNode jsonNode) {
+    String company = jsonNode.asText("company");
+    String student = jsonNode.asText("student");
+
     return null;
   }
 

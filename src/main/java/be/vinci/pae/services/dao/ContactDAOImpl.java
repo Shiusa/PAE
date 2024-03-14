@@ -1,16 +1,93 @@
 package be.vinci.pae.services.dao;
 
 
+import be.vinci.pae.domain.ContactFactory;
 import be.vinci.pae.domain.dto.ContactDTO;
+import be.vinci.pae.services.dal.DalServices;
+import jakarta.inject.Inject;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  * Implementation of ContactDAO.
  */
 public class ContactDAOImpl implements ContactDAO {
 
+  @Inject
+  private DalServices dalServices;
+  @Inject
+  private ContactFactory contactFactory;
 
   @Override
-  public ContactDTO startContact(int student, int company) {
+  public ContactDTO findByCompanyStudentSchoolYear(int company, int student, String schoolYear) {
+    String requestSql = """
+        SELECT contact_id, company, student, meeting, contact_state, reason_for_refusal,
+          school_year
+        FROM prostage.contacts
+        WHERE contacts.company = ? AND contacts.student = ? AND contacts.school_year = ?
+        """;
+    PreparedStatement ps = dalServices.getPreparedStatement(requestSql);
+
+    try {
+      ps.setString(1, Integer.toString(company));
+      ps.setString(2, Integer.toString(student));
+      ps.setString(3, schoolYear);
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+
+    ContactDTO contact = contactFactory.getContactDTO();
+    try (ResultSet rs = ps.executeQuery()) {
+      if (rs.next()) {
+        contact.setId(rs.getInt("contact_id"));
+        contact.setCompany(rs.getInt("company"));
+        contact.setStudent(rs.getInt("student"));
+        contact.setMeeting(rs.getString("meeting"));
+        contact.setState(rs.getString("contact_state"));
+        contact.setReasonRefusal(rs.getString("reason_for_refusal"));
+        contact.setSchoolYear(rs.getString("school_year"));
+        rs.close();
+        return contact;
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    } finally {
+      try {
+        ps.close();
+      } catch (SQLException e) {
+        throw new RuntimeException(e);
+      }
+    }
     return null;
   }
+
+  @Override
+  public void startContact(int company, int student, String schoolYear) {
+    String requestSql = """
+        INSERT INTO prostage.contacts VALUES (?, ?, NULL, ?, NULL, ?)
+        """;
+    PreparedStatement ps = dalServices.getPreparedStatement(requestSql);
+    try {
+      ps.setString(1, Integer.toString(company));
+      ps.setString(2, Integer.toString(student));
+      ps.setString(3, "started");
+      ps.setString(4, schoolYear);
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+    try {
+      ResultSet rs = ps.executeQuery();
+      rs.close();
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    } finally {
+      try {
+        ps.close();
+      } catch (SQLException e) {
+        throw new RuntimeException(e);
+      }
+    }
+  }
+
 }

@@ -42,7 +42,33 @@ public class UserDAOImpl implements UserDAO {
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
+    return buildUserDTO(ps);
+  }
 
+  /**
+   * Get one user by id then set the userDTO if user exist.
+   *
+   * @param id user' id.
+   * @return userDTO with setter corresponding to the id, null otherwise.
+   */
+  @Override
+  public UserDTO getOneUserById(int id) {
+    String requestSql = """
+        SELECT user_id, email, lastname, firstname, phone_number, password,
+        registration_date, school_year, role
+        FROM prostage.users
+        WHERE user_id = ?
+        """;
+    PreparedStatement ps = dalServices.getPreparedStatement(requestSql);
+    try {
+      ps.setString(1, Integer.toString(id));
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+    return buildUserDTO(ps);
+  }
+
+  private UserDTO buildUserDTO(PreparedStatement ps) {
     UserDTO user = userFactory.getUserDTO();
 
     try (ResultSet rs = ps.executeQuery()) {
