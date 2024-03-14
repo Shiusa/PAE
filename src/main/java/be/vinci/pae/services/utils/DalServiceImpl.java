@@ -9,7 +9,7 @@ import java.sql.SQLException;
 /**
  * Implementation of DalService.
  */
-public class DalServiceImpl implements DalService {
+public class DalServiceImpl implements DalServices, DalBackendServices {
 
   private Connection connection = null;
 
@@ -35,6 +35,37 @@ public class DalServiceImpl implements DalService {
   public PreparedStatement getPreparedStatement(String query) {
     try {
       return connection.prepareStatement(query);
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  /**
+   * Start a transation
+   */
+  @Override
+  public void startTransaction() {
+    try {
+      connection.setAutoCommit(false);
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Override
+  public void commit() {
+    try {
+      connection.commit();
+      connection.setAutoCommit(true);
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Override
+  public void rollback() {
+    try {
+      connection.rollback();
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
