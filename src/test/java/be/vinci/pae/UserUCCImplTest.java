@@ -13,7 +13,7 @@ import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.domain.ucc.UserUCC;
 import be.vinci.pae.domain.ucc.UserUCCImpl;
 import be.vinci.pae.services.dao.UserDAO;
-import be.vinci.pae.services.utils.DalService;
+import be.vinci.pae.services.utils.DalServices;
 import be.vinci.pae.utils.ApplicationBinder;
 import jakarta.ws.rs.WebApplicationException;
 import org.glassfish.hk2.api.ServiceLocator;
