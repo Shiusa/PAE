@@ -1,9 +1,7 @@
 package be.vinci.pae.utils;
 
-import be.vinci.pae.domain.User;
 import be.vinci.pae.domain.UserFactory;
 import be.vinci.pae.domain.UserFactoryImpl;
-import be.vinci.pae.domain.UserImpl;
 import be.vinci.pae.domain.ucc.UserUCC;
 import be.vinci.pae.domain.ucc.UserUCCImpl;
 import be.vinci.pae.services.dao.UserDAO;
@@ -26,7 +24,6 @@ public class ApplicationBinder extends AbstractBinder {
    */
   @Override
   protected void configure() {
-    bind(UserImpl.class).to(User.class).in(Singleton.class);
     bind(UserDAOImpl.class).to(UserDAO.class).in(Singleton.class);
     bind(DalServicesImpl.class).to(DalServices.class).in(Singleton.class);
     bind(DalServicesImpl.class).to(DalBackendServices.class).in(Singleton.class);
