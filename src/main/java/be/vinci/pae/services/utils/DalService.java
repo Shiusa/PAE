@@ -1,5 +1,6 @@
 package be.vinci.pae.services.utils;
 
+import be.vinci.pae.utils.exceptions.FatalException;
 import java.sql.PreparedStatement;
 
 /**
@@ -7,5 +8,5 @@ import java.sql.PreparedStatement;
  */
 public interface DalService {
 
-  PreparedStatement getPreparedStatement(String sql);
+  PreparedStatement getPreparedStatement(String sql) throws FatalException;
 }

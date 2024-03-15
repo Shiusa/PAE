@@ -3,6 +3,8 @@ package be.vinci.pae.domain.ucc;
 import be.vinci.pae.domain.User;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.services.dao.UserDAO;
+import be.vinci.pae.utils.exceptions.BadRequestException;
+import be.vinci.pae.utils.exceptions.NotFoundException;
 import jakarta.inject.Inject;
 import java.util.List;
 
@@ -27,10 +29,12 @@ public class UserUCCImpl implements UserUCC {
 
     User user = (User) userDTOFound;
 
-    if (user == null || !user.checkPassword(password)) {
-      return null;
+    if (user == null) {
+      throw new NotFoundException();
     }
-
+    if (!user.checkPassword(password)) {
+      throw new BadRequestException();
+    }
     userDTOFound.setPassword(null);
     return userDTOFound;
   }

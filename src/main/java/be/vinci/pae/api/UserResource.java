@@ -3,6 +3,8 @@ package be.vinci.pae.api;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.domain.ucc.UserUCC;
 import be.vinci.pae.utils.Config;
+import be.vinci.pae.utils.exceptions.BadRequestException;
+import be.vinci.pae.utils.exceptions.FatalException;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -15,9 +17,7 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
 import java.util.List;
 
 /**
@@ -44,13 +44,13 @@ public class UserResource {
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode login(JsonNode json) {
     if (!json.hasNonNull("email") || !json.hasNonNull("password")) {
-      throw new WebApplicationException("email or password required", Response.Status.BAD_REQUEST);
+      throw new BadRequestException();
     }
     if (json.get("email").asText().isBlank()) {
-      throw new WebApplicationException("email required", Response.Status.BAD_REQUEST);
+      throw new BadRequestException();
     }
     if (json.get("password").asText().isBlank()) {
-      throw new WebApplicationException("password required", Response.Status.BAD_REQUEST);
+      throw new BadRequestException();
     }
 
     String email = json.get("email").asText();
@@ -69,7 +69,7 @@ public class UserResource {
       return publicUser;
     } catch (Exception e) {
       System.out.println("Error while creating token");
-      throw new WebApplicationException("error while creating token", Response.Status.UNAUTHORIZED);
+      throw new FatalException(e);
     }
   }
 
@@ -81,7 +81,13 @@ public class UserResource {
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   public List<UserDTO> getAll() {
-    return userUCC.getAllUsers();
+    List<UserDTO> userDTOList;
+    try {
+      userDTOList = userUCC.getAllUsers();
+    } catch (FatalException e) {
+      throw e;
+    }
+    return userDTOList;
   }
 }
 

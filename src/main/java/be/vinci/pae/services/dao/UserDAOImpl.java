@@ -3,6 +3,7 @@ package be.vinci.pae.services.dao;
 import be.vinci.pae.domain.UserFactory;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.services.utils.DalService;
+import be.vinci.pae.utils.exceptions.FatalException;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -42,7 +43,7 @@ public class UserDAOImpl implements UserDAO {
     try {
       ps.setString(1, email);
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new FatalException(e);
     }
 
     UserDTO user = userFactory.getUserDTO();
@@ -62,16 +63,15 @@ public class UserDAOImpl implements UserDAO {
         return user;
       }
       return null;
-    } catch (SQLException throwables) {
-      throwables.printStackTrace();
+    } catch (SQLException e) {
+      throw new FatalException(e);
     } finally {
       try {
         ps.close();
       } catch (SQLException e) {
-        e.printStackTrace();
+        throw new FatalException(e);
       }
     }
-    return null;
   }
 
   /**
@@ -105,7 +105,7 @@ public class UserDAOImpl implements UserDAO {
         }
       }
     } catch (SQLException e) {
-      e.printStackTrace();
+      throw new FatalException(e);
     }
     return userDTOList;
   }

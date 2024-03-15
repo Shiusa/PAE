@@ -1,6 +1,7 @@
 package be.vinci.pae.domain.ucc;
 
 import be.vinci.pae.domain.dto.UserDTO;
+import be.vinci.pae.utils.exceptions.BadRequestException;
 import java.util.List;
 
 /**
@@ -15,7 +16,7 @@ public interface UserUCC {
    * @param password the user's hashed password.
    * @return a UserDTO if existing user and correct password;.
    */
-  UserDTO login(String email, String password);
+  UserDTO login(String email, String password) throws BadRequestException;
 
   /**
    * Get all users.
