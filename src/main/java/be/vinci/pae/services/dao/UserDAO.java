@@ -15,4 +15,12 @@ public interface UserDAO {
    */
   UserDTO getOneUserByEmail(String email);
 
+  /**
+   * Add one user.
+   *
+   * @param user  user to add.
+   * @return added user.
+   */
+  UserDTO addOneUser(UserDTO user);
+
 }

@@ -39,7 +39,7 @@ public class UserDAOImpl implements UserDAO {
 
     UserDTO user = userFactory.getUserDTO();
 
-    try(PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql)) {
+    try (PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql)) {
       ps.setString(1, email);
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
@@ -60,6 +60,44 @@ public class UserDAOImpl implements UserDAO {
       }
     } catch (SQLException e) {
       throw new RuntimeException(e);
+    }
+
+    return null;
+
+  }
+
+  /**
+   * Add one user.
+   *
+   * @param user user to add.
+   * @return UserDTO of added user, null otherwise.
+   */
+  @Override
+  public UserDTO addOneUser(UserDTO user) {
+
+    String requestSql = """
+        INSERT INTO prostage.users(email, lastname, firstname, phone_number, 
+        password, registration_date, school_year, role) VALUES (?,?,?,?,?,?,?,?)
+        RETURNING email AS inserted_email
+        """;
+
+    try (PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql)) {
+      ps.setString(1, user.getEmail());
+      ps.setString(2, user.getLastname());
+      ps.setString(3, user.getFirstname());
+      ps.setString(4, user.getPhoneNumber());
+      ps.setString(5, user.getPassword());
+      ps.setDate(6, user.getRegistrationDate());
+      ps.setString(7, user.getEmail());
+      ps.setString(8, user.getEmail());
+      try(ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          return getOneUserByEmail(rs.getString("inserted_email"));
+        }
+        return null;
+      }
+    } catch (SQLException throwables) {
+      throwables.printStackTrace();
     }
 
     return null;
