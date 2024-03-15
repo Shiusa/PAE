@@ -11,12 +11,14 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import java.util.List;
 
 /**
  * UserResource class.
@@ -69,6 +71,17 @@ public class UserResource {
       System.out.println("Error while creating token");
       throw new WebApplicationException("error while creating token", Response.Status.UNAUTHORIZED);
     }
+  }
+
+  /**
+   * Get all users.
+   *
+   * @return a list containing all the users.
+   */
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  public List<UserDTO> getAll() {
+    return userUCC.getAllUsers();
   }
 }
 

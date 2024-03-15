@@ -4,6 +4,7 @@ import be.vinci.pae.domain.User;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.services.dao.UserDAO;
 import jakarta.inject.Inject;
+import java.util.List;
 
 /**
  * User UCC.
@@ -16,7 +17,7 @@ public class UserUCCImpl implements UserUCC {
   /**
    * Get a user associated with an email and check their password with the password entered.
    *
-   * @param email      the user's email.
+   * @param email    the user's email.
    * @param password the user's hashed password.
    * @return a UserDTO if existing user and correct password;.
    */
@@ -32,5 +33,15 @@ public class UserUCCImpl implements UserUCC {
 
     userDTOFound.setPassword(null);
     return userDTOFound;
+  }
+
+  /**
+   * Get all users.
+   *
+   * @return a list containing all the users.
+   */
+  @Override
+  public List<UserDTO> getAllUsers() {
+    return userDAO.getAllUsers();
   }
 }
