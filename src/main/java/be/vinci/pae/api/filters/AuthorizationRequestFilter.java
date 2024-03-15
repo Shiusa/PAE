@@ -17,6 +17,9 @@ import jakarta.ws.rs.core.Response.Status;
 import jakarta.ws.rs.ext.Provider;
 import java.io.IOException;
 
+/**
+ * AuthorizationRequestFilter class.
+ */
 @Singleton
 @Provider
 @Authorize
@@ -28,6 +31,12 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
   @Inject
   private UserUCC myUserDataService;
 
+  /**
+   * Filters.
+   *
+   * @param requestContext requestContext.
+   * @throws IOException exception.
+   */
   @Override
   public void filter(ContainerRequestContext requestContext) throws IOException {
     String token = requestContext.getHeaderString("Authorization");

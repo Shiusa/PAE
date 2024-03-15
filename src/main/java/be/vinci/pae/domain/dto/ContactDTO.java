@@ -1,6 +1,9 @@
 package be.vinci.pae.domain.dto;
 
-public interface ContactDTO  {
+/**
+ * ContactDTO interface.
+ */
+public interface ContactDTO {
 
   /**
    * Get the contact's id.

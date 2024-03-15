@@ -40,6 +40,12 @@ public class UserUCCImpl implements UserUCC {
     return userDTOFound;
   }
 
+  /**
+   * Get a user by his id.
+   *
+   * @param id the user id.
+   * @return the user found.
+   */
   public UserDTO getOneById(int id) {
     dalServices.startTransaction();
     UserDTO user = userDAO.getOneUserById(id);

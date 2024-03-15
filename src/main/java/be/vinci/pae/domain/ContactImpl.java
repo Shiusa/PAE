@@ -2,6 +2,9 @@ package be.vinci.pae.domain;
 
 import java.util.List;
 
+/**
+ * Implementation of Contact.
+ */
 public class ContactImpl implements Contact {
 
   private int id;

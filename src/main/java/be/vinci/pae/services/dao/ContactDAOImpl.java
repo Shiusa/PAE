@@ -52,7 +52,8 @@ public class ContactDAOImpl implements ContactDAO {
   @Override
   public ContactDTO startContact(int company, int student, String schoolYear) {
     String requestSql = """
-        INSERT INTO prostage.contacts (company, student, contact_state, school_year) VALUES (?, ?, ?, ?) RETURNING *;
+        INSERT INTO prostage.contacts (company, student, contact_state, school_year)
+         VALUES (?, ?, ?, ?) RETURNING *;
         """;
     PreparedStatement ps = dalServices.getPreparedStatement(requestSql);
     try {

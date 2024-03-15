@@ -2,6 +2,9 @@ package be.vinci.pae.domain.ucc;
 
 import be.vinci.pae.domain.dto.ContactDTO;
 
+/**
+ * ContactUCC interface.
+ */
 public interface ContactUCC {
 
   /**
