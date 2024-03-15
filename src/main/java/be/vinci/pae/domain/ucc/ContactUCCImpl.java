@@ -18,10 +18,14 @@ public class ContactUCCImpl implements ContactUCC {
   private UserDAO userDAO;
 
   @Override
-  public ContactDTO start(int student, int company) {
+  public ContactDTO start(int company, int student) {
     UserDTO studentDTO = userDAO.getOneUserById(student);
     String schoolYear = studentDTO.getSchoolYear();
+    if (contactDAO.findContactByCompanyStudentSchoolYear(student, company, schoolYear) != null) {
+      return null;
+    }
 
-    return contactDAO.findByCompanyStudentSchoolYear(student, company, schoolYear);
+    contactDAO.startContact(student, company, schoolYear);
+    return contactDAO.findContactByCompanyStudentSchoolYear(student, company, schoolYear);
   }
 }

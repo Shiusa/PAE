@@ -20,7 +20,8 @@ public class ContactDAOImpl implements ContactDAO {
   private ContactFactory contactFactory;
 
   @Override
-  public ContactDTO findByCompanyStudentSchoolYear(int company, int student, String schoolYear) {
+  public ContactDTO findContactByCompanyStudentSchoolYear(int company, int student,
+      String schoolYear) {
     String requestSql = """
         SELECT contact_id, company, student, meeting, contact_state, reason_for_refusal,
           school_year
@@ -77,16 +78,10 @@ public class ContactDAOImpl implements ContactDAO {
       throw new RuntimeException(e);
     }
     try {
-      ResultSet rs = ps.executeQuery();
-      rs.close();
+      ps.execute();
+      ps.close();
     } catch (SQLException e) {
       throw new RuntimeException(e);
-    } finally {
-      try {
-        ps.close();
-      } catch (SQLException e) {
-        throw new RuntimeException(e);
-      }
     }
   }
 

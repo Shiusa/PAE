@@ -9,6 +9,6 @@ public interface ContactUCC {
    *
    * @return the started contact.
    */
-  ContactDTO start(int student, int company);
+  ContactDTO start(int company, int student);
 
 }
