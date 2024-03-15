@@ -6,6 +6,7 @@ import RegisterPage from '../Pages/RegisterPage';
 import Logout from '../Logout/Logout';
 import ContactPage from '../Pages/ContactPage';
 import InfoPage from '../Pages/InfoPage';
+import DashboardPage from '../Pages/DashboardPage';
 
 const routes = {
   "/": HomePage,
@@ -14,6 +15,7 @@ const routes = {
   "/logout": Logout,
   "/contact": ContactPage,
   "/info": InfoPage,
+  "/dashboard": DashboardPage,
 };
 
 /**

@@ -14,6 +14,9 @@ const Navbar = async () => {
         <a class="nav-link nav-btn d-flex justify-content-center align-items-center" id="home" href="#" data-uri="/">
           <p data-uri="/">Accueil</p>
         </a>
+        <a class="nav-link nav-btn d-flex justify-content-center align-items-center" id="dashboard" href="#" data-uri="/dashboard">
+          <p data-uri="/dashboard">Tableau de<br>bord</p>
+        </a>
         <a class="nav-link nav-btn d-flex justify-content-center align-items-center" id="contact" href="#" data-uri="/contact">
           <p data-uri="/contact">Contact</p>
         </a>
