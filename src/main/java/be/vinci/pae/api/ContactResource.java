@@ -1,5 +1,6 @@
 package be.vinci.pae.api;
 
+import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.dto.ContactDTO;
 import be.vinci.pae.domain.ucc.ContactUCC;
 import be.vinci.pae.utils.Config;
@@ -40,6 +41,7 @@ public class ContactResource {
   @Path("start")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
+  @Authorize
   public ObjectNode start(JsonNode jsonNode) {
     String company = jsonNode.asText("company");
     String student = jsonNode.asText("student");
