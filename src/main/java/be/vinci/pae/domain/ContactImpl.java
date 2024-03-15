@@ -1,6 +1,5 @@
 package be.vinci.pae.domain;
 
-import be.vinci.pae.domain.Contact;
 import java.util.List;
 
 public class ContactImpl implements Contact {
