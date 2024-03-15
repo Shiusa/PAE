@@ -55,7 +55,6 @@ public class ContactDAOImpl implements ContactDAO {
         INSERT INTO prostage.contacts (company, student, contact_state, school_year) VALUES (?, ?, ?, ?) RETURNING *;
         """;
     PreparedStatement ps = dalServices.getPreparedStatement(requestSql);
-    // String insertQuery = "INSERT INTO proStage.contacts (company, student, contact_state, school_year) VALUES (?, ?, ?, ?) RETURNING *;"
     try {
       ps.setInt(1, company);
       ps.setInt(2, student);

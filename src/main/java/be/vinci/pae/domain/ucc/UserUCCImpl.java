@@ -41,10 +41,13 @@ public class UserUCCImpl implements UserUCC {
   }
 
   public UserDTO getOneById(int id) {
+    dalServices.startTransaction();
     UserDTO user = userDAO.getOneUserById(id);
     if (user == null) {
+      dalServices.rollbackTransaction();
       throw new IllegalArgumentException("id unknown");
     }
+    dalServices.commitTransaction();
     return user;
   }
 }
