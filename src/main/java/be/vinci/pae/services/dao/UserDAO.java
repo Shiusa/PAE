@@ -9,6 +9,6 @@ public interface UserDAO {
 
   UserDTO getOneUserByEmail(String email);
 
-  public UserDTO getOneUserById(int id);
+  UserDTO getOneUserById(int id);
 
 }
