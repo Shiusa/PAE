@@ -33,4 +33,28 @@ public class UserUCCImpl implements UserUCC {
     userDTOFound.setPassword(null);
     return userDTOFound;
   }
+
+  /**
+   * Register a user.
+   *
+   * @param user  user to register.
+   * @return a UserDTO of registered user, null otherwise.
+   */
+  @Override
+  public UserDTO register(UserDTO user) {
+
+    UserDTO existingUser = userDAO.getOneUserByEmail(user.getEmail());
+    if (existingUser!=null) {
+      return null;
+    }
+
+    User userHashPwd = (User) user;
+    userHashPwd.hashPassword();
+
+    UserDTO registeredUser = userDAO.addOneUser((UserDTO) userHashPwd);
+    if (registeredUser==null){
+      return null;
+    }
+    return registeredUser;
+  }
 }

@@ -15,4 +15,12 @@ public interface UserUCC {
    * @return a UserDTO if existing user and correct password;.
    */
   UserDTO login(String email, String password);
+
+  /**
+   * Register a user.
+   *
+   * @param user  user to register.
+   * @return a UserDTO of registered user.
+   */
+  UserDTO register(UserDTO user);
 }
