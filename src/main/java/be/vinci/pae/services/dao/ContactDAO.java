@@ -16,4 +16,12 @@ public interface ContactDAO {
    */
   ContactDTO startContact(int student, int company);
 
+  /**
+   * meeting the contact.
+   *
+   * @param idContact the id of the contact.
+   * @param meeting   the way how they met.
+   * @return the contact updated.
+   */
+  ContactDTO meetingContact(int idContact, String meeting);
 }
