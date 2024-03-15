@@ -5,6 +5,7 @@
 ### IntelliJ ###
 .idea/
 dev.properties
+requests
 
 ### Eclipse ###
 .metadata

@@ -34,7 +34,7 @@ public class ContactResource {
   /**
    * Starting contact route.
    *
-   * @param jsonNode jsonNode containing user id and company id to start the contact.
+   * @param json jsonNode containing user id and company id to start the contact.
    * @return the started contact.
    */
   @POST
@@ -42,34 +42,26 @@ public class ContactResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize
-  public ObjectNode start(JsonNode jsonNode) {
-    String company = jsonNode.asText("company");
-    String student = jsonNode.asText("student");
-
-    if (company.isEmpty() || company.isBlank()) {
+  public ObjectNode start(JsonNode json) {
+    if (!json.hasNonNull("company") || !json.hasNonNull("student")) {
+      throw new WebApplicationException("company and student", Response.Status.BAD_REQUEST);
+    }
+    if (json.get("company").asText().isBlank()) {
       throw new WebApplicationException("company required", Response.Status.BAD_REQUEST);
     }
-    if (student.isEmpty() || student.isBlank()) {
+    if (json.get("student").asText().isBlank()) {
       throw new WebApplicationException("student required", Response.Status.BAD_REQUEST);
     }
 
-    int companyId;
-    int studentId;
+    int company = json.get("company").asInt();
+    int student = json.get("student").asInt();
 
-    try {
-      companyId = Integer.parseInt(company);
-      studentId = Integer.parseInt(student);
-    } catch (NumberFormatException e) {
-      throw new WebApplicationException("invalid format for company or student",
-          Response.Status.BAD_REQUEST);
-    }
-
-    ContactDTO contactDTO = contactUCC.start(companyId, studentId);
+    ContactDTO contactDTO = contactUCC.start(company, student);
     if (contactDTO == null) {
       throw new WebApplicationException("error inserting data", Status.BAD_REQUEST);
     }
 
-    ObjectNode contact = jsonMapper.createObjectNode().putPOJO("pojo", contactDTO);
+    ObjectNode contact = jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
 
     return contact;
   }

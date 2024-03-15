@@ -25,6 +25,6 @@ public interface ContactDAO {
    * @param schoolYear the school year.
    * @return the contact created.
    */
-  void startContact(int company, int student, String schoolYear);
+  ContactDTO startContact(int company, int student, String schoolYear);
 
 }

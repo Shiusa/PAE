@@ -21,11 +21,12 @@ public class ContactUCCImpl implements ContactUCC {
   public ContactDTO start(int company, int student) {
     UserDTO studentDTO = userDAO.getOneUserById(student);
     String schoolYear = studentDTO.getSchoolYear();
-    if (contactDAO.findContactByCompanyStudentSchoolYear(student, company, schoolYear) != null) {
+    ContactDTO contactFound = contactDAO
+        .findContactByCompanyStudentSchoolYear(student, company, schoolYear);
+    if (contactFound.getCompany() == company) {
       return null;
     }
 
-    contactDAO.startContact(student, company, schoolYear);
-    return contactDAO.findContactByCompanyStudentSchoolYear(student, company, schoolYear);
+    return contactDAO.startContact(student, company, schoolYear);
   }
 }

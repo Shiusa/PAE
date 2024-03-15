@@ -31,13 +31,50 @@ public class ContactDAOImpl implements ContactDAO {
     PreparedStatement ps = dalServices.getPreparedStatement(requestSql);
 
     try {
-      ps.setString(1, Integer.toString(company));
-      ps.setString(2, Integer.toString(student));
+      ps.setInt(1, company);
+      ps.setInt(2, student);
       ps.setString(3, schoolYear);
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
 
+    ContactDTO contact = buildContactDTO(ps);
+
+    try {
+      ps.close();
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+
+    return contact;
+  }
+
+  @Override
+  public ContactDTO startContact(int company, int student, String schoolYear) {
+    String requestSql = """
+        INSERT INTO prostage.contacts (company, student, contact_state, school_year) VALUES (?, ?, ?, ?) RETURNING *;
+        """;
+    PreparedStatement ps = dalServices.getPreparedStatement(requestSql);
+    // String insertQuery = "INSERT INTO proStage.contacts (company, student, contact_state, school_year) VALUES (?, ?, ?, ?) RETURNING *;"
+    try {
+      ps.setInt(1, company);
+      ps.setInt(2, student);
+      ps.setString(3, "started");
+      ps.setString(4, schoolYear);
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+
+    ContactDTO contact = buildContactDTO(ps);
+    try {
+      ps.close();
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+    return contact;
+  }
+
+  private ContactDTO buildContactDTO(PreparedStatement ps) {
     ContactDTO contact = contactFactory.getContactDTO();
     try (ResultSet rs = ps.executeQuery()) {
       if (rs.next()) {
@@ -53,36 +90,8 @@ public class ContactDAOImpl implements ContactDAO {
       }
     } catch (SQLException e) {
       e.printStackTrace();
-    } finally {
-      try {
-        ps.close();
-      } catch (SQLException e) {
-        throw new RuntimeException(e);
-      }
     }
-    return null;
-  }
-
-  @Override
-  public void startContact(int company, int student, String schoolYear) {
-    String requestSql = """
-        INSERT INTO prostage.contacts VALUES (?, ?, NULL, ?, NULL, ?)
-        """;
-    PreparedStatement ps = dalServices.getPreparedStatement(requestSql);
-    try {
-      ps.setString(1, Integer.toString(company));
-      ps.setString(2, Integer.toString(student));
-      ps.setString(3, "started");
-      ps.setString(4, schoolYear);
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
-    }
-    try {
-      ps.execute();
-      ps.close();
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
-    }
+    return contact;
   }
 
 }
