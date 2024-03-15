@@ -88,7 +88,7 @@ public class UserDAOImpl implements UserDAO {
       ps.setString(4, user.getPhoneNumber());
       ps.setString(5, user.getPassword());
       ps.setDate(6, user.getRegistrationDate());
-      ps.setString(7, user.getEmail());
+      ps.setString(7, user.getSchoolYear());
       ps.setString(8, user.getEmail());
       try(ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {

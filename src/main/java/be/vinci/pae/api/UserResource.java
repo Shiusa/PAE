@@ -99,10 +99,10 @@ public class UserResource {
     String schoolYear;
     if (monthValue >= 9) {
       schoolYear =
-          String.valueOf(localDate.getYear()) + "-" + String.valueOf(localDate.plusYears(1));
+          String.valueOf(localDate.getYear()) + "-" + String.valueOf(localDate.plusYears(1).getYear());
     } else {
       schoolYear =
-          String.valueOf(localDate.minusYears(1)) + "-" + String.valueOf(localDate.getYear());
+          String.valueOf(localDate.minusYears(1).getYear()) + "-" + String.valueOf(localDate.getYear());
     }
     String role = json.get("role").asText();
 
