@@ -36,39 +36,33 @@ public class UserDAOImpl implements UserDAO {
         FROM prostage.users
         WHERE email = ?
         """;
-    PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql);
-    try {
+
+    UserDTO user = userFactory.getUserDTO();
+
+    try(PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql)) {
       ps.setString(1, email);
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          user.setId(rs.getInt("user_id"));
+          user.setEmail(rs.getString("email"));
+          user.setLastname(rs.getString("lastname"));
+          user.setFirstname(rs.getString("firstname"));
+          user.setPhoneNumber(rs.getString("phone_number"));
+          user.setPassword(rs.getString("password"));
+          user.setRegistrationDate(rs.getDate("registration_date"));
+          user.setSchoolYear(rs.getString("school_year"));
+          user.setRole(rs.getString("role"));
+          return user;
+        }
+        return null;
+      } catch (SQLException throwables) {
+        throwables.printStackTrace();
+      }
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
 
-    UserDTO user = userFactory.getUserDTO();
-
-    try (ResultSet rs = ps.executeQuery()) {
-      if (rs.next()) {
-        user.setId(rs.getInt("user_id"));
-        user.setEmail(rs.getString("email"));
-        user.setLastname(rs.getString("lastname"));
-        user.setFirstname(rs.getString("firstname"));
-        user.setPhoneNumber(rs.getString("phone_number"));
-        user.setPassword(rs.getString("password"));
-        user.setRegistrationDate(rs.getDate("registration_date"));
-        user.setSchoolYear(rs.getString("school_year"));
-        user.setRole(rs.getString("role"));
-        rs.close();
-        return user;
-      }
-      return null;
-    } catch (SQLException throwables) {
-      throwables.printStackTrace();
-    } finally {
-      try {
-        ps.close();
-      } catch (SQLException e) {
-        e.printStackTrace();
-      }
-    }
     return null;
+
   }
 }
