@@ -30,7 +30,6 @@ public class UserUCCImpl implements UserUCC {
       return null;
     }
 
-    userDTOFound.setPassword(null);
     return userDTOFound;
   }
 
