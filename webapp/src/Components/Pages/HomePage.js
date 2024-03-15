@@ -27,7 +27,7 @@ const HomePage = () => {
 
   if(user) {
     // eslint-disable-next-line
-    emailSpan.innerHTML = ", " + user.user.prenom;
+    emailSpan.innerHTML = ", " + user.user.firstname;
     lienCon.style.display = "none";
   }
 

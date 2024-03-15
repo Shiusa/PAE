@@ -4,9 +4,6 @@ import be.vinci.pae.domain.User;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.services.dao.UserDAO;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
 
 /**
  * User UCC.
@@ -20,19 +17,20 @@ public class UserUCCImpl implements UserUCC {
    * Get a user associated with an email and check their password with the password entered.
    *
    * @param email      the user's email.
-   * @param motDePasse the user's hashed password.
+   * @param password the user's hashed password.
    * @return a UserDTO if existing user and correct password;.
    */
   @Override
-  public UserDTO login(String email, String motDePasse) {
+  public UserDTO login(String email, String password) {
     UserDTO userDTOFound = userDAO.getOneUserByEmail(email);
 
     User user = (User) userDTOFound;
 
-    if (user == null || !user.checkMotDePasse(motDePasse)) {
-      throw new WebApplicationException(Response.status(Status.BAD_REQUEST)
-          .entity("Ressource not found").type("text/plain").build());
+    if (user == null || !user.checkPassword(password)) {
+      return null;
     }
+
+    userDTOFound.setPassword(null);
     return userDTOFound;
   }
 }
