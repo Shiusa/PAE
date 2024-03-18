@@ -1,5 +1,6 @@
 package be.vinci.pae.api;
 
+import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.domain.ucc.UserUCC;
 import be.vinci.pae.utils.Config;
@@ -11,12 +12,15 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.glassfish.jersey.server.ContainerRequest;
 
 /**
  * UserResource class.
@@ -70,5 +74,26 @@ public class UserResource {
       throw new WebApplicationException("error while creating token", Response.Status.UNAUTHORIZED);
     }
   }
+
+  @GET
+  @Path("login")
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize
+  public ObjectNode rememberMe(@Context ContainerRequest request) {
+    UserDTO userDTO = (UserDTO) request.getProperty("user");
+    String token;
+    try {
+      token = JWT.create().withIssuer("auth0")
+          .withClaim("user", userDTO.getId()).sign(this.jwtAlgorithm);
+      ObjectNode publicUser = jsonMapper.createObjectNode()
+          .put("token", token)
+          .putPOJO("user", userDTO);
+      return publicUser;
+    } catch (Exception e) {
+      System.out.println("Error while creating token");
+      throw new WebApplicationException("error while creating token", Response.Status.UNAUTHORIZED);
+    }
+  }
+
 }
 
