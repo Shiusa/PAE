@@ -4,6 +4,9 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
 
+/**
+ * Exception handler class.
+ */
 @Provider
 public class MapperException implements ExceptionMapper<Throwable> {
 
