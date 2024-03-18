@@ -5,6 +5,7 @@ import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.services.dal.DalServicesConnection;
 import be.vinci.pae.services.dao.ContactDAO;
 import be.vinci.pae.services.dao.UserDAO;
+import be.vinci.pae.utils.exceptions.DuplicateException;
 import jakarta.inject.Inject;
 
 /**
@@ -29,7 +30,7 @@ public class ContactUCCImpl implements ContactUCC {
         .findContactByCompanyStudentSchoolYear(company, student, schoolYear);
     if (contactFound.getCompany() == company) {
       dalServices.rollbackTransaction();
-      return null;
+      throw new DuplicateException("This contact already exist for this year.");
     }
     ContactDTO contact = contactDAO.startContact(company, student, schoolYear);
     dalServices.commitTransaction();

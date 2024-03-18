@@ -4,6 +4,7 @@ import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.dto.ContactDTO;
 import be.vinci.pae.domain.ucc.ContactUCC;
 import be.vinci.pae.utils.Config;
+import be.vinci.pae.utils.exceptions.DuplicateException;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,7 +18,6 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
 
 /**
  * ContactResource class.
@@ -55,14 +55,15 @@ public class ContactResource {
 
     int company = json.get("company").asInt();
     int student = json.get("student").asInt();
-
-    ContactDTO contactDTO = contactUCC.start(company, student);
-    if (contactDTO == null) {
-      throw new WebApplicationException("error inserting data", Status.BAD_REQUEST);
+    
+    ContactDTO contactDTO;
+    try {
+      contactDTO = contactUCC.start(company, student);
+    } catch (DuplicateException e) {
+      throw new WebApplicationException("this contact already exist", Response.Status.CONFLICT);
     }
 
     ObjectNode contact = jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
-
     return contact;
   }
 
