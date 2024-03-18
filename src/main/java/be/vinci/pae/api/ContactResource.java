@@ -4,7 +4,6 @@ import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.dto.ContactDTO;
 import be.vinci.pae.domain.ucc.ContactUCC;
 import be.vinci.pae.utils.Config;
-import be.vinci.pae.utils.exceptions.DuplicateException;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -55,13 +54,8 @@ public class ContactResource {
 
     int company = json.get("company").asInt();
     int student = json.get("student").asInt();
-    
-    ContactDTO contactDTO;
-    try {
-      contactDTO = contactUCC.start(company, student);
-    } catch (DuplicateException e) {
-      throw new WebApplicationException("this contact already exist", Response.Status.CONFLICT);
-    }
+
+    ContactDTO contactDTO = contactUCC.start(company, student);
 
     ObjectNode contact = jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
     return contact;
