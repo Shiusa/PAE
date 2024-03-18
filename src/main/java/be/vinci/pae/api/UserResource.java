@@ -75,6 +75,12 @@ public class UserResource {
     }
   }
 
+  /**
+   * Login route with remember me.
+   *
+   * @param request the token.
+   * @return a new token.
+   */
   @GET
   @Path("login")
   @Produces(MediaType.APPLICATION_JSON)
