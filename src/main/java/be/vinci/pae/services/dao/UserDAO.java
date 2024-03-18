@@ -1,7 +1,6 @@
 package be.vinci.pae.services.dao;
 
 import be.vinci.pae.domain.dto.UserDTO;
-import be.vinci.pae.utils.exceptions.FatalException;
 import java.util.List;
 
 /**
@@ -9,7 +8,7 @@ import java.util.List;
  */
 public interface UserDAO {
 
-  UserDTO getOneUserByEmail(String email) throws FatalException;
+  UserDTO getOneUserByEmail(String email);
 
-  List<UserDTO> getAllUsers() throws FatalException;
+  List<UserDTO> getAllUsers();
 }
