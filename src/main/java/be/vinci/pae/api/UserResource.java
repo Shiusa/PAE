@@ -46,13 +46,10 @@ public class UserResource {
     if (!json.hasNonNull("email") || !json.hasNonNull("password")) {
       throw new BadRequestException();
     }
-    if (json.get("email").asText().isBlank()) {
+    if (json.get("email").asText().isBlank() || json.get("password").asText().isBlank()) {
       throw new BadRequestException();
     }
-    if (json.get("password").asText().isBlank()) {
-      throw new BadRequestException();
-    }
-
+    
     String email = json.get("email").asText();
     String password = json.get("password").asText();
 
