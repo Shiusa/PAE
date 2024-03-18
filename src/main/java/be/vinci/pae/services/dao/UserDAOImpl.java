@@ -3,10 +3,13 @@ package be.vinci.pae.services.dao;
 import be.vinci.pae.domain.UserFactory;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.services.utils.DalService;
+import be.vinci.pae.utils.exceptions.FatalException;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Implementation of UserDAO.
@@ -40,7 +43,7 @@ public class UserDAOImpl implements UserDAO {
     try {
       ps.setString(1, email);
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new FatalException(e);
     }
 
     UserDTO user = userFactory.getUserDTO();
@@ -60,15 +63,50 @@ public class UserDAOImpl implements UserDAO {
         return user;
       }
       return null;
-    } catch (SQLException throwables) {
-      throwables.printStackTrace();
+    } catch (SQLException e) {
+      throw new FatalException(e);
     } finally {
       try {
         ps.close();
       } catch (SQLException e) {
-        e.printStackTrace();
+        throw new FatalException(e);
       }
     }
-    return null;
+  }
+
+  /**
+   * Get all users from the database who don't have the role admin.
+   *
+   * @return A list containing all users.
+   */
+  @Override
+  public List<UserDTO> getAllUsers() {
+    List<UserDTO> userDTOList = new ArrayList<>();
+
+    String requestSql = """
+        SELECT user_id,email, lastname, firstname,phone_number,password,
+        registration_date, school_year, role
+        FROM proStage.users """;
+
+    try (PreparedStatement ps = dalService.getPreparedStatement(requestSql)) {
+      try (ResultSet rs = ps.executeQuery()) {
+        while (rs.next()) {
+          UserDTO userDTO = userFactory.getUserDTO();
+          userDTO.setId(rs.getInt(1));
+          userDTO.setEmail(rs.getString("email"));
+          userDTO.setLastname(rs.getString("lastname"));
+          userDTO.setFirstname(rs.getString("firstname"));
+          userDTO.setPhoneNumber(rs.getString("phone_number"));
+          userDTO.setPassword(rs.getString("password"));
+          userDTO.setRegistrationDate(rs.getDate("registration_date"));
+          userDTO.setSchoolYear(rs.getString("school_year"));
+          userDTO.setRole(rs.getString("role"));
+          userDTOList.add(userDTO);
+        }
+      }
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+    return userDTOList;
   }
 }
