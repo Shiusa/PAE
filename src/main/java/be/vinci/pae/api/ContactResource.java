@@ -38,6 +38,13 @@ public class ContactResource {
     return null;
   }
 
+  /**
+   * admitting a contact with the type of the meeting(on site or remote)
+   *
+   * @param json
+   * @return ObjectNode containing all information about the contact admitted
+   * @throws WebApplicationException when the contact_id and/or the meeting field is invalid
+   */
   @POST
   @Path("admitted")
   @Consumes(MediaType.APPLICATION_JSON)
@@ -55,7 +62,7 @@ public class ContactResource {
 
     if (contactDTO == null) {
       throw new WebApplicationException("Your meeting type is neither on site nor remote",
-          Response.Status.BAD_REQUEST);
+          Response.Status.NOT_FOUND);
     }
     ObjectNode contact = jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
     return contact;
