@@ -18,18 +18,17 @@ public interface UserUCC {
   UserDTO login(String email, String password);
 
   /**
-<<<<<<< HEAD
    * Get all users.
    *
    * @return a list containing all the users.
    */
   List<UserDTO> getAllUsers();
-=======
+
+  /**
    * Get a user by his id.
    *
    * @param id the user id.
    * @return the user if found.
    */
   UserDTO getOneById(int id);
->>>>>>> ca4d4212ed873d321e191ccf6ff8d41a4d8533b0
 }

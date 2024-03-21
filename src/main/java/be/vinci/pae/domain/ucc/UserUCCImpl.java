@@ -34,27 +34,22 @@ public class UserUCCImpl implements UserUCC {
 
     User user = (User) userDTOFound;
 
-<<<<<<< HEAD
     if (user == null) {
       throw new NotFoundException();
     }
     if (!user.checkPassword(password)) {
       throw new BadRequestException();
     }
-    userDTOFound.setPassword(null);
-=======
     if (user == null || !user.checkPassword(password)) {
       dalServices.rollbackTransaction();
       return null;
     }
 
     dalServices.commitTransaction();
->>>>>>> ca4d4212ed873d321e191ccf6ff8d41a4d8533b0
     return userDTOFound;
   }
 
   /**
-<<<<<<< HEAD
    * Get all users.
    *
    * @return a list containing all the users.
@@ -62,7 +57,9 @@ public class UserUCCImpl implements UserUCC {
   @Override
   public List<UserDTO> getAllUsers() {
     return userDAO.getAllUsers();
-=======
+  }
+
+  /**
    * Get a user by his id.
    *
    * @param id the user id.
@@ -77,6 +74,5 @@ public class UserUCCImpl implements UserUCC {
     }
     dalServices.commitTransaction();
     return user;
->>>>>>> ca4d4212ed873d321e191ccf6ff8d41a4d8533b0
   }
 }
