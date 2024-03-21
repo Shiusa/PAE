@@ -7,5 +7,12 @@ import java.sql.PreparedStatement;
  */
 public interface DalServices {
 
+  /**
+   * Get a prepared statement.
+   *
+   * @param sql the sql command.
+   * @return the prepared statement.
+   */
   PreparedStatement getPreparedStatement(String sql);
+
 }

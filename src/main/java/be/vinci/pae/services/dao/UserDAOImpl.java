@@ -24,12 +24,6 @@ public class UserDAOImpl implements UserDAO {
   @Inject
   private UserFactory userFactory;
 
-  /**
-   * Get one user by email then set the userDTO if user exist.
-   *
-   * @param email user' email.
-   * @return userDTO with setter corresponding to the email, null otherwise.
-   */
   @Override
   public UserDTO getOneUserByEmail(String email) {
 
@@ -48,12 +42,6 @@ public class UserDAOImpl implements UserDAO {
     return buildUserDTO(ps);
   }
 
-  /**
-   * Get one user by id then set the userDTO if user exist.
-   *
-   * @param id user' id.
-   * @return userDTO with setter corresponding to the id, null otherwise.
-   */
   @Override
   public UserDTO getOneUserById(int id) {
     String requestSql = """
@@ -71,6 +59,12 @@ public class UserDAOImpl implements UserDAO {
     return buildUserDTO(ps);
   }
 
+  /**
+   * Build the UserDTO based on the prepared statement.
+   *
+   * @param ps the prepared statement.
+   * @return the userDTO built.
+   */
   private UserDTO buildUserDTO(PreparedStatement ps) {
     UserDTO user = userFactory.getUserDTO();
 
@@ -100,11 +94,6 @@ public class UserDAOImpl implements UserDAO {
     }
   }
 
-  /**
-   * Get all users from the database who don't have the role admin.
-   *
-   * @return A list containing all users.
-   */
   @Override
   public List<UserDTO> getAllUsers() {
     List<UserDTO> userDTOList = new ArrayList<>();

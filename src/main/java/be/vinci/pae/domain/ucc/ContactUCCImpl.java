@@ -17,7 +17,6 @@ public class ContactUCCImpl implements ContactUCC {
   private ContactDAO contactDAO;
   @Inject
   private DalServicesConnection dalServices;
-
   @Inject
   private UserDAO userDAO;
 

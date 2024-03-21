@@ -14,12 +14,7 @@ public class DalServicesImpl implements DalServices, DalServicesConnection {
 
   private ThreadLocal<Connection> connections = new ThreadLocal<>();
 
-  /**
-   * Get a prepared statement.
-   *
-   * @param query an sql request.
-   * @return a prepared statement.
-   */
+  @Override
   public PreparedStatement getPreparedStatement(String query) {
     try {
       return connections.get().prepareStatement(query);
