@@ -11,12 +11,22 @@ import java.sql.SQLException;
  */
 public class DalServicesImpl implements DalServices, DalBackendServices {
 
-  private Connection connection = null;
+  //private Connection connection = null;
+  private static final ThreadLocal<Connection> connectionThreadLocal = ThreadLocal.withInitial(
+      () -> {
+        try {
+          return DriverManager.getConnection(Config.getProperty("postgresUrl"),
+              Config.getProperty("postgresUser"),
+              Config.getProperty("postgresPassword"));
+        } catch (SQLException e) {
+          throw new RuntimeException(e);
+        }
+      });
 
   /**
    * Create connection to database.
    */
-  public DalServicesImpl() {
+  /*public DalServicesImpl() {
     try {
       this.connection = DriverManager.getConnection(Config.getProperty("postgresUrl"),
           Config.getProperty("postgresUser"),
@@ -24,6 +34,9 @@ public class DalServicesImpl implements DalServices, DalBackendServices {
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
+  }*/
+  private static Connection getConnection() {
+    return connectionThreadLocal.get();
   }
 
   /**
@@ -34,6 +47,7 @@ public class DalServicesImpl implements DalServices, DalBackendServices {
    */
   public PreparedStatement getPreparedStatement(String query) {
     try {
+      Connection connection = getConnection();
       return connection.prepareStatement(query);
     } catch (SQLException e) {
       throw new RuntimeException(e);
@@ -45,6 +59,7 @@ public class DalServicesImpl implements DalServices, DalBackendServices {
    */
   @Override
   public void startTransaction() {
+    Connection connection = getConnection();
     try {
       connection.setAutoCommit(false);
     } catch (SQLException e) {
@@ -57,11 +72,19 @@ public class DalServicesImpl implements DalServices, DalBackendServices {
    */
   @Override
   public void commit() {
+    Connection connection = getConnection();
     try {
       connection.commit();
       connection.setAutoCommit(true);
     } catch (SQLException e) {
       throw new RuntimeException(e);
+    } finally {
+      try {
+        connection.close();
+      } catch (SQLException e) {
+        throw new RuntimeException(e);
+      }
+      connectionThreadLocal.remove();
     }
   }
 
@@ -70,10 +93,18 @@ public class DalServicesImpl implements DalServices, DalBackendServices {
    */
   @Override
   public void rollback() {
+    Connection connection = getConnection();
     try {
       connection.rollback();
     } catch (SQLException e) {
       throw new RuntimeException(e);
+    } finally {
+      try {
+        connection.close();
+      } catch (SQLException e) {
+        throw new RuntimeException(e);
+      }
+      connectionThreadLocal.remove();
     }
   }
 }
