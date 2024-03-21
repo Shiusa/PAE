@@ -1,6 +1,7 @@
 package be.vinci.pae.services.dal;
 
 import be.vinci.pae.utils.Config;
+import be.vinci.pae.utils.exceptions.FatalException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -24,7 +25,7 @@ public class DalServicesImpl implements DalServices, DalServicesConnection {
           Config.getProperty("postgresUser"),
           Config.getProperty("postgresPassword"));
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new FatalException(e);
     }
   }
 
@@ -38,7 +39,7 @@ public class DalServicesImpl implements DalServices, DalServicesConnection {
     try {
       return connection.prepareStatement(query);
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new FatalException(e);
     }
   }
 
