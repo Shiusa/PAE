@@ -4,6 +4,7 @@ package be.vinci.pae.services.dao;
 import be.vinci.pae.domain.ContactFactory;
 import be.vinci.pae.domain.dto.ContactDTO;
 import be.vinci.pae.services.dal.DalServices;
+import be.vinci.pae.utils.exceptions.FatalException;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,26 +22,62 @@ public class ContactDAOImpl implements ContactDAO {
 
 
   @Override
-  public ContactDTO startContact(int student, int company) {
-    return null;
-  }
-
-  public ContactDTO meetingContact(int idContact, String meeting) {
+  public ContactDTO findContactByCompanyStudentSchoolYear(int company, int student,
+      String schoolYear) {
     String requestSql = """
-        UPDATE proStage.contacts
-        SET meeting = ?, contact_state = 'admitted'
-        WHERE contact_id = ?
-        RETURNING contact_id, company, student, meeting, contact_state, reason_for_refusal, school_year;
+        SELECT contact_id, company, student, meeting, contact_state, reason_for_refusal,
+          school_year
+        FROM prostage.contacts
+        WHERE contacts.company = ? AND contacts.student = ? AND contacts.school_year = ?
         """;
     PreparedStatement ps = dalServices.getPreparedStatement(requestSql);
+
     try {
-      ps.setString(1, meeting);
-      ps.setInt(2, idContact);
+      ps.setInt(1, company);
+      ps.setInt(2, student);
+      ps.setString(3, schoolYear);
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
-    ContactDTO contact = contactFactory.getContactDTO();
 
+    ContactDTO contact = buildContactDTO(ps);
+
+    try {
+      ps.close();
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+
+    return contact;
+  }
+
+  @Override
+  public ContactDTO startContact(int company, int student, String schoolYear) {
+    String requestSql = """
+        INSERT INTO prostage.contacts (company, student, contact_state, school_year)
+         VALUES (?, ?, ?, ?) RETURNING *;
+        """;
+    PreparedStatement ps = dalServices.getPreparedStatement(requestSql);
+    try {
+      ps.setInt(1, company);
+      ps.setInt(2, student);
+      ps.setString(3, "started");
+      ps.setString(4, schoolYear);
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+
+    ContactDTO contact = buildContactDTO(ps);
+    try {
+      ps.close();
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+    return contact;
+  }
+
+  private ContactDTO buildContactDTO(PreparedStatement ps) {
+    ContactDTO contact = contactFactory.getContactDTO();
     try (ResultSet rs = ps.executeQuery()) {
       if (rs.next()) {
         contact.setId(rs.getInt("contact_id"));
@@ -53,16 +90,35 @@ public class ContactDAOImpl implements ContactDAO {
         rs.close();
         return contact;
       }
-      return null;
-    } catch (SQLException throwables) {
-      throwables.printStackTrace();
-    } finally {
-      try {
-        ps.close();
-      } catch (SQLException e) {
-        e.printStackTrace();
-      }
+    } catch (SQLException e) {
+      e.printStackTrace();
     }
-    return null;
+    return contact;
+  }
+
+
+  public ContactDTO meetingContact(int idContact, String meeting) {
+    String requestSql = """
+        UPDATE proStage.contacts
+        SET meeting = ?, contact_state = 'admitted'
+        WHERE contact_id = ?
+        RETURNING *;
+        """;
+    PreparedStatement ps = dalServices.getPreparedStatement(requestSql);
+    try {
+      ps.setString(1, meeting);
+      ps.setInt(2, idContact);
+      ps.close();
+    } catch (SQLException e) {
+      e.printStackTrace();
+      throw new FatalException(e);
+    }
+    ContactDTO contact = buildContactDTO(ps);
+    try {
+      ps.close();
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+    return contact;
   }
 }

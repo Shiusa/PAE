@@ -2,6 +2,9 @@ package be.vinci.pae.domain.ucc;
 
 import be.vinci.pae.domain.dto.ContactDTO;
 
+/**
+ * ContactUCC interface.
+ */
 public interface ContactUCC {
 
   /**
@@ -9,9 +12,7 @@ public interface ContactUCC {
    *
    * @return the started contact.
    */
-  ContactDTO start(int student, int company, String schoolYear);
-
-  ContactDTO start(int student, int company);
+  ContactDTO start(int company, int student);
 
   /**
    * take a meeting with the contact on site or remote. it checks if meeting is on site or remote,

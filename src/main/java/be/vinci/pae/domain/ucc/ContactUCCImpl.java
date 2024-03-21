@@ -3,7 +3,12 @@ package be.vinci.pae.domain.ucc;
 import be.vinci.pae.domain.Contact;
 import be.vinci.pae.domain.ContactFactory;
 import be.vinci.pae.domain.dto.ContactDTO;
+import be.vinci.pae.domain.dto.UserDTO;
+import be.vinci.pae.services.dal.DalServicesConnection;
 import be.vinci.pae.services.dao.ContactDAO;
+import be.vinci.pae.services.dao.UserDAO;
+import be.vinci.pae.utils.exceptions.BadRequestException;
+import be.vinci.pae.utils.exceptions.DuplicateException;
 import jakarta.inject.Inject;
 
 /**
@@ -13,37 +18,34 @@ public class ContactUCCImpl implements ContactUCC {
 
   @Inject
   private ContactDAO contactDAO;
-
-  //@Inject
-  //private UserDAO userDAO;
+  @Inject
+  private DalServicesConnection dalServices;
+  @Inject
+  private UserDAO userDAO;
   @Inject
   private ContactFactory contactFactory;
 
   @Override
-  public ContactDTO start(int student, int company, String schoolYear) {
-    return null;
-  }
-
-  @Override
-  public ContactDTO start(int student, int company) {
-    /*UserDTO studentDTO = userDAO.getOneUserById(student);
+  public ContactDTO start(int company, int student) {
+    dalServices.startTransaction();
+    UserDTO studentDTO = userDAO.getOneUserById(student);
     String schoolYear = studentDTO.getSchoolYear();
-    if (contactDAO.findContactByCompanyStudentSchoolYear(student, company, schoolYear) != null) {
-     */
-    return null;
+    ContactDTO contactFound = contactDAO
+        .findContactByCompanyStudentSchoolYear(company, student, schoolYear);
+    if (contactFound.getCompany() == company) {
+      dalServices.rollbackTransaction();
+      throw new DuplicateException("This contact already exist for this year.");
+    }
+    ContactDTO contact = contactDAO.startContact(company, student, schoolYear);
+    dalServices.commitTransaction();
+    return contact;
   }
 
-  /*
-      contactDAO.startContact(student, company, schoolYear);
-      return contactDAO.findContactByCompanyStudentSchoolYear(student, company, schoolYear);
-    }
-   */
   @Override
   public ContactDTO admitted(int idContact, String meeting) {
-    System.out.println("oueueoeuoeueoueoeu");
     Contact contact = (Contact) contactFactory.getContactDTO();
     if (!contact.checkMeeting(meeting)) {
-      return null;
+      throw new BadRequestException();
     }
     return contactDAO.meetingContact(idContact, meeting);
   }

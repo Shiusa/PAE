@@ -1,5 +1,6 @@
 package be.vinci.pae.api;
 
+import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.dto.ContactDTO;
 import be.vinci.pae.domain.ucc.ContactUCC;
 import be.vinci.pae.utils.Config;
@@ -29,26 +30,49 @@ public class ContactResource {
   @Inject
   private ContactUCC contactUCC;
 
-
+  /**
+   * Starting contact route.
+   *
+   * @param json jsonNode containing user id and company id to start the contact.
+   * @return the started contact.
+   */
   @POST
   @Path("start")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public ObjectNode start(JsonNode jsonNode) {
-    return null;
+  @Authorize
+  public ObjectNode start(JsonNode json) {
+    if (!json.hasNonNull("company") || !json.hasNonNull("student")) {
+      throw new WebApplicationException("company and student", Response.Status.BAD_REQUEST);
+    }
+    if (json.get("company").asText().isBlank()) {
+      throw new WebApplicationException("company required", Response.Status.BAD_REQUEST);
+    }
+    if (json.get("student").asText().isBlank()) {
+      throw new WebApplicationException("student required", Response.Status.BAD_REQUEST);
+    }
+
+    int company = json.get("company").asInt();
+    int student = json.get("student").asInt();
+
+    ContactDTO contactDTO = contactUCC.start(company, student);
+
+    ObjectNode contact = jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
+    return contact;
   }
 
   /**
-   * admitting a contact with the type of the meeting(on site or remote)
+   * admitting a contact with the type of the meeting("on site" or "remote").
    *
-   * @param json
-   * @return ObjectNode containing all information about the contact admitted
-   * @throws WebApplicationException when the contact_id and/or the meeting field is invalid
+   * @param json jsonNode containing contact id and the type of the meeting.
+   * @return ObjectNode containing all information about the contact admitted.
+   * @throws WebApplicationException when the contact_id and/or the meeting field is invalid.
    */
   @POST
   @Path("admitted")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
+  @Authorize
   public ObjectNode taken(JsonNode json) {
     if (!json.hasNonNull("contact_id") || !json.hasNonNull("meeting") || json.get("contact_id")
         .asText().isBlank() || json.get("meeting").asText().isBlank()) {
@@ -58,13 +82,9 @@ public class ContactResource {
     int idContact = json.get("contact_id").asInt();
     String meeting = json.get("meeting").asText();
 
-    ContactDTO contactDTO = contactUCC.admitted(idContact, meeting);
+    ContactDTO contactDTO;
+    contactDTO = contactUCC.admitted(idContact, meeting);
 
-    if (contactDTO == null) {
-      throw new WebApplicationException("Your meeting type is neither on site nor remote",
-          Response.Status.NOT_FOUND);
-    }
-    ObjectNode contact = jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
-    return contact;
+    return jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
   }
 }

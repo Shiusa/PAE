@@ -3,10 +3,13 @@ package be.vinci.pae.services.dao;
 import be.vinci.pae.domain.UserFactory;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.services.dal.DalServices;
+import be.vinci.pae.utils.exceptions.FatalException;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Implementation of UserDAO.
@@ -21,12 +24,6 @@ public class UserDAOImpl implements UserDAO {
   @Inject
   private UserFactory userFactory;
 
-  /**
-   * Get one user by email then set the userDTO if user exist.
-   *
-   * @param email user' email.
-   * @return userDTO with setter corresponding to the email, null otherwise.
-   */
   @Override
   public UserDTO getOneUserByEmail(String email) {
 
@@ -40,9 +37,35 @@ public class UserDAOImpl implements UserDAO {
     try {
       ps.setString(1, email);
     } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+    return buildUserDTO(ps);
+  }
+
+  @Override
+  public UserDTO getOneUserById(int id) {
+    String requestSql = """
+        SELECT user_id, email, lastname, firstname, phone_number, password,
+        registration_date, school_year, role
+        FROM prostage.users
+        WHERE user_id = ?
+        """;
+    PreparedStatement ps = dalServices.getPreparedStatement(requestSql);
+    try {
+      ps.setInt(1, id);
+    } catch (SQLException e) {
       throw new RuntimeException(e);
     }
+    return buildUserDTO(ps);
+  }
 
+  /**
+   * Build the UserDTO based on the prepared statement.
+   *
+   * @param ps the prepared statement.
+   * @return the userDTO built.
+   */
+  private UserDTO buildUserDTO(PreparedStatement ps) {
     UserDTO user = userFactory.getUserDTO();
 
     try (ResultSet rs = ps.executeQuery()) {
@@ -60,15 +83,45 @@ public class UserDAOImpl implements UserDAO {
         return user;
       }
       return null;
-    } catch (SQLException throwables) {
-      throwables.printStackTrace();
+    } catch (SQLException e) {
+      throw new FatalException(e);
     } finally {
       try {
         ps.close();
       } catch (SQLException e) {
-        e.printStackTrace();
+        throw new FatalException(e);
       }
     }
-    return null;
+  }
+
+  @Override
+  public List<UserDTO> getAllUsers() {
+    List<UserDTO> userDTOList = new ArrayList<>();
+
+    String requestSql = """
+        SELECT user_id,email, lastname, firstname,phone_number,password,
+        registration_date, school_year, role
+        FROM proStage.users """;
+
+    try (PreparedStatement ps = dalServices.getPreparedStatement(requestSql)) {
+      try (ResultSet rs = ps.executeQuery()) {
+        while (rs.next()) {
+          UserDTO userDTO = userFactory.getUserDTO();
+          userDTO.setId(rs.getInt(1));
+          userDTO.setEmail(rs.getString("email"));
+          userDTO.setLastname(rs.getString("lastname"));
+          userDTO.setFirstname(rs.getString("firstname"));
+          userDTO.setPhoneNumber(rs.getString("phone_number"));
+          userDTO.setPassword(rs.getString("password"));
+          userDTO.setRegistrationDate(rs.getDate("registration_date"));
+          userDTO.setSchoolYear(rs.getString("school_year"));
+          userDTO.setRole(rs.getString("role"));
+          userDTOList.add(userDTO);
+        }
+      }
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+    return userDTOList;
   }
 }

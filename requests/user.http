@@ -1,0 +1,19 @@
+@baseUrl = http://localhost:3000
+
+### Login the default user & define a Request Variable
+# @name eleonore
+POST {{baseUrl}}/users/login
+Content-Type: application/json
+
+{
+  "email":"eleonore.martin@vinci.be",
+  "password":"123"
+}
+
+> {%
+  client.global.set("eleonoreToken", response.body.token);
+%}
+
+### Login the default user with remember me or refresh
+GET {{baseUrl}}/users/login
+Authorization: {{eleonoreToken}}
