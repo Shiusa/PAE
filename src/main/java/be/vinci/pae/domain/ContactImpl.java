@@ -26,6 +26,12 @@ public class ContactImpl implements Contact {
   }
 
   @Override
+  public boolean isAdmitted() {
+    return getState().equals("admitted");
+  }
+
+
+  @Override
   public int getId() {
     return this.id;
   }
