@@ -64,7 +64,7 @@ public class UserDAOImpl implements UserDAO {
         """;
     PreparedStatement ps = dalServices.getPreparedStatement(requestSql);
     try {
-      ps.setString(1, Integer.toString(id));
+      ps.setInt(1, id);
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }

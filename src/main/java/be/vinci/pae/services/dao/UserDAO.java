@@ -11,7 +11,11 @@ public interface UserDAO {
   UserDTO getOneUserByEmail(String email);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   public UserDTO getOneUserById(int id);
+=======
+  UserDTO getOneUserById(int id);
+>>>>>>> ca4d4212ed873d321e191ccf6ff8d41a4d8533b0
 
 =======
   List<UserDTO> getAllUsers();

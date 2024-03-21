@@ -20,7 +20,8 @@ public class ContactDAOImpl implements ContactDAO {
   private ContactFactory contactFactory;
 
   @Override
-  public ContactDTO findByCompanyStudentSchoolYear(int company, int student, String schoolYear) {
+  public ContactDTO findContactByCompanyStudentSchoolYear(int company, int student,
+      String schoolYear) {
     String requestSql = """
         SELECT contact_id, company, student, meeting, contact_state, reason_for_refusal,
           school_year
@@ -30,13 +31,50 @@ public class ContactDAOImpl implements ContactDAO {
     PreparedStatement ps = dalServices.getPreparedStatement(requestSql);
 
     try {
-      ps.setString(1, Integer.toString(company));
-      ps.setString(2, Integer.toString(student));
+      ps.setInt(1, company);
+      ps.setInt(2, student);
       ps.setString(3, schoolYear);
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
 
+    ContactDTO contact = buildContactDTO(ps);
+
+    try {
+      ps.close();
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+
+    return contact;
+  }
+
+  @Override
+  public ContactDTO startContact(int company, int student, String schoolYear) {
+    String requestSql = """
+        INSERT INTO prostage.contacts (company, student, contact_state, school_year)
+         VALUES (?, ?, ?, ?) RETURNING *;
+        """;
+    PreparedStatement ps = dalServices.getPreparedStatement(requestSql);
+    try {
+      ps.setInt(1, company);
+      ps.setInt(2, student);
+      ps.setString(3, "started");
+      ps.setString(4, schoolYear);
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+
+    ContactDTO contact = buildContactDTO(ps);
+    try {
+      ps.close();
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+    return contact;
+  }
+
+  private ContactDTO buildContactDTO(PreparedStatement ps) {
     ContactDTO contact = contactFactory.getContactDTO();
     try (ResultSet rs = ps.executeQuery()) {
       if (rs.next()) {
@@ -52,42 +90,8 @@ public class ContactDAOImpl implements ContactDAO {
       }
     } catch (SQLException e) {
       e.printStackTrace();
-    } finally {
-      try {
-        ps.close();
-      } catch (SQLException e) {
-        throw new RuntimeException(e);
-      }
     }
-    return null;
-  }
-
-  @Override
-  public void startContact(int company, int student, String schoolYear) {
-    String requestSql = """
-        INSERT INTO prostage.contacts VALUES (?, ?, NULL, ?, NULL, ?)
-        """;
-    PreparedStatement ps = dalServices.getPreparedStatement(requestSql);
-    try {
-      ps.setString(1, Integer.toString(company));
-      ps.setString(2, Integer.toString(student));
-      ps.setString(3, "started");
-      ps.setString(4, schoolYear);
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
-    }
-    try {
-      ResultSet rs = ps.executeQuery();
-      rs.close();
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
-    } finally {
-      try {
-        ps.close();
-      } catch (SQLException e) {
-        throw new RuntimeException(e);
-      }
-    }
+    return contact;
   }
 
 }
