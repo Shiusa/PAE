@@ -23,4 +23,12 @@ public interface UserUCC {
    * @return a list containing all the users.
    */
   List<UserDTO> getAllUsers();
+
+  /**
+   * Get a user by his id.
+   *
+   * @param id the user id.
+   * @return the user if found.
+   */
+  UserDTO getOneById(int id);
 }

@@ -2,6 +2,7 @@ package be.vinci.pae.domain.ucc;
 
 import be.vinci.pae.domain.User;
 import be.vinci.pae.domain.dto.UserDTO;
+import be.vinci.pae.services.dal.DalServicesConnection;
 import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.utils.exceptions.BadRequestException;
 import be.vinci.pae.utils.exceptions.NotFoundException;
@@ -15,6 +16,8 @@ public class UserUCCImpl implements UserUCC {
 
   @Inject
   private UserDAO userDAO;
+  @Inject
+  private DalServicesConnection dalServices;
 
   /**
    * Get a user associated with an email and check their password with the password entered.
@@ -25,6 +28,8 @@ public class UserUCCImpl implements UserUCC {
    */
   @Override
   public UserDTO login(String email, String password) {
+    dalServices.startTransaction();
+
     UserDTO userDTOFound = userDAO.getOneUserByEmail(email);
 
     User user = (User) userDTOFound;
@@ -35,7 +40,12 @@ public class UserUCCImpl implements UserUCC {
     if (!user.checkPassword(password)) {
       throw new BadRequestException();
     }
-    userDTOFound.setPassword(null);
+    if (user == null || !user.checkPassword(password)) {
+      dalServices.rollbackTransaction();
+      return null;
+    }
+
+    dalServices.commitTransaction();
     return userDTOFound;
   }
 
@@ -47,5 +57,22 @@ public class UserUCCImpl implements UserUCC {
   @Override
   public List<UserDTO> getAllUsers() {
     return userDAO.getAllUsers();
+  }
+
+  /**
+   * Get a user by his id.
+   *
+   * @param id the user id.
+   * @return the user found.
+   */
+  public UserDTO getOneById(int id) {
+    dalServices.startTransaction();
+    UserDTO user = userDAO.getOneUserById(id);
+    if (user == null) {
+      dalServices.rollbackTransaction();
+      throw new IllegalArgumentException("id unknown");
+    }
+    dalServices.commitTransaction();
+    return user;
   }
 }

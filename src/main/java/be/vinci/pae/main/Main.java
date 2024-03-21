@@ -14,7 +14,6 @@ import org.glassfish.jersey.server.ResourceConfig;
  */
 public class Main {
 
-  // Base URI the Grizzly HTTP server will listen on
   public static final String BASE_URI;
 
   static {
@@ -54,4 +53,3 @@ public class Main {
     server.stop();
   }
 }
-

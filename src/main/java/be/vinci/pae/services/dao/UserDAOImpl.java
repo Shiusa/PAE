@@ -2,7 +2,7 @@ package be.vinci.pae.services.dao;
 
 import be.vinci.pae.domain.UserFactory;
 import be.vinci.pae.domain.dto.UserDTO;
-import be.vinci.pae.services.utils.DalService;
+import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.utils.exceptions.FatalException;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
@@ -20,16 +20,10 @@ public class UserDAOImpl implements UserDAO {
    * Implementation of UserDAO class.
    */
   @Inject
-  private DalService dalService;
+  private DalServices dalServices;
   @Inject
   private UserFactory userFactory;
 
-  /**
-   * Get one user by email then set the userDTO if user exist.
-   *
-   * @param email user' email.
-   * @return userDTO with setter corresponding to the email, null otherwise.
-   */
   @Override
   public UserDTO getOneUserByEmail(String email) {
 
@@ -39,13 +33,39 @@ public class UserDAOImpl implements UserDAO {
         FROM prostage.users
         WHERE email = ?
         """;
-    PreparedStatement ps = dalService.getPreparedStatement(requestSql);
+    PreparedStatement ps = dalServices.getPreparedStatement(requestSql);
     try {
       ps.setString(1, email);
     } catch (SQLException e) {
       throw new FatalException(e);
     }
+    return buildUserDTO(ps);
+  }
 
+  @Override
+  public UserDTO getOneUserById(int id) {
+    String requestSql = """
+        SELECT user_id, email, lastname, firstname, phone_number, password,
+        registration_date, school_year, role
+        FROM prostage.users
+        WHERE user_id = ?
+        """;
+    PreparedStatement ps = dalServices.getPreparedStatement(requestSql);
+    try {
+      ps.setInt(1, id);
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+    return buildUserDTO(ps);
+  }
+
+  /**
+   * Build the UserDTO based on the prepared statement.
+   *
+   * @param ps the prepared statement.
+   * @return the userDTO built.
+   */
+  private UserDTO buildUserDTO(PreparedStatement ps) {
     UserDTO user = userFactory.getUserDTO();
 
     try (ResultSet rs = ps.executeQuery()) {
@@ -74,11 +94,6 @@ public class UserDAOImpl implements UserDAO {
     }
   }
 
-  /**
-   * Get all users from the database who don't have the role admin.
-   *
-   * @return A list containing all users.
-   */
   @Override
   public List<UserDTO> getAllUsers() {
     List<UserDTO> userDTOList = new ArrayList<>();
@@ -88,7 +103,7 @@ public class UserDAOImpl implements UserDAO {
         registration_date, school_year, role
         FROM proStage.users """;
 
-    try (PreparedStatement ps = dalService.getPreparedStatement(requestSql)) {
+    try (PreparedStatement ps = dalServices.getPreparedStatement(requestSql)) {
       try (ResultSet rs = ps.executeQuery()) {
         while (rs.next()) {
           UserDTO userDTO = userFactory.getUserDTO();
