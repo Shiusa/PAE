@@ -14,4 +14,6 @@ public interface ContactUCC {
    */
   ContactDTO start(int company, int student);
 
+  ContactDTO turnedDown(int contact_id, String reasonForRefusal);
+
 }

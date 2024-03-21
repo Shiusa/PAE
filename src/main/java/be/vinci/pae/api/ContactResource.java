@@ -61,4 +61,33 @@ public class ContactResource {
     return contact;
   }
 
+  /**
+   * admitting a contact with the type of the meeting("on site" or "remote").
+   *
+   * @param json jsonNode containing contact id and the type of the meeting.
+   * @return ObjectNode containing all information about the contact admitted.
+   * @throws WebApplicationException when the contact_id and/or the meeting field is invalid.
+   */
+  @POST
+  @Path("turnedDown")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize
+  public ObjectNode turnedDown(JsonNode json) {
+    if (!json.hasNonNull("contact_id") || !json.hasNonNull("reason_for_refusal") || json.get(
+            "contact_id")
+        .asText().isBlank() || json.get("reason_for_refusal").asText().isBlank()) {
+      throw new WebApplicationException("contact or reason for refusal required",
+          Response.Status.BAD_REQUEST);
+    }
+
+    int idContact = json.get("contact_id").asInt();
+    String reasonForRefusal = json.get("reason_for_refusal").asText();
+
+    ContactDTO contactDTO;
+    contactDTO = contactUCC.turnedDown(idContact, reasonForRefusal);
+
+    return jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
+  }
+
 }

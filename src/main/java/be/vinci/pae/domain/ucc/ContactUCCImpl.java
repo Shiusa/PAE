@@ -35,4 +35,9 @@ public class ContactUCCImpl implements ContactUCC {
     dalServices.commitTransaction();
     return contact;
   }
+
+  public ContactDTO turnedDown(int contact_id, String reasonForRefusal) {
+    return null;
+  }
+
 }
