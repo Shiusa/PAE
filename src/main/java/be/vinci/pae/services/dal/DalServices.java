@@ -1,4 +1,4 @@
-package be.vinci.pae.services.utils;
+package be.vinci.pae.services.dal;
 
 /**
  * DalService Interface.
@@ -13,10 +13,10 @@ public interface DalServices {
   /**
    * Commit changes.
    */
-  void commit();
+  void commitTransaction();
 
   /**
    * Rollback changes.
    */
-  void rollback();
+  void rollbackTransaction();
 }
