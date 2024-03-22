@@ -1,5 +1,6 @@
 package be.vinci.pae.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 
 /**
@@ -26,6 +27,7 @@ public class ContactImpl implements Contact {
   }
 
   @Override
+  @JsonIgnore
   public boolean isAdmitted() {
     return getState().equals("admitted");
   }
