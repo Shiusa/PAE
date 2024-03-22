@@ -125,7 +125,7 @@ public class ContactDAOImpl implements ContactDAO {
   }
 
 
-  public ContactDTO admitContact(int idContact, String meeting) {
+  public ContactDTO admitContact(int contactId, String meeting) {
     String requestSql = """
         UPDATE proStage.contacts
         SET meeting = ?, contact_state = 'admitted'
@@ -135,7 +135,7 @@ public class ContactDAOImpl implements ContactDAO {
     PreparedStatement ps = dalServices.getPreparedStatement(requestSql);
     try {
       ps.setString(1, meeting);
-      ps.setInt(2, idContact);
+      ps.setInt(2, contactId);
     } catch (SQLException e) {
       e.printStackTrace();
       throw new FatalException(e);

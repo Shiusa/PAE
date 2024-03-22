@@ -1,11 +1,12 @@
 package be.vinci.pae.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 
 /**
  * Implementation of Contact.
  */
-public class ContactImpl implements Contact {
+class ContactImpl implements Contact {
 
   private int id;
   private int company;
@@ -96,6 +97,7 @@ public class ContactImpl implements Contact {
   }
 
   @Override
+  @JsonIgnore
   public boolean isStarted() {
     return this.state.equals("started");
   }

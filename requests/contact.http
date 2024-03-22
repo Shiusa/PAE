@@ -30,6 +30,6 @@ Content-Type: application/json
 Authorization: {{eleonoreToken}}
 
 {
-  "contactId": "7",
+  "contactId": "3",
   "meeting": "remote"
 }
