@@ -8,6 +8,7 @@ import be.vinci.pae.utils.exceptions.BadRequestException;
 import be.vinci.pae.utils.exceptions.FatalException;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -17,12 +18,14 @@ import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.List;
+import org.glassfish.jersey.internal.util.collection.Views;
 import org.glassfish.jersey.server.ContainerRequest;
 
 /**
@@ -115,6 +118,35 @@ public class UserResource {
     } catch (Exception e) {
       System.out.println("Error while creating token");
       throw new WebApplicationException("error while creating token", Response.Status.UNAUTHORIZED);
+    }
+  }
+
+
+  /**
+   * returns a member by its id.
+   *
+   * @param request the token from the front.
+   * @param id      of the member
+   * @return memberDTO
+   */
+  @GET
+  @Path("/{id}")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getOneUser(@Context ContainerRequest request, @PathParam("id") int id) {
+    UserDTO userDTO = userUCC.getOneById(id);
+    ObjectMapper mapper = new ObjectMapper();
+    String jsonUser = "";
+
+    try {
+
+      jsonUser = mapper.writeValueAsString(userDTO);
+      return Response.ok(jsonUser).build();
+    } catch (IllegalArgumentException e) {
+      // Gérer le cas où l'ID de l'utilisateur est inconnu
+      return Response.status(Response.Status.NOT_FOUND).entity("ID inconnu").build();
+    } catch (Exception e) {
+      // Gérer les autres exceptions
+      return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Erreur lors de la récupération des données de l'utilisateur").build();
     }
   }
 }
