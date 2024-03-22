@@ -23,10 +23,10 @@ import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import java.util.List;
-import org.glassfish.jersey.server.ContainerRequest;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.List;
+import org.glassfish.jersey.server.ContainerRequest;
 
 /**
  * UserResource class.
@@ -135,40 +135,39 @@ public class UserResource {
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode register(JsonNode json) {
 
-    if (!json.hasNonNull("email") || !json.hasNonNull("lastname") || !json.hasNonNull("firstname") || !json.hasNonNull("phoneNumber") || !json.hasNonNull("password")) {
+    if (!json.hasNonNull("email") || !json.hasNonNull("lastname") || !json.hasNonNull("firstname")
+        || !json.hasNonNull("phoneNumber") || !json.hasNonNull("password")) {
       throw new BadRequestException();
     }
-    if (json.get("email").asText().isBlank() || json.get("lastname").asText().isBlank() || json.get("firstname").asText().isBlank() || json.get("phoneNumber").asText().isBlank() || json.get("password").asText().isBlank()) {
+    if (json.get("email").asText().isBlank() || json.get("lastname").asText().isBlank() || json.get(
+        "firstname").asText().isBlank() || json.get("phoneNumber").asText().isBlank() || json.get(
+        "password").asText().isBlank()) {
       throw new BadRequestException();
     }
 
-    String email = json.get("email").asText();
-    String lastname = json.get("lastname").asText();
-    String firstname = json.get("firstname").asText();
-    String phoneNumber = json.get("phoneNumber").asText();
-    String password = json.get("password").asText();
+    UserDTO user = userFactory.getUserDTO();
+
+    user.setEmail(json.get("email").asText());
+    user.setLastname(json.get("lastname").asText());
+    user.setFirstname(json.get("firstname").asText());
+    user.setPhoneNumber(json.get("phoneNumber").asText());
+    user.setPassword(json.get("password").asText());
     LocalDate localDate = LocalDate.now();
     Date registrationDate = Date.valueOf(localDate);
+    user.setRegistrationDate(registrationDate);
     int monthValue = localDate.getMonthValue();
     String schoolYear;
     if (monthValue >= 9) {
       schoolYear =
-          String.valueOf(localDate.getYear()) + "-" + String.valueOf(localDate.plusYears(1).getYear());
+          String.valueOf(localDate.getYear()) + "-" + String.valueOf(
+              localDate.plusYears(1).getYear());
     } else {
       schoolYear =
-          String.valueOf(localDate.minusYears(1).getYear()) + "-" + String.valueOf(localDate.getYear());
+          String.valueOf(localDate.minusYears(1).getYear()) + "-" + String.valueOf(
+              localDate.getYear());
     }
-    String role = json.get("role").asText();
-
-    UserDTO user = userFactory.getUserDTO();
-    user.setEmail(email);
-    user.setLastname(lastname);
-    user.setFirstname(firstname);
-    user.setPhoneNumber(phoneNumber);
-    user.setPassword(password);
-    user.setRegistrationDate(registrationDate);
     user.setSchoolYear(schoolYear);
-    user.setRole(role);
+    user.setRole(json.get("role").asText());
 
     UserDTO registeredUser;
 
