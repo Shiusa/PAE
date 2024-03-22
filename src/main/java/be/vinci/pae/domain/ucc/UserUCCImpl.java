@@ -5,7 +5,6 @@ import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.utils.exceptions.BadRequestException;
-import be.vinci.pae.utils.exceptions.FatalException;
 import be.vinci.pae.utils.exceptions.NotFoundException;
 import jakarta.inject.Inject;
 import java.util.List;
@@ -107,7 +106,7 @@ public class UserUCCImpl implements UserUCC {
       return registeredUser;
     } catch (Exception e) {
       dalServices.rollbackTransaction();
-      throw new FatalException(e);
+      throw e;
     }
   }
 }
