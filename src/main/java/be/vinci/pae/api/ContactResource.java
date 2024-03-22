@@ -79,11 +79,11 @@ public class ContactResource {
       throw new WebApplicationException("contact or meeting required", Response.Status.BAD_REQUEST);
     }
 
-    int idContact = json.get("contact_id").asInt();
+    int contactId = json.get("contact_id").asInt();
     String meeting = json.get("meeting").asText();
 
     ContactDTO contactDTO;
-    contactDTO = contactUCC.admitted(idContact, meeting);
+    contactDTO = contactUCC.admitted(contactId, meeting);
 
     return jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
   }

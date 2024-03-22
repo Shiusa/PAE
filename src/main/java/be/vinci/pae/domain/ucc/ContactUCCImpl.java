@@ -42,11 +42,11 @@ public class ContactUCCImpl implements ContactUCC {
   }
 
   @Override
-  public ContactDTO admitted(int idContact, String meeting) {
-    Contact contact = (Contact) contactFactory.getContactDTO();
+  public ContactDTO admitted(int contactId, String meeting) {
+    Contact contact = (Contact) contactDAO.findContactById(contactId);
     if (!contact.checkMeeting(meeting)) {
       throw new BadRequestException();
     }
-    return contactDAO.meetingContact(idContact, meeting);
+    return contactDAO.meetingContact(contactId, meeting);
   }
 }

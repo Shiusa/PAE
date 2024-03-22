@@ -52,6 +52,33 @@ public class ContactDAOImpl implements ContactDAO {
   }
 
   @Override
+  public ContactDTO findContactById(int contactId) {
+    String requestSql = """
+        SELECT *
+        FROM prostage.contacts
+        WHERE contacts.contact_id = ?
+        """;
+    PreparedStatement ps = dalServices.getPreparedStatement(requestSql);
+
+    try {
+      ps.setInt(1, contactId);
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+
+    ContactDTO contact = buildContactDTO(ps);
+
+    try {
+      ps.close();
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+
+    return contact;
+  }
+
+
+  @Override
   public ContactDTO startContact(int company, int student, String schoolYear) {
     String requestSql = """
         INSERT INTO prostage.contacts (company, student, contact_state, school_year)

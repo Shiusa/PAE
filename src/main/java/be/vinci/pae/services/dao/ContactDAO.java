@@ -18,6 +18,15 @@ public interface ContactDAO {
   ContactDTO findContactByCompanyStudentSchoolYear(int company, int student, String schoolYear);
 
   /**
+   * Find a contact by its company, student and school year.
+   *
+   * @param contactId the id of the contact.
+   * @return a ContactDTO if the contact was found, null otherwise.
+   */
+  ContactDTO findContactById(int contactId);
+
+
+  /**
    * Create the contact.
    *
    * @param student    the student.
