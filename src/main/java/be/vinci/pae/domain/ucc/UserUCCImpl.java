@@ -49,18 +49,29 @@ public class UserUCCImpl implements UserUCC {
   @Override
   public UserDTO register(UserDTO user) {
 
-    UserDTO existingUser = userDAO.getOneUserByEmail(user.getEmail());
-    if (existingUser != null) {
-      return null;
-    }
+    UserDTO registeredUser;
 
-    User userHashPwd = (User) user;
-    userHashPwd.hashPassword();
+    try {
+      dalServices.startTransaction();
+      UserDTO existingUser = userDAO.getOneUserByEmail(user.getEmail());
+      if (existingUser != null) {
+        return null;
+      }
 
-    UserDTO registeredUser = userDAO.addOneUser((UserDTO) userHashPwd);
-    if (registeredUser == null) {
-      return null;
+      User userHashPwd = (User) user;
+      userHashPwd.hashPassword();
+
+      registeredUser = userDAO.addOneUser((UserDTO) userHashPwd);
+      if (registeredUser == null) {
+        return null;
+      }
+
+      dalServices.commit();
+      return registeredUser;
+    } catch (Exception e) {
+      dalServices.rollback();
+      e.printStackTrace();
     }
-    return registeredUser;
+    return null;
   }
 }
