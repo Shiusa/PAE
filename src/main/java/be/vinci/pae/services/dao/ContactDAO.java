@@ -37,7 +37,7 @@ public interface ContactDAO {
   ContactDTO startContact(int company, int student, String schoolYear);
 
   /**
-   * meeting the contact.
+   * admit the contact.
    *
    * @param contactId the id of the contact.
    * @param meeting   the way how they met.
