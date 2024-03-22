@@ -10,10 +10,19 @@ public interface ContactUCC {
   /**
    * Start the contact and get it.
    *
+   * @param company the id of the company.
+   * @param student the id of the student.
    * @return the started contact.
    */
   ContactDTO start(int company, int student);
 
-  ContactDTO turnedDown(int contact_id, String contact_state, String reasonForRefusal);
+  /**
+   * turned down the contact.
+   *
+   * @param contactId        the id of the contact.
+   * @param reasonForRefusal the reason for the refusal
+   * @return the started contact.
+   */
+  ContactDTO turnedDown(int contactId, String reasonForRefusal);
 
 }

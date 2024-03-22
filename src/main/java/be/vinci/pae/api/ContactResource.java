@@ -76,19 +76,17 @@ public class ContactResource {
   @Authorize
   public ObjectNode turnedDown(JsonNode json) {
     if (!json.hasNonNull("contact_id") || json.get("contact_id").asText().isBlank()
-        || !json.hasNonNull("state") || json.get("state").asText().isBlank()
         || !json.hasNonNull("reason_for_refusal") || json.get("reason_for_refusal").asText()
         .isBlank()) {
       throw new WebApplicationException("contact or reason for refusal required",
           Response.Status.BAD_REQUEST);
     }
 
-    int idContact = json.get("contact_id").asInt();
-    String stateContact = json.get("state").asText();
+    int contactId = json.get("contact_id").asInt();
     String reasonForRefusal = json.get("reason_for_refusal").asText();
 
     ContactDTO contactDTO;
-    contactDTO = contactUCC.turnedDown(idContact, stateContact, reasonForRefusal);
+    contactDTO = contactUCC.turnedDown(contactId, reasonForRefusal);
 
     return jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
   }

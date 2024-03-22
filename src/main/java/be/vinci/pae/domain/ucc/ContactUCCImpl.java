@@ -42,13 +42,13 @@ public class ContactUCCImpl implements ContactUCC {
     return contact;
   }
 
-  public ContactDTO turnedDown(int contact_id, String contact_state, String reasonForRefusal) {
-    Contact contact = (Contact) contactFactory.getContactDTO();
-    contact.setState(contact_state);
+  @Override
+  public ContactDTO turnedDown(int contactId, String reasonForRefusal) {
+    Contact contact = (Contact) contactDAO.findContactById(contactId);
     if (!contact.isAdmitted()) {
       throw new BadRequestException();
     }
-    return null;
+    return contactDAO.turnedDown(contactId, reasonForRefusal);
   }
 
 }
