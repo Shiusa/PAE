@@ -78,7 +78,7 @@ public class DalServicesImpl implements DalServices, DalBackendServices {
   }
 
   /**
-   * Start a transation
+   * Start a transation.
    */
   @Override
   public void startTransaction() {

@@ -4,7 +4,6 @@ package be.vinci.pae.services.dao;
 import be.vinci.pae.domain.ContactFactory;
 import be.vinci.pae.domain.dto.ContactDTO;
 import be.vinci.pae.services.dal.DalBackendServices;
-import be.vinci.pae.services.dal.DalServices;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
