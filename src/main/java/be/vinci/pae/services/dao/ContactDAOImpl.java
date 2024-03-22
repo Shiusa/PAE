@@ -82,7 +82,8 @@ public class ContactDAOImpl implements ContactDAO {
   public ContactDTO startContact(int company, int student, String schoolYear) {
     String requestSql = """
         INSERT INTO prostage.contacts (company, student, contact_state, school_year)
-         VALUES (?, ?, ?, ?) RETURNING *;
+         VALUES (?, ?, ?, ?) RETURNING contact_id, company, student, meeting, contact_state,
+         reason_for_refusal, school_year;
         """;
     PreparedStatement ps = dalServices.getPreparedStatement(requestSql);
     try {
@@ -135,7 +136,6 @@ public class ContactDAOImpl implements ContactDAO {
     try {
       ps.setString(1, meeting);
       ps.setInt(2, idContact);
-      ps.close();
     } catch (SQLException e) {
       e.printStackTrace();
       throw new FatalException(e);

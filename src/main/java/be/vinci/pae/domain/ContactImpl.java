@@ -94,4 +94,9 @@ public class ContactImpl implements Contact {
   public void setSchoolYear(String schoolYear) {
     this.schoolYear = schoolYear;
   }
+
+  @Override
+  public boolean isStarted() {
+    return this.state.equals("started");
+  }
 }

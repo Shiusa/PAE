@@ -23,3 +23,13 @@ Authorization: {{eleonoreToken}}
   "company": "2",
   "student": "3"
 }
+
+### Admit one contact
+POST {{baseUrl}}/contacts/admit
+Content-Type: application/json
+Authorization: {{eleonoreToken}}
+
+{
+  "contactId": "7",
+  "meeting": "remote"
+}

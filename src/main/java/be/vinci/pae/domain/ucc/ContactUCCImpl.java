@@ -1,7 +1,6 @@
 package be.vinci.pae.domain.ucc;
 
 import be.vinci.pae.domain.Contact;
-import be.vinci.pae.domain.ContactFactory;
 import be.vinci.pae.domain.dto.ContactDTO;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.services.dal.DalServicesConnection;
@@ -22,8 +21,6 @@ public class ContactUCCImpl implements ContactUCC {
   private DalServicesConnection dalServices;
   @Inject
   private UserDAO userDAO;
-  @Inject
-  private ContactFactory contactFactory;
 
   @Override
   public ContactDTO start(int company, int student) {
@@ -43,10 +40,14 @@ public class ContactUCCImpl implements ContactUCC {
 
   @Override
   public ContactDTO admit(int contactId, String meeting) {
+    dalServices.startTransaction();
     Contact contact = (Contact) contactDAO.findContactById(contactId);
-    if (!contact.checkMeeting(meeting)) {
+    if (!contact.checkMeeting(meeting) || !contact.isStarted()) {
+      dalServices.rollbackTransaction();
       throw new BadRequestException();
     }
-    return contactDAO.admitContact(contactId, meeting);
+    ContactDTO contactDTO = contactDAO.admitContact(contactId, meeting);
+    dalServices.commitTransaction();
+    return contactDTO;
   }
 }

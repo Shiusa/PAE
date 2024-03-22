@@ -3,8 +3,6 @@ package be.vinci.pae.api;
 import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.dto.ContactDTO;
 import be.vinci.pae.domain.ucc.ContactUCC;
-import be.vinci.pae.utils.Config;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -25,7 +23,6 @@ import jakarta.ws.rs.core.Response;
 @Path("/contacts")
 public class ContactResource {
 
-  private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
   private final ObjectMapper jsonMapper = new ObjectMapper();
   @Inject
   private ContactUCC contactUCC;
@@ -57,8 +54,7 @@ public class ContactResource {
 
     ContactDTO contactDTO = contactUCC.start(company, student);
 
-    ObjectNode contact = jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
-    return contact;
+    return jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
   }
 
   /**
@@ -74,16 +70,15 @@ public class ContactResource {
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize
   public ObjectNode admit(JsonNode json) {
-    if (!json.hasNonNull("contact_id") || !json.hasNonNull("meeting") || json.get("contact_id")
+    if (!json.hasNonNull("contactId") || !json.hasNonNull("meeting") || json.get("contactId")
         .asText().isBlank() || json.get("meeting").asText().isBlank()) {
       throw new WebApplicationException("contact or meeting required", Response.Status.BAD_REQUEST);
     }
 
-    int contactId = json.get("contact_id").asInt();
+    int contactId = json.get("contactId").asInt();
     String meeting = json.get("meeting").asText();
 
-    ContactDTO contactDTO;
-    contactDTO = contactUCC.admit(contactId, meeting);
+    ContactDTO contactDTO = contactUCC.admit(contactId, meeting);
 
     return jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
   }
