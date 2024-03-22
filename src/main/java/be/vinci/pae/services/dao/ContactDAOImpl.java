@@ -124,7 +124,7 @@ public class ContactDAOImpl implements ContactDAO {
   }
 
 
-  public ContactDTO meetingContact(int idContact, String meeting) {
+  public ContactDTO admitContact(int idContact, String meeting) {
     String requestSql = """
         UPDATE proStage.contacts
         SET meeting = ?, contact_state = 'admitted'

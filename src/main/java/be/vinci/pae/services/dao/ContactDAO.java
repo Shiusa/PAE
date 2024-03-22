@@ -43,5 +43,5 @@ public interface ContactDAO {
    * @param meeting   the way how they met.
    * @return the contact updated.
    */
-  ContactDTO meetingContact(int idContact, String meeting);
+  ContactDTO admitContact(int idContact, String meeting);
 }

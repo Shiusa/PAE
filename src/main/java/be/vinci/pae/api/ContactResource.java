@@ -69,11 +69,11 @@ public class ContactResource {
    * @throws WebApplicationException when the contact_id and/or the meeting field is invalid.
    */
   @POST
-  @Path("admitted")
+  @Path("admit")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize
-  public ObjectNode taken(JsonNode json) {
+  public ObjectNode admit(JsonNode json) {
     if (!json.hasNonNull("contact_id") || !json.hasNonNull("meeting") || json.get("contact_id")
         .asText().isBlank() || json.get("meeting").asText().isBlank()) {
       throw new WebApplicationException("contact or meeting required", Response.Status.BAD_REQUEST);
@@ -83,7 +83,7 @@ public class ContactResource {
     String meeting = json.get("meeting").asText();
 
     ContactDTO contactDTO;
-    contactDTO = contactUCC.admitted(contactId, meeting);
+    contactDTO = contactUCC.admit(contactId, meeting);
 
     return jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
   }

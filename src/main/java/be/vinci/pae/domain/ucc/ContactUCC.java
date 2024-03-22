@@ -22,5 +22,5 @@ public interface ContactUCC {
    * @param meeting   the type of the meeting either on site or remote
    * @return the started contact.
    */
-  ContactDTO admitted(int contactId, String meeting);
+  ContactDTO admit(int contactId, String meeting);
 }
