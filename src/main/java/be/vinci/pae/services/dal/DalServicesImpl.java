@@ -1,4 +1,4 @@
-package be.vinci.pae.services.utils;
+package be.vinci.pae.services.dal;
 
 import be.vinci.pae.utils.Config;
 import java.sql.Connection;
@@ -78,7 +78,7 @@ public class DalServicesImpl implements DalServices, DalBackendServices {
   }
 
   /**
-   * Start a transation
+   * Start a transation.
    */
   @Override
   public void startTransaction() {
@@ -94,7 +94,7 @@ public class DalServicesImpl implements DalServices, DalBackendServices {
    * Commit changes.
    */
   @Override
-  public void commit() {
+  public void commitTransaction() {
     Connection connection = getConnection();
     try {
       connection.commit();
@@ -115,7 +115,7 @@ public class DalServicesImpl implements DalServices, DalBackendServices {
    * Rollback changes.
    */
   @Override
-  public void rollback() {
+  public void rollbackTransaction() {
     Connection connection = getConnection();
     try {
       connection.rollback();
