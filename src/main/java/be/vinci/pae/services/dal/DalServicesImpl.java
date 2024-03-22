@@ -36,7 +36,7 @@ public class DalServicesImpl implements DalServices, DalBackendServices {
       dataSource.setMaxIdle(10);
       dataSource.setMaxOpenPreparedStatements(100);
     } catch (Exception e) {
-      e.printStackTrace();
+      throw new FatalException(e);
     }
     return dataSource;
   }
