@@ -5,6 +5,7 @@ import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.utils.exceptions.BadRequestException;
+import be.vinci.pae.utils.exceptions.FatalException;
 import be.vinci.pae.utils.exceptions.NotFoundException;
 import jakarta.inject.Inject;
 import java.util.List;
@@ -91,7 +92,7 @@ public class UserUCCImpl implements UserUCC {
       dalServices.startTransaction();
       UserDTO existingUser = userDAO.getOneUserByEmail(user.getEmail());
       if (existingUser != null) {
-        return null;
+        throw new BadRequestException();
       }
 
       User userHashPwd = (User) user;
@@ -99,15 +100,14 @@ public class UserUCCImpl implements UserUCC {
 
       registeredUser = userDAO.addOneUser((UserDTO) userHashPwd);
       if (registeredUser == null) {
-        return null;
+        throw new BadRequestException();
       }
 
       dalServices.commitTransaction();
       return registeredUser;
     } catch (Exception e) {
       dalServices.rollbackTransaction();
-      e.printStackTrace();
+      throw new FatalException(e);
     }
-    return null;
   }
 }

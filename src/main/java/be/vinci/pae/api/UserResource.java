@@ -135,6 +135,13 @@ public class UserResource {
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode register(JsonNode json) {
 
+    if (!json.hasNonNull("email") || !json.hasNonNull("lastname") || !json.hasNonNull("firstname") || !json.hasNonNull("phoneNumber") || !json.hasNonNull("password")) {
+      throw new BadRequestException();
+    }
+    if (json.get("email").asText().isBlank() || json.get("lastname").asText().isBlank() || json.get("firstname").asText().isBlank() || json.get("phoneNumber").asText().isBlank() || json.get("password").asText().isBlank()) {
+      throw new BadRequestException();
+    }
+
     String email = json.get("email").asText();
     String lastname = json.get("lastname").asText();
     String firstname = json.get("firstname").asText();
@@ -163,12 +170,20 @@ public class UserResource {
     user.setSchoolYear(schoolYear);
     user.setRole(role);
 
-    UserDTO registeredUser = userUCC.register(user);
+    UserDTO registeredUser;
 
-    ObjectNode publicUser = jsonMapper.createObjectNode()
-        .putPOJO("user", registeredUser);
+    try {
+      registeredUser = userUCC.register(user);
+      ObjectNode publicUser = jsonMapper.createObjectNode()
+          .putPOJO("user", registeredUser);
 
-    return publicUser;
+      return publicUser;
+    } catch (FatalException e) {
+      throw new FatalException(e);
+    } catch (BadRequestException e) {
+      throw new BadRequestException();
+    }
+
 
   }
 }

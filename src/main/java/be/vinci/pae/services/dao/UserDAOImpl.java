@@ -59,7 +59,7 @@ public class UserDAOImpl implements UserDAO {
     try {
       ps.setInt(1, id);
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new FatalException(e);
     }
     return buildUserDTO(ps);
   }
@@ -147,17 +147,15 @@ public class UserDAOImpl implements UserDAO {
       ps.setDate(6, user.getRegistrationDate());
       ps.setString(7, user.getSchoolYear());
       ps.setString(8, user.getEmail());
-      try(ResultSet rs = ps.executeQuery()) {
+      try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
           return getOneUserByEmail(rs.getString("inserted_email"));
         }
         return null;
       }
-    } catch (SQLException throwables) {
-      throwables.printStackTrace();
+    } catch (SQLException e) {
+      throw new FatalException(e);
     }
-
-    return null;
 
   }
 }
