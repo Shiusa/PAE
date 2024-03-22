@@ -52,6 +52,8 @@ const RegisterPage = () => {
   const registerBtn = document.getElementById("register-btn");
   registerBtn.addEventListener("click", register);
 
+  const emailInput = document.getElementById("input-email");
+  emailInput.addEventListener("change", roleSelector);
 
 };
 
@@ -107,6 +109,18 @@ const onUserLogin = async (userData) => {
   Navbar();
   Redirect("/");
 };
+
+function roleSelector() {
+  const emailInput = document.getElementById("input-email").value;
+  const mailStudent = /@student\.vinci\.be$/;
+  const mailNonStudent = /@vinci\.be$/;
+  const roleInput = document.getElementById("input-role")
+  if (mailNonStudent.test(emailInput)) {
+    roleInput.style.display="block";
+  } else if (mailStudent.test(emailInput)) {
+    roleInput.style.display="none";
+  }
+}
 
 
 export default RegisterPage;
