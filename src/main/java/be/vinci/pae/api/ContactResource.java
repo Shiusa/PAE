@@ -64,29 +64,27 @@ public class ContactResource {
   /**
    * a contact has turned down the internship
    *
-   * @param json jsonNode containing contact id, the state of the contact and the reason for
-   *             refusal.
-   * @return ObjectNode containing all information about the contact turned down.
-   * @throws WebApplicationException when the contact_id and/or the meeting field is invalid.
+   * @param json jsonNode containing contact id of the contact and the reason for refusal.
+   * @return ObjectNode containing all information about the contact to turn down.
+   * @throws WebApplicationException when the contactId and/or the meeting field is invalid.
    */
   @POST
-  @Path("turnedDown")
+  @Path("turnDown")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize
-  public ObjectNode turnedDown(JsonNode json) {
-    if (!json.hasNonNull("contact_id") || json.get("contact_id").asText().isBlank()
-        || !json.hasNonNull("reason_for_refusal") || json.get("reason_for_refusal").asText()
+  public ObjectNode turnDown(JsonNode json) {
+    if (!json.hasNonNull("contactId") || json.get("contactId").asText().isBlank()
+        || !json.hasNonNull("reasonForRefusal") || json.get("reasonForRefusal").asText()
         .isBlank()) {
       throw new WebApplicationException("contact or reason for refusal required",
           Response.Status.BAD_REQUEST);
     }
 
-    int contactId = json.get("contact_id").asInt();
-    String reasonForRefusal = json.get("reason_for_refusal").asText();
+    int contactId = json.get("contactId").asInt();
+    String reasonForRefusal = json.get("reasonForRefusal").asText();
 
-    ContactDTO contactDTO;
-    contactDTO = contactUCC.turnedDown(contactId, reasonForRefusal);
+    ContactDTO contactDTO = contactUCC.turnDown(contactId, reasonForRefusal);
 
     return jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
   }

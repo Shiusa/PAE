@@ -101,7 +101,7 @@ public class ContactDAOImpl implements ContactDAO {
   }
 
   @Override
-  public ContactDTO turnedDown(int contact_id, String reason_for_refusal) {
+  public ContactDTO turnDown(int contact_id, String reason_for_refusal) {
     String requestSql = """
                 UPDATE proStage.contacts
                 SET reason_for_refusal = ?, contact_state = 'turned down'

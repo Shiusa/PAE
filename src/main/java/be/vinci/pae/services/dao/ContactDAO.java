@@ -18,7 +18,7 @@ public interface ContactDAO {
   ContactDTO findContactByCompanyStudentSchoolYear(int company, int student, String schoolYear);
 
   /**
-   * Find a contact by its company, student and school year.
+   * Find a contact by its id.
    *
    * @param contactId the id of the contact.
    * @return a ContactDTO if the contact was found, null otherwise.
@@ -26,13 +26,13 @@ public interface ContactDAO {
   ContactDTO findContactById(int contactId);
 
   /**
-   * Find a contact by its company, student and school year.
+   * Turn down a contact and give the reason for refusal.
    *
    * @param contactId        the id of the contact.
    * @param reasonForRefusal the reason of the refusal.
    * @return a ContactDTO if the update of contact was successful, null otherwise.
    */
-  ContactDTO turnedDown(int contactId, String reasonForRefusal);
+  ContactDTO turnDown(int contactId, String reasonForRefusal);
 
   /**
    * Create the contact.

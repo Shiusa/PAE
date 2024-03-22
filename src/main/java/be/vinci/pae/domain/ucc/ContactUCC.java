@@ -17,12 +17,12 @@ public interface ContactUCC {
   ContactDTO start(int company, int student);
 
   /**
-   * turned down the contact.
+   * turn down the contact.
    *
    * @param contactId        the id of the contact.
    * @param reasonForRefusal the reason for the refusal
    * @return the started contact.
    */
-  ContactDTO turnedDown(int contactId, String reasonForRefusal);
+  ContactDTO turnDown(int contactId, String reasonForRefusal);
 
 }

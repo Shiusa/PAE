@@ -43,12 +43,12 @@ public class ContactUCCImpl implements ContactUCC {
   }
 
   @Override
-  public ContactDTO turnedDown(int contactId, String reasonForRefusal) {
+  public ContactDTO turnDown(int contactId, String reasonForRefusal) {
     Contact contact = (Contact) contactDAO.findContactById(contactId);
     if (!contact.isAdmitted()) {
       throw new BadRequestException();
     }
-    return contactDAO.turnedDown(contactId, reasonForRefusal);
+    return contactDAO.turnDown(contactId, reasonForRefusal);
   }
 
 }
