@@ -5,6 +5,10 @@ import be.vinci.pae.utils.Config;
 import be.vinci.pae.utils.WebExceptionMapper;
 import java.io.IOException;
 import java.net.URI;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -45,6 +49,13 @@ public class Main {
    * @throws IOException I/O exception
    */
   public static void main(String[] args) throws IOException {
+    // logger
+    Logger logger = Logger.getLogger("fileLogs");
+    Handler fileHandler = new FileHandler("logs/log%g.log", 10485760, 1, true);
+    logger.setLevel(Level.WARNING);
+    fileHandler.setLevel(Level.WARNING);
+    logger.addHandler(fileHandler);
+
     final HttpServer server = startServer();
     System.out.println(String.format(
         "Jersey app started with endpoints available at " + "%s%nHit Ctrl-C to stop it...",
