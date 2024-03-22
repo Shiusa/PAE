@@ -12,8 +12,6 @@ import org.apache.commons.dbcp2.BasicDataSource;
  */
 public class DalServicesImpl implements DalServices, DalBackendServices {
 
-  //private Connection connection = null;
-
   private static final ThreadLocal<Connection> connectionThreadLocal = ThreadLocal.withInitial(
       () -> {
         try {
@@ -41,6 +39,20 @@ public class DalServicesImpl implements DalServices, DalBackendServices {
       e.printStackTrace();
     }
     return dataSource;
+  }
+
+  /**
+   * Close a connection and remove it from ThreadLocal.
+   *
+   * @param connection BasicDataSource connection.
+   */
+  private static void closeConnection(Connection connection) {
+    try {
+      connection.close();
+      connectionThreadLocal.remove();
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
   }
 
   /**
@@ -102,12 +114,7 @@ public class DalServicesImpl implements DalServices, DalBackendServices {
     } catch (SQLException e) {
       throw new FatalException(e);
     } finally {
-      try {
-        connection.close();
-      } catch (SQLException e) {
-        throw new FatalException(e);
-      }
-      connectionThreadLocal.remove();
+      closeConnection(connection);
     }
   }
 
@@ -122,12 +129,7 @@ public class DalServicesImpl implements DalServices, DalBackendServices {
     } catch (SQLException e) {
       throw new FatalException(e);
     } finally {
-      try {
-        connection.close();
-      } catch (SQLException e) {
-        throw new FatalException(e);
-      }
-      connectionThreadLocal.remove();
+      closeConnection(connection);
     }
   }
 }
