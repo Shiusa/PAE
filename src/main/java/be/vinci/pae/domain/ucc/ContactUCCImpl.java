@@ -2,7 +2,7 @@ package be.vinci.pae.domain.ucc;
 
 import be.vinci.pae.domain.dto.ContactDTO;
 import be.vinci.pae.domain.dto.UserDTO;
-import be.vinci.pae.services.dal.DalServicesConnection;
+import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.ContactDAO;
 import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.utils.exceptions.DuplicateException;
@@ -16,7 +16,7 @@ public class ContactUCCImpl implements ContactUCC {
   @Inject
   private ContactDAO contactDAO;
   @Inject
-  private DalServicesConnection dalServices;
+  private DalServices dalServices;
   @Inject
   private UserDAO userDAO;
 

@@ -2,7 +2,7 @@ package be.vinci.pae.domain.ucc;
 
 import be.vinci.pae.domain.User;
 import be.vinci.pae.domain.dto.UserDTO;
-import be.vinci.pae.services.dal.DalServicesConnection;
+import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.utils.exceptions.BadRequestException;
 import be.vinci.pae.utils.exceptions.NotFoundException;
@@ -17,7 +17,7 @@ public class UserUCCImpl implements UserUCC {
   @Inject
   private UserDAO userDAO;
   @Inject
-  private DalServicesConnection dalServices;
+  private DalServices dalServices;
 
   /**
    * Get a user associated with an email and check their password with the password entered.
