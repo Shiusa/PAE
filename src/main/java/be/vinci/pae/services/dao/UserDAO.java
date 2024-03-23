@@ -1,6 +1,6 @@
 package be.vinci.pae.services.dao;
 
-import be.vinci.pae.domain.dto.UserDTO;
+import be.vinci.pae.domain.UserDTO;
 import java.util.List;
 
 /**
@@ -19,7 +19,7 @@ public interface UserDAO {
   /**
    * Add one user.
    *
-   * @param user  user to add.
+   * @param user user to add.
    * @return added user.
    */
   UserDTO addOneUser(UserDTO user);

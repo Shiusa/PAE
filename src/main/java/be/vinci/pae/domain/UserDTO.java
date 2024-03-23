@@ -1,10 +1,12 @@
-package be.vinci.pae.domain.dto;
+package be.vinci.pae.domain;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.sql.Date;
 
 /**
  * UserDTO interface containing only getters and setters of a User.
  */
+@JsonDeserialize(as = UserImpl.class)
 public interface UserDTO {
 
   /**

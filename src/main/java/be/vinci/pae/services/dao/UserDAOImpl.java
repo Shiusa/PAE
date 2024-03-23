@@ -1,7 +1,7 @@
 package be.vinci.pae.services.dao;
 
+import be.vinci.pae.domain.UserDTO;
 import be.vinci.pae.domain.UserFactory;
-import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.services.dal.DalBackendServices;
 import be.vinci.pae.utils.exceptions.FatalException;
 import jakarta.inject.Inject;
@@ -146,7 +146,7 @@ public class UserDAOImpl implements UserDAO {
       ps.setString(5, user.getPassword());
       ps.setDate(6, user.getRegistrationDate());
       ps.setString(7, user.getSchoolYear());
-      ps.setString(8, user.getEmail());
+      ps.setString(8, user.getRole());
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
           return getOneUserByEmail(rs.getString("inserted_email"));

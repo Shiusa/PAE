@@ -1,6 +1,6 @@
 package be.vinci.pae.domain.ucc;
 
-import be.vinci.pae.domain.dto.UserDTO;
+import be.vinci.pae.domain.UserDTO;
 import java.util.List;
 
 /**
@@ -35,7 +35,7 @@ public interface UserUCC {
   /**
    * Register a user.
    *
-   * @param user  user to register.
+   * @param user user to register.
    * @return a UserDTO of registered user.
    */
   UserDTO register(UserDTO user);

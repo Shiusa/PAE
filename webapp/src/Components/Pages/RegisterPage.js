@@ -1,7 +1,7 @@
 // eslint-disable-next-line import/no-cycle
 import {Redirect} from "../Router/Router";
 import showNavStyle from "../../utils/function";
-import {setUserSessionData} from "../../utils/session";
+// import {setUserSessionData} from "../../utils/session";
 import Navbar from "../Navbar/Navbar";
 
 const RegisterPage = () => {
@@ -31,7 +31,16 @@ const RegisterPage = () => {
                 <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-key"></i></span>
                 <input type="text" class="form-control" id="input-pwd" placeholder="Mot de passe" aria-label="Mot de passe" aria-describedby="basic-addon1">
               </div>
-              <input type="text" id="input-role" value="student">
+              <div class="input-group-role disable">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="roleTeacher" value="teacher">
+                  <label class="form-check-label" for="roleTeacher">Professeur</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="roleAdministrative" value="administrative">
+                  <label class="form-check-label" for="roleAdministrative">Administratif</label>
+                </div>
+              </div>
               <p class="btn-login" id="register-btn">S'inscrire</p>
               <h2 id="error-message">L'adresse email ou<br>le mot de passe est incorrect !</h2>
             </div>
@@ -66,7 +75,34 @@ async function register(e) {
   const email = document.querySelector("#input-email").value;
   const phoneNumber = document.querySelector("#input-phone-number").value;
   const password = document.querySelector("#input-pwd").value;
-  const role = document.querySelector("#input-role").value;
+  const roleRadio = document.querySelector(".input-group-role");
+  let role;
+  const roleRadioBtn = document.querySelectorAll('.input-group-role input[type="radio"]');
+
+  errorMessage = document.getElementById("error-message");
+  try {
+    if (roleRadio && !roleRadio.classList.contains("disable")){
+      roleRadioBtn.forEach(button => {
+        if (button.checked) {
+          role = button.value;
+        }
+      })
+      if (!role) {
+        throw new Error(
+            `fetch error : 400 : BADREQUEST`
+        );
+      } else {
+        errorMessage.style.display="none";
+      }
+    }
+
+    if (!role) {
+      role="student";
+    }
+  } catch(error) {
+    errorMessage.style.display="block";
+    return;
+  }
 
   try {
      const options = {
@@ -92,33 +128,36 @@ async function register(e) {
       );
     }
 
-    const user = await response.json(); // json() returns a promise => we wait for the data
+    /* const user = await response.json(); // json() returns a promise => we wait for the data
 
     // eslint-disable-next-line no-use-before-define
-    await onUserLogin(user);
+    await onUserLogin(user); */
 
   } catch (error) {
     errorMessage = document.getElementById("error-message");
     errorMessage.style.display="block";
+    return;
   }
+  Navbar();
+  Redirect("/");
 }
 
-const onUserLogin = async (userData) => {
+/* const onUserLogin = async (userData) => {
     setUserSessionData(userData);
   // re-render the navbar for the authenticated user
   Navbar();
   Redirect("/");
-};
+}; */
 
 function roleSelector() {
   const emailInput = document.getElementById("input-email").value;
   const mailStudent = /@student\.vinci\.be$/;
   const mailNonStudent = /@vinci\.be$/;
-  const roleInput = document.getElementById("input-role")
+  const roleInput = document.querySelector(".input-group-role")
   if (mailNonStudent.test(emailInput)) {
-    roleInput.style.display="block";
+    roleInput.classList.remove("disable");
   } else if (mailStudent.test(emailInput)) {
-    roleInput.style.display="none";
+    roleInput.classList.add("disable")
   }
 }
 

@@ -508,8 +508,8 @@
   }
 }
 
-#input-role {
-  display: block;
+.input-group-role.disable {
+  display: none;
 }
 
 .info-line {

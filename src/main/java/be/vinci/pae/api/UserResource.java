@@ -1,8 +1,8 @@
 package be.vinci.pae.api;
 
 import be.vinci.pae.api.filters.Authorize;
+import be.vinci.pae.domain.UserDTO;
 import be.vinci.pae.domain.UserFactory;
-import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.domain.ucc.UserUCC;
 import be.vinci.pae.utils.Config;
 import be.vinci.pae.utils.exceptions.BadRequestException;
@@ -126,16 +126,17 @@ public class UserResource {
   /**
    * Register route.
    *
-   * @param json object containing email, lastname, firstname, phone number, password, role.
+   * @param userToRegister object containing email, lastname, firstname, phone number, password,
+   *                       role.
    * @return a User.
    */
   @POST
   @Path("register")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public ObjectNode register(JsonNode json) {
+  public UserDTO register(UserDTO userToRegister) {
 
-    if (!json.hasNonNull("email") || !json.hasNonNull("lastname") || !json.hasNonNull("firstname")
+    /*if (!json.hasNonNull("email") || !json.hasNonNull("lastname") || !json.hasNonNull("firstname")
         || !json.hasNonNull("phoneNumber") || !json.hasNonNull("password")) {
       throw new BadRequestException();
     }
@@ -143,18 +144,19 @@ public class UserResource {
         "firstname").asText().isBlank() || json.get("phoneNumber").asText().isBlank() || json.get(
         "password").asText().isBlank()) {
       throw new BadRequestException();
-    }
+    }*/
 
-    UserDTO user = userFactory.getUserDTO();
+    //UserDTO user = userFactory.getUserDTO();
 
-    user.setEmail(json.get("email").asText());
+
+    /*user.setEmail();
     user.setLastname(json.get("lastname").asText());
     user.setFirstname(json.get("firstname").asText());
     user.setPhoneNumber(json.get("phoneNumber").asText());
-    user.setPassword(json.get("password").asText());
+    user.setPassword(json.get("password").asText());*/
     LocalDate localDate = LocalDate.now();
     Date registrationDate = Date.valueOf(localDate);
-    user.setRegistrationDate(registrationDate);
+    userToRegister.setRegistrationDate(registrationDate);
     int monthValue = localDate.getMonthValue();
     String schoolYear;
     if (monthValue >= 9) {
@@ -166,12 +168,15 @@ public class UserResource {
           String.valueOf(localDate.minusYears(1).getYear()) + "-" + String.valueOf(
               localDate.getYear());
     }
-    user.setSchoolYear(schoolYear);
-    user.setRole(json.get("role").asText());
+    userToRegister.setSchoolYear(schoolYear);
+    /*user.setRole(json.get("role").asText());*/
 
     UserDTO registeredUser;
 
-    try {
+    registeredUser = userUCC.register(userToRegister);
+    return registeredUser;
+
+    /*try {
       registeredUser = userUCC.register(user);
       ObjectNode publicUser = jsonMapper.createObjectNode()
           .putPOJO("user", registeredUser);
@@ -181,8 +186,7 @@ public class UserResource {
       throw new FatalException(e);
     } catch (BadRequestException e) {
       throw new BadRequestException();
-    }
-
+    }*/
 
   }
 }
