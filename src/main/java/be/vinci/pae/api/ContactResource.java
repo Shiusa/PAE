@@ -4,7 +4,7 @@ import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.dto.ContactDTO;
 import be.vinci.pae.domain.ucc.ContactUCC;
 import be.vinci.pae.utils.Config;
-import be.vinci.pae.utils.exceptions.BadRequestException;
+import be.vinci.pae.utils.exceptions.InvalidRequestException;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -75,10 +75,10 @@ public class ContactResource {
   @Authorize
   public ObjectNode unsupervise(JsonNode json) {
     if (!json.hasNonNull("contactId")) {
-      throw new BadRequestException();
+      throw new InvalidRequestException();
     }
     if (json.get("contactId").asText().isBlank()) {
-      throw new BadRequestException();
+      throw new InvalidRequestException();
     }
     int contactId = json.get("contactId").asInt();
     ContactDTO contactDTO = contactUCC.unsupervise(contactId);

@@ -7,7 +7,7 @@ import be.vinci.pae.services.dal.DalServicesConnection;
 import be.vinci.pae.services.dao.ContactDAO;
 import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.utils.exceptions.DuplicateException;
-import be.vinci.pae.utils.exceptions.NotFoundException;
+import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
 import jakarta.inject.Inject;
 
 /**
@@ -50,7 +50,7 @@ public class ContactUCCImpl implements ContactUCC {
     Contact contact = (Contact) contactDAO.findContactById(contactId);
     if (!contact.isStarted() && !contact.isAdmitted()) {
       dalServices.rollbackTransaction();
-      throw new NotFoundException();
+      throw new ResourceNotFoundException();
     }
     ContactDTO contactDTO = contactDAO.unsupervise(contactId);
     dalServices.commitTransaction();
