@@ -5,6 +5,7 @@ import be.vinci.pae.domain.ContactFactory;
 import be.vinci.pae.domain.dto.ContactDTO;
 import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.utils.Logs;
+import be.vinci.pae.utils.exceptions.FatalException;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -82,6 +83,52 @@ public class ContactDAOImpl implements ContactDAO {
     }
     Logs.log(Level.DEBUG, "ContactDAO (startContact) : success!");
     return contact;
+  }
+
+  @Override
+  public ContactDTO findContactById(int contactId) {
+    String requestSql = """
+        SELECT *
+        FROM prostage.contacts
+        WHERE contacts.contact_id = ?
+        """;
+    PreparedStatement ps = dalServices.getPreparedStatement(requestSql);
+
+    try {
+      ps.setInt(1, contactId);
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+
+    ContactDTO contact = buildContactDTO(ps);
+
+    try {
+      ps.close();
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+
+    return contact;
+  }
+
+  @Override
+  public ContactDTO unsupervise(int contactId) {
+    ContactDTO contactDTO = contactFactory.getContactDTO();
+    String requestSql = """
+        UPDATE proStage.contacts
+        SET contact_state = 'unsupervised'
+        WHERE contact_id = ?
+        RETURNING *;
+        """;
+
+    PreparedStatement ps = dalServices.getPreparedStatement(requestSql);
+    try {
+      ps.setInt(1, contactId);
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+    System.out.println(contactDTO.getId());
+    return buildContactDTO(ps);
   }
 
   private ContactDTO buildContactDTO(PreparedStatement ps) {

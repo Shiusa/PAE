@@ -11,6 +11,8 @@ import {
   setUserStorageData
 } from "../../utils/session";
 
+import showNavStyle from "../../utils/function";
+
 const onUserLogin = async (userData) => {
   if (document.getElementById("stayconnected").checked) {
     setUserStorageData(userData)
@@ -74,7 +76,7 @@ async function login(e){
 const LoginPage = () => {
   const main = document.querySelector('main');
   main.innerHTML = `
-        <div class="page-login d-flex justify-content-center align-items-center">
+        <div class="page-login d-flex justify-content-center align-items-center mb-4 mt-5">
           <div class="box-register d-flex justify-content-center align-items-center">
             <p class="btn-register">Inscription</p>
           </div>
@@ -107,15 +109,7 @@ const LoginPage = () => {
       Redirect("/register");
     });
 
-    const allNav = document.querySelectorAll(".nav-btn");
-
-    allNav.forEach((nav) => {
-      const newNav = nav;
-      newNav.style.boxShadow = "0px 0px 0px";
-    });
-
-    const logNav = document.getElementById("login");
-    logNav.style.boxShadow = "8px 8px 0px var(red)";
+    showNavStyle("login");
 
     const loginBtn = document.getElementById("login-btn");
 

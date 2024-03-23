@@ -10,19 +10,28 @@ const Navbar = async () => {
 
   if(isConnected) {
     navbar = `
-      <nav class="d-flex justify-content-center align-items-center">
+      <nav class="d-flex justify-content-center align-items-center flex-wrap">
         <a class="nav-link nav-btn d-flex justify-content-center align-items-center" id="home" href="#" data-uri="/">
           <p data-uri="/">Accueil</p>
         </a>
+        <a class="nav-link nav-btn d-flex justify-content-center align-items-center" id="dashboard" href="#" data-uri="/dashboard">
+          <p data-uri="/dashboard">Tableau de<br>bord</p>
+        </a>
+        <a class="nav-link nav-btn d-flex justify-content-center align-items-center" id="contact" href="#" data-uri="/contact">
+          <p data-uri="/contact">Contact</p>
+        </a>
+        <a class="nav-link nav-btn d-flex justify-content-center align-items-center" id="info" href="#" data-uri="/info">
+          <p data-uri="/info">Mes infos</p>
+        </a>
         <a class="nav-link nav-logout d-flex justify-content-center align-items-center" href="#" data-uri="/logout">
-          <p data-uri="/logout"><i class="fa-solid fa-arrow-right-from-bracket" data-uri="/"></i></p>
+          <p data-uri="/logout"><i class="fa-solid fa-arrow-right-from-bracket" data-uri="/logout"></i></p>
         </a>
       </nav>
     `;
 
   } else {
     navbar = `
-      <nav class="d-flex justify-content-center align-items-center">
+      <nav class="d-flex justify-content-center align-items-center flex-wrap">
         <a class="nav-link nav-btn d-flex justify-content-center align-items-center" id="home" href="#" data-uri="/">
           <p data-uri="/">Accueil</p>
         </a>

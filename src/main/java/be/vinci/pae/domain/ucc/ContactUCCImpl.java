@@ -1,5 +1,6 @@
 package be.vinci.pae.domain.ucc;
 
+import be.vinci.pae.domain.Contact;
 import be.vinci.pae.domain.dto.ContactDTO;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.services.dal.DalServicesConnection;
@@ -7,6 +8,7 @@ import be.vinci.pae.services.dao.ContactDAO;
 import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.utils.Logs;
 import be.vinci.pae.utils.exceptions.DuplicateException;
+import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
 import jakarta.inject.Inject;
 import org.apache.logging.log4j.Level;
 
@@ -40,5 +42,24 @@ public class ContactUCCImpl implements ContactUCC {
     dalServices.commitTransaction();
     Logs.log(Level.DEBUG, "ContactUCC (start) : success!");
     return contact;
+  }
+
+  /**
+   * Unsupervised the contact.
+   *
+   * @param contactId the id of the contact.
+   * @return the unsupervised state of a contact.
+   */
+  @Override
+  public ContactDTO unsupervise(int contactId) {
+    dalServices.startTransaction();
+    Contact contact = (Contact) contactDAO.findContactById(contactId);
+    if (!contact.isStarted() && !contact.isAdmitted()) {
+      dalServices.rollbackTransaction();
+      throw new ResourceNotFoundException();
+    }
+    ContactDTO contactDTO = contactDAO.unsupervise(contactId);
+    dalServices.commitTransaction();
+    return contactDTO;
   }
 }

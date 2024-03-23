@@ -5,8 +5,8 @@ import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.domain.ucc.UserUCC;
 import be.vinci.pae.utils.Config;
 import be.vinci.pae.utils.Logs;
-import be.vinci.pae.utils.exceptions.BadRequestException;
 import be.vinci.pae.utils.exceptions.FatalException;
+import be.vinci.pae.utils.exceptions.InvalidRequestException;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -53,11 +53,10 @@ public class UserResource {
     Logs.log(Level.INFO, "UserResource (login) : entrance");
     if (!json.hasNonNull("email") || !json.hasNonNull("password")) {
       Logs.log(Level.WARN, "UserResource (login) : email or password is null");
-      throw new BadRequestException();
+      throw new InvalidRequestException();
     }
     if (json.get("email").asText().isBlank() || json.get("password").asText().isBlank()) {
-      Logs.log(Level.WARN, "UserResource (login) : email or password is blank");
-      throw new BadRequestException();
+      throw new InvalidRequestException();
     }
 
     String email = json.get("email").asText();
