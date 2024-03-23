@@ -3,6 +3,7 @@ package be.vinci.pae.services.dao;
 import be.vinci.pae.domain.UserFactory;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.services.dal.DalServices;
+import be.vinci.pae.utils.Logs;
 import be.vinci.pae.utils.exceptions.FatalException;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
@@ -10,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.logging.log4j.Level;
 
 /**
  * Implementation of UserDAO.
@@ -26,7 +28,7 @@ public class UserDAOImpl implements UserDAO {
 
   @Override
   public UserDTO getOneUserByEmail(String email) {
-
+    Logs.log(Level.INFO, "UserDAO (getOneUserByEmail) : entrance");
     String requestSql = """
         SELECT user_id, email, lastname, firstname, phone_number, password,
         registration_date, school_year, role
@@ -37,13 +39,16 @@ public class UserDAOImpl implements UserDAO {
     try {
       ps.setString(1, email);
     } catch (SQLException e) {
+      Logs.log(Level.FATAL, "UserDAO (getOneUserByEmail) : internal error");
       throw new FatalException(e);
     }
+    Logs.log(Level.DEBUG, "UserDAO (getOneUserByEmail) : success!");
     return buildUserDTO(ps);
   }
 
   @Override
   public UserDTO getOneUserById(int id) {
+    Logs.log(Level.INFO, "UserDAO (getOneUserById) : entrance");
     String requestSql = """
         SELECT user_id, email, lastname, firstname, phone_number, password,
         registration_date, school_year, role
@@ -54,8 +59,10 @@ public class UserDAOImpl implements UserDAO {
     try {
       ps.setInt(1, id);
     } catch (SQLException e) {
+      Logs.log(Level.FATAL, "UserDAO (getOneUserById) : internal error");
       throw new RuntimeException(e);
     }
+    Logs.log(Level.DEBUG, "UserDAO (getOneUserById) : success!");
     return buildUserDTO(ps);
   }
 
@@ -84,11 +91,13 @@ public class UserDAOImpl implements UserDAO {
       }
       return null;
     } catch (SQLException e) {
+      Logs.log(Level.FATAL, "UserDAO (buildUserDTO) : internal error!");
       throw new FatalException(e);
     } finally {
       try {
         ps.close();
       } catch (SQLException e) {
+        Logs.log(Level.FATAL, "UserDAO (buildUserDTO) : internal error!");
         throw new FatalException(e);
       }
     }
@@ -96,6 +105,7 @@ public class UserDAOImpl implements UserDAO {
 
   @Override
   public List<UserDTO> getAllUsers() {
+    Logs.log(Level.INFO, "UserDAO (getAllUsers) : entrance");
     List<UserDTO> userDTOList = new ArrayList<>();
 
     String requestSql = """
@@ -120,8 +130,10 @@ public class UserDAOImpl implements UserDAO {
         }
       }
     } catch (SQLException e) {
+      Logs.log(Level.FATAL, "UserDAO (getAllUsers) : internal error!");
       throw new FatalException(e);
     }
+    Logs.log(Level.DEBUG, "UserDAO (getAllUsers) : success!");
     return userDTOList;
   }
 }
