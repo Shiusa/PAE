@@ -4,8 +4,8 @@ import be.vinci.pae.domain.User;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.services.dal.DalServicesConnection;
 import be.vinci.pae.services.dao.UserDAO;
-import be.vinci.pae.utils.exceptions.BadRequestException;
-import be.vinci.pae.utils.exceptions.NotFoundException;
+import be.vinci.pae.utils.exceptions.InvalidRequestException;
+import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
 import jakarta.inject.Inject;
 import java.util.List;
 
@@ -35,10 +35,10 @@ public class UserUCCImpl implements UserUCC {
     User user = (User) userDTOFound;
 
     if (user == null) {
-      throw new NotFoundException();
+      throw new ResourceNotFoundException();
     }
     if (!user.checkPassword(password)) {
-      throw new BadRequestException();
+      throw new InvalidRequestException();
     }
     if (user == null || !user.checkPassword(password)) {
       dalServices.rollbackTransaction();

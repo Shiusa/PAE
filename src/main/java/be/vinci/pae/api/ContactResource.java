@@ -4,6 +4,7 @@ import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.dto.ContactDTO;
 import be.vinci.pae.domain.ucc.ContactUCC;
 import be.vinci.pae.utils.Config;
+import be.vinci.pae.utils.exceptions.InvalidRequestException;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -61,4 +62,26 @@ public class ContactResource {
     return contact;
   }
 
+  /**
+   * Unsupervised contact route.
+   *
+   * @param json jsonNode containing contact id to unsupervised the contact.
+   * @return the unsupervised state of a contact.
+   */
+  @POST
+  @Path("unsupervise")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize
+  public ObjectNode unsupervise(JsonNode json) {
+    if (!json.hasNonNull("contactId")) {
+      throw new InvalidRequestException();
+    }
+    if (json.get("contactId").asText().isBlank()) {
+      throw new InvalidRequestException();
+    }
+    int contactId = json.get("contactId").asInt();
+    ContactDTO contactDTO = contactUCC.unsupervise(contactId);
+    return jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
+  }
 }

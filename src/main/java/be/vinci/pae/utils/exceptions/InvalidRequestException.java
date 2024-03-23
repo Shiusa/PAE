@@ -3,12 +3,12 @@ package be.vinci.pae.utils.exceptions;
 /**
  * Bad request exception class.
  */
-public class BadRequestException extends RuntimeException {
+public class InvalidRequestException extends RuntimeException {
 
   /**
    * Bad request exception.
    */
-  public BadRequestException() {
+  public InvalidRequestException() {
     super();
   }
 }

@@ -4,8 +4,8 @@ import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.domain.ucc.UserUCC;
 import be.vinci.pae.utils.Config;
-import be.vinci.pae.utils.exceptions.BadRequestException;
 import be.vinci.pae.utils.exceptions.FatalException;
+import be.vinci.pae.utils.exceptions.InvalidRequestException;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -49,10 +49,10 @@ public class UserResource {
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode login(JsonNode json) {
     if (!json.hasNonNull("email") || !json.hasNonNull("password")) {
-      throw new BadRequestException();
+      throw new InvalidRequestException();
     }
     if (json.get("email").asText().isBlank() || json.get("password").asText().isBlank()) {
-      throw new BadRequestException();
+      throw new InvalidRequestException();
     }
 
     String email = json.get("email").asText();
