@@ -4,6 +4,7 @@ import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.dto.ContactDTO;
 import be.vinci.pae.domain.ucc.ContactUCC;
 import be.vinci.pae.utils.Config;
+import be.vinci.pae.utils.Logs;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,6 +18,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.apache.logging.log4j.Level;
 
 /**
  * ContactResource class.
@@ -42,13 +44,17 @@ public class ContactResource {
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize
   public ObjectNode start(JsonNode json) {
+    Logs.log(Level.INFO, "ContactResource (start) : entrance");
     if (!json.hasNonNull("company") || !json.hasNonNull("student")) {
+      Logs.log(Level.WARN, "ContactResource (start) : Company or student is null");
       throw new WebApplicationException("company and student", Response.Status.BAD_REQUEST);
     }
     if (json.get("company").asText().isBlank()) {
+      Logs.log(Level.WARN, "ContactResource (start) : Company is blank");
       throw new WebApplicationException("company required", Response.Status.BAD_REQUEST);
     }
     if (json.get("student").asText().isBlank()) {
+      Logs.log(Level.WARN, "ContactResource (start) : Student is blank");
       throw new WebApplicationException("student required", Response.Status.BAD_REQUEST);
     }
 
@@ -58,6 +64,7 @@ public class ContactResource {
     ContactDTO contactDTO = contactUCC.start(company, student);
 
     ObjectNode contact = jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
+    Logs.log(Level.DEBUG, "ContactResource (start) : success!");
     return contact;
   }
 

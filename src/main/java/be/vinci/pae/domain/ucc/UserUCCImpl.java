@@ -4,10 +4,12 @@ import be.vinci.pae.domain.User;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.services.dal.DalServicesConnection;
 import be.vinci.pae.services.dao.UserDAO;
+import be.vinci.pae.utils.Logs;
 import be.vinci.pae.utils.exceptions.BadRequestException;
 import be.vinci.pae.utils.exceptions.NotFoundException;
 import jakarta.inject.Inject;
 import java.util.List;
+import org.apache.logging.log4j.Level;
 
 /**
  * User UCC.
@@ -28,6 +30,7 @@ public class UserUCCImpl implements UserUCC {
    */
   @Override
   public UserDTO login(String email, String password) {
+    Logs.log(Level.INFO, "UserUCC (login) : entrance");
     dalServices.startTransaction();
 
     UserDTO userDTOFound = userDAO.getOneUserByEmail(email);
@@ -35,17 +38,16 @@ public class UserUCCImpl implements UserUCC {
     User user = (User) userDTOFound;
 
     if (user == null) {
+      Logs.log(Level.ERROR, "UserUCC (login) : user not found");
       throw new NotFoundException();
     }
     if (!user.checkPassword(password)) {
+      Logs.log(Level.ERROR, "UserUCC (login) : wrong password");
       throw new BadRequestException();
-    }
-    if (user == null || !user.checkPassword(password)) {
-      dalServices.rollbackTransaction();
-      return null;
     }
 
     dalServices.commitTransaction();
+    Logs.log(Level.DEBUG, "UserUCC (login) : success!");
     return userDTOFound;
   }
 
@@ -56,6 +58,8 @@ public class UserUCCImpl implements UserUCC {
    */
   @Override
   public List<UserDTO> getAllUsers() {
+    Logs.log(Level.INFO, "UserUCC (getAllUsers) : entrance");
+    Logs.log(Level.DEBUG, "UserUCC (getAllUsers) : success!");
     return userDAO.getAllUsers();
   }
 
@@ -66,13 +70,16 @@ public class UserUCCImpl implements UserUCC {
    * @return the user found.
    */
   public UserDTO getOneById(int id) {
+    Logs.log(Level.INFO, "UserUCC (getOneById) : entrance");
     dalServices.startTransaction();
     UserDTO user = userDAO.getOneUserById(id);
     if (user == null) {
       dalServices.rollbackTransaction();
+      Logs.log(Level.ERROR, "UserUCC (getOneById) : user is not in db");
       throw new IllegalArgumentException("id unknown");
     }
     dalServices.commitTransaction();
+    Logs.log(Level.DEBUG, "UserUCC (getOneById) : success!");
     return user;
   }
 }
