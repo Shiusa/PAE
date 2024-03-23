@@ -1,7 +1,7 @@
 package be.vinci.pae.domain.ucc;
 
 import be.vinci.pae.domain.User;
-import be.vinci.pae.domain.UserDTO;
+import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.utils.exceptions.BadRequestException;

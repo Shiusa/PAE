@@ -1,5 +1,7 @@
 package be.vinci.pae.domain;
 
+import be.vinci.pae.domain.dto.UserDTO;
+
 /**
  * UserFactory Interface.
  */

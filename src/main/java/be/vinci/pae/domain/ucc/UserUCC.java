@@ -1,6 +1,6 @@
 package be.vinci.pae.domain.ucc;
 
-import be.vinci.pae.domain.UserDTO;
+import be.vinci.pae.domain.dto.UserDTO;
 import java.util.List;
 
 /**

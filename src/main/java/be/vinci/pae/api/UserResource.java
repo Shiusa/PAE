@@ -1,8 +1,8 @@
 package be.vinci.pae.api;
 
 import be.vinci.pae.api.filters.Authorize;
-import be.vinci.pae.domain.UserDTO;
 import be.vinci.pae.domain.UserFactory;
+import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.domain.ucc.UserUCC;
 import be.vinci.pae.utils.Config;
 import be.vinci.pae.utils.exceptions.BadRequestException;
