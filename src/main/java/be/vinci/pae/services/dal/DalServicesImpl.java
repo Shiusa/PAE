@@ -32,9 +32,7 @@ public class DalServicesImpl implements DalServices, DalBackendServices {
       dataSource.setUrl(Config.getProperty("postgresUrl"));
       dataSource.setUsername(Config.getProperty("postgresUser"));
       dataSource.setPassword(Config.getProperty("postgresPassword"));
-      dataSource.setMinIdle(2);
-      dataSource.setMaxIdle(10);
-      dataSource.setMaxOpenPreparedStatements(100);
+      dataSource.setMaxTotal(5);
     } catch (Exception e) {
       throw new FatalException(e);
     }
