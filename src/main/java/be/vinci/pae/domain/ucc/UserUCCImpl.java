@@ -1,5 +1,6 @@
 package be.vinci.pae.domain.ucc;
 
+import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.User;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.services.dal.DalServicesConnection;
@@ -28,23 +29,23 @@ public class UserUCCImpl implements UserUCC {
    */
   @Override
   public UserDTO login(String email, String password) {
-    dalServices.startTransaction();
+    User user;
+    UserDTO userDTOFound;
 
-    UserDTO userDTOFound = userDAO.getOneUserByEmail(email);
-
-    User user = (User) userDTOFound;
-
+    try {
+      dalServices.startTransaction();
+      userDTOFound = userDAO.getOneUserByEmail(email);
+      user = (User) userDTOFound;
+    } catch (Exception e) {
+      dalServices.rollbackTransaction();
+      throw e;
+    }
     if (user == null) {
       throw new ResourceNotFoundException();
     }
     if (!user.checkPassword(password)) {
       throw new InvalidRequestException();
     }
-    if (user == null || !user.checkPassword(password)) {
-      dalServices.rollbackTransaction();
-      return null;
-    }
-
     dalServices.commitTransaction();
     return userDTOFound;
   }
@@ -55,8 +56,18 @@ public class UserUCCImpl implements UserUCC {
    * @return a list containing all the users.
    */
   @Override
+  @Authorize
   public List<UserDTO> getAllUsers() {
-    return userDAO.getAllUsers();
+    List<UserDTO> userList;
+    try {
+      dalServices.startTransaction();
+      userList = userDAO.getAllUsers();
+    } catch (Exception e) {
+      dalServices.rollbackTransaction();
+      throw e;
+    }
+    dalServices.commitTransaction();
+    return userList;
   }
 
   /**
@@ -66,11 +77,16 @@ public class UserUCCImpl implements UserUCC {
    * @return the user found.
    */
   public UserDTO getOneById(int id) {
-    dalServices.startTransaction();
-    UserDTO user = userDAO.getOneUserById(id);
-    if (user == null) {
+    UserDTO user;
+    try {
+      dalServices.startTransaction();
+      user = userDAO.getOneUserById(id);
+    } catch (Exception e) {
       dalServices.rollbackTransaction();
-      throw new IllegalArgumentException("id unknown");
+      throw e;
+    }
+    if (user == null) {
+      throw new ResourceNotFoundException();
     }
     dalServices.commitTransaction();
     return user;

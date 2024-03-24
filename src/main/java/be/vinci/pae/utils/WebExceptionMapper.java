@@ -3,6 +3,7 @@ package be.vinci.pae.utils;
 import be.vinci.pae.utils.exceptions.FatalException;
 import be.vinci.pae.utils.exceptions.InvalidRequestException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
+import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -29,6 +30,9 @@ public class WebExceptionMapper implements ExceptionMapper<Throwable> {
       return Response.status(Status.NOT_FOUND)
           .entity(exception.getMessage())
           .build();
+    }
+    if (exception instanceof WebApplicationException) {
+      return ((WebApplicationException) exception).getResponse();
     }
     return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
         .entity(exception.getMessage())

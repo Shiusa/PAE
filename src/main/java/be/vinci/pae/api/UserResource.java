@@ -4,8 +4,6 @@ import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.domain.ucc.UserUCC;
 import be.vinci.pae.utils.Config;
-import be.vinci.pae.utils.exceptions.FatalException;
-import be.vinci.pae.utils.exceptions.InvalidRequestException;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -22,6 +20,7 @@ import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 import java.util.List;
 import org.glassfish.jersey.server.ContainerRequest;
 
@@ -49,30 +48,21 @@ public class UserResource {
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode login(JsonNode json) {
     if (!json.hasNonNull("email") || !json.hasNonNull("password")) {
-      throw new InvalidRequestException();
+      throw new WebApplicationException("Email and password required", Response.Status.BAD_REQUEST);
     }
     if (json.get("email").asText().isBlank() || json.get("password").asText().isBlank()) {
-      throw new InvalidRequestException();
+      System.out.println("here");
+      throw new WebApplicationException("Email and password cannot be blank",
+          Response.Status.BAD_REQUEST);
     }
 
     String email = json.get("email").asText();
     String password = json.get("password").asText();
 
     UserDTO userDTO;
-    String token;
     userDTO = userUCC.login(email, password);
 
-    try {
-      token = JWT.create().withIssuer("auth0")
-          .withClaim("user", userDTO.getId()).sign(this.jwtAlgorithm);
-      ObjectNode publicUser = jsonMapper.createObjectNode()
-          .put("token", token)
-          .putPOJO("user", userDTO);
-      return publicUser;
-    } catch (Exception e) {
-      System.out.println("Error while creating token");
-      throw new FatalException(e);
-    }
+    return createToken(userDTO);
   }
 
   /**
@@ -81,15 +71,10 @@ public class UserResource {
    * @return a list containing all the users.
    */
   @GET
+  @Path("all")
   @Produces(MediaType.APPLICATION_JSON)
   public List<UserDTO> getAll() {
-    List<UserDTO> userDTOList;
-    try {
-      userDTOList = userUCC.getAllUsers();
-    } catch (FatalException e) {
-      throw e;
-    }
-    return userDTOList;
+    return userUCC.getAllUsers();
   }
 
   /**
@@ -104,6 +89,10 @@ public class UserResource {
   @Authorize
   public ObjectNode rememberMe(@Context ContainerRequest request) {
     UserDTO userDTO = (UserDTO) request.getProperty("user");
+    return createToken(userDTO);
+  }
+
+  private ObjectNode createToken(UserDTO userDTO) {
     String token;
     try {
       token = JWT.create().withIssuer("auth0")
@@ -114,7 +103,7 @@ public class UserResource {
       return publicUser;
     } catch (Exception e) {
       System.out.println("Error while creating token");
-      throw new WebApplicationException("error while creating token", Response.Status.UNAUTHORIZED);
+      throw new WebApplicationException("error while creating token", Status.UNAUTHORIZED);
     }
   }
 }

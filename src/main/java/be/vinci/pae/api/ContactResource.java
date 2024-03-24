@@ -4,7 +4,6 @@ import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.dto.ContactDTO;
 import be.vinci.pae.domain.ucc.ContactUCC;
 import be.vinci.pae.utils.Config;
-import be.vinci.pae.utils.exceptions.InvalidRequestException;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -44,15 +43,12 @@ public class ContactResource {
   @Authorize
   public ObjectNode start(JsonNode json) {
     if (!json.hasNonNull("company") || !json.hasNonNull("student")) {
-      throw new WebApplicationException("company and student", Response.Status.BAD_REQUEST);
+      throw new WebApplicationException("company and student required",
+          Response.Status.BAD_REQUEST);
     }
-    if (json.get("company").asText().isBlank()) {
-      throw new WebApplicationException("company required", Response.Status.BAD_REQUEST);
+    if (json.get("company").asText().isBlank() || json.get("student").asText().isBlank()) {
+      throw new WebApplicationException("company cannot be blank", Response.Status.BAD_REQUEST);
     }
-    if (json.get("student").asText().isBlank()) {
-      throw new WebApplicationException("student required", Response.Status.BAD_REQUEST);
-    }
-
     int company = json.get("company").asInt();
     int student = json.get("student").asInt();
 
@@ -75,10 +71,10 @@ public class ContactResource {
   @Authorize
   public ObjectNode unsupervise(JsonNode json) {
     if (!json.hasNonNull("contactId")) {
-      throw new InvalidRequestException();
+      throw new WebApplicationException("Contact id required", Response.Status.BAD_REQUEST);
     }
     if (json.get("contactId").asText().isBlank()) {
-      throw new InvalidRequestException();
+      throw new WebApplicationException("Contact id cannot be blank", Response.Status.BAD_REQUEST);
     }
     int contactId = json.get("contactId").asInt();
     ContactDTO contactDTO = contactUCC.unsupervise(contactId);

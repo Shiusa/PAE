@@ -24,13 +24,19 @@ public class ContactUCCImpl implements ContactUCC {
 
   @Override
   public ContactDTO start(int company, int student) {
-    dalServices.startTransaction();
-    UserDTO studentDTO = userDAO.getOneUserById(student);
-    String schoolYear = studentDTO.getSchoolYear();
-    ContactDTO contactFound = contactDAO
-        .findContactByCompanyStudentSchoolYear(company, student, schoolYear);
-    if (contactFound.getCompany() == company) {
+    UserDTO studentDTO;
+    String schoolYear;
+    ContactDTO contactFound;
+    try {
+      dalServices.startTransaction();
+      studentDTO = userDAO.getOneUserById(student);
+      schoolYear = studentDTO.getSchoolYear();
+      contactFound = contactDAO.findContactByCompanyStudentSchoolYear(company, student, schoolYear);
+    } catch (Exception e) {
       dalServices.rollbackTransaction();
+      throw e;
+    }
+    if (contactFound.getCompany() == company) {
       throw new DuplicateException("This contact already exist for this year.");
     }
     ContactDTO contact = contactDAO.startContact(company, student, schoolYear);
