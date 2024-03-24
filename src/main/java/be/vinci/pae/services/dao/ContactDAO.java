@@ -27,4 +27,7 @@ public interface ContactDAO {
    */
   ContactDTO startContact(int company, int student, String schoolYear);
 
+  ContactDTO findContactById(int contact_id);
+
+  ContactDTO unsupervise(int contactId);
 }
