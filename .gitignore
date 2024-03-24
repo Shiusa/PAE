@@ -5,6 +5,8 @@
 ### IntelliJ ###
 .idea/
 dev.properties
+logs/
+*.log
 
 ### Eclipse ###
 .metadata

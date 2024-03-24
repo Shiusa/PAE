@@ -14,4 +14,12 @@ public interface ContactUCC {
    */
   ContactDTO start(int company, int student);
 
+  /**
+   * Unsupervised the contact.
+   *
+   * @param companyId the id of the contact.
+   * @return the unsupervised state of a contact.
+   */
+  ContactDTO unsupervise(int companyId);
+
 }

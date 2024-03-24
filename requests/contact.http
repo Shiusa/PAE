@@ -23,3 +23,12 @@ Authorization: {{eleonoreToken}}
   "company": "2",
   "student": "3"
 }
+
+### Unsupervise one contact
+POST {{baseUrl}}/contacts/unsupervise
+Content-Type: application/json
+Authorization: {{eleonoreToken}}
+
+{
+  "contactId":"3"
+}
