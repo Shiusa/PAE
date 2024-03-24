@@ -98,15 +98,15 @@ public class UserUCCImpl implements UserUCC {
       dalServices.startTransaction();
       UserDTO existingUser = userDAO.getOneUserByEmail(user.getEmail());
       if (existingUser != null) {
-        throw new BadRequestException();
+        throw new InvalidRequestException();
       }
 
       User userHashPwd = (User) user;
       userHashPwd.hashPassword();
 
-      registeredUser = userDAO.addOneUser((UserDTO) userHashPwd);
+      registeredUser = userDAO.addOneUser(userHashPwd);
       if (registeredUser == null) {
-        throw new BadRequestException();
+        throw new InvalidRequestException();
       }
 
       dalServices.commitTransaction();
