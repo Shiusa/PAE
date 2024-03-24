@@ -124,6 +124,7 @@ public class DalServicesImpl implements DalServices, DalBackendServices {
     Connection connection = getConnection();
     try {
       connection.rollback();
+      connection.setAutoCommit(true);
     } catch (SQLException e) {
       throw new FatalException(e);
     } finally {
