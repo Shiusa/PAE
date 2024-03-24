@@ -1,6 +1,7 @@
 package be.vinci.pae.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import java.sql.Date;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -14,7 +15,7 @@ public class UserImpl implements User {
   private String lastname;
   private String firstname;
   private String phoneNumber;
-  @JsonIgnore
+  @JsonProperty(access = Access.WRITE_ONLY)
   private String password;
   private Date registrationDate;
   private String schoolYear;

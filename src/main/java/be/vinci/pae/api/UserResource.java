@@ -135,8 +135,8 @@ public class UserResource {
   /**
    * Register route.
    *
-   * @param userToRegister object containing email, lastname, firstname, phone number, password,
-   *                       role.
+   * @param userToRegister UserDTO object containing email, lastname, firstname, phone number,
+   *                       password, role.
    * @return a User.
    */
   @POST
@@ -145,57 +145,28 @@ public class UserResource {
   @Produces(MediaType.APPLICATION_JSON)
   public UserDTO register(UserDTO userToRegister) {
 
-    /*if (!json.hasNonNull("email") || !json.hasNonNull("lastname") || !json.hasNonNull("firstname")
-        || !json.hasNonNull("phoneNumber") || !json.hasNonNull("password")) {
-      throw new BadRequestException();
+    if (userToRegister.getEmail().isBlank() || userToRegister.getLastname().isBlank()
+        || userToRegister.getFirstname().isBlank() || userToRegister.getPhoneNumber().isBlank()
+        || userToRegister.getPassword().isBlank() || userToRegister.getRole().isBlank()) {
+      throw new InvalidRequestException();
     }
-    if (json.get("email").asText().isBlank() || json.get("lastname").asText().isBlank() || json.get(
-        "firstname").asText().isBlank() || json.get("phoneNumber").asText().isBlank() || json.get(
-        "password").asText().isBlank()) {
-      throw new BadRequestException();
-    }*/
 
-    //UserDTO user = userFactory.getUserDTO();
-
-
-    /*user.setEmail();
-    user.setLastname(json.get("lastname").asText());
-    user.setFirstname(json.get("firstname").asText());
-    user.setPhoneNumber(json.get("phoneNumber").asText());
-    user.setPassword(json.get("password").asText());*/
     LocalDate localDate = LocalDate.now();
     Date registrationDate = Date.valueOf(localDate);
     userToRegister.setRegistrationDate(registrationDate);
     int monthValue = localDate.getMonthValue();
     String schoolYear;
     if (monthValue >= 9) {
-      schoolYear =
-          String.valueOf(localDate.getYear()) + "-" + String.valueOf(
-              localDate.plusYears(1).getYear());
+      schoolYear = localDate.getYear() + "-" + localDate.plusYears(1).getYear();
     } else {
-      schoolYear =
-          String.valueOf(localDate.minusYears(1).getYear()) + "-" + String.valueOf(
-              localDate.getYear());
+      schoolYear = localDate.minusYears(1).getYear() + "-" + localDate.getYear();
     }
     userToRegister.setSchoolYear(schoolYear);
-    /*user.setRole(json.get("role").asText());*/
 
     UserDTO registeredUser;
 
     registeredUser = userUCC.register(userToRegister);
     return registeredUser;
-
-    /*try {
-      registeredUser = userUCC.register(user);
-      ObjectNode publicUser = jsonMapper.createObjectNode()
-          .putPOJO("user", registeredUser);
-
-      return publicUser;
-    } catch (FatalException e) {
-      throw new FatalException(e);
-    } catch (BadRequestException e) {
-      throw new BadRequestException();
-    }*/
 
   }
 }
