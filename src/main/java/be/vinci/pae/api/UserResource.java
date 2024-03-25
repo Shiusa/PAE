@@ -51,7 +51,6 @@ public class UserResource {
       throw new WebApplicationException("Email and password required", Response.Status.BAD_REQUEST);
     }
     if (json.get("email").asText().isBlank() || json.get("password").asText().isBlank()) {
-      System.out.println("here");
       throw new WebApplicationException("Email and password cannot be blank",
           Response.Status.BAD_REQUEST);
     }

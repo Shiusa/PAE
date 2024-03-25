@@ -83,27 +83,22 @@ public class ContactDAOImpl implements ContactDAO {
         WHERE contacts.contact_id = ?
         """;
     PreparedStatement ps = dalServices.getPreparedStatement(requestSql);
-
     try {
       ps.setInt(1, contactId);
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
-
     ContactDTO contact = buildContactDTO(ps);
-
     try {
       ps.close();
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
-
     return contact;
   }
 
   @Override
   public ContactDTO unsupervise(int contactId) {
-    ContactDTO contactDTO = contactFactory.getContactDTO();
     String requestSql = """
         UPDATE proStage.contacts
         SET contact_state = 'unsupervised'
@@ -117,7 +112,6 @@ public class ContactDAOImpl implements ContactDAO {
     } catch (SQLException e) {
       throw new FatalException(e);
     }
-    System.out.println(contactDTO.getId());
     return buildContactDTO(ps);
   }
 
