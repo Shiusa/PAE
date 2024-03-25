@@ -6,9 +6,11 @@ import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.services.dal.DalServicesConnection;
 import be.vinci.pae.services.dao.ContactDAO;
 import be.vinci.pae.services.dao.UserDAO;
+import be.vinci.pae.utils.Logs;
 import be.vinci.pae.utils.exceptions.DuplicateException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
 import jakarta.inject.Inject;
+import org.apache.logging.log4j.Level;
 
 /**
  * Implementation of ContactUCC.
@@ -29,6 +31,7 @@ public class ContactUCCImpl implements ContactUCC {
     ContactDTO contactFound;
     ContactDTO contact;
     try {
+      Logs.log(Level.DEBUG, "ContactUCC (start) : entrance");
       dalServices.startTransaction();
       studentDTO = userDAO.getOneUserById(student);
       schoolYear = studentDTO.getSchoolYear();
@@ -39,9 +42,12 @@ public class ContactUCCImpl implements ContactUCC {
       throw e;
     }
     if (contactFound.getCompany() == company) {
+      Logs.log(Level.ERROR,
+          "ContactUCC (start) : contact already exist with this student, company, year");
       throw new DuplicateException("This contact already exist for this year.");
     }
     dalServices.commitTransaction();
+    Logs.log(Level.DEBUG, "ContactUCC (start) : success!");
     return contact;
   }
 

@@ -4,6 +4,8 @@ import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.domain.ucc.UserUCC;
 import be.vinci.pae.utils.Config;
+import be.vinci.pae.utils.Logs;
+import be.vinci.pae.utils.exceptions.FatalException;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -20,8 +22,8 @@ import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
 import java.util.List;
+import org.apache.logging.log4j.Level;
 import org.glassfish.jersey.server.ContainerRequest;
 
 /**
@@ -47,7 +49,9 @@ public class UserResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode login(JsonNode json) {
+    Logs.log(Level.INFO, "UserResource (login) : entrance");
     if (!json.hasNonNull("email") || !json.hasNonNull("password")) {
+      Logs.log(Level.WARN, "UserResource (login) : email or password is null");
       throw new WebApplicationException("Email and password required", Response.Status.BAD_REQUEST);
     }
     if (json.get("email").asText().isBlank() || json.get("password").asText().isBlank()) {
@@ -61,7 +65,19 @@ public class UserResource {
     UserDTO userDTO;
     userDTO = userUCC.login(email, password);
 
-    return createToken(userDTO);
+    String token;
+    try {
+      token = JWT.create().withIssuer("auth0")
+          .withClaim("user", userDTO.getId()).sign(this.jwtAlgorithm);
+      ObjectNode publicUser = jsonMapper.createObjectNode()
+          .put("token", token)
+          .putPOJO("user", userDTO);
+      Logs.log(Level.WARN, "UserResource (login) : success!");
+      return publicUser;
+    } catch (Exception e) {
+      Logs.log(Level.FATAL, "UserResource (login) : internal error");
+      throw new FatalException(e);
+    }
   }
 
   /**
@@ -73,7 +89,15 @@ public class UserResource {
   @Path("all")
   @Produces(MediaType.APPLICATION_JSON)
   public List<UserDTO> getAll() {
-    return userUCC.getAllUsers();
+    Logs.log(Level.INFO, "UserResource (getAll) : entrance");
+    List<UserDTO> userDTOList;
+    try {
+      userDTOList = userUCC.getAllUsers();
+    } catch (FatalException e) {
+      throw e;
+    }
+    Logs.log(Level.DEBUG, "UserResource(getAll) : success!");
+    return userDTOList;
   }
 
   /**
@@ -87,6 +111,7 @@ public class UserResource {
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize
   public ObjectNode rememberMe(@Context ContainerRequest request) {
+    Logs.log(Level.INFO, "UserResource (rememberMe) : entrance");
     UserDTO userDTO = (UserDTO) request.getProperty("user");
     return createToken(userDTO);
   }
@@ -99,10 +124,11 @@ public class UserResource {
       ObjectNode publicUser = jsonMapper.createObjectNode()
           .put("token", token)
           .putPOJO("user", userDTO);
+      Logs.log(Level.DEBUG, "UserResource (rememberMe) : success!");
       return publicUser;
     } catch (Exception e) {
-      System.out.println("Error while creating token");
-      throw new WebApplicationException("error while creating token", Status.UNAUTHORIZED);
+      Logs.log(Level.ERROR, "UserResource (rememberMe) : error creating token");
+      throw new WebApplicationException("error while creating token", Response.Status.UNAUTHORIZED);
     }
   }
 }
