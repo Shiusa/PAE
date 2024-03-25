@@ -27,11 +27,13 @@ public class ContactUCCImpl implements ContactUCC {
     UserDTO studentDTO;
     String schoolYear;
     ContactDTO contactFound;
+    ContactDTO contact;
     try {
       dalServices.startTransaction();
       studentDTO = userDAO.getOneUserById(student);
       schoolYear = studentDTO.getSchoolYear();
       contactFound = contactDAO.findContactByCompanyStudentSchoolYear(company, student, schoolYear);
+      contact = contactDAO.startContact(company, student, schoolYear);
     } catch (Exception e) {
       dalServices.rollbackTransaction();
       throw e;
@@ -39,7 +41,6 @@ public class ContactUCCImpl implements ContactUCC {
     if (contactFound.getCompany() == company) {
       throw new DuplicateException("This contact already exist for this year.");
     }
-    ContactDTO contact = contactDAO.startContact(company, student, schoolYear);
     dalServices.commitTransaction();
     return contact;
   }
@@ -52,13 +53,19 @@ public class ContactUCCImpl implements ContactUCC {
    */
   @Override
   public ContactDTO unsupervise(int contactId) {
-    dalServices.startTransaction();
-    Contact contact = (Contact) contactDAO.findContactById(contactId);
-    if (!contact.isStarted() && !contact.isAdmitted()) {
+    Contact contact;
+    ContactDTO contactDTO;
+    try {
+      dalServices.startTransaction();
+      contact = (Contact) contactDAO.findContactById(contactId);
+      contactDTO = contactDAO.unsupervise(contactId);
+    } catch (Exception e) {
       dalServices.rollbackTransaction();
+      throw e;
+    }
+    if (!contact.isStarted() && !contact.isAdmitted()) {
       throw new ResourceNotFoundException();
     }
-    ContactDTO contactDTO = contactDAO.unsupervise(contactId);
     dalServices.commitTransaction();
     return contactDTO;
   }
