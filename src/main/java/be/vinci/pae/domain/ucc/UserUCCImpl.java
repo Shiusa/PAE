@@ -5,8 +5,8 @@ import be.vinci.pae.domain.User;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.services.dal.DalServicesConnection;
 import be.vinci.pae.services.dao.UserDAO;
-import be.vinci.pae.utils.exceptions.InvalidRequestException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
+import be.vinci.pae.utils.exceptions.UnauthorizedAccesException;
 import jakarta.inject.Inject;
 import java.util.List;
 
@@ -41,10 +41,10 @@ public class UserUCCImpl implements UserUCC {
       throw e;
     }
     if (user == null) {
-      throw new ResourceNotFoundException();
+      throw new ResourceNotFoundException("User not found.");
     }
     if (!user.checkPassword(password)) {
-      throw new InvalidRequestException();
+      throw new UnauthorizedAccesException("The password is incorrect");
     }
     dalServices.commitTransaction();
     return userDTOFound;
@@ -65,6 +65,9 @@ public class UserUCCImpl implements UserUCC {
     } catch (Exception e) {
       dalServices.rollbackTransaction();
       throw e;
+    }
+    if (userList.isEmpty()) {
+      throw new ResourceNotFoundException("Users not found.");
     }
     dalServices.commitTransaction();
     return userList;
