@@ -6,9 +6,18 @@ package be.vinci.pae.utils.exceptions;
 public class ResourceNotFoundException extends RuntimeException {
 
   /**
-   * Not found exception.
+   * Resource not found exception.
    */
   public ResourceNotFoundException() {
     super();
+  }
+
+  /**
+   * Resource not found exception with a parameter.
+   *
+   * @param e message
+   */
+  public ResourceNotFoundException(String e) {
+    super(e);
   }
 }

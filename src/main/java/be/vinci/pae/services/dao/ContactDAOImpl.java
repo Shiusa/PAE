@@ -40,7 +40,7 @@ public class ContactDAOImpl implements ContactDAO {
       ps.setString(3, schoolYear);
     } catch (SQLException e) {
       Logs.log(Level.FATAL, "ContactDAO (findContactByCompanyStudentSchoolYear) : internal error");
-      throw new RuntimeException(e);
+      throw new FatalException(e);
     }
 
     ContactDTO contact = buildContactDTO(ps);
@@ -49,7 +49,7 @@ public class ContactDAOImpl implements ContactDAO {
       ps.close();
     } catch (SQLException e) {
       Logs.log(Level.FATAL, "ContactDAO (findContactByCompanyStudentSchoolYear) : internal error");
-      throw new RuntimeException(e);
+      throw new FatalException(e);
     }
 
     Logs.log(Level.DEBUG, "ContactDAO (findContactByCompanyStudentSchoolYear) : success!");
@@ -71,7 +71,7 @@ public class ContactDAOImpl implements ContactDAO {
       ps.setString(4, schoolYear);
     } catch (SQLException e) {
       Logs.log(Level.FATAL, "ContactDAO (startContact) : internal error");
-      throw new RuntimeException(e);
+      throw new FatalException(e);
     }
 
     ContactDTO contact = buildContactDTO(ps);
@@ -79,7 +79,7 @@ public class ContactDAOImpl implements ContactDAO {
       ps.close();
     } catch (SQLException e) {
       Logs.log(Level.FATAL, "ContactDAO (startContact) : internal error");
-      throw new RuntimeException(e);
+      throw new FatalException(e);
     }
     Logs.log(Level.DEBUG, "ContactDAO (startContact) : success!");
     return contact;
@@ -94,21 +94,18 @@ public class ContactDAOImpl implements ContactDAO {
         WHERE contacts.contact_id = ?
         """;
     PreparedStatement ps = dalServices.getPreparedStatement(requestSql);
-
     try {
       ps.setInt(1, contactId);
     } catch (SQLException e) {
       Logs.log(Level.FATAL, "ContactDAO (findContactById) : internal error");
-      throw new RuntimeException(e);
+      throw new FatalException(e);
     }
-
     ContactDTO contact = buildContactDTO(ps);
-
     try {
       ps.close();
     } catch (SQLException e) {
       Logs.log(Level.FATAL, "ContactDAO (findContactById) : internal error");
-      throw new RuntimeException(e);
+      throw new FatalException(e);
     }
 
     Logs.log(Level.DEBUG, "ContactDAO (findContactByCompanyStudentSchoolYear) : success!");

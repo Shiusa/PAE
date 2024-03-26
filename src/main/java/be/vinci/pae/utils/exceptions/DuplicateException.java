@@ -6,14 +6,14 @@ package be.vinci.pae.utils.exceptions;
 public class DuplicateException extends RuntimeException {
 
   /**
-   * Constructor.
+   * Duplicate exception.
    */
   public DuplicateException() {
     super();
   }
 
   /**
-   * Constructor.
+   * Duplicate exception with a parameter.
    *
    * @param e message.
    */
