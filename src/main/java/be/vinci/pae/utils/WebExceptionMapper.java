@@ -3,6 +3,7 @@ package be.vinci.pae.utils;
 import be.vinci.pae.utils.exceptions.DuplicateException;
 import be.vinci.pae.utils.exceptions.FatalException;
 import be.vinci.pae.utils.exceptions.InvalidRequestException;
+import be.vinci.pae.utils.exceptions.NotAllowedException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -33,6 +34,11 @@ public class WebExceptionMapper implements ExceptionMapper<Throwable> {
     }
     if (exception instanceof DuplicateException) {
       return Response.status(Status.CONFLICT)
+          .entity(exception.getMessage())
+          .build();
+    }
+    if (exception instanceof NotAllowedException) {
+      return Response.status(Status.FORBIDDEN)
           .entity(exception.getMessage())
           .build();
     }
