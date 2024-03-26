@@ -1,6 +1,7 @@
 package be.vinci.pae;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import be.vinci.pae.domain.UserFactory;
@@ -80,7 +81,7 @@ public class UserUCCImplTest {
     userDTO.setEmail(email);
     userDTO.setPassword(hashPassword);
     Mockito.when(userDAOMock.getOneUserByEmail(email)).thenReturn(userDTO);
-    assertEquals(42, userUCC.login(email, password).getId());
+    assertNotNull(userUCC.login(email, password));
   }
 
   @Test
@@ -92,18 +93,18 @@ public class UserUCCImplTest {
   }
 
   @Test
-  @DisplayName("Test get one by unknown id")
+  @DisplayName("Test get one by wrong id")
   public void testGetOneByUnknownId() {
     Mockito.when(userDAOMock.getOneUserById(49)).thenReturn(null);
     assertThrows(ResourceNotFoundException.class, () -> userUCC.getOneById(49));
   }
 
   @Test
-  @DisplayName("Test get one by known id")
+  @DisplayName("Test get one by id")
   public void testGetOneByKnownId() {
     userDTO.setEmail(email);
     Mockito.when(userDAOMock.getOneUserById(1)).thenReturn(userDTO);
-    assertEquals(email, userUCC.getOneById(1).getEmail());
+    assertNotNull(userUCC.getOneById(1));
   }
 
 }

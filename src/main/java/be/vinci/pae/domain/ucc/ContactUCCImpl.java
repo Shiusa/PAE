@@ -77,13 +77,17 @@ public class ContactUCCImpl implements ContactUCC {
   @Override
   public ContactDTO unsupervise(int contactId) {
     dalServices.startTransaction();
+    Logs.log(Level.DEBUG, "ContactUCC (unsupervise) : entrance");
     Contact contact = (Contact) contactDAO.findContactById(contactId);
-    if (!contact.isStarted() && !contact.isAdmitted()) {
+    if (contact == null) {
       dalServices.rollbackTransaction();
+      Logs.log(Level.ERROR,
+          "ContactUCC (unsupervise) : contact not found");
       throw new ResourceNotFoundException();
     }
     ContactDTO contactDTO = contactDAO.unsupervise(contactId);
     dalServices.commitTransaction();
+    Logs.log(Level.DEBUG, "ContactUCC (unsupervise) : success!");
     return contactDTO;
   }
 }
