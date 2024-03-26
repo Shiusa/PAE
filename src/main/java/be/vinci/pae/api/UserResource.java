@@ -62,22 +62,8 @@ public class UserResource {
     String email = json.get("email").asText();
     String password = json.get("password").asText();
 
-    UserDTO userDTO;
-    userDTO = userUCC.login(email, password);
-
-    String token;
-    try {
-      token = JWT.create().withIssuer("auth0")
-          .withClaim("user", userDTO.getId()).sign(this.jwtAlgorithm);
-      ObjectNode publicUser = jsonMapper.createObjectNode()
-          .put("token", token)
-          .putPOJO("user", userDTO);
-      Logs.log(Level.WARN, "UserResource (login) : success!");
-      return publicUser;
-    } catch (Exception e) {
-      Logs.log(Level.FATAL, "UserResource (login) : internal error");
-      throw new FatalException(e);
-    }
+    UserDTO userDTO = userUCC.login(email, password);
+    return buildToken(userDTO);
   }
 
   /**
@@ -113,10 +99,16 @@ public class UserResource {
   public ObjectNode rememberMe(@Context ContainerRequest request) {
     Logs.log(Level.INFO, "UserResource (rememberMe) : entrance");
     UserDTO userDTO = (UserDTO) request.getProperty("user");
-    return createToken(userDTO);
+    return buildToken(userDTO);
   }
 
-  private ObjectNode createToken(UserDTO userDTO) {
+  /**
+   * Build a token based on a UserDTO.
+   *
+   * @param userDTO the userDTO.
+   * @return the token built.
+   */
+  private ObjectNode buildToken(UserDTO userDTO) {
     String token;
     try {
       token = JWT.create().withIssuer("auth0")
@@ -124,11 +116,11 @@ public class UserResource {
       ObjectNode publicUser = jsonMapper.createObjectNode()
           .put("token", token)
           .putPOJO("user", userDTO);
-      Logs.log(Level.DEBUG, "UserResource (rememberMe) : success!");
+      Logs.log(Level.WARN, "UserResource (login) : success!");
       return publicUser;
     } catch (Exception e) {
-      Logs.log(Level.ERROR, "UserResource (rememberMe) : error creating token");
-      throw new WebApplicationException("error while creating token", Response.Status.UNAUTHORIZED);
+      Logs.log(Level.FATAL, "UserResource (login) : internal error");
+      throw new FatalException(e);
     }
   }
 }

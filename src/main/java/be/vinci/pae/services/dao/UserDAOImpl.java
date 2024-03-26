@@ -18,9 +18,6 @@ import org.apache.logging.log4j.Level;
  */
 public class UserDAOImpl implements UserDAO {
 
-  /**
-   * Implementation of UserDAO class.
-   */
   @Inject
   private DalServices dalServices;
   @Inject
@@ -60,7 +57,7 @@ public class UserDAOImpl implements UserDAO {
       ps.setInt(1, id);
     } catch (SQLException e) {
       Logs.log(Level.FATAL, "UserDAO (getOneUserById) : internal error");
-      throw new RuntimeException(e);
+      throw new FatalException(e);
     }
     Logs.log(Level.DEBUG, "UserDAO (getOneUserById) : success!");
     return buildUserDTO(ps);

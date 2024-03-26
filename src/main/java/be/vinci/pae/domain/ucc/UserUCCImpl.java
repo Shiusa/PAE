@@ -6,6 +6,7 @@ import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.services.dal.DalServicesConnection;
 import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.utils.Logs;
+import be.vinci.pae.utils.exceptions.FatalException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
 import be.vinci.pae.utils.exceptions.UnauthorizedAccesException;
 import jakarta.inject.Inject;
@@ -38,16 +39,18 @@ public class UserUCCImpl implements UserUCC {
       dalServices.startTransaction();
       userDTOFound = userDAO.getOneUserByEmail(email);
       user = (User) userDTOFound;
-    } catch (Exception e) {
+    } catch (FatalException e) {
       dalServices.rollbackTransaction();
       throw e;
     }
     if (user == null) {
       Logs.log(Level.ERROR, "UserUCC (login) : user not found");
+      dalServices.rollbackTransaction();
       throw new ResourceNotFoundException("User not found.");
     }
     if (!user.checkPassword(password)) {
       Logs.log(Level.ERROR, "UserUCC (login) : wrong password");
+      dalServices.rollbackTransaction();
       throw new UnauthorizedAccesException("The password is incorrect");
     }
     dalServices.commitTransaction();
@@ -68,12 +71,9 @@ public class UserUCCImpl implements UserUCC {
       Logs.log(Level.INFO, "UserUCC (getAllUsers) : entrance");
       dalServices.startTransaction();
       userList = userDAO.getAllUsers();
-    } catch (Exception e) {
+    } catch (FatalException e) {
       dalServices.rollbackTransaction();
       throw e;
-    }
-    if (userList.isEmpty()) {
-      throw new ResourceNotFoundException("Users not found.");
     }
     dalServices.commitTransaction();
     Logs.log(Level.DEBUG, "UserUCC (getAllUsers) : success!");
@@ -92,12 +92,13 @@ public class UserUCCImpl implements UserUCC {
       Logs.log(Level.INFO, "UserUCC (getOneById) : entrance");
       dalServices.startTransaction();
       user = userDAO.getOneUserById(id);
-    } catch (Exception e) {
+    } catch (FatalException e) {
       dalServices.rollbackTransaction();
       throw e;
     }
     if (user == null) {
       Logs.log(Level.ERROR, "UserUCC (getOneById) : user is not in db");
+      dalServices.rollbackTransaction();
       throw new ResourceNotFoundException();
     }
     dalServices.commitTransaction();
