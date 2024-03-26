@@ -135,6 +135,7 @@ public class ContactUCCImplTest {
   @DisplayName("Test unsupervise contact with wrong student")
   public void testUnsuperviseContactWrongStudent() {
     contactDTO.setStudent(5);
+    contactDTO.setState("started");
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
     assertThrows(NotAllowedException.class, () -> contactUCC.unsupervise(1, 1));
   }
@@ -143,6 +144,7 @@ public class ContactUCCImplTest {
   @DisplayName("Test unsupervise contact correctly")
   public void testUnsuperviseContactCorrectly() {
     contactDTO.setStudent(1);
+    contactDTO.setState("started");
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
     Mockito.when(contactDAOMock.unsupervise(1)).thenReturn(contactDTO);
     assertNotNull(contactUCC.unsupervise(1, 1));
