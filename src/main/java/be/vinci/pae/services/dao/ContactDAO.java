@@ -36,9 +36,9 @@ public interface ContactDAO {
   ContactDTO findContactById(int contactId);
 
   /**
-   * Unsupervise a contact.
+   * Unsupervise the contact.
    *
-   * @param contactId contact to unsupervise.
+   * @param contactId the contact id.
    * @return the unsupervised contact.
    */
   ContactDTO unsupervise(int contactId);

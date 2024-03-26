@@ -6,7 +6,6 @@ import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.domain.ucc.ContactUCC;
 import be.vinci.pae.utils.Config;
 import be.vinci.pae.utils.Logs;
-import be.vinci.pae.utils.exceptions.InvalidRequestException;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -85,10 +84,10 @@ public class ContactResource {
   public ObjectNode unsupervise(@Context ContainerRequest request, JsonNode json) {
     UserDTO userDTO = (UserDTO) request.getProperty("user");
     if (!json.hasNonNull("contactId")) {
-      throw new InvalidRequestException();
+      throw new WebApplicationException("Contact id required", Response.Status.BAD_REQUEST);
     }
     if (json.get("contactId").asText().isBlank()) {
-      throw new InvalidRequestException();
+      throw new WebApplicationException("Contact id cannot be blank", Response.Status.BAD_REQUEST);
     }
     int contactId = json.get("contactId").asInt();
     int student = userDTO.getId();

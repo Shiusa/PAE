@@ -1,7 +1,7 @@
 package be.vinci.pae.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.util.Date;
+import java.sql.Date;
 import org.mindrot.jbcrypt.BCrypt;
 
 /**
