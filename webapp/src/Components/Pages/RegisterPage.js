@@ -1,10 +1,11 @@
 // eslint-disable-next-line import/no-cycle
 import {Redirect} from "../Router/Router";
+import showNavStyle from "../../utils/function";
 
 const RegisterPage = () => {
   const main = document.querySelector('main');
-  main.innerHTML = `
-        <div class="page-login d-flex justify-content-center align-items-center">
+  main.innerHTML = ` 
+        <div class="page-login d-flex justify-content-center align-items-center mb-4 mt-5">
           <div class="box-login d-flex justify-content-center align-items-center" id="box-register-left">
             <div class="box-in-login d-flex justify-content-center align-items-center flex-column">
               <h1>Inscription</h1>
@@ -37,15 +38,7 @@ const RegisterPage = () => {
         </div>
   `;
 
-  const allNav = document.querySelectorAll(".nav-btn");
-
-  allNav.forEach((nav) => {
-    const newNav = nav;
-    newNav.style.boxShadow = "0px 0px 0px";
-  });
-
-  const regNav = document.getElementById("register");
-  regNav.style.boxShadow = "8px 8px 0px var(--ma-couleur)";
+  showNavStyle("register");
 
   const registerBtn = document.querySelector(".btn-register");
   registerBtn.addEventListener('click', () => {

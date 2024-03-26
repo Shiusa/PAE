@@ -102,4 +102,16 @@ public class ContactImpl implements Contact {
   public void setSchoolYear(String schoolYear) {
     this.schoolYear = schoolYear;
   }
+
+  @Override
+  @JsonIgnore
+  public boolean isStarted() {
+    return this.state.equals("started");
+  }
+
+  @Override
+  @JsonIgnore
+  public boolean isAdmitted() {
+    return getState().equals("admitted");
+  }
 }
