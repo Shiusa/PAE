@@ -31,7 +31,8 @@ public class UserUCCImplTest {
   private static final String firstname = "Eléonore";
   private static final String phoneNumber = "+32485123456";
   private static final String password = "123";
-  private static final String hashPassword = "$2a$10$HG7./iXYemq7gF/v9Hc98eXJFGo3KajGwPLoaiU0r9TlaxlIFxsAu";
+  private static final String hashPassword = "$2a$10$HG7./iX"
+      + "Yemq7gF/v9Hc98eXJFGo3KajGwPLoaiU0r9TlaxlIFxsAu";
   private static final String role = "teacher";
   private static final Date registrationDate = Date.valueOf(LocalDate.now());
   private static final String schoolYear = "2023-2024";
