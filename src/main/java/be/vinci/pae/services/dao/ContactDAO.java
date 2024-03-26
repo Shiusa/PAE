@@ -51,4 +51,13 @@ public interface ContactDAO {
    * @return the unsupervised contact.
    */
   ContactDTO unsupervise(int contactId);
+
+  /**
+   * Turn down a contact and give the reason for refusal.
+   *
+   * @param contactId        the id of the contact.
+   * @param reasonForRefusal the reason of the refusal.
+   * @return a ContactDTO if the update of contact was successful, null otherwise.
+   */
+  ContactDTO turnDown(int contactId, String reasonForRefusal);
 }
