@@ -120,8 +120,8 @@ public class ContactDAOImpl implements ContactDAO {
         """;
     PreparedStatement ps = dalServices.getPreparedStatement(requestSql);
     try {
-      ps.setInt(1, contactId);
-      ps.setString(2, reasonForRefusal);
+      ps.setString(1, reasonForRefusal);
+      ps.setInt(2, contactId);
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
