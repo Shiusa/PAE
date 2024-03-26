@@ -9,7 +9,6 @@ import be.vinci.pae.services.dao.CompanyDAO;
 import be.vinci.pae.services.dao.ContactDAO;
 import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.utils.Logs;
-import be.vinci.pae.utils.exceptions.BadRequestException;
 import be.vinci.pae.utils.exceptions.DuplicateException;
 import be.vinci.pae.utils.exceptions.InvalidRequestException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
@@ -75,12 +74,13 @@ public class ContactUCCImpl implements ContactUCC {
     Contact contact = (Contact) contactDAO.findContactById(contactId);
     if (!contact.checkMeeting(meeting) || !contact.isStarted()) {
       dalServices.rollbackTransaction();
-      throw new BadRequestException();
+      throw new InvalidRequestException();
     }
     ContactDTO contactDTO = contactDAO.admitContact(contactId, meeting);
     dalServices.commitTransaction();
     return contactDTO;
   }
+
   /**
    * Unsupervised the contact.
    *
