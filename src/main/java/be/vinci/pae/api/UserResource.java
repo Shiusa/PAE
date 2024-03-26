@@ -142,9 +142,11 @@ public class UserResource {
   @Produces(MediaType.APPLICATION_JSON)
   public UserDTO register(UserDTO userToRegister) {
 
+    Logs.log(Level.INFO, "UserResource (register) : entrance");
     if (userToRegister.getEmail().isBlank() || userToRegister.getLastname().isBlank()
         || userToRegister.getFirstname().isBlank() || userToRegister.getPhoneNumber().isBlank()
         || userToRegister.getPassword().isBlank() || userToRegister.getRole().isBlank()) {
+      Logs.log(Level.WARN, "UserResource (register) : missing input");
       throw new WebApplicationException("Inputs cannot be blank", Response.Status.BAD_REQUEST);
     }
 
@@ -163,6 +165,7 @@ public class UserResource {
     UserDTO registeredUser;
 
     registeredUser = userUCC.register(userToRegister);
+    Logs.log(Level.INFO, "UserResource (register) : success!");
     return registeredUser;
 
   }

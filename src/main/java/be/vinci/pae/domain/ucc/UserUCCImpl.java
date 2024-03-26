@@ -93,12 +93,14 @@ public class UserUCCImpl implements UserUCC {
   @Override
   public UserDTO register(UserDTO user) {
 
+    Logs.log(Level.DEBUG, "UserUCC (register) : entrance");
     UserDTO registeredUser;
 
     try {
       dalServices.startTransaction();
       UserDTO existingUser = userDAO.getOneUserByEmail(user.getEmail());
       if (existingUser != null) {
+        Logs.log(Level.DEBUG, "UserUCC (register) : already existing user");
         throw new DuplicateException("Cannot add existing user");
       }
 
@@ -108,8 +110,10 @@ public class UserUCCImpl implements UserUCC {
       registeredUser = userDAO.addOneUser(userHashPwd);
 
       dalServices.commitTransaction();
+      Logs.log(Level.DEBUG, "UserUCC (register) : success!");
       return registeredUser;
     } catch (Exception e) {
+      Logs.log(Level.ERROR, "UserUCC (register) : registration failed");
       dalServices.rollbackTransaction();
       throw e;
     }

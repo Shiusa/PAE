@@ -2,8 +2,8 @@ package be.vinci.pae.services.dao;
 
 import be.vinci.pae.domain.UserFactory;
 import be.vinci.pae.domain.dto.UserDTO;
-import be.vinci.pae.utils.Logs;
 import be.vinci.pae.services.dal.DalBackendServices;
+import be.vinci.pae.utils.Logs;
 import be.vinci.pae.utils.exceptions.FatalException;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
@@ -151,8 +151,9 @@ public class UserDAOImpl implements UserDAO {
   @Override
   public UserDTO addOneUser(UserDTO user) {
 
+    Logs.log(Level.DEBUG, "UserDAO (addOneUser) : entrance");
     String requestSql = """
-        INSERT INTO prostage.users(email, lastname, firstname, phone_number, 
+        INSERT INTO prostage.users(email, lastname, firstname, phone_number,
         password, registration_date, school_year, role) VALUES (?,?,?,?,?,?,?,?)
         RETURNING email AS inserted_email
         """;
@@ -168,11 +169,13 @@ public class UserDAOImpl implements UserDAO {
       ps.setString(8, user.getRole());
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
+          Logs.log(Level.DEBUG, "UserDAO (addOneUser) : success!");
           return getOneUserByEmail(rs.getString("inserted_email"));
         }
         return null;
       }
     } catch (SQLException e) {
+      Logs.log(Level.FATAL, "UserDAO (addOneUser) : internal error");
       throw new FatalException(e);
     }
 
