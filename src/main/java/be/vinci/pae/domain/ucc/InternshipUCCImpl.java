@@ -5,7 +5,8 @@ import be.vinci.pae.services.dal.DalServicesConnection;
 import be.vinci.pae.services.dao.ContactDAO;
 import be.vinci.pae.services.dao.InternshipDAO;
 import be.vinci.pae.utils.exceptions.FatalException;
-import be.vinci.pae.utils.exceptions.NotFoundException;
+import be.vinci.pae.utils.exceptions.NotAllowedException;
+import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
 import jakarta.inject.Inject;
 
 public class InternshipUCCImpl implements InternshipUCC {
@@ -26,7 +27,7 @@ public class InternshipUCCImpl implements InternshipUCC {
       internship = internshipDAO.getOneInternshipByIdUser(student);
       if (internship == null) {
         dalServices.rollbackTransaction();
-        throw new NotFoundException();
+        throw new ResourceNotFoundException();
       }
     } catch (FatalException e) {
       dalServices.rollbackTransaction();
@@ -45,7 +46,7 @@ public class InternshipUCCImpl implements InternshipUCC {
       internship = internshipDAO.getOneInternshipById(id);
       if (internship == null) {
         dalServices.rollbackTransaction();
-        throw new NotFoundException();
+        throw new ResourceNotFoundException();
       } else if (contactDAO.getOneContactById(internship.getContact()).getStudent()
           != actualStudent) {
         dalServices.rollbackTransaction();

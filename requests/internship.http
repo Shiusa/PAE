@@ -15,7 +15,7 @@ Content-Type: application/json
 %}
 
 ### Get internship
-GET {{baseUrl}}/internships/student/3
+GET {{baseUrl}}/internships/student/4
 Authorization: {{marcelToken}}
 
 ### Get internship

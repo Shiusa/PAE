@@ -1,13 +1,17 @@
 package be.vinci.pae.domain.ucc;
 
+import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.User;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.services.dal.DalServicesConnection;
 import be.vinci.pae.services.dao.UserDAO;
-import be.vinci.pae.utils.exceptions.BadRequestException;
-import be.vinci.pae.utils.exceptions.NotFoundException;
+import be.vinci.pae.utils.Logs;
+import be.vinci.pae.utils.exceptions.FatalException;
+import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
+import be.vinci.pae.utils.exceptions.UnauthorizedAccesException;
 import jakarta.inject.Inject;
 import java.util.List;
+import org.apache.logging.log4j.Level;
 
 /**
  * User UCC.
@@ -28,24 +32,29 @@ public class UserUCCImpl implements UserUCC {
    */
   @Override
   public UserDTO login(String email, String password) {
-    dalServices.startTransaction();
-
-    UserDTO userDTOFound = userDAO.getOneUserByEmail(email);
-
-    User user = (User) userDTOFound;
-
+    User user;
+    UserDTO userDTOFound;
+    try {
+      Logs.log(Level.INFO, "UserUCC (login) : entrance");
+      dalServices.startTransaction();
+      userDTOFound = userDAO.getOneUserByEmail(email);
+      user = (User) userDTOFound;
+    } catch (FatalException e) {
+      dalServices.rollbackTransaction();
+      throw e;
+    }
     if (user == null) {
-      throw new NotFoundException();
+      Logs.log(Level.ERROR, "UserUCC (login) : user not found");
+      dalServices.rollbackTransaction();
+      throw new ResourceNotFoundException("User not found.");
     }
     if (!user.checkPassword(password)) {
-      throw new BadRequestException();
-    }
-    if (user == null || !user.checkPassword(password)) {
+      Logs.log(Level.ERROR, "UserUCC (login) : wrong password");
       dalServices.rollbackTransaction();
-      return null;
+      throw new UnauthorizedAccesException("The password is incorrect");
     }
-
     dalServices.commitTransaction();
+    Logs.log(Level.DEBUG, "UserUCC (login) : success!");
     return userDTOFound;
   }
 
@@ -55,8 +64,20 @@ public class UserUCCImpl implements UserUCC {
    * @return a list containing all the users.
    */
   @Override
+  @Authorize
   public List<UserDTO> getAllUsers() {
-    return userDAO.getAllUsers();
+    List<UserDTO> userList;
+    try {
+      Logs.log(Level.INFO, "UserUCC (getAllUsers) : entrance");
+      dalServices.startTransaction();
+      userList = userDAO.getAllUsers();
+    } catch (FatalException e) {
+      dalServices.rollbackTransaction();
+      throw e;
+    }
+    dalServices.commitTransaction();
+    Logs.log(Level.DEBUG, "UserUCC (getAllUsers) : success!");
+    return userList;
   }
 
   /**
@@ -66,13 +87,22 @@ public class UserUCCImpl implements UserUCC {
    * @return the user found.
    */
   public UserDTO getOneById(int id) {
-    dalServices.startTransaction();
-    UserDTO user = userDAO.getOneUserById(id);
-    if (user == null) {
+    UserDTO user;
+    try {
+      Logs.log(Level.INFO, "UserUCC (getOneById) : entrance");
+      dalServices.startTransaction();
+      user = userDAO.getOneUserById(id);
+    } catch (FatalException e) {
       dalServices.rollbackTransaction();
-      throw new IllegalArgumentException("id unknown");
+      throw e;
+    }
+    if (user == null) {
+      Logs.log(Level.ERROR, "UserUCC (getOneById) : user is not in db");
+      dalServices.rollbackTransaction();
+      throw new ResourceNotFoundException();
     }
     dalServices.commitTransaction();
+    Logs.log(Level.DEBUG, "UserUCC (getOneById) : success!");
     return user;
   }
 }

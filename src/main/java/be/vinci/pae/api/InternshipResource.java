@@ -4,6 +4,7 @@ import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.dto.InternshipDTO;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.domain.ucc.InternshipUCC;
+import be.vinci.pae.utils.Logs;
 import be.vinci.pae.utils.exceptions.FatalException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,6 +18,7 @@ import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.apache.logging.log4j.Level;
 import org.glassfish.jersey.server.ContainerRequest;
 
 /**
@@ -44,8 +46,10 @@ public class InternshipResource {
   @Authorize
   public Response getOneInternshipByIdUser(@Context ContainerRequest request,
       @PathParam("idUser") int idUser) {
+    Logs.log(Level.INFO, "InternshipResource (getOneInternshipByIdUser) : entrance");
     UserDTO user = (UserDTO) request.getProperty("user");
     if (user.getId() != idUser) {
+      Logs.log(Level.ERROR, "InternshipResource (getOneInternshipByIdUser) : unauthorized");
       throw new WebApplicationException("unauthorized", Response.Status.UNAUTHORIZED);
     }
     InternshipDTO internshipDTO = internshipUCC.getOneByStudent(idUser);
@@ -53,8 +57,11 @@ public class InternshipResource {
     try {
       internship = jsonMapper.writeValueAsString(internshipDTO);
     } catch (JsonProcessingException e) {
+      Logs.log(Level.FATAL,
+          "InternshipResource (getOneInternshipByIdUser) : internal error");
       throw new FatalException(e);
     }
+    Logs.log(Level.DEBUG, "InternshipResource (getOneInternshipByIdUser) : success!");
     return Response.ok(internship).build();
   }
 
@@ -70,14 +77,18 @@ public class InternshipResource {
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize
   public Response getOneInternship(@Context ContainerRequest request, @PathParam("id") int id) {
+    Logs.log(Level.INFO, "InternshipResource (getOneInternship) : entrance");
     UserDTO user = (UserDTO) request.getProperty("user");
     InternshipDTO internshipDTO = internshipUCC.getOneById(id, user.getId());
     String internship;
     try {
       internship = jsonMapper.writeValueAsString(internshipDTO);
     } catch (JsonProcessingException e) {
+      Logs.log(Level.FATAL,
+          "InternshipResource (getOneInternship) : internal error");
       throw new FatalException(e);
     }
+    Logs.log(Level.DEBUG, "InternshipResource (getOneInternship) : success!");
     return Response.ok(internship).build();
   }
 

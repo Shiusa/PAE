@@ -28,7 +28,6 @@ public interface ContactDAO {
    */
   ContactDTO startContact(int company, int student, String schoolYear);
 
-
   /**
    * Get one contact by id then set the contactDTO if contact exist.
    *
@@ -38,13 +37,6 @@ public interface ContactDAO {
   ContactDTO getOneContactById(int id);
 
   /**
-   * Get all contacts.
-   *
-   * @return a list of all contacts.
-   */
-  public List<ContactDTO> getAllContacts();
-
-  /**
    * Get all contacts by a student id.
    *
    * @param student student' id.
@@ -52,4 +44,19 @@ public interface ContactDAO {
    */
   List<ContactDTO> getAllContactsByStudent(int student);
 
+  /**
+   * Find a contact by its id.
+   *
+   * @param contactId the contact id.
+   * @return the contact found.
+   */
+  ContactDTO findContactById(int contactId);
+
+  /**
+   * Unsupervise the contact.
+   *
+   * @param contactId the contact id.
+   * @return the unsupervised contact.
+   */
+  ContactDTO unsupervise(int contactId);
 }

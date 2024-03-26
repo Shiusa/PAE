@@ -20,6 +20,14 @@ Content-Type: application/json
 Authorization: {{eleonoreToken}}
 
 {
-  "company": "2",
-  "student": "3"
+  "company": "2"
+}
+
+### Unsupervise one contact
+POST {{baseUrl}}/contacts/unsupervise
+Content-Type: application/json
+Authorization: {{eleonoreToken}}
+
+{
+  "contactId":"4"
 }
