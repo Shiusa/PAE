@@ -113,7 +113,6 @@ public class ContactDAOImpl implements ContactDAO {
 
   @Override
   public ContactDTO unsupervise(int contactId) {
-    ContactDTO contactDTO = contactFactory.getContactDTO();
     String requestSql = """
         UPDATE proStage.contacts
         SET contact_state = 'unsupervised'
