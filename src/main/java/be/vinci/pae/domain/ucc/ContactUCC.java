@@ -23,4 +23,13 @@ public interface ContactUCC {
    * @return the started contact.
    */
   ContactDTO admit(int contactId, String meeting);
+
+  /**
+   * Unsupervised the contact.
+   *
+   * @param companyId the id of the contact.
+   * @return the unsupervised state of a contact.
+   */
+  ContactDTO unsupervise(int companyId);
+
 }

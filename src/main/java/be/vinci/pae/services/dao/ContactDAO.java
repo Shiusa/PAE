@@ -44,4 +44,7 @@ public interface ContactDAO {
    * @return the contact updated.
    */
   ContactDTO admitContact(int contactId, String meeting);
+
+  ContactDTO unsupervise(int contactId);
+
 }

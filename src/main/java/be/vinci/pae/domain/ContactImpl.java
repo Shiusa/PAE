@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Implementation of Contact.
  */
-class ContactImpl implements Contact {
+public class ContactImpl implements Contact {
 
   private int id;
   private int company;
@@ -100,5 +100,11 @@ class ContactImpl implements Contact {
   @JsonIgnore
   public boolean isStarted() {
     return this.state.equals("started");
+  }
+
+  @Override
+  @JsonIgnore
+  public boolean isAdmitted() {
+    return getState().equals("admitted");
   }
 }

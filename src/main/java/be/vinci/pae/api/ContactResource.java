@@ -3,6 +3,10 @@ package be.vinci.pae.api;
 import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.dto.ContactDTO;
 import be.vinci.pae.domain.ucc.ContactUCC;
+import be.vinci.pae.utils.Config;
+import be.vinci.pae.utils.Logs;
+import be.vinci.pae.utils.exceptions.InvalidRequestException;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -15,6 +19,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.apache.logging.log4j.Level;
 
 /**
  * ContactResource class.
@@ -23,6 +28,7 @@ import jakarta.ws.rs.core.Response;
 @Path("/contacts")
 public class ContactResource {
 
+  private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
   private final ObjectMapper jsonMapper = new ObjectMapper();
   @Inject
   private ContactUCC contactUCC;
@@ -39,13 +45,17 @@ public class ContactResource {
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize
   public ObjectNode start(JsonNode json) {
+    Logs.log(Level.INFO, "ContactResource (start) : entrance");
     if (!json.hasNonNull("company") || !json.hasNonNull("student")) {
+      Logs.log(Level.WARN, "ContactResource (start) : Company or student is null");
       throw new WebApplicationException("company and student", Response.Status.BAD_REQUEST);
     }
     if (json.get("company").asText().isBlank()) {
+      Logs.log(Level.WARN, "ContactResource (start) : Company is blank");
       throw new WebApplicationException("company required", Response.Status.BAD_REQUEST);
     }
     if (json.get("student").asText().isBlank()) {
+      Logs.log(Level.WARN, "ContactResource (start) : Student is blank");
       throw new WebApplicationException("student required", Response.Status.BAD_REQUEST);
     }
 
@@ -54,7 +64,9 @@ public class ContactResource {
 
     ContactDTO contactDTO = contactUCC.start(company, student);
 
-    return jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
+    ObjectNode contact = jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
+    Logs.log(Level.DEBUG, "ContactResource (start) : success!");
+    return contact;
   }
 
   /**
@@ -74,12 +86,34 @@ public class ContactResource {
         .asText().isBlank() || json.get("meeting").asText().isBlank()) {
       throw new WebApplicationException("contact or meeting required", Response.Status.BAD_REQUEST);
     }
-
     int contactId = json.get("contactId").asInt();
     String meeting = json.get("meeting").asText();
 
     ContactDTO contactDTO = contactUCC.admit(contactId, meeting);
 
+    return jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
+  }
+
+  /**
+   * Unsupervised contact route.
+   *
+   * @param json jsonNode containing contact id to unsupervised the contact.
+   * @return the unsupervised state of a contact.
+   */
+  @POST
+  @Path("unsupervise")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize
+  public ObjectNode unsupervise(JsonNode json) {
+    if (!json.hasNonNull("contactId")) {
+      throw new InvalidRequestException();
+    }
+    if (json.get("contactId").asText().isBlank()) {
+      throw new InvalidRequestException();
+    }
+    int contactId = json.get("contactId").asInt();
+    ContactDTO contactDTO = contactUCC.unsupervise(contactId);
     return jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
   }
 }

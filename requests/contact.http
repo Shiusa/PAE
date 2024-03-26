@@ -33,3 +33,12 @@ Authorization: {{eleonoreToken}}
   "contactId": "3",
   "meeting": "remote"
 }
+
+### Unsupervise one contact
+POST {{baseUrl}}/contacts/unsupervise
+Content-Type: application/json
+Authorization: {{eleonoreToken}}
+
+{
+  "contactId":"3"
+}
