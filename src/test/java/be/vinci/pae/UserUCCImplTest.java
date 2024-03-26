@@ -27,8 +27,9 @@ import org.mockito.Mockito;
 public class UserUCCImplTest {
 
   private static final String email = "eleonore.martin@vinci.be";
-  private final static String password = "123";
-  private final static String hashPassword = "$2a$10$HG7./iXYemq7gF/v9Hc98eXJFGo3KajGwPLoaiU0r9TlaxlIFxsAu";
+  private static final String password = "123";
+  private static final String hashPassword
+      = "$2a$10$HG7./iXYemq7gF/v9Hc98eXJFGo3KajGwPLoaiU0r9TlaxlIFxsAu";
   private static ServiceLocator serviceLocator;
   private static UserDAO userDAOMock;
   private static DalServicesConnection dalServicesMock;
