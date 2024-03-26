@@ -16,6 +16,7 @@ import be.vinci.pae.services.dao.ContactDAO;
 import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.utils.exceptions.DuplicateException;
 import be.vinci.pae.utils.exceptions.InvalidRequestException;
+import be.vinci.pae.utils.exceptions.NotAllowedException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
@@ -124,8 +125,26 @@ public class ContactUCCImplTest {
   }
 
   @Test
-  @DisplayName("Test unsupervise wrong contact")
-  public void testUnsuperviseContact() {
-    
+  @DisplayName("Test unsupervise contact is null")
+  public void testUnsuperviseContactNotFound() {
+    Mockito.when(contactDAOMock.findContactById(1)).thenReturn(null);
+    assertThrows(ResourceNotFoundException.class, () -> contactUCC.unsupervise(1, 1));
+  }
+
+  @Test
+  @DisplayName("Test unsupervise contact with wrong student")
+  public void testUnsuperviseContactWrongStudent() {
+    contactDTO.setStudent(5);
+    Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
+    assertThrows(NotAllowedException.class, () -> contactUCC.unsupervise(1, 1));
+  }
+
+  @Test
+  @DisplayName("Test unsupervise contact correctly")
+  public void testUnsuperviseContactCorrectly() {
+    contactDTO.setStudent(1);
+    Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
+    Mockito.when(contactDAOMock.unsupervise(1)).thenReturn(contactDTO);
+    assertNotNull(contactUCC.unsupervise(1, 1));
   }
 }
