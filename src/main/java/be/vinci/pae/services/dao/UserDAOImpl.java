@@ -18,9 +18,6 @@ import org.apache.logging.log4j.Level;
  */
 public class UserDAOImpl implements UserDAO {
 
-  /**
-   * Implementation of UserDAO class.
-   */
   @Inject
   private DalBackendServices dalBackendServices;
   @Inject

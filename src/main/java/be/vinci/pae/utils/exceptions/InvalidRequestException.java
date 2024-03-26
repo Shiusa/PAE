@@ -6,7 +6,7 @@ package be.vinci.pae.utils.exceptions;
 public class InvalidRequestException extends RuntimeException {
 
   /**
-   * Bad request exception.
+   * Invalid request exception.
    */
   public InvalidRequestException() {
     super();

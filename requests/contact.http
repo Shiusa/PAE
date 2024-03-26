@@ -20,8 +20,8 @@ Content-Type: application/json
 Authorization: {{eleonoreToken}}
 
 {
-  "company": "2",
-  "student": "3"
+  "company": "6",
+  "student": "2"
 }
 
 ### Unsupervise one contact

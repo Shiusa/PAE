@@ -25,7 +25,7 @@ public interface Contact extends ContactDTO {
   boolean checkState(String state);
 
   /**
-   * Check if the state is admitted :*
+   * Check if the state is admitted.*
    *
    * @return true if the state is correct, false otherwise.
    */
