@@ -72,7 +72,7 @@ public class ContactResource {
   }
 
   /**
-   * <<<<<<< HEAD returns a contact by its id.
+   * returns a contact by its id.
    *
    * @param request the token from the front.
    * @param id      of the internship
