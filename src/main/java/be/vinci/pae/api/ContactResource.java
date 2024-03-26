@@ -83,14 +83,17 @@ public class ContactResource {
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize
   public ObjectNode admit(JsonNode json) {
+    Logs.log(Level.INFO, "ContactResource (admit) : entrance");
     if (!json.hasNonNull("contactId") || !json.hasNonNull("meeting") || json.get("contactId")
         .asText().isBlank() || json.get("meeting").asText().isBlank()) {
+      Logs.log(Level.WARN, "ContactResource (admit) : contactId or meeting is null");
       throw new WebApplicationException("contact or meeting required", Response.Status.BAD_REQUEST);
     }
     int contactId = json.get("contactId").asInt();
     String meeting = json.get("meeting").asText();
 
     ContactDTO contactDTO = contactUCC.admit(contactId, meeting);
+    Logs.log(Level.DEBUG, "ContactResource (admit) : success!");
 
     return jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
   }

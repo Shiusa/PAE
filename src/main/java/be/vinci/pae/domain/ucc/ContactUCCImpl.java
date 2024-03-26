@@ -71,14 +71,22 @@ public class ContactUCCImpl implements ContactUCC {
 
   @Override
   public ContactDTO admit(int contactId, String meeting) {
+    Logs.log(Level.DEBUG, "ContactUCC (admit) : entrance");
     dalServices.startTransaction();
     Contact contact = (Contact) contactDAO.findContactById(contactId);
-    if (!contact.checkMeeting(meeting) || !contact.isStarted()) {
+    if (!contact.checkMeeting(meeting)) {
+      Logs.log(Level.ERROR, "ContactUCC (admit) : type meeting is invalid");
+      dalServices.rollbackTransaction();
+      throw new InvalidRequestException();
+    }
+    if (!contact.isStarted()) {
+      Logs.log(Level.ERROR, "ContactUCC (admit) : contact's state isn't started");
       dalServices.rollbackTransaction();
       throw new InvalidRequestException();
     }
     ContactDTO contactDTO = contactDAO.admitContact(contactId, meeting);
     dalServices.commitTransaction();
+    Logs.log(Level.DEBUG, "ContactUCC (admit) : success!");
     return contactDTO;
   }
 

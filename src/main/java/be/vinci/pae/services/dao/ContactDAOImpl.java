@@ -160,6 +160,7 @@ public class ContactDAOImpl implements ContactDAO {
 
 
   public ContactDTO admitContact(int contactId, String meeting) {
+    Logs.log(Level.INFO, "ContactDAO (admit) : entrance");
     String requestSql = """
         UPDATE proStage.contacts
         SET meeting = ?, contact_state = 'admitted'
@@ -171,6 +172,7 @@ public class ContactDAOImpl implements ContactDAO {
       ps.setString(1, meeting);
       ps.setInt(2, contactId);
     } catch (SQLException e) {
+      Logs.log(Level.FATAL, "ContactDAO (admit) : internal error");
       e.printStackTrace();
       throw new FatalException(e);
     }
@@ -178,6 +180,7 @@ public class ContactDAOImpl implements ContactDAO {
     try {
       ps.close();
     } catch (SQLException e) {
+      Logs.log(Level.FATAL, "ContactDAO (startContact) : internal error");
       throw new FatalException(e);
     }
     return contact;
