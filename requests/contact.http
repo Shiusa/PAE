@@ -23,3 +23,13 @@ Authorization: {{eleonoreToken}}
   "company": "2",
   "student": "3"
 }
+
+### Create one contact
+POST {{baseUrl}}/contacts/turnDown
+Content-Type: application/json
+Authorization: {{eleonoreToken}}
+
+{
+  "contactId": "3",
+  "reasonForRefusal": "your profil isn't corresponding to our demand"
+}
