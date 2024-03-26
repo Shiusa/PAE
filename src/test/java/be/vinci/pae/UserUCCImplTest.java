@@ -47,6 +47,9 @@ public class UserUCCImplTest {
     userUCC = serviceLocator.getService(UserUCC.class);
     userFactory = serviceLocator.getService(UserFactory.class);
     userDTO = userFactory.getUserDTO();
+    Mockito.doNothing().when(dalServicesMock).startTransaction();
+    Mockito.doNothing().when(dalServicesMock).commitTransaction();
+    Mockito.doNothing().when(dalServicesMock).rollbackTransaction();
   }
 
   @AfterEach

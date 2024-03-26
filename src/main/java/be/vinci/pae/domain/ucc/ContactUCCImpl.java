@@ -29,6 +29,11 @@ public class ContactUCCImpl implements ContactUCC {
     Logs.log(Level.DEBUG, "ContactUCC (start) : entrance");
     dalServices.startTransaction();
     UserDTO studentDTO = userDAO.getOneUserById(student);
+    if (studentDTO == null) {
+      Logs.log(Level.ERROR,
+          "ContactUCC (start) : user not found");
+      throw new ResourceNotFoundException();
+    }
     String schoolYear = studentDTO.getSchoolYear();
     ContactDTO contactFound = contactDAO
         .findContactByCompanyStudentSchoolYear(company, student, schoolYear);
