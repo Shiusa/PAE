@@ -101,7 +101,7 @@ public class ContactDAOImpl implements ContactDAO {
   }
 
   @Override
-  public ContactDTO turnDown(int contact_id, String reason_for_refusal) {
+  public ContactDTO turnDown(int contactId, String reasonForRefusal) {
     String requestSql = """
                 UPDATE proStage.contacts
                 SET reason_for_refusal = ?, contact_state = 'turned down'
@@ -111,8 +111,8 @@ public class ContactDAOImpl implements ContactDAO {
         """;
     PreparedStatement ps = dalServices.getPreparedStatement(requestSql);
     try {
-      ps.setInt(1, contact_id);
-      ps.setString(2, reason_for_refusal);
+      ps.setInt(1, contactId);
+      ps.setString(2, reasonForRefusal);
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }

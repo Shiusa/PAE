@@ -83,7 +83,6 @@ public class ContactResource {
 
     int contactId = json.get("contactId").asInt();
     String reasonForRefusal = json.get("reasonForRefusal").asText();
-
     ContactDTO contactDTO = contactUCC.turnDown(contactId, reasonForRefusal);
 
     return jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
