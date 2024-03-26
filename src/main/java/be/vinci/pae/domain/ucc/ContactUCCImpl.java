@@ -68,13 +68,7 @@ public class ContactUCCImpl implements ContactUCC {
     Logs.log(Level.DEBUG, "ContactUCC (start) : success!");
     return contact;
   }
-
-  /**
-   * Unsupervised the contact.
-   *
-   * @param contactId the id of the contact.
-   * @return the unsupervised state of a contact.
-   */
+  
   @Override
   public ContactDTO unsupervise(int contactId, int student) {
     dalServices.startTransaction();
