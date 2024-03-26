@@ -63,7 +63,7 @@ public class CompanyDAOImpl implements CompanyDAO {
         return company;
       }
     } catch (SQLException e) {
-      e.printStackTrace();
+      throw new FatalException(e);
     }
     return null;
   }

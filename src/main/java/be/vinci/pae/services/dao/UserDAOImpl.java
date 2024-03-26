@@ -63,7 +63,7 @@ public class UserDAOImpl implements UserDAO {
       ps.setInt(1, id);
     } catch (SQLException e) {
       Logs.log(Level.FATAL, "UserDAO (getOneUserById) : internal error");
-      throw new RuntimeException(e);
+      throw new FatalException(e);
     }
     Logs.log(Level.DEBUG, "UserDAO (getOneUserById) : success!");
     return buildUserDTO(ps);

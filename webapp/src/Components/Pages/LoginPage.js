@@ -11,7 +11,7 @@ import {
   setUserStorageData
 } from "../../utils/session";
 
-import showNavStyle from "../../utils/function";
+import {showNavStyle} from "../../utils/function";
 
 const onUserLogin = async (userData) => {
   if (document.getElementById("stayconnected").checked) {

@@ -11,4 +11,13 @@ public class InvalidRequestException extends RuntimeException {
   public InvalidRequestException() {
     super();
   }
+
+  /**
+   * Invalid request exception with a parameter.
+   *
+   * @param e message
+   */
+  public InvalidRequestException(String e) {
+    super(e);
+  }
 }

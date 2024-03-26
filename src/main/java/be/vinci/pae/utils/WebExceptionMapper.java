@@ -5,6 +5,8 @@ import be.vinci.pae.utils.exceptions.FatalException;
 import be.vinci.pae.utils.exceptions.InvalidRequestException;
 import be.vinci.pae.utils.exceptions.NotAllowedException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
+import be.vinci.pae.utils.exceptions.UnauthorizedAccessException;
+import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -32,6 +34,11 @@ public class WebExceptionMapper implements ExceptionMapper<Throwable> {
           .entity(exception.getMessage())
           .build();
     }
+    if (exception instanceof UnauthorizedAccessException) {
+      return Response.status(Status.UNAUTHORIZED)
+          .entity(exception.getMessage())
+          .build();
+    }
     if (exception instanceof DuplicateException) {
       return Response.status(Status.CONFLICT)
           .entity(exception.getMessage())
@@ -41,6 +48,9 @@ public class WebExceptionMapper implements ExceptionMapper<Throwable> {
       return Response.status(Status.FORBIDDEN)
           .entity(exception.getMessage())
           .build();
+    }
+    if (exception instanceof WebApplicationException) {
+      return ((WebApplicationException) exception).getResponse();
     }
     return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
         .entity(exception.getMessage())
