@@ -23,7 +23,7 @@ public class ContactDAOImpl implements ContactDAO {
   private ContactFactory contactFactory;
 
   @Override
-  public ContactDTO findContactByCompanyStudentSchoolYear(int company, int student,
+  public ContactDTO findContactByCompanyStudentSchoolYear(int company, int studentId,
       String schoolYear) {
     Logs.log(Level.INFO, "ContactDAO (findContactByCompanyStudentSchoolYear) : entrance");
     String requestSql = """
@@ -36,7 +36,7 @@ public class ContactDAOImpl implements ContactDAO {
 
     try {
       ps.setInt(1, company);
-      ps.setInt(2, student);
+      ps.setInt(2, studentId);
       ps.setString(3, schoolYear);
     } catch (SQLException e) {
       Logs.log(Level.FATAL, "ContactDAO (findContactByCompanyStudentSchoolYear) : internal error");
@@ -57,7 +57,7 @@ public class ContactDAOImpl implements ContactDAO {
   }
 
   @Override
-  public ContactDTO startContact(int company, int student, String schoolYear) {
+  public ContactDTO startContact(int company, int studentId, String schoolYear) {
     Logs.log(Level.INFO, "ContactDAO (startContact) : entrance");
     String requestSql = """
         INSERT INTO prostage.contacts (company, student, contact_state, school_year)
@@ -66,7 +66,7 @@ public class ContactDAOImpl implements ContactDAO {
     PreparedStatement ps = dalServices.getPreparedStatement(requestSql);
     try {
       ps.setInt(1, company);
-      ps.setInt(2, student);
+      ps.setInt(2, studentId);
       ps.setString(3, "started");
       ps.setString(4, schoolYear);
     } catch (SQLException e) {

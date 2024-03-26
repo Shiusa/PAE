@@ -31,10 +31,10 @@ public class ContactUCCImpl implements ContactUCC {
   private CompanyDAO companyDAO;
 
   @Override
-  public ContactDTO start(int company, int student) {
+  public ContactDTO start(int company, int studentId) {
     Logs.log(Level.DEBUG, "ContactUCC (start) : entrance");
     dalServices.startTransaction();
-    UserDTO studentDTO = userDAO.getOneUserById(student);
+    UserDTO studentDTO = userDAO.getOneUserById(studentId);
     if (studentDTO == null) {
       dalServices.rollbackTransaction();
       Logs.log(Level.ERROR,
@@ -56,23 +56,33 @@ public class ContactUCCImpl implements ContactUCC {
 
     String schoolYear = studentDTO.getSchoolYear();
     ContactDTO contactFound = contactDAO
-        .findContactByCompanyStudentSchoolYear(company, student, schoolYear);
+        .findContactByCompanyStudentSchoolYear(company, studentId, schoolYear);
     if (contactFound != null) {
       dalServices.rollbackTransaction();
       Logs.log(Level.ERROR,
           "ContactUCC (start) : contact already exist with this student, company, year");
       throw new DuplicateException("This contact already exist for this year.");
     }
-    ContactDTO contact = contactDAO.startContact(company, student, schoolYear);
+    ContactDTO contact = contactDAO.startContact(company, studentId, schoolYear);
     dalServices.commitTransaction();
     Logs.log(Level.DEBUG, "ContactUCC (start) : success!");
     return contact;
   }
+
   @Override
-  public ContactDTO admit(int contactId, String meeting) {
+  public ContactDTO admit(int contactId, String meeting, int studentId) {
     Logs.log(Level.DEBUG, "ContactUCC (admit) : entrance");
     dalServices.startTransaction();
     Contact contact = (Contact) contactDAO.findContactById(contactId);
+    if (contact == null) {
+      dalServices.rollbackTransaction();
+      Logs.log(Level.ERROR,
+          "ContactUCC (unsupervise) : contact not found");
+      throw new ResourceNotFoundException();
+    } else if (contact.getStudent() != studentId) {
+      dalServices.rollbackTransaction();
+      throw new NotAllowedException();
+    }
     if (!contact.checkMeeting(meeting)) {
       Logs.log(Level.ERROR, "ContactUCC (admit) : type meeting is invalid");
       dalServices.rollbackTransaction();
@@ -90,7 +100,7 @@ public class ContactUCCImpl implements ContactUCC {
   }
 
   @Override
-  public ContactDTO unsupervise(int contactId, int student) {
+  public ContactDTO unsupervise(int contactId, int studentId) {
     dalServices.startTransaction();
     Logs.log(Level.DEBUG, "ContactUCC (unsupervise) : entrance");
     Contact contact = (Contact) contactDAO.findContactById(contactId);
@@ -99,7 +109,7 @@ public class ContactUCCImpl implements ContactUCC {
       Logs.log(Level.ERROR,
           "ContactUCC (unsupervise) : contact not found");
       throw new ResourceNotFoundException();
-    } else if (contact.getStudent() != student) {
+    } else if (contact.getStudent() != studentId) {
       dalServices.rollbackTransaction();
       throw new NotAllowedException();
     }

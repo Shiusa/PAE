@@ -61,9 +61,9 @@ public class ContactResource {
 
     int company = json.get("company").asInt();
     UserDTO userDTO = (UserDTO) request.getProperty("user");
-    int student = userDTO.getId();
+    int studentId = userDTO.getId();
 
-    ContactDTO contactDTO = contactUCC.start(company, student);
+    ContactDTO contactDTO = contactUCC.start(company, studentId);
 
     ObjectNode contact = jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
     Logs.log(Level.DEBUG, "ContactResource (start) : success!");
@@ -82,7 +82,7 @@ public class ContactResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize
-  public ObjectNode admit(JsonNode json) {
+  public ObjectNode admit(@Context ContainerRequest request, JsonNode json) {
     Logs.log(Level.INFO, "ContactResource (admit) : entrance");
     if (!json.hasNonNull("contactId") || !json.hasNonNull("meeting") || json.get("contactId")
         .asText().isBlank() || json.get("meeting").asText().isBlank()) {
@@ -91,8 +91,10 @@ public class ContactResource {
     }
     int contactId = json.get("contactId").asInt();
     String meeting = json.get("meeting").asText();
+    UserDTO userDTO = (UserDTO) request.getProperty("user");
+    int studentId = userDTO.getId();
 
-    ContactDTO contactDTO = contactUCC.admit(contactId, meeting);
+    ContactDTO contactDTO = contactUCC.admit(contactId, meeting, studentId);
     Logs.log(Level.DEBUG, "ContactResource (admit) : success!");
 
     return jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
@@ -119,9 +121,9 @@ public class ContactResource {
       throw new InvalidRequestException();
     }
     int contactId = json.get("contactId").asInt();
-    int student = userDTO.getId();
+    int studentId = userDTO.getId();
 
-    ContactDTO contactDTO = contactUCC.unsupervise(contactId, student);
+    ContactDTO contactDTO = contactUCC.unsupervise(contactId, studentId);
     return jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
   }
 }
