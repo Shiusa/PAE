@@ -93,14 +93,21 @@ public class ContactUCCImpl implements ContactUCC {
 
   @Override
   public ContactDTO turnDown(int contactId, String reasonForRefusal) {
+    Logs.log(Level.DEBUG, "ContactUCC (turnDown) : entrance");
     dalServices.startTransaction();
     Contact contact = (Contact) contactDAO.findContactById(contactId);
-    if (!contact.isAdmitted()) {
+    if (contact == null) {
+      dalServices.rollbackTransaction();
+      Logs.log(Level.ERROR, "ContactUCC (turnDown) : contact not found");
+      throw new ResourceNotFoundException();
+    } else if (!contact.isAdmitted()) {
+      Logs.log(Level.ERROR, "ContactUCC (turnDown) : contact's state not admitted");
       dalServices.rollbackTransaction();
       throw new ResourceNotFoundException();
     }
     ContactDTO contactDTO = contactDAO.turnDown(contactId, reasonForRefusal);
     dalServices.commitTransaction();
+    Logs.log(Level.DEBUG, "ContactUCC (turnDown) : success!");
     return contactDTO;
   }
 }

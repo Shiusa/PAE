@@ -110,9 +110,11 @@ public class ContactResource {
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize
   public ObjectNode turnDown(JsonNode json) {
+    Logs.log(Level.INFO, "ContactResource (turnDown) : entrance");
     if (!json.hasNonNull("contactId") || json.get("contactId").asText().isBlank()
         || !json.hasNonNull("reasonForRefusal") || json.get("reasonForRefusal").asText()
         .isBlank()) {
+      Logs.log(Level.WARN, "ContactResource (turnDown) : contactId or reasonForRefusal is null");
       throw new WebApplicationException("contact or reason for refusal required",
           Response.Status.BAD_REQUEST);
     }
@@ -120,7 +122,10 @@ public class ContactResource {
     int contactId = json.get("contactId").asInt();
     String reasonForRefusal = json.get("reasonForRefusal").asText();
     ContactDTO contactDTO = contactUCC.turnDown(contactId, reasonForRefusal);
+    ObjectNode contact = jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
 
-    return jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
+    Logs.log(Level.DEBUG, "ContactResource (turnDown) : success!");
+
+    return contact;
   }
 }
