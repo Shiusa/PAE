@@ -93,10 +93,14 @@ public class ContactUCCImpl implements ContactUCC {
 
   @Override
   public ContactDTO turnDown(int contactId, String reasonForRefusal) {
+    dalServices.startTransaction();
     Contact contact = (Contact) contactDAO.findContactById(contactId);
     if (!contact.isAdmitted()) {
-      throw new InvalidRequestException();
+      dalServices.rollbackTransaction();
+      throw new ResourceNotFoundException();
     }
-    return contactDAO.turnDown(contactId, reasonForRefusal);
+    ContactDTO contactDTO = contactDAO.turnDown(contactId, reasonForRefusal);
+    dalServices.commitTransaction();
+    return contactDTO;
   }
 }
