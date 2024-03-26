@@ -32,6 +32,7 @@ public interface ContactUCC {
   /**
    * Get all contacts by a student id.
    *
+   * @param student the student.
    * @return a list containing all the contacts.
    */
   List<ContactDTO> getAllContactsByStudent(int student);

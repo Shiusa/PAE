@@ -8,7 +8,7 @@ import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.utils.Logs;
 import be.vinci.pae.utils.exceptions.FatalException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
-import be.vinci.pae.utils.exceptions.UnauthorizedAccesException;
+import be.vinci.pae.utils.exceptions.UnauthorizedAccessException;
 import jakarta.inject.Inject;
 import java.util.List;
 import org.apache.logging.log4j.Level;
@@ -51,7 +51,7 @@ public class UserUCCImpl implements UserUCC {
     if (!user.checkPassword(password)) {
       Logs.log(Level.ERROR, "UserUCC (login) : wrong password");
       dalServices.rollbackTransaction();
-      throw new UnauthorizedAccesException("The password is incorrect");
+      throw new UnauthorizedAccessException("The password is incorrect");
     }
     dalServices.commitTransaction();
     Logs.log(Level.DEBUG, "UserUCC (login) : success!");

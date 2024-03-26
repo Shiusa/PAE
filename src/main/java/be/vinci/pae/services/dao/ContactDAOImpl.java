@@ -130,6 +130,7 @@ public class ContactDAOImpl implements ContactDAO {
     return buildContactDTO(ps);
   }
 
+  @Override
   public ContactDTO unsupervise(int contactId) {
     String requestSql = """
         UPDATE proStage.contacts
@@ -207,7 +208,7 @@ public class ContactDAOImpl implements ContactDAO {
     }
   }
 
-
+  @Override
   public ContactDTO admitContact(int contactId, String meeting) {
     Logs.log(Level.INFO, "ContactDAO (admit) : entrance");
     String requestSql = """

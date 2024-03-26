@@ -78,13 +78,6 @@ public class ContactUCCImpl implements ContactUCC {
     return contact;
   }
 
-
-  /**
-   * Get all contacts by a student id.
-   *
-   * @param student the student id.
-   * @return a list containing all the contacts.
-   */
   @Override
   public List<ContactDTO> getAllContactsByStudent(int student) {
     return contactDAO.getAllContactsByStudent(student);
@@ -132,6 +125,7 @@ public class ContactUCCImpl implements ContactUCC {
     return contactDTO;
   }
 
+  @Override
   public ContactDTO admit(int contactId, String meeting, int studentId) {
     Logs.log(Level.DEBUG, "ContactUCC (admit) : entrance");
     Contact contact;

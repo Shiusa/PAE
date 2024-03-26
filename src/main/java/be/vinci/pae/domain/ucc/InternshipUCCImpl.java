@@ -9,6 +9,9 @@ import be.vinci.pae.utils.exceptions.NotAllowedException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
 import jakarta.inject.Inject;
 
+/**
+ * Implementation of InternshipUCC.
+ */
 public class InternshipUCCImpl implements InternshipUCC {
 
   @Inject

@@ -182,7 +182,7 @@ public class ContactResource {
   }
 
   /**
-   * a contact has turned down the internship
+   * a contact has turned down the internship.
    *
    * @param request the token.
    * @param json    jsonNode containing contact id of the contact and the reason for refusal.

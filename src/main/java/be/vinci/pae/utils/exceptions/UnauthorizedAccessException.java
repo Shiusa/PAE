@@ -1,11 +1,14 @@
 package be.vinci.pae.utils.exceptions;
 
-public class UnauthorizedAccesException extends RuntimeException {
+/**
+ * Unauthorized access exception.
+ */
+public class UnauthorizedAccessException extends RuntimeException {
 
   /**
    * Unauthorized acces exception.
    */
-  public UnauthorizedAccesException() {
+  public UnauthorizedAccessException() {
     super();
   }
 
@@ -14,7 +17,7 @@ public class UnauthorizedAccesException extends RuntimeException {
    *
    * @param e message.
    */
-  public UnauthorizedAccesException(String e) {
+  public UnauthorizedAccessException(String e) {
     super(e);
   }
 
