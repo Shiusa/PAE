@@ -1,9 +1,11 @@
 package be.vinci.pae;
 
+import be.vinci.pae.domain.UserFactory;
+import be.vinci.pae.domain.UserFactoryImpl;
 import be.vinci.pae.domain.ucc.UserUCC;
 import be.vinci.pae.domain.ucc.UserUCCImpl;
+import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.UserDAO;
-import be.vinci.pae.services.dao.UserDAOImpl;
 import jakarta.inject.Singleton;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.mockito.Mockito;
@@ -19,6 +21,9 @@ public class BinderTest extends AbstractBinder {
   @Override
   protected void configure() {
     bind(UserUCCImpl.class).to(UserUCC.class).in(Singleton.class);
-    bind(Mockito.mock(UserDAOImpl.class)).to(UserDAO.class);
+    bind(UserFactoryImpl.class).to(UserFactory.class).in(Singleton.class);
+
+    bind(Mockito.mock(UserDAO.class)).to(UserDAO.class);
+    bind(Mockito.mock(DalServices.class)).to(DalServices.class);
   }
 }
