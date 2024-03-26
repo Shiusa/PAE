@@ -10,6 +10,8 @@ public interface ContactUCC {
   /**
    * Start the contact and get it.
    *
+   * @param company the company.
+   * @param student the student.
    * @return the started contact.
    */
   ContactDTO start(int company, int student);
