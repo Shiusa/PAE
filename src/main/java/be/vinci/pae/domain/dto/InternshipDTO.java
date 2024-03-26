@@ -1,6 +1,5 @@
 package be.vinci.pae.domain.dto;
 
-import be.vinci.pae.domain.Internship;
 import java.util.Date;
 
 /**

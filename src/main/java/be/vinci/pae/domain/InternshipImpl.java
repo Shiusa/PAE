@@ -1,8 +1,6 @@
 package be.vinci.pae.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Date;
-import org.mindrot.jbcrypt.BCrypt;
 
 /**
  * Implementation of Internship.
