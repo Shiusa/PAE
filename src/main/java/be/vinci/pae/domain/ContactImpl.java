@@ -26,12 +26,6 @@ public class ContactImpl implements Contact {
     return List.of("started", "admitted", "turned down", "accepted", "on hold").contains(state);
   }
 
-  @Override
-  @JsonIgnore
-  public boolean isAdmitted() {
-    return getState().equals("admitted");
-  }
-
 
   @Override
   public int getId() {

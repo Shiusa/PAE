@@ -182,7 +182,5 @@ public class ContactDAOImpl implements ContactDAO {
         throw new FatalException(e);
       }
     }
-    return contact;
   }
-
 }

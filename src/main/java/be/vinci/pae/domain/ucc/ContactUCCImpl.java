@@ -9,7 +9,6 @@ import be.vinci.pae.services.dao.CompanyDAO;
 import be.vinci.pae.services.dao.ContactDAO;
 import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.utils.Logs;
-import be.vinci.pae.utils.exceptions.BadRequestException;
 import be.vinci.pae.utils.exceptions.DuplicateException;
 import be.vinci.pae.utils.exceptions.InvalidRequestException;
 import be.vinci.pae.utils.exceptions.NotAllowedException;
@@ -96,7 +95,7 @@ public class ContactUCCImpl implements ContactUCC {
   public ContactDTO turnDown(int contactId, String reasonForRefusal) {
     Contact contact = (Contact) contactDAO.findContactById(contactId);
     if (!contact.isAdmitted()) {
-      throw new BadRequestException();
+      throw new InvalidRequestException();
     }
     return contactDAO.turnDown(contactId, reasonForRefusal);
   }

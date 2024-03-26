@@ -43,8 +43,6 @@ public interface ContactDAO {
    * @return the contact created.
    */
   ContactDTO startContact(int company, int student, String schoolYear);
-
-  ContactDTO findContactById(int contactId);
-
+  
   ContactDTO unsupervise(int contactId);
 }
