@@ -1,7 +1,6 @@
 package be.vinci.pae.api;
 
 import be.vinci.pae.api.filters.Authorize;
-import be.vinci.pae.domain.UserFactory;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.domain.ucc.UserUCC;
 import be.vinci.pae.utils.Config;
@@ -41,8 +40,6 @@ public class UserResource {
   private final ObjectMapper jsonMapper = new ObjectMapper();
   @Inject
   private UserUCC userUCC;
-  @Inject
-  private UserFactory userFactory;
 
   /**
    * Login route.
@@ -148,7 +145,7 @@ public class UserResource {
     if (userToRegister.getEmail().isBlank() || userToRegister.getLastname().isBlank()
         || userToRegister.getFirstname().isBlank() || userToRegister.getPhoneNumber().isBlank()
         || userToRegister.getPassword().isBlank() || userToRegister.getRole().isBlank()) {
-      throw new InvalidRequestException();
+      throw new WebApplicationException("Inputs cannot be blank", Response.Status.BAD_REQUEST);
     }
 
     LocalDate localDate = LocalDate.now();

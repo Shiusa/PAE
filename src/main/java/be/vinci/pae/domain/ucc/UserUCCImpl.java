@@ -5,6 +5,7 @@ import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.utils.Logs;
+import be.vinci.pae.utils.exceptions.DuplicateException;
 import be.vinci.pae.utils.exceptions.InvalidRequestException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
 import jakarta.inject.Inject;
@@ -98,16 +99,13 @@ public class UserUCCImpl implements UserUCC {
       dalServices.startTransaction();
       UserDTO existingUser = userDAO.getOneUserByEmail(user.getEmail());
       if (existingUser != null) {
-        throw new InvalidRequestException();
+        throw new DuplicateException("Cannot add existing user");
       }
 
       User userHashPwd = (User) user;
       userHashPwd.hashPassword();
 
       registeredUser = userDAO.addOneUser(userHashPwd);
-      if (registeredUser == null) {
-        throw new InvalidRequestException();
-      }
 
       dalServices.commitTransaction();
       return registeredUser;
