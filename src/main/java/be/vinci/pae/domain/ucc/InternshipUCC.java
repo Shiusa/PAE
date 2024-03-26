@@ -20,5 +20,5 @@ public interface InternshipUCC {
    * @param id the internship id.
    * @return the internship found.
    */
-  InternshipDTO getOneById(int id);
+  InternshipDTO getOneById(int id, int actualStudent);
 }

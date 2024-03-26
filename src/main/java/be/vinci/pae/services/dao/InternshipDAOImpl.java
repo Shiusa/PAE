@@ -23,14 +23,14 @@ public class InternshipDAOImpl implements InternshipDAO {
   public InternshipDTO getOneInternshipByIdUser(int student) {
     String requestSql = """
         SELECT i.internship_id, i.contact, i.supervisor, i.signature_date, i.project, i.school_year
-        FROM prostage.internship i, prostage.contacts c
+        FROM prostage.internships i, prostage.contacts c
         WHERE c.student = ? AND c.contact_id = i.contact
         """;
     PreparedStatement ps = dalServices.getPreparedStatement(requestSql);
     try {
       ps.setInt(1, student);
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new FatalException(e);
     }
     return buildInternshipDTO(ps);
   }
@@ -39,14 +39,14 @@ public class InternshipDAOImpl implements InternshipDAO {
   public InternshipDTO getOneInternshipById(int id) {
     String requestSql = """
         SELECT internship_id, contact, supervisor, signature_date, project, school_year
-        FROM prostage.internship
+        FROM prostage.internships
         WHERE internship_id = ?
         """;
     PreparedStatement ps = dalServices.getPreparedStatement(requestSql);
     try {
       ps.setInt(1, id);
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new FatalException(e);
     }
     return buildInternshipDTO(ps);
   }

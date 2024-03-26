@@ -2,6 +2,7 @@ package be.vinci.pae.utils;
 
 import be.vinci.pae.utils.exceptions.BadRequestException;
 import be.vinci.pae.utils.exceptions.FatalException;
+import be.vinci.pae.utils.exceptions.NotAllowedException;
 import be.vinci.pae.utils.exceptions.NotFoundException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -27,6 +28,11 @@ public class WebExceptionMapper implements ExceptionMapper<Throwable> {
     }
     if (exception instanceof NotFoundException) {
       return Response.status(Status.NOT_FOUND)
+          .entity(exception.getMessage())
+          .build();
+    }
+    if (exception instanceof NotAllowedException) {
+      return Response.status(Status.UNAUTHORIZED)
           .entity(exception.getMessage())
           .build();
     }

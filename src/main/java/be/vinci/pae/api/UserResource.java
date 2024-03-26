@@ -25,7 +25,6 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.List;
-import org.glassfish.jersey.internal.util.collection.Views;
 import org.glassfish.jersey.server.ContainerRequest;
 
 /**
@@ -85,6 +84,7 @@ public class UserResource {
    */
   @GET
   @Produces(MediaType.APPLICATION_JSON)
+  @Authorize
   public List<UserDTO> getAll() {
     List<UserDTO> userDTOList;
     try {
@@ -132,17 +132,20 @@ public class UserResource {
   @GET
   @Path("/{id}")
   @Produces(MediaType.APPLICATION_JSON)
+  @Authorize
   public Response getOneUser(@Context ContainerRequest request, @PathParam("id") int id) {
+    UserDTO userCheck = (UserDTO) request.getProperty("user");
+    if (userCheck.getId() != id) {
+      throw new WebApplicationException("you can't see this user", Response.Status.UNAUTHORIZED);
+    }
     UserDTO userDTO = userUCC.getOneById(id);
-    String user = "";
-
+    String user;
     try {
       user = jsonMapper.writeValueAsString(userDTO);
-      return Response.ok(user).build();
-
-    } catch (Exception e) {
-      return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Erreur lors de la récupération des données de l'utilisateur").build();
+    } catch (JsonProcessingException e) {
+      throw new FatalException(e);
     }
+    return Response.ok(user).build();
   }
 }
 

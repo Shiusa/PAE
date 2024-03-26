@@ -2,10 +2,12 @@ package be.vinci.pae.api;
 
 import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.dto.ContactDTO;
+import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.domain.ucc.ContactUCC;
 import be.vinci.pae.utils.Config;
 import be.vinci.pae.utils.exceptions.FatalException;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -68,7 +70,7 @@ public class ContactResource {
   }
 
   /**
-   * returns an internship by its id.
+   * returns a contact by its id.
    *
    * @param request the token from the front.
    * @param id      of the internship
@@ -77,16 +79,16 @@ public class ContactResource {
   @GET
   @Path("/{id}")
   @Produces(MediaType.APPLICATION_JSON)
+  @Authorize
   public Response getOneContact(@Context ContainerRequest request, @PathParam("id") int id) {
     ContactDTO contactDTO = contactUCC.getOneById(id);
-    String contact = "";
+    String contact;
 
     try {
       contact = jsonMapper.writeValueAsString(contactDTO);
       return Response.ok(contact).build();
-
-    } catch (Exception e) {
-      return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Erreur lors de la récupération des données de l'utilisateur").build();
+    } catch (JsonProcessingException e) {
+      throw new FatalException(e);
     }
   }
 
@@ -96,15 +98,17 @@ public class ContactResource {
    * @return a list containing all the contacts by a student id.
    */
   @GET
-  @Path("/byStudent/{idStudent}")
+  @Path("/all/{idStudent}")
   @Produces(MediaType.APPLICATION_JSON)
-  public List<ContactDTO> getAllByStudent(@Context ContainerRequest request, @PathParam("idStudent") int student) {
-    List<ContactDTO> contactDTOList;
-    try {
-      contactDTOList = contactUCC.getAllContactsByStudent(student);
-    } catch (FatalException e) {
-      throw e;
+  @Authorize
+  public List<ContactDTO> getAllByStudent(@Context ContainerRequest request,
+      @PathParam("idStudent") int student) {
+    UserDTO user = (UserDTO) request.getProperty("user");
+    if (user.getId() != student) {
+      throw new WebApplicationException("unauthorized", Response.Status.UNAUTHORIZED);
     }
+    List<ContactDTO> contactDTOList;
+    contactDTOList = contactUCC.getAllContactsByStudent(student);
     return contactDTOList;
   }
 
