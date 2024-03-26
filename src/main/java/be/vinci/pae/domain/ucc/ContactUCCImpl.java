@@ -68,19 +68,16 @@ public class ContactUCCImpl implements ContactUCC {
     Logs.log(Level.DEBUG, "ContactUCC (start) : success!");
     return contact;
   }
-
-  /**
-   * Unsupervised the contact.
-   *
-   * @param contactId the id of the contact.
-   * @return the unsupervised state of a contact.
-   */
+  
   @Override
   public ContactDTO unsupervise(int contactId, int student) {
     dalServices.startTransaction();
+    Logs.log(Level.DEBUG, "ContactUCC (unsupervise) : entrance");
     Contact contact = (Contact) contactDAO.findContactById(contactId);
-    if (!contact.isStarted() && !contact.isAdmitted()) {
+    if (contact == null) {
       dalServices.rollbackTransaction();
+      Logs.log(Level.ERROR,
+          "ContactUCC (unsupervise) : contact not found");
       throw new ResourceNotFoundException();
     } else if (contact.getStudent() != student) {
       dalServices.rollbackTransaction();
@@ -88,6 +85,7 @@ public class ContactUCCImpl implements ContactUCC {
     }
     ContactDTO contactDTO = contactDAO.unsupervise(contactId);
     dalServices.commitTransaction();
+    Logs.log(Level.DEBUG, "ContactUCC (unsupervise) : success!");
     return contactDTO;
   }
 }

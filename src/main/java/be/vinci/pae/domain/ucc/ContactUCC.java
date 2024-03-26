@@ -10,6 +10,8 @@ public interface ContactUCC {
   /**
    * Start the contact and get it.
    *
+   * @param company the company.
+   * @param student the student.
    * @return the started contact.
    */
   ContactDTO start(int company, int student);
@@ -17,10 +19,10 @@ public interface ContactUCC {
   /**
    * Unsupervised the contact.
    *
-   * @param companyId the id of the contact.
+   * @param contactId the id of the contact.
    * @param student   the id of the student.
    * @return the unsupervised state of a contact.
    */
-  ContactDTO unsupervise(int companyId, int student);
+  ContactDTO unsupervise(int contactId, int student);
 
 }
