@@ -16,6 +16,8 @@ const DashboardPage = async () => {
 
     const user = getUserSessionData();
 
+    
+
     const readUserInfo = async () => {
         try {
             
@@ -34,7 +36,51 @@ const DashboardPage = async () => {
         }
     };
 
+    const readInternship = async () => {
+        try {
+            
+            const response = await fetch('api/internships/1');
+
+            if (!response.ok) {
+                throw new Error(
+                    `fetch error : ${response.status} : ${response.statusText}`);
+            }
+            
+            const userInfo = await response.json();
+            return userInfo;
+        } catch (err) {
+            console.error('DashBoardPage::error: ', err);
+            throw err;
+        }
+    };
+
+    /*
+
+    const readAllContactsByStudent = async () => {
+        try {
+            const response = await fetch('api/contacts/byStudent/' + user.user.id);
+
+            if (!response.ok) {
+                console.log("le status est" + response.status);
+                if (response.status === 401) {
+                Redirect("/");
+                }
+                throw new Error(
+                    `fetch error : ${response.status} : ${response.statusText}`);
+            }
+            const contactList = await response.json();
+            return contactList;
+        } catch (err) {
+            console.error('userListPage::error: ', err);
+            throw err;
+        }
+    };
+
+    */ 
+
     const userInfoID = await readUserInfo();
+    const test = await readInternship();
+    console.log(test);
 
     main.innerHTML = `        
         <div class="dash d-flex justify-content-center align-items-center mt-5 mb-5 mx-auto">
@@ -70,23 +116,7 @@ const DashboardPage = async () => {
                                 </div>
                         </div>
                         <div class="table-line-box overflow-auto">
-                            <div class="table-line d-flex align-items-center mt-2 mb-2">
-                                <div class="line-col-1">
-                                    <p class="mx-auto mt-3">entreprise.nom<br>entreprise.appellation</p>
-                                </div>
-                                <div class="line-col-2 d-flex justify-content-center">
-                                    <select class="form-select" aria-label="Default select example">
-                                        <option  value="1">State 1</option>
-                                        <option value="2" selected>State 2</option>
-                                        <option value="3">State 3</option>
-                                        <option value="4">State 4</option>
-                                    </select>
-                                </div>
-                                <div class="line-col-3 d-flex justify-content-center align-items-center">
-                                    <button class="btn btn-primary ms-2 me-2" type="submit">Mettre à jour</button>
-                                    <button type="button" class="btn btn-outline-primary ms-2 me-2">Ne plus suivre</button>
-                                </div>
-                            </div>
+                            
                         </div>
                     </div>
                     <div class="entreprise-box d-flex justify-contain-center align-items-center">    
@@ -134,8 +164,47 @@ const DashboardPage = async () => {
 
     showNavStyle("dashboard");
 
-    const btnChangeInfo = document.getElementById("btn-info-change");
 
+    /* 
+
+    const tableContacts = document.querySelector(".table-line-box");
+
+    const contacts = await readAllContactsByStudent();
+
+    showContacts(contacts);
+
+    function showContacts(contactsTable) {
+        tableContacts.innerHTML = ``;
+    
+        let u = 0;
+        let info = ``;
+        while (u < contactsTable.length) {
+            info += `
+                <div class="table-line d-flex align-items-center mt-2 mb-2">
+                    <div class="line-col-1">
+                        <p class="mx-auto mt-3">entreprise.nom<br>entreprise.appellation</p>
+                    </div>
+                    <div class="line-col-2 d-flex justify-content-center">
+                        <select class="form-select" aria-label="Default select example">
+                            <option  value="1">State 1</option>
+                            <option value="2" selected>State 2</option>
+                            <option value="3">State 3</option>
+                            <option value="4">State 4</option>
+                        </select>
+                    </div>
+                    <div class="line-col-3 d-flex justify-content-center align-items-center">
+                        <button class="btn btn-primary ms-2 me-2" type="submit">Mettre à jour</button>
+                        <button type="button" class="btn btn-outline-primary ms-2 me-2">Ne plus suivre</button>
+                    </div>
+                </div>
+            `;
+             u += 1;
+        }
+        tableContacts.innerHTML = info;
+    }
+    */
+
+    const btnChangeInfo = document.getElementById("btn-info-change");
 
     const btnBack = document.getElementById('btn-back2');
     const boxInfo = document.querySelector('.entreprise-box');

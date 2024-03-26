@@ -7,6 +7,7 @@ import be.vinci.pae.services.dao.ContactDAO;
 import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.utils.exceptions.DuplicateException;
 import jakarta.inject.Inject;
+import java.util.List;
 
 /**
  * Implementation of ContactUCC.
@@ -32,6 +33,45 @@ public class ContactUCCImpl implements ContactUCC {
       throw new DuplicateException("This contact already exist for this year.");
     }
     ContactDTO contact = contactDAO.startContact(company, student, schoolYear);
+    dalServices.commitTransaction();
+    return contact;
+  }
+
+  /**
+   * Get all users.
+   *
+   * @return a list containing all the users.
+   */
+  @Override
+  public List<ContactDTO> getAllContacts() {
+    return contactDAO.getAllContacts();
+  }
+
+
+  /**
+   * Get all contacts by a student id.
+   *
+   * @param student the student id.
+   * @return a list containing all the contacts.
+   */
+  @Override
+  public List<ContactDTO> getAllContactsByStudent(int student) {
+    return contactDAO.getAllContactsByStudent(student);
+  }
+
+  /**
+   * Get a contact by his id.
+   *
+   * @param id the contact id.
+   * @return the contact found.
+   */
+  public ContactDTO getOneById(int id) {
+    dalServices.startTransaction();
+    ContactDTO contact = contactDAO.getOneContactById(id);
+    if (contact == null) {
+      dalServices.rollbackTransaction();
+      throw new IllegalArgumentException("id unknown");
+    }
     dalServices.commitTransaction();
     return contact;
   }

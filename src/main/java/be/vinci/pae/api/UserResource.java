@@ -123,29 +123,24 @@ public class UserResource {
 
 
   /**
-   * returns a member by its id.
+   * returns a user by its id.
    *
    * @param request the token from the front.
-   * @param id      of the member
-   * @return memberDTO
+   * @param id      of the user
+   * @return userDTO
    */
   @GET
   @Path("/{id}")
   @Produces(MediaType.APPLICATION_JSON)
   public Response getOneUser(@Context ContainerRequest request, @PathParam("id") int id) {
     UserDTO userDTO = userUCC.getOneById(id);
-    ObjectMapper mapper = new ObjectMapper();
-    String jsonUser = "";
+    String user = "";
 
     try {
+      user = jsonMapper.writeValueAsString(userDTO);
+      return Response.ok(user).build();
 
-      jsonUser = mapper.writeValueAsString(userDTO);
-      return Response.ok(jsonUser).build();
-    } catch (IllegalArgumentException e) {
-      // Gérer le cas où l'ID de l'utilisateur est inconnu
-      return Response.status(Response.Status.NOT_FOUND).entity("ID inconnu").build();
     } catch (Exception e) {
-      // Gérer les autres exceptions
       return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Erreur lors de la récupération des données de l'utilisateur").build();
     }
   }

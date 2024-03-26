@@ -3,11 +3,16 @@ package be.vinci.pae.services.dao;
 
 import be.vinci.pae.domain.ContactFactory;
 import be.vinci.pae.domain.dto.ContactDTO;
+import be.vinci.pae.domain.dto.InternshipDTO;
+import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.services.dal.DalServices;
+import be.vinci.pae.utils.exceptions.FatalException;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Implementation of ContactDAO.
@@ -72,6 +77,81 @@ public class ContactDAOImpl implements ContactDAO {
       throw new RuntimeException(e);
     }
     return contact;
+  }
+
+  @Override
+  public ContactDTO getOneContactById(int id) {
+    String requestSql = """
+        SELECT contact_id, company, student, meeting, contact_state, reason_for_refusal, school_year
+        FROM prostage.contacts
+        WHERE contact_id = ?
+        """;
+    PreparedStatement ps = dalServices.getPreparedStatement(requestSql);
+    try {
+      ps.setInt(1, id);
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+    return buildContactDTO(ps);
+  }
+
+  @Override
+  public List<ContactDTO> getAllContacts() {
+    List<ContactDTO> contactDTOList = new ArrayList<>();
+
+    String requestSql = """
+        SELECT contact_id, company, student, meeting, contact_state, reason_for_refusal, school_year
+        FROM proStage.contacts """;
+
+    try (PreparedStatement ps = dalServices.getPreparedStatement(requestSql)) {
+      try (ResultSet rs = ps.executeQuery()) {
+        while (rs.next()) {
+          ContactDTO contactDTO = contactFactory.getContactDTO();
+          contactDTO.setId(rs.getInt(1));
+          contactDTO.setCompany(rs.getInt("company"));
+          contactDTO.setStudent(rs.getInt("student"));
+          contactDTO.setMeeting(rs.getString("meeting"));
+          contactDTO.setState(rs.getString("contact_state"));
+          contactDTO.setReasonRefusal(rs.getString("reason_for_refusal"));
+          contactDTO.setSchoolYear(rs.getString("school_year"));
+          contactDTOList.add(contactDTO);
+        }
+      }
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+    return contactDTOList;
+  }
+
+  @Override
+  public List<ContactDTO> getAllContactsByStudent(int student) {
+    List<ContactDTO> contactDTOList = new ArrayList<>();
+
+    String requestSql = """
+        SELECT contact_id, company, student, meeting, contact_state, reason_for_refusal, school_year
+        FROM proStage.contacts 
+        WHERE student = ?
+        """;
+
+    try (PreparedStatement ps = dalServices.getPreparedStatement(requestSql)) {
+      ps.setInt(1,student);
+      try (ResultSet rs = ps.executeQuery()) {
+        while (rs.next()) {
+          ContactDTO contactDTO = contactFactory.getContactDTO();
+          contactDTO.setId(rs.getInt(1));
+          contactDTO.setCompany(rs.getInt("company"));
+          contactDTO.setStudent(rs.getInt("student"));
+          contactDTO.setMeeting(rs.getString("meeting"));
+          contactDTO.setState(rs.getString("contact_state"));
+          contactDTO.setReasonRefusal(rs.getString("reason_for_refusal"));
+          contactDTO.setSchoolYear(rs.getString("school_year"));
+          contactDTOList.add(contactDTO);
+        }
+      }
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+    return contactDTOList;
   }
 
   private ContactDTO buildContactDTO(PreparedStatement ps) {

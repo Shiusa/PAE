@@ -4,6 +4,7 @@ import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.dto.ContactDTO;
 import be.vinci.pae.domain.ucc.ContactUCC;
 import be.vinci.pae.utils.Config;
+import be.vinci.pae.utils.exceptions.FatalException;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,12 +12,17 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import java.util.List;
+import org.glassfish.jersey.server.ContainerRequest;
 
 /**
  * ContactResource class.
@@ -59,6 +65,47 @@ public class ContactResource {
 
     ObjectNode contact = jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
     return contact;
+  }
+
+  /**
+   * returns an internship by its id.
+   *
+   * @param request the token from the front.
+   * @param id      of the internship
+   * @return internshipDTO
+   */
+  @GET
+  @Path("/{id}")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getOneContact(@Context ContainerRequest request, @PathParam("id") int id) {
+    ContactDTO contactDTO = contactUCC.getOneById(id);
+    String contact = "";
+
+    try {
+      contact = jsonMapper.writeValueAsString(contactDTO);
+      return Response.ok(contact).build();
+
+    } catch (Exception e) {
+      return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Erreur lors de la récupération des données de l'utilisateur").build();
+    }
+  }
+
+  /**
+   * Get all contacts by a student id.
+   *
+   * @return a list containing all the contacts by a student id.
+   */
+  @GET
+  @Path("/byStudent/{idStudent}")
+  @Produces(MediaType.APPLICATION_JSON)
+  public List<ContactDTO> getAllByStudent(@Context ContainerRequest request, @PathParam("idStudent") int student) {
+    List<ContactDTO> contactDTOList;
+    try {
+      contactDTOList = contactUCC.getAllContactsByStudent(student);
+    } catch (FatalException e) {
+      throw e;
+    }
+    return contactDTOList;
   }
 
 }
