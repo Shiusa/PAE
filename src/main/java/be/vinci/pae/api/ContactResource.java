@@ -49,11 +49,10 @@ public class ContactResource {
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize
   public ObjectNode start(@Context ContainerRequest request, JsonNode json) {
-    UserDTO userDTO = (UserDTO) request.getProperty("user");
     Logs.log(Level.INFO, "ContactResource (start) : entrance");
-    if (!json.hasNonNull("company") || !json.hasNonNull("student")) {
-      Logs.log(Level.WARN, "ContactResource (start) : Company or student is null");
-      throw new WebApplicationException("company and student", Response.Status.BAD_REQUEST);
+    if (!json.hasNonNull("company")) {
+      Logs.log(Level.WARN, "ContactResource (start) : Company is null");
+      throw new WebApplicationException("company", Response.Status.BAD_REQUEST);
     }
     if (json.get("company").asText().isBlank()) {
       Logs.log(Level.WARN, "ContactResource (start) : Company is blank");
@@ -61,6 +60,7 @@ public class ContactResource {
     }
 
     int company = json.get("company").asInt();
+    UserDTO userDTO = (UserDTO) request.getProperty("user");
     int student = userDTO.getId();
 
     ContactDTO contactDTO = contactUCC.start(company, student);
