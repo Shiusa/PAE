@@ -25,7 +25,7 @@ public class ContactDAOImpl implements ContactDAO {
   private ContactFactory contactFactory;
 
   @Override
-  public ContactDTO findContactByCompanyStudentSchoolYear(int company, int student,
+  public ContactDTO findContactByCompanyStudentSchoolYear(int company, int studentId,
       String schoolYear) {
     Logs.log(Level.INFO, "ContactDAO (findContactByCompanyStudentSchoolYear) : entrance");
     String requestSql = """
@@ -38,7 +38,7 @@ public class ContactDAOImpl implements ContactDAO {
 
     try {
       ps.setInt(1, company);
-      ps.setInt(2, student);
+      ps.setInt(2, studentId);
       ps.setString(3, schoolYear);
     } catch (SQLException e) {
       Logs.log(Level.FATAL, "ContactDAO (findContactByCompanyStudentSchoolYear) : internal error");
@@ -59,7 +59,7 @@ public class ContactDAOImpl implements ContactDAO {
   }
 
   @Override
-  public ContactDTO startContact(int company, int student, String schoolYear) {
+  public ContactDTO startContact(int company, int studentId, String schoolYear) {
     Logs.log(Level.INFO, "ContactDAO (startContact) : entrance");
     String requestSql = """
         INSERT INTO prostage.contacts (company, student, contact_state, school_year)
@@ -68,7 +68,7 @@ public class ContactDAOImpl implements ContactDAO {
     PreparedStatement ps = dalServices.getPreparedStatement(requestSql);
     try {
       ps.setInt(1, company);
-      ps.setInt(2, student);
+      ps.setInt(2, studentId);
       ps.setString(3, "started");
       ps.setString(4, schoolYear);
     } catch (SQLException e) {
@@ -89,6 +89,7 @@ public class ContactDAOImpl implements ContactDAO {
 
   @Override
   public ContactDTO findContactById(int contactId) {
+    Logs.log(Level.INFO, "ContactDAO (findContactById) : entrance");
     String requestSql = """
         SELECT *
         FROM prostage.contacts
@@ -98,14 +99,18 @@ public class ContactDAOImpl implements ContactDAO {
     try {
       ps.setInt(1, contactId);
     } catch (SQLException e) {
+      Logs.log(Level.FATAL, "ContactDAO (findContactById) : internal error");
       throw new FatalException(e);
     }
     ContactDTO contact = buildContactDTO(ps);
     try {
       ps.close();
     } catch (SQLException e) {
+      Logs.log(Level.FATAL, "ContactDAO (findContactById) : internal error");
       throw new FatalException(e);
     }
+
+    Logs.log(Level.DEBUG, "ContactDAO (findContactById) : success!");
     return contact;
   }
 
@@ -202,4 +207,63 @@ public class ContactDAOImpl implements ContactDAO {
     }
   }
 
+
+  public ContactDTO admitContact(int contactId, String meeting) {
+    Logs.log(Level.INFO, "ContactDAO (admit) : entrance");
+    String requestSql = """
+        UPDATE proStage.contacts
+        SET meeting = ?, contact_state = 'admitted'
+        WHERE contact_id = ?
+        RETURNING *;
+        """;
+    PreparedStatement ps = dalServices.getPreparedStatement(requestSql);
+    try {
+      ps.setString(1, meeting);
+      ps.setInt(2, contactId);
+    } catch (SQLException e) {
+      Logs.log(Level.FATAL, "ContactDAO (admit) : internal error");
+      e.printStackTrace();
+      throw new FatalException(e);
+    }
+    ContactDTO contact = buildContactDTO(ps);
+    try {
+      ps.close();
+    } catch (SQLException e) {
+      Logs.log(Level.FATAL, "ContactDAO (admit) : internal error");
+      throw new FatalException(e);
+    }
+    Logs.log(Level.DEBUG, "ContactDAO (admit) : success!");
+    return contact;
+  }
+
+  @Override
+  public ContactDTO turnDown(int contactId, String reasonForRefusal) {
+    Logs.log(Level.INFO, "ContactDAO (turnDown) : entrance");
+    String requestSql = """
+                UPDATE proStage.contacts
+                SET reason_for_refusal = ?, contact_state = 'turned down'
+                WHERE contact_id = ?
+                RETURNING *;
+                
+        """;
+    PreparedStatement ps = dalServices.getPreparedStatement(requestSql);
+    try {
+      ps.setString(1, reasonForRefusal);
+      ps.setInt(2, contactId);
+    } catch (SQLException e) {
+      Logs.log(Level.FATAL, "ContactDAO (turnDown) : internal error");
+      throw new RuntimeException(e);
+    }
+
+    ContactDTO contact = buildContactDTO(ps);
+
+    try {
+      ps.close();
+    } catch (SQLException e) {
+      Logs.log(Level.FATAL, "ContactDAO (turnDown) : internal error");
+      throw new RuntimeException(e);
+    }
+    Logs.log(Level.DEBUG, "ContactDAO (turnDown) : success!");
+    return contact;
+  }
 }

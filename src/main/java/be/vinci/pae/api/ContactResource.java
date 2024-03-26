@@ -62,9 +62,9 @@ public class ContactResource {
 
     int company = json.get("company").asInt();
     UserDTO userDTO = (UserDTO) request.getProperty("user");
-    int student = userDTO.getId();
+    int studentId = userDTO.getId();
 
-    ContactDTO contactDTO = contactUCC.start(company, student);
+    ContactDTO contactDTO = contactUCC.start(company, studentId);
 
     ObjectNode contact = jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
     Logs.log(Level.DEBUG, "ContactResource (start) : success!");
@@ -72,7 +72,7 @@ public class ContactResource {
   }
 
   /**
-   * returns a contact by its id.
+   * <<<<<<< HEAD returns a contact by its id.
    *
    * @param request the token from the front.
    * @param id      of the internship
@@ -120,6 +120,37 @@ public class ContactResource {
   }
 
   /**
+   * admitting a contact with the type of the meeting("on site" or "remote").
+   *
+   * @param request the token.
+   * @param json    jsonNode containing contact id and the type of the meeting.
+   * @return ObjectNode containing all information about the contact admitted.
+   * @throws WebApplicationException when the contact_id and/or the meeting field is invalid.
+   */
+  @POST
+  @Path("admit")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize
+  public ObjectNode admit(@Context ContainerRequest request, JsonNode json) {
+    Logs.log(Level.INFO, "ContactResource (admit) : entrance");
+    if (!json.hasNonNull("contactId") || !json.hasNonNull("meeting") || json.get("contactId")
+        .asText().isBlank() || json.get("meeting").asText().isBlank()) {
+      Logs.log(Level.WARN, "ContactResource (admit) : contactId or meeting is null");
+      throw new WebApplicationException("contact or meeting required", Response.Status.BAD_REQUEST);
+    }
+    int contactId = json.get("contactId").asInt();
+    String meeting = json.get("meeting").asText();
+    UserDTO userDTO = (UserDTO) request.getProperty("user");
+    int studentId = userDTO.getId();
+
+    ContactDTO contactDTO = contactUCC.admit(contactId, meeting, studentId);
+    Logs.log(Level.DEBUG, "ContactResource (admit) : success!");
+
+    return jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
+  }
+
+  /**
    * Unsupervised contact route.
    *
    * @param request the token.
@@ -143,10 +174,46 @@ public class ContactResource {
       throw new WebApplicationException("Contact id cannot be blank", Response.Status.BAD_REQUEST);
     }
     int contactId = json.get("contactId").asInt();
-    int student = userDTO.getId();
+    int studentId = userDTO.getId();
 
-    ContactDTO contactDTO = contactUCC.unsupervise(contactId, student);
     Logs.log(Level.DEBUG, "ContactResource (unsupervise) : success!");
+    ContactDTO contactDTO = contactUCC.unsupervise(contactId, studentId);
     return jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
+  }
+
+  /**
+   * a contact has turned down the internship
+   *
+   * @param request the token.
+   * @param json    jsonNode containing contact id of the contact and the reason for refusal.
+   * @return ObjectNode containing all information about the contact to turn down.
+   * @throws WebApplicationException when the contactId and/or the meeting field is invalid.
+   */
+  @POST
+  @Path("turnDown")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize
+  public ObjectNode turnDown(@Context ContainerRequest request, JsonNode json) {
+    Logs.log(Level.INFO, "ContactResource (turnDown) : entrance");
+    if (!json.hasNonNull("contactId") || json.get("contactId").asText().isBlank()
+        || !json.hasNonNull("reasonForRefusal") || json.get("reasonForRefusal").asText()
+        .isBlank()) {
+      Logs.log(Level.WARN, "ContactResource (turnDown) : contactId or reasonForRefusal is null");
+      throw new WebApplicationException("contact or reason for refusal required",
+          Response.Status.BAD_REQUEST);
+    }
+
+    int contactId = json.get("contactId").asInt();
+    String reasonForRefusal = json.get("reasonForRefusal").asText();
+    UserDTO userDTO = (UserDTO) request.getProperty("user");
+    int studentId = userDTO.getId();
+
+    ContactDTO contactDTO = contactUCC.turnDown(contactId, reasonForRefusal, studentId);
+    ObjectNode contact = jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
+
+    Logs.log(Level.DEBUG, "ContactResource (turnDown) : success!");
+
+    return contact;
   }
 }

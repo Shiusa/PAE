@@ -26,6 +26,7 @@ public class ContactImpl implements Contact {
     return List.of("started", "admitted", "turned down", "accepted", "on hold").contains(state);
   }
 
+
   @Override
   public int getId() {
     return this.id;

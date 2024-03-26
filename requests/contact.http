@@ -22,6 +22,15 @@ Authorization: {{eleonoreToken}}
 {
   "company": "2"
 }
+### Admit one contact
+POST {{baseUrl}}/contacts/admit
+Content-Type: application/json
+Authorization: {{eleonoreToken}}
+
+{
+  "contactId": "6",
+  "meeting": "remote"
+}
 
 ### Unsupervise one contact
 POST {{baseUrl}}/contacts/unsupervise
@@ -29,5 +38,15 @@ Content-Type: application/json
 Authorization: {{eleonoreToken}}
 
 {
-  "contactId":"4"
+  "contactId":"6"
+}
+
+### Create one contact
+POST {{baseUrl}}/contacts/turnDown
+Content-Type: application/json
+Authorization: {{eleonoreToken}}
+
+{
+  "contactId": "6",
+  "reasonForRefusal": "your profil isn't corresponding to our demand"
 }
