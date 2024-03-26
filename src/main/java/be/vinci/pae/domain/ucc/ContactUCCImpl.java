@@ -106,16 +106,25 @@ public class ContactUCCImpl implements ContactUCC {
     Logs.log(Level.DEBUG, "ContactUCC (unsupervise) : success!");
     return contactDTO;
   }
+
   public ContactDTO admit(int contactId, String meeting, int studentId) {
     Logs.log(Level.DEBUG, "ContactUCC (admit) : entrance");
-    dalServices.startTransaction();
-    Contact contact = (Contact) contactDAO.findContactById(contactId);
-    if (contact == null) {
+    Contact contact;
+    ContactDTO contactDTO;
+    try {
+      dalServices.startTransaction();
+      contact = (Contact) contactDAO.findContactById(contactId);
+      if (contact == null) {
+        dalServices.rollbackTransaction();
+        Logs.log(Level.ERROR, "ContactUCC (unsupervise) : contact not found");
+        throw new ResourceNotFoundException();
+      }
+      contactDTO = contactDAO.admitContact(contactId, meeting);
+    } catch (FatalException e) {
       dalServices.rollbackTransaction();
-      Logs.log(Level.ERROR,
-          "ContactUCC (unsupervise) : contact not found");
-      throw new ResourceNotFoundException();
-    } else if (contact.getStudent() != studentId) {
+      throw e;
+    }
+    if (contact.getStudent() != studentId) {
       dalServices.rollbackTransaction();
       throw new NotAllowedException();
     }
@@ -129,7 +138,6 @@ public class ContactUCCImpl implements ContactUCC {
       dalServices.rollbackTransaction();
       throw new InvalidRequestException();
     }
-    ContactDTO contactDTO = contactDAO.admitContact(contactId, meeting);
     dalServices.commitTransaction();
     Logs.log(Level.DEBUG, "ContactUCC (admit) : success!");
     return contactDTO;
