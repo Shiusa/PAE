@@ -22,6 +22,15 @@ Authorization: {{eleonoreToken}}
 {
   "company": "2"
 }
+### Admit one contact
+POST {{baseUrl}}/contacts/admit
+Content-Type: application/json
+Authorization: {{eleonoreToken}}
+
+{
+  "contactId": "3",
+  "meeting": "remote"
+}
 
 ### Unsupervise one contact
 POST {{baseUrl}}/contacts/unsupervise

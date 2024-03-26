@@ -16,8 +16,8 @@ public interface Contact extends ContactDTO {
   boolean checkMeeting(String meeting);
 
   /**
-   * Check that the state is one of the following : started, admitted, turned down, accepted, on
-   * hold.
+   * Check that the state is one of the following :
+   * started, admitted, turned down, accepted, on hold.
    *
    * @param state the state to check.
    * @return true if the state is correct, false otherwise.
@@ -25,16 +25,17 @@ public interface Contact extends ContactDTO {
   boolean checkState(String state);
 
   /**
+   * Check that the state is started.
+   *
+   * @return true if the state is started, false otherwise.
+   */
+  boolean isStarted();
+
+
+  /**
    * Check if the state is admitted.*
    *
    * @return true if the state is correct, false otherwise.
    */
   boolean isAdmitted();
-
-  /**
-   * Check that the state is started.*
-   *
-   * @return true if the state is started, false otherwise.
-   */
-  boolean isStarted();
 }

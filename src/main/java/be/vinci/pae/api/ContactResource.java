@@ -60,13 +60,43 @@ public class ContactResource {
 
     int company = json.get("company").asInt();
     UserDTO userDTO = (UserDTO) request.getProperty("user");
-    int student = userDTO.getId();
+    int studentId = userDTO.getId();
 
-    ContactDTO contactDTO = contactUCC.start(company, student);
+    ContactDTO contactDTO = contactUCC.start(company, studentId);
 
     ObjectNode contact = jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
     Logs.log(Level.DEBUG, "ContactResource (start) : success!");
     return contact;
+  }
+
+  /**
+   * admitting a contact with the type of the meeting("on site" or "remote").
+   *
+   * @param json jsonNode containing contact id and the type of the meeting.
+   * @return ObjectNode containing all information about the contact admitted.
+   * @throws WebApplicationException when the contact_id and/or the meeting field is invalid.
+   */
+  @POST
+  @Path("admit")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize
+  public ObjectNode admit(@Context ContainerRequest request, JsonNode json) {
+    Logs.log(Level.INFO, "ContactResource (admit) : entrance");
+    if (!json.hasNonNull("contactId") || !json.hasNonNull("meeting") || json.get("contactId")
+        .asText().isBlank() || json.get("meeting").asText().isBlank()) {
+      Logs.log(Level.WARN, "ContactResource (admit) : contactId or meeting is null");
+      throw new WebApplicationException("contact or meeting required", Response.Status.BAD_REQUEST);
+    }
+    int contactId = json.get("contactId").asInt();
+    String meeting = json.get("meeting").asText();
+    UserDTO userDTO = (UserDTO) request.getProperty("user");
+    int studentId = userDTO.getId();
+
+    ContactDTO contactDTO = contactUCC.admit(contactId, meeting, studentId);
+    Logs.log(Level.DEBUG, "ContactResource (admit) : success!");
+
+    return jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
   }
 
   /**
@@ -90,9 +120,9 @@ public class ContactResource {
       throw new WebApplicationException("Contact id cannot be blank", Response.Status.BAD_REQUEST);
     }
     int contactId = json.get("contactId").asInt();
-    int student = userDTO.getId();
+    int studentId = userDTO.getId();
 
-    ContactDTO contactDTO = contactUCC.unsupervise(contactId, student);
+    ContactDTO contactDTO = contactUCC.unsupervise(contactId, studentId);
     return jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
   }
 }
