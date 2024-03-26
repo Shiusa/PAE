@@ -97,7 +97,7 @@ public class ContactUCCImpl implements ContactUCC {
     }
     if (!contact.isStarted() && !contact.isAdmitted()) {
       dalServices.rollbackTransaction();
-      throw new ResourceNotFoundException();
+      throw new InvalidRequestException();
     } else if (contact.getStudent() != student) {
       dalServices.rollbackTransaction();
       throw new NotAllowedException();

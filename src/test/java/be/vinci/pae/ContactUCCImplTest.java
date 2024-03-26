@@ -141,6 +141,15 @@ public class ContactUCCImplTest {
   }
 
   @Test
+  @DisplayName("Test unsupervise contact with state different than started or admitted")
+  public void testUnsuperviseContactWrongState() {
+    contactDTO.setStudent(1);
+    contactDTO.setState("turned down");
+    Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
+    assertThrows(InvalidRequestException.class, () -> contactUCC.unsupervise(1, 1));
+  }
+
+  @Test
   @DisplayName("Test unsupervise contact correctly")
   public void testUnsuperviseContactCorrectly() {
     contactDTO.setStudent(1);
