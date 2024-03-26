@@ -99,6 +99,8 @@ public class ContactResource {
   /**
    * Get all contacts by a student id.
    *
+   * @param request the token.
+   * @param student the student.
    * @return a list containing all the contacts by a student id.
    */
   @GET
