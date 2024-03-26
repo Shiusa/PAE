@@ -156,10 +156,20 @@ public class ContactUCCImplTest {
   }
 
   @Test
-  @DisplayName("Test unsupervise contact correctly")
-  public void testUnsuperviseContactCorrectly() {
+  @DisplayName("Test unsupervise contact correctly started")
+  public void testUnsuperviseContactCorrectlyStarted() {
     contactDTO.setStudent(1);
     contactDTO.setState("started");
+    Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
+    Mockito.when(contactDAOMock.unsupervise(1)).thenReturn(contactDTO);
+    assertNotNull(contactUCC.unsupervise(1, 1));
+  }
+
+  @Test
+  @DisplayName("Test unsupervise contact correctly admitted")
+  public void testUnsuperviseContactCorrectlyAdmitted() {
+    contactDTO.setStudent(1);
+    contactDTO.setState("admitted");
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
     Mockito.when(contactDAOMock.unsupervise(1)).thenReturn(contactDTO);
     assertNotNull(contactUCC.unsupervise(1, 1));
