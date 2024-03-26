@@ -1,5 +1,6 @@
 package be.vinci.pae;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -9,6 +10,7 @@ import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.domain.ucc.UserUCC;
 import be.vinci.pae.services.dal.DalServicesConnection;
 import be.vinci.pae.services.dao.UserDAO;
+import be.vinci.pae.utils.exceptions.FatalException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
 import be.vinci.pae.utils.exceptions.UnauthorizedAccesException;
 import java.util.List;
@@ -34,7 +36,6 @@ public class UserUCCImplTest {
   private static UserDAO userDAOMock;
   private static DalServicesConnection dalServicesMock;
   private UserUCC userUCC;
-  private UserFactory userFactory;
   private UserDTO userDTO;
 
   @BeforeAll
@@ -47,7 +48,7 @@ public class UserUCCImplTest {
   @BeforeEach
   void setup() {
     userUCC = serviceLocator.getService(UserUCC.class);
-    userFactory = serviceLocator.getService(UserFactory.class);
+    UserFactory userFactory = serviceLocator.getService(UserFactory.class);
     userDTO = userFactory.getUserDTO();
     Mockito.doNothing().when(dalServicesMock).startTransaction();
     Mockito.doNothing().when(dalServicesMock).commitTransaction();
@@ -106,6 +107,24 @@ public class UserUCCImplTest {
     userDTO.setEmail(email);
     Mockito.when(userDAOMock.getOneUserById(1)).thenReturn(userDTO);
     assertNotNull(userUCC.getOneById(1));
+  }
+
+  @Test
+  @DisplayName("Test unsupervise contact crash transaction")
+  public void testCrashTransaction() {
+    Mockito.doThrow(new FatalException(new RuntimeException()))
+        .when(dalServicesMock).startTransaction();
+    assertAll(
+        () -> assertThrows(FatalException.class, () -> {
+          userUCC.login(email, password);
+        }),
+        () -> assertThrows(FatalException.class, () -> {
+          userUCC.getAllUsers();
+        }),
+        () -> assertThrows(FatalException.class, () -> {
+          userUCC.getOneById(1);
+        })
+    );
   }
 
 }

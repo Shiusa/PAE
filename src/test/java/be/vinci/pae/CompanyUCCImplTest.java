@@ -1,12 +1,14 @@
 package be.vinci.pae;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import be.vinci.pae.domain.CompanyFactory;
 import be.vinci.pae.domain.dto.CompanyDTO;
 import be.vinci.pae.domain.ucc.CompanyUCC;
 import be.vinci.pae.services.dal.DalServicesConnection;
 import be.vinci.pae.services.dao.CompanyDAO;
+import be.vinci.pae.utils.exceptions.FatalException;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.junit.jupiter.api.AfterEach;
@@ -25,7 +27,6 @@ public class CompanyUCCImplTest {
   private static CompanyDAO companyDAOMock;
   private static DalServicesConnection dalServicesMock;
   private CompanyUCC companyUCC;
-  private CompanyFactory companyFactory;
   private CompanyDTO companyDTO;
 
   @BeforeAll
@@ -38,7 +39,7 @@ public class CompanyUCCImplTest {
   @BeforeEach
   void setup() {
     companyUCC = serviceLocator.getService(CompanyUCC.class);
-    companyFactory = serviceLocator.getService(CompanyFactory.class);
+    CompanyFactory companyFactory = serviceLocator.getService(CompanyFactory.class);
     companyDTO = companyFactory.getCompanyDTO();
     Mockito.doNothing().when(dalServicesMock).startTransaction();
     Mockito.doNothing().when(dalServicesMock).commitTransaction();
@@ -55,6 +56,14 @@ public class CompanyUCCImplTest {
   public void testFindOneById() {
     Mockito.when(companyDAOMock.getOneCompanyById(1)).thenReturn(companyDTO);
     assertNotNull(companyUCC.findOneById(1));
+  }
+
+  @Test
+  @DisplayName("Test find one by id crash transaction")
+  public void testFindOneByIdCrashTransaction() {
+    Mockito.doThrow(new FatalException(new RuntimeException())).when(dalServicesMock)
+        .startTransaction();
+    assertThrows(FatalException.class, () -> companyUCC.findOneById(1));
   }
 
 }

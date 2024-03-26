@@ -1,5 +1,6 @@
 package be.vinci.pae;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -15,6 +16,7 @@ import be.vinci.pae.services.dao.CompanyDAO;
 import be.vinci.pae.services.dao.ContactDAO;
 import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.utils.exceptions.DuplicateException;
+import be.vinci.pae.utils.exceptions.FatalException;
 import be.vinci.pae.utils.exceptions.InvalidRequestException;
 import be.vinci.pae.utils.exceptions.NotAllowedException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
@@ -38,9 +40,6 @@ public class ContactUCCImplTest {
   private static CompanyDAO companyDAOMock;
   private static DalServicesConnection dalServicesMock;
   private ContactUCC contactUCC;
-  private ContactFactory contactFactory;
-  private UserFactory userFactory;
-  private CompanyFactory companyFactory;
   private ContactDTO contactDTO;
   private UserDTO userDTO;
   private CompanyDTO companyDTO;
@@ -57,9 +56,9 @@ public class ContactUCCImplTest {
   @BeforeEach
   void setup() {
     contactUCC = serviceLocator.getService(ContactUCC.class);
-    contactFactory = serviceLocator.getService(ContactFactory.class);
-    userFactory = serviceLocator.getService(UserFactory.class);
-    companyFactory = serviceLocator.getService(CompanyFactory.class);
+    ContactFactory contactFactory = serviceLocator.getService(ContactFactory.class);
+    UserFactory userFactory = serviceLocator.getService(UserFactory.class);
+    CompanyFactory companyFactory = serviceLocator.getService(CompanyFactory.class);
     contactDTO = contactFactory.getContactDTO();
     userDTO = userFactory.getUserDTO();
     companyDTO = companyFactory.getCompanyDTO();
@@ -112,6 +111,13 @@ public class ContactUCCImplTest {
   }
 
   @Test
+  @DisplayName("Test start crash transaction")
+  public void testStartCrashTransaction() {
+    Mockito.doThrow(new FatalException(new RuntimeException()))
+        .when(dalServicesMock).startTransaction();
+  }
+
+  @Test
   @DisplayName("Test start good contact and company")
   public void testStartGoodContactCompany() {
     contactDTO.setId(50);
@@ -157,5 +163,20 @@ public class ContactUCCImplTest {
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
     Mockito.when(contactDAOMock.unsupervise(1)).thenReturn(contactDTO);
     assertNotNull(contactUCC.unsupervise(1, 1));
+  }
+
+  @Test
+  @DisplayName("Test unsupervise contact crash transaction")
+  public void testCrashTransaction() {
+    Mockito.doThrow(new FatalException(new RuntimeException()))
+        .when(dalServicesMock).startTransaction();
+    assertAll(
+        () -> assertThrows(FatalException.class, () -> {
+          contactUCC.start(1, 1);
+        }),
+        () -> assertThrows(FatalException.class, () -> {
+          contactUCC.unsupervise(1, 1);
+        })
+    );
   }
 }
