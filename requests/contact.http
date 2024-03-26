@@ -20,10 +20,8 @@ Content-Type: application/json
 Authorization: {{eleonoreToken}}
 
 {
-  "company": "2",
-  "student": "3"
+  "company": "2"
 }
-
 ### Admit one contact
 POST {{baseUrl}}/contacts/admit
 Content-Type: application/json

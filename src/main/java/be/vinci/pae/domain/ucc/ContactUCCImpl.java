@@ -10,6 +10,7 @@ import be.vinci.pae.services.dao.ContactDAO;
 import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.utils.Logs;
 import be.vinci.pae.utils.exceptions.DuplicateException;
+import be.vinci.pae.utils.exceptions.FatalException;
 import be.vinci.pae.utils.exceptions.InvalidRequestException;
 import be.vinci.pae.utils.exceptions.NotAllowedException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
@@ -31,63 +32,114 @@ public class ContactUCCImpl implements ContactUCC {
   private CompanyDAO companyDAO;
 
   @Override
-  public ContactDTO start(int company, int student) {
+  public ContactDTO start(int company, int studentId) {
     Logs.log(Level.DEBUG, "ContactUCC (start) : entrance");
-    dalServices.startTransaction();
-    UserDTO studentDTO = userDAO.getOneUserById(student);
-    if (studentDTO == null) {
-      dalServices.rollbackTransaction();
-      Logs.log(Level.ERROR,
-          "ContactUCC (start) : student not found");
-      throw new ResourceNotFoundException();
-    }
-    Company company2 = (Company) companyDAO.getOneCompanyById(company);
-    if (company2 == null) {
-      dalServices.rollbackTransaction();
-      Logs.log(Level.ERROR,
-          "ContactUCC (start) : company not found");
-      throw new ResourceNotFoundException();
-    } else if (!company2.studentCanContact()) {
-      dalServices.rollbackTransaction();
-      Logs.log(Level.ERROR,
-          "ContactUCC (start) : company is blacklisted");
-      throw new InvalidRequestException();
-    }
+    ContactDTO contact;
+    try {
+      dalServices.startTransaction();
+      UserDTO studentDTO = userDAO.getOneUserById(studentId);
+      if (studentDTO == null) {
+        dalServices.rollbackTransaction();
+        Logs.log(Level.ERROR,
+            "ContactUCC (start) : student not found");
+        throw new ResourceNotFoundException();
+      }
+      Company company2 = (Company) companyDAO.getOneCompanyById(company);
+      if (company2 == null) {
+        dalServices.rollbackTransaction();
+        Logs.log(Level.ERROR,
+            "ContactUCC (start) : company not found");
+        throw new ResourceNotFoundException();
+      } else if (!company2.studentCanContact()) {
+        dalServices.rollbackTransaction();
+        Logs.log(Level.ERROR,
+            "ContactUCC (start) : company is blacklisted");
+        throw new InvalidRequestException();
+      }
 
-    String schoolYear = studentDTO.getSchoolYear();
-    ContactDTO contactFound = contactDAO
-        .findContactByCompanyStudentSchoolYear(company, student, schoolYear);
-    if (contactFound != null) {
+      String schoolYear = studentDTO.getSchoolYear();
+      ContactDTO contactFound = contactDAO
+          .findContactByCompanyStudentSchoolYear(company, studentId, schoolYear);
+      if (contactFound != null) {
+        dalServices.rollbackTransaction();
+        Logs.log(Level.ERROR,
+            "ContactUCC (start) : contact already exist with this student, company, year");
+        throw new DuplicateException("This contact already exist for this year.");
+      }
+
+      contact = contactDAO.startContact(company, studentId, schoolYear);
+    } catch (FatalException e) {
       dalServices.rollbackTransaction();
-      Logs.log(Level.ERROR,
-          "ContactUCC (start) : contact already exist with this student, company, year");
-      throw new DuplicateException("This contact already exist for this year.");
+      throw e;
     }
-    ContactDTO contact = contactDAO.startContact(company, student, schoolYear);
     dalServices.commitTransaction();
     Logs.log(Level.DEBUG, "ContactUCC (start) : success!");
     return contact;
   }
 
-  /**
-   * Unsupervised the contact.
-   *
-   * @param contactId the id of the contact.
-   * @return the unsupervised state of a contact.
-   */
   @Override
   public ContactDTO unsupervise(int contactId, int student) {
-    dalServices.startTransaction();
-    Contact contact = (Contact) contactDAO.findContactById(contactId);
+    Contact contact;
+    ContactDTO contactDTO;
+    try {
+      dalServices.startTransaction();
+      contact = (Contact) contactDAO.findContactById(contactId);
+      if (contact == null) {
+        dalServices.rollbackTransaction();
+        Logs.log(Level.ERROR,
+            "ContactUCC (unsupervise) : contact not found");
+        throw new ResourceNotFoundException();
+      }
+      contactDTO = contactDAO.unsupervise(contactId);
+    } catch (FatalException e) {
+      dalServices.rollbackTransaction();
+      throw e;
+    }
     if (!contact.isStarted() && !contact.isAdmitted()) {
       dalServices.rollbackTransaction();
-      throw new ResourceNotFoundException();
+      throw new InvalidRequestException();
     } else if (contact.getStudent() != student) {
       dalServices.rollbackTransaction();
       throw new NotAllowedException();
     }
-    ContactDTO contactDTO = contactDAO.unsupervise(contactId);
     dalServices.commitTransaction();
+    Logs.log(Level.DEBUG, "ContactUCC (unsupervise) : success!");
+    return contactDTO;
+  }
+
+  public ContactDTO admit(int contactId, String meeting, int studentId) {
+    Logs.log(Level.DEBUG, "ContactUCC (admit) : entrance");
+    Contact contact;
+    ContactDTO contactDTO;
+    try {
+      dalServices.startTransaction();
+      contact = (Contact) contactDAO.findContactById(contactId);
+      if (contact == null) {
+        dalServices.rollbackTransaction();
+        Logs.log(Level.ERROR, "ContactUCC (unsupervise) : contact not found");
+        throw new ResourceNotFoundException();
+      }
+      contactDTO = contactDAO.admitContact(contactId, meeting);
+    } catch (FatalException e) {
+      dalServices.rollbackTransaction();
+      throw e;
+    }
+    if (contact.getStudent() != studentId) {
+      dalServices.rollbackTransaction();
+      throw new NotAllowedException();
+    }
+    if (!contact.checkMeeting(meeting)) {
+      Logs.log(Level.ERROR, "ContactUCC (admit) : type meeting is invalid");
+      dalServices.rollbackTransaction();
+      throw new InvalidRequestException();
+    }
+    if (!contact.isStarted()) {
+      Logs.log(Level.ERROR, "ContactUCC (admit) : contact's state isn't started");
+      dalServices.rollbackTransaction();
+      throw new InvalidRequestException();
+    }
+    dalServices.commitTransaction();
+    Logs.log(Level.DEBUG, "ContactUCC (admit) : success!");
     return contactDTO;
   }
 
