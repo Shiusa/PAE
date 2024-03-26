@@ -34,7 +34,7 @@ public class UserDAOImpl implements UserDAO {
    */
   @Override
   public UserDTO getOneUserByEmail(String email) {
-    Logs.log(Level.INFO, "UserDAO (getOneUserByEmail) : entrance");
+    Logs.log(Level.DEBUG, "UserDAO (getOneUserByEmail) : entrance");
     String requestSql = """
         SELECT user_id, email, lastname, firstname, phone_number, password,
         registration_date, school_year, role
