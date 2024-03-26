@@ -10,6 +10,7 @@ import be.vinci.pae.services.dal.DalServicesConnection;
 import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.utils.exceptions.InvalidRequestException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
+import java.util.List;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.junit.jupiter.api.AfterEach;
@@ -77,6 +78,29 @@ public class UserUCCImplTest {
     userDTO.setPassword(hashPassword);
     Mockito.when(userDAOMock.getOneUserByEmail(email)).thenReturn(userDTO);
     assertEquals(42, userUCC.login(email, password).getId());
+  }
+
+  @Test
+  @DisplayName("Test get all users")
+  public void testGetAllUsers() {
+    userDTO.setId(56);
+    Mockito.when(userDAOMock.getAllUsers()).thenReturn(List.of(userDTO));
+    assertEquals(56, userUCC.getAllUsers().get(0).getId());
+  }
+
+  @Test
+  @DisplayName("Test get one by unknown id")
+  public void testGetOneByUnknownId() {
+    Mockito.when(userDAOMock.getOneUserById(49)).thenReturn(null);
+    assertThrows(ResourceNotFoundException.class, () -> userUCC.getOneById(49));
+  }
+
+  @Test
+  @DisplayName("Test get one by known id")
+  public void testGetOneByKnownId() {
+    userDTO.setEmail(email);
+    Mockito.when(userDAOMock.getOneUserById(1)).thenReturn(userDTO);
+    assertEquals(email, userUCC.getOneById(1).getEmail());
   }
 
 }

@@ -76,7 +76,7 @@ public class UserUCCImpl implements UserUCC {
     if (user == null) {
       dalServices.rollbackTransaction();
       Logs.log(Level.ERROR, "UserUCC (getOneById) : user is not in db");
-      throw new IllegalArgumentException("id unknown");
+      throw new ResourceNotFoundException();
     }
     dalServices.commitTransaction();
     Logs.log(Level.DEBUG, "UserUCC (getOneById) : success!");
