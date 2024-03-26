@@ -72,7 +72,8 @@ public class ContactResource {
   /**
    * admitting a contact with the type of the meeting("on site" or "remote").
    *
-   * @param json jsonNode containing contact id and the type of the meeting.
+   * @param request the token.
+   * @param json    jsonNode containing contact id and the type of the meeting.
    * @return ObjectNode containing all information about the contact admitted.
    * @throws WebApplicationException when the contact_id and/or the meeting field is invalid.
    */
@@ -129,7 +130,8 @@ public class ContactResource {
   /**
    * a contact has turned down the internship
    *
-   * @param json jsonNode containing contact id of the contact and the reason for refusal.
+   * @param request the token.
+   * @param json    jsonNode containing contact id of the contact and the reason for refusal.
    * @return ObjectNode containing all information about the contact to turn down.
    * @throws WebApplicationException when the contactId and/or the meeting field is invalid.
    */
@@ -138,7 +140,7 @@ public class ContactResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize
-  public ObjectNode turnDown(JsonNode json) {
+  public ObjectNode turnDown(@Context ContainerRequest request, JsonNode json) {
     Logs.log(Level.INFO, "ContactResource (turnDown) : entrance");
     if (!json.hasNonNull("contactId") || json.get("contactId").asText().isBlank()
         || !json.hasNonNull("reasonForRefusal") || json.get("reasonForRefusal").asText()
@@ -150,7 +152,10 @@ public class ContactResource {
 
     int contactId = json.get("contactId").asInt();
     String reasonForRefusal = json.get("reasonForRefusal").asText();
-    ContactDTO contactDTO = contactUCC.turnDown(contactId, reasonForRefusal);
+    UserDTO userDTO = (UserDTO) request.getProperty("user");
+    int studentId = userDTO.getId();
+
+    ContactDTO contactDTO = contactUCC.turnDown(contactId, reasonForRefusal, studentId);
     ObjectNode contact = jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
 
     Logs.log(Level.DEBUG, "ContactResource (turnDown) : success!");

@@ -108,7 +108,7 @@ public class ContactDAOImpl implements ContactDAO {
       throw new FatalException(e);
     }
 
-    Logs.log(Level.DEBUG, "ContactDAO (findContactByCompanyStudentSchoolYear) : success!");
+    Logs.log(Level.DEBUG, "ContactDAO (findContactById) : success!");
     return contact;
   }
 
@@ -181,11 +181,13 @@ public class ContactDAOImpl implements ContactDAO {
     try {
       ps.close();
     } catch (SQLException e) {
-      Logs.log(Level.FATAL, "ContactDAO (startContact) : internal error");
+      Logs.log(Level.FATAL, "ContactDAO (admit) : internal error");
       throw new FatalException(e);
     }
+    Logs.log(Level.DEBUG, "ContactDAO (admit) : success!");
     return contact;
   }
+
   @Override
   public ContactDTO turnDown(int contactId, String reasonForRefusal) {
     Logs.log(Level.INFO, "ContactDAO (turnDown) : entrance");

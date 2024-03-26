@@ -116,7 +116,7 @@ public class ContactUCCImpl implements ContactUCC {
       contact = (Contact) contactDAO.findContactById(contactId);
       if (contact == null) {
         dalServices.rollbackTransaction();
-        Logs.log(Level.ERROR, "ContactUCC (unsupervise) : contact not found");
+        Logs.log(Level.ERROR, "ContactUCC (admit) : contact not found");
         throw new ResourceNotFoundException();
       }
       contactDTO = contactDAO.admitContact(contactId, meeting);
@@ -125,6 +125,8 @@ public class ContactUCCImpl implements ContactUCC {
       throw e;
     }
     if (contact.getStudent() != studentId) {
+      Logs.log(Level.ERROR,
+          "ContactUCC (admit) : the student of the contact isn't the student from the token");
       dalServices.rollbackTransaction();
       throw new NotAllowedException();
     }
@@ -144,20 +146,34 @@ public class ContactUCCImpl implements ContactUCC {
   }
 
   @Override
-  public ContactDTO turnDown(int contactId, String reasonForRefusal) {
+  public ContactDTO turnDown(int contactId, String reasonForRefusal, int studentId) {
     Logs.log(Level.DEBUG, "ContactUCC (turnDown) : entrance");
-    dalServices.startTransaction();
-    Contact contact = (Contact) contactDAO.findContactById(contactId);
-    if (contact == null) {
+    Contact contact;
+    ContactDTO contactDTO;
+    try {
+      dalServices.startTransaction();
+      contact = (Contact) contactDAO.findContactById(contactId);
+      if (contact == null) {
+        dalServices.rollbackTransaction();
+        Logs.log(Level.ERROR, "ContactUCC (turnDown) : contact not found");
+        throw new ResourceNotFoundException();
+      }
+      contactDTO = contactDAO.turnDown(contactId, reasonForRefusal);
+    } catch (FatalException e) {
       dalServices.rollbackTransaction();
-      Logs.log(Level.ERROR, "ContactUCC (turnDown) : contact not found");
-      throw new ResourceNotFoundException();
-    } else if (!contact.isAdmitted()) {
+      throw e;
+    }
+    if (contact.getStudent() != studentId) {
+      Logs.log(Level.ERROR,
+          "ContactUCC (turnDown) : the student of the contact isn't the student from the token");
+      dalServices.rollbackTransaction();
+      throw new NotAllowedException();
+    }
+    if (!contact.isAdmitted()) {
       Logs.log(Level.ERROR, "ContactUCC (turnDown) : contact's state not admitted");
       dalServices.rollbackTransaction();
       throw new ResourceNotFoundException();
     }
-    ContactDTO contactDTO = contactDAO.turnDown(contactId, reasonForRefusal);
     dalServices.commitTransaction();
     Logs.log(Level.DEBUG, "ContactUCC (turnDown) : success!");
     return contactDTO;

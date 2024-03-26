@@ -40,9 +40,10 @@ public interface ContactUCC {
    * turn down the contact.
    *
    * @param contactId        the id of the contact.
-   * @param reasonForRefusal the reason for the refusal
+   * @param reasonForRefusal the reason for the refusal.
+   * @param studentId        the id of the student.
    * @return the started contact.
    */
-  ContactDTO turnDown(int contactId, String reasonForRefusal);
+  ContactDTO turnDown(int contactId, String reasonForRefusal, int studentId);
 
 }
