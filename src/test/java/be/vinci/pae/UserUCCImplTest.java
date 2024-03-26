@@ -12,7 +12,7 @@ import be.vinci.pae.services.dal.DalServicesConnection;
 import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.utils.exceptions.FatalException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
-import be.vinci.pae.utils.exceptions.UnauthorizedAccesException;
+import be.vinci.pae.utils.exceptions.UnauthorizedAccessException;
 import java.util.List;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
@@ -73,7 +73,7 @@ public class UserUCCImplTest {
     userDTO.setEmail(email);
     userDTO.setPassword(hashPassword);
     Mockito.when(userDAOMock.getOneUserByEmail(email)).thenReturn(userDTO);
-    assertThrows(UnauthorizedAccesException.class, () -> userUCC.login(email, "boom"));
+    assertThrows(UnauthorizedAccessException.class, () -> userUCC.login(email, "boom"));
   }
 
   @Test

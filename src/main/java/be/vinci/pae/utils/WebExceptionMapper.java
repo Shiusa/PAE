@@ -5,7 +5,7 @@ import be.vinci.pae.utils.exceptions.FatalException;
 import be.vinci.pae.utils.exceptions.InvalidRequestException;
 import be.vinci.pae.utils.exceptions.NotAllowedException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
-import be.vinci.pae.utils.exceptions.UnauthorizedAccesException;
+import be.vinci.pae.utils.exceptions.UnauthorizedAccessException;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -34,7 +34,7 @@ public class WebExceptionMapper implements ExceptionMapper<Throwable> {
           .entity(exception.getMessage())
           .build();
     }
-    if (exception instanceof UnauthorizedAccesException) {
+    if (exception instanceof UnauthorizedAccessException) {
       return Response.status(Status.UNAUTHORIZED)
           .entity(exception.getMessage())
           .build();

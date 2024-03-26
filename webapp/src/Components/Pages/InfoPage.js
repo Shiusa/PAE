@@ -1,25 +1,58 @@
-import showNavStyle from "../../utils/function";
+import {showNavStyle, awaitFront} from "../../utils/function";
+
+/* eslint-disable prefer-template */
+// eslint-disable-next-line import/no-cycle
+
+import {getUserSessionData} from "../../utils/session";
 
 
-const InfoPage = () => {
+const InfoPage = async () => {
+
+    showNavStyle("info");
 
     const main = document.querySelector('main');
+    
+    awaitFront();
+
+    const user = getUserSessionData();
+
+    const readUserInfo = async () => {
+        try {
+            
+            const response = await fetch('api/users/' + user.user.id);
+
+            if (!response.ok) {
+                throw new Error(
+                    `fetch error : ${response.status} : ${response.statusText}`);
+            }
+            
+            const userInfo = await response.json();
+            return userInfo;
+        } catch (err) {
+            console.error('DashBoardPage::error: ', err);
+            throw err;
+        }
+    };
+
+    const userInfoID = await readUserInfo();
+
+    
     const info = ` 
         <h1 class="">Vos informations</h1>
         <div class="mt-1 mb-1 info-line"></div>
-        <h4 class="mt-3">Année académique : 2023-2024</h2>
-        <h5 class="mt-1 mb-4">james.hutch@vinci.be</h3>
+        <h4 class="mt-3">Année académique : ${userInfoID.schoolYear}</h2>
+        <h5 class="mt-1 mb-4">${userInfoID.email}</h3>
         <div class="input-group mb-3">
             <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-user"></i></span>
-            <input type="text" class="form-control" id="input-surname" value="James" placeholder="Prénom" aria-label="Prénom" aria-describedby="basic-addon1">
+            <input type="text" class="form-control" id="input-firstname" value="${userInfoID.firstname}" placeholder="Prénom" aria-label="Prénom" aria-describedby="basic-addon1">
         </div>
         <div class="input-group mb-3">
             <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-user"></i></span>
-            <input type="text" class="form-control" id="input-name" value="Hutch" placeholder="Nom" aria-label="Nom" aria-describedby="basic-addon1">
+            <input type="text" class="form-control" id="input-lastname" value="${userInfoID.lastname}" placeholder="Nom" aria-label="Nom" aria-describedby="basic-addon1">
         </div>
         <div class="input-group mb-3">
             <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-phone"></i></span>
-            <input type="text" class="form-control" id="input-phone" value="0471475854" placeholder="Téléphone" aria-label="Téléphone" aria-describedby="basic-addon1">
+            <input type="text" class="form-control" id="input-phone" value="${userInfoID.phoneNumber}" placeholder="Téléphone" aria-label="Téléphone" aria-describedby="basic-addon1">
         </div>
         <p class="btn btn-primary mt-1" id="btn-save">Enregistrer les modifications</p>
         <p class="btn btn-outline-primary mt-2" id="btn-change-pwd">Modifier mon mot de passe</p>    
@@ -38,9 +71,9 @@ const InfoPage = () => {
 
     refresh();
 
-
-
     showNavStyle("info");
+
+    
 
     function refresh() {
         infoContainer.innerHTML = info;

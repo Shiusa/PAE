@@ -1,6 +1,7 @@
 package be.vinci.pae.services.dao;
 
 import be.vinci.pae.domain.dto.ContactDTO;
+import java.util.List;
 
 /**
  * ContactDAO interface.
@@ -26,6 +27,22 @@ public interface ContactDAO {
    * @return the contact created.
    */
   ContactDTO startContact(int company, int student, String schoolYear);
+
+  /**
+   * Get one contact by id then set the contactDTO if contact exist.
+   *
+   * @param id contact' id.
+   * @return contactDTO with setter corresponding to the id, null otherwise.
+   */
+  ContactDTO getOneContactById(int id);
+
+  /**
+   * Get all contacts by a student id.
+   *
+   * @param student student' id.
+   * @return a list of all contacts.
+   */
+  List<ContactDTO> getAllContactsByStudent(int student);
 
   /**
    * Find a contact by its id.

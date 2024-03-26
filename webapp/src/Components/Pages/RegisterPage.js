@@ -1,6 +1,6 @@
 // eslint-disable-next-line import/no-cycle
 import {Redirect} from "../Router/Router";
-import showNavStyle from "../../utils/function";
+import {showNavStyle} from "../../utils/function";
 
 const RegisterPage = () => {
   const main = document.querySelector('main');

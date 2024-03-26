@@ -15,6 +15,7 @@ import be.vinci.pae.utils.exceptions.InvalidRequestException;
 import be.vinci.pae.utils.exceptions.NotAllowedException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
 import jakarta.inject.Inject;
+import java.util.List;
 import org.apache.logging.log4j.Level;
 
 /**
@@ -78,6 +79,23 @@ public class ContactUCCImpl implements ContactUCC {
   }
 
   @Override
+  public List<ContactDTO> getAllContactsByStudent(int student) {
+    return contactDAO.getAllContactsByStudent(student);
+  }
+
+  @Override
+  public ContactDTO getOneById(int id) {
+    dalServices.startTransaction();
+    ContactDTO contact = contactDAO.getOneContactById(id);
+    if (contact == null) {
+      dalServices.rollbackTransaction();
+      throw new IllegalArgumentException("id unknown");
+    }
+    dalServices.commitTransaction();
+    return contact;
+  }
+
+  @Override
   public ContactDTO unsupervise(int contactId, int student) {
     Contact contact;
     ContactDTO contactDTO;
@@ -107,6 +125,7 @@ public class ContactUCCImpl implements ContactUCC {
     return contactDTO;
   }
 
+  @Override
   public ContactDTO admit(int contactId, String meeting, int studentId) {
     Logs.log(Level.DEBUG, "ContactUCC (admit) : entrance");
     Contact contact;

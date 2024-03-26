@@ -10,6 +10,8 @@ import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.logging.log4j.Level;
 
 /**
@@ -113,6 +115,22 @@ public class ContactDAOImpl implements ContactDAO {
   }
 
   @Override
+  public ContactDTO getOneContactById(int id) {
+    String requestSql = """
+        SELECT contact_id, company, student, meeting, contact_state, reason_for_refusal, school_year
+        FROM prostage.contacts
+        WHERE contact_id = ?
+        """;
+    PreparedStatement ps = dalServices.getPreparedStatement(requestSql);
+    try {
+      ps.setInt(1, id);
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+    return buildContactDTO(ps);
+  }
+
+  @Override
   public ContactDTO unsupervise(int contactId) {
     String requestSql = """
         UPDATE proStage.contacts
@@ -128,6 +146,37 @@ public class ContactDAOImpl implements ContactDAO {
       throw new FatalException(e);
     }
     return buildContactDTO(ps);
+  }
+
+  @Override
+  public List<ContactDTO> getAllContactsByStudent(int student) {
+    List<ContactDTO> contactDTOList = new ArrayList<>();
+
+    String requestSql = """
+        SELECT contact_id, company, student, meeting, contact_state, reason_for_refusal, school_year
+        FROM proStage.contacts 
+        WHERE student = ?
+        """;
+
+    try (PreparedStatement ps = dalServices.getPreparedStatement(requestSql)) {
+      ps.setInt(1, student);
+      try (ResultSet rs = ps.executeQuery()) {
+        while (rs.next()) {
+          ContactDTO contactDTO = contactFactory.getContactDTO();
+          contactDTO.setId(rs.getInt(1));
+          contactDTO.setCompany(rs.getInt("company"));
+          contactDTO.setStudent(rs.getInt("student"));
+          contactDTO.setMeeting(rs.getString("meeting"));
+          contactDTO.setState(rs.getString("contact_state"));
+          contactDTO.setReasonRefusal(rs.getString("reason_for_refusal"));
+          contactDTO.setSchoolYear(rs.getString("school_year"));
+          contactDTOList.add(contactDTO);
+        }
+      }
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+    return contactDTOList;
   }
 
   private ContactDTO buildContactDTO(PreparedStatement ps) {
@@ -159,7 +208,7 @@ public class ContactDAOImpl implements ContactDAO {
     }
   }
 
-
+  @Override
   public ContactDTO admitContact(int contactId, String meeting) {
     Logs.log(Level.INFO, "ContactDAO (admit) : entrance");
     String requestSql = """

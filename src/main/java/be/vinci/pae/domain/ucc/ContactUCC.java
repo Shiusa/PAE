@@ -1,6 +1,7 @@
 package be.vinci.pae.domain.ucc;
 
 import be.vinci.pae.domain.dto.ContactDTO;
+import java.util.List;
 
 /**
  * ContactUCC interface.
@@ -27,6 +28,23 @@ public interface ContactUCC {
    */
   ContactDTO admit(int contactId, String meeting, int studentId);
 
+
+  /**
+   * Get all contacts by a student id.
+   *
+   * @param student the student.
+   * @return a list containing all the contacts.
+   */
+  List<ContactDTO> getAllContactsByStudent(int student);
+
+
+  /**
+   * Get a contact by his id.
+   *
+   * @return the contact found.
+   */
+  ContactDTO getOneById(int id);
+
   /**
    * Unsupervised the contact.
    *
@@ -45,5 +63,4 @@ public interface ContactUCC {
    * @return the started contact.
    */
   ContactDTO turnDown(int contactId, String reasonForRefusal, int studentId);
-
 }

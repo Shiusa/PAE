@@ -8,6 +8,7 @@ import be.vinci.pae.utils.Logs;
 import be.vinci.pae.utils.exceptions.FatalException;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -17,6 +18,7 @@ import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Context;
@@ -74,6 +76,7 @@ public class UserResource {
   @GET
   @Path("all")
   @Produces(MediaType.APPLICATION_JSON)
+  @Authorize
   public List<UserDTO> getAll() {
     Logs.log(Level.INFO, "UserResource (getAll) : entrance");
     List<UserDTO> userDTOList;
@@ -99,6 +102,7 @@ public class UserResource {
   public ObjectNode rememberMe(@Context ContainerRequest request) {
     Logs.log(Level.INFO, "UserResource (rememberMe) : entrance");
     UserDTO userDTO = (UserDTO) request.getProperty("user");
+    Logs.log(Level.DEBUG, "UserResource (rememberMe) : success!");
     return buildToken(userDTO);
   }
 
@@ -122,6 +126,37 @@ public class UserResource {
       Logs.log(Level.FATAL, "UserResource (login) : internal error");
       throw new FatalException(e);
     }
+  }
+
+
+  /**
+   * returns a user by its id.
+   *
+   * @param request the token from the front.
+   * @param id      of the user
+   * @return userDTO
+   */
+  @GET
+  @Path("/{id}")
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize
+  public Response getOneUser(@Context ContainerRequest request, @PathParam("id") int id) {
+    Logs.log(Level.INFO, "UserResource (getOneUser) : entrance");
+    UserDTO userCheck = (UserDTO) request.getProperty("user");
+    if (userCheck.getId() != id) {
+      Logs.log(Level.ERROR, "UserResource (getOneUser) : unauthorized");
+      throw new WebApplicationException("you can't see this user", Response.Status.UNAUTHORIZED);
+    }
+    UserDTO userDTO = userUCC.getOneById(id);
+    String user;
+    try {
+      user = jsonMapper.writeValueAsString(userDTO);
+    } catch (JsonProcessingException e) {
+      Logs.log(Level.FATAL, "UserResource (getOneUser) : internal error");
+      throw new FatalException(e);
+    }
+    Logs.log(Level.INFO, "UserResource (getOneUser) : success!");
+    return Response.ok(user).build();
   }
 }
 
