@@ -127,12 +127,12 @@ public class ContactDAOImpl implements ContactDAO {
     } catch (SQLException e) {
       throw new FatalException(e);
     }
-    System.out.println(contactDTO.getId());
     return buildContactDTO(ps);
   }
 
   private ContactDTO buildContactDTO(PreparedStatement ps) {
     ContactDTO contact = contactFactory.getContactDTO();
+
     try (ResultSet rs = ps.executeQuery()) {
       if (rs.next()) {
         contact.setId(rs.getInt("contact_id"));
@@ -145,10 +145,18 @@ public class ContactDAOImpl implements ContactDAO {
         rs.close();
         return contact;
       }
+      return null;
     } catch (SQLException e) {
-      e.printStackTrace();
+      Logs.log(Level.FATAL, "CompanyDAO (buildCompanyDTO) : internal error!");
+      throw new FatalException(e);
+    } finally {
+      try {
+        ps.close();
+      } catch (SQLException e) {
+        Logs.log(Level.FATAL, "CompanyDAO (buildCompanyDTO) : internal error!");
+        throw new FatalException(e);
+      }
     }
-    return contact;
   }
 
 }
