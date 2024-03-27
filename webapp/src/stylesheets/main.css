@@ -548,6 +548,10 @@
   }
 }
 
+.input-group-role.disable {
+  display: none;
+}
+
 .info-line {
   width: 30%;
   height: 2px;

@@ -24,6 +24,8 @@ import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import org.apache.logging.log4j.Level;
 import org.glassfish.jersey.server.ContainerRequest;
@@ -128,7 +130,6 @@ public class UserResource {
     }
   }
 
-
   /**
    * returns a user by its id.
    *
@@ -157,6 +158,47 @@ public class UserResource {
     }
     Logs.log(Level.INFO, "UserResource (getOneUser) : success!");
     return Response.ok(user).build();
+  }
+
+  /**
+   * Register route.
+   *
+   * @param userToRegister UserDTO object containing email, lastname, firstname, phone number,
+   *                       password, role.
+   * @return a User.
+   */
+  @POST
+  @Path("register")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  public UserDTO register(UserDTO userToRegister) {
+
+    Logs.log(Level.INFO, "UserResource (register) : entrance");
+    if (userToRegister.getEmail().isBlank() || userToRegister.getLastname().isBlank()
+        || userToRegister.getFirstname().isBlank() || userToRegister.getPhoneNumber().isBlank()
+        || userToRegister.getPassword().isBlank() || userToRegister.getRole().isBlank()) {
+      Logs.log(Level.WARN, "UserResource (register) : missing input");
+      throw new WebApplicationException("Inputs cannot be blank", Response.Status.BAD_REQUEST);
+    }
+
+    LocalDate localDate = LocalDate.now();
+    Date registrationDate = Date.valueOf(localDate);
+    userToRegister.setRegistrationDate(registrationDate);
+    int monthValue = localDate.getMonthValue();
+    String schoolYear;
+    if (monthValue >= 9) {
+      schoolYear = localDate.getYear() + "-" + localDate.plusYears(1).getYear();
+    } else {
+      schoolYear = localDate.minusYears(1).getYear() + "-" + localDate.getYear();
+    }
+    userToRegister.setSchoolYear(schoolYear);
+
+    UserDTO registeredUser;
+
+    registeredUser = userUCC.register(userToRegister);
+    Logs.log(Level.INFO, "UserResource (register) : success!");
+    return registeredUser;
+
   }
 }
 
