@@ -36,7 +36,7 @@ const RegisterPage = () => {
                   <label class="form-check-label" for="roleTeacher">Professeur</label>
                 </div>
                 <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="roleAdministrative" value="administrative">
+                  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="roleAdministrative" value="administrative employee">
                   <label class="form-check-label" for="roleAdministrative">Administratif</label>
                 </div>
               </div>
@@ -100,6 +100,7 @@ async function register(e) {
     }
   } catch(error) {
     errorMessage.style.display="block";
+    errorMessage.innerText="role non choisi";
     return;
   }
 
@@ -129,6 +130,15 @@ async function register(e) {
   } catch (error) {
     errorMessage = document.getElementById("error-message");
     errorMessage.style.display="block";
+    if (error instanceof Error && error.message.startsWith("fetch error : 400")) {
+      errorMessage.innerText="Tous les champs doivent être remplis";
+    }
+    if (error instanceof Error && error.message.startsWith("fetch error : 409")) {
+      errorMessage.innerText="Email déjà utilisé";
+    }
+    if (error instanceof Error && error.message.startsWith("fetch error : 500")) {
+      errorMessage.innerText="Une erreur interne s'est produite, veuillez réssayer";
+    }
     return;
   }
   Navbar();
