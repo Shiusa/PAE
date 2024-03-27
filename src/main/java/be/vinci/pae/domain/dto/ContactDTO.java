@@ -99,7 +99,22 @@ public interface ContactDTO {
   /**
    * Set the contact's school year.
    *
-   * @param schoolYear school year to set.
+   * @param version school year to set.
    */
-  void setSchoolYear(String schoolYear);
+  void setSchoolYear(String version);
+
+  /**
+   * Get the contact's version.
+   *
+   * @return the contact's version.
+   */
+  int getVersion();
+
+  /**
+   * Set the contact's version.
+   *
+   * @param version school version.
+   */
+  void setVersion(int version);
+
 }

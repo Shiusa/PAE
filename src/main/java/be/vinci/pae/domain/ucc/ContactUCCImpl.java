@@ -86,7 +86,7 @@ public class ContactUCCImpl implements ContactUCC {
   @Override
   public ContactDTO getOneById(int id) {
     dalServices.startTransaction();
-    ContactDTO contact = contactDAO.getOneContactById(id);
+    ContactDTO contact = contactDAO.findContactById(id);
     if (contact == null) {
       dalServices.rollbackTransaction();
       throw new IllegalArgumentException("id unknown");
@@ -108,7 +108,8 @@ public class ContactUCCImpl implements ContactUCC {
             "ContactUCC (unsupervise) : contact not found");
         throw new ResourceNotFoundException();
       }
-      contactDTO = contactDAO.unsupervise(contactId);
+      int version = contact.getVersion();
+      contactDTO = contactDAO.unsupervise(contactId, version);
     } catch (FatalException e) {
       dalServices.rollbackTransaction();
       throw e;
@@ -118,6 +119,7 @@ public class ContactUCCImpl implements ContactUCC {
       throw new InvalidRequestException();
     } else if (contact.getStudent() != student) {
       dalServices.rollbackTransaction();
+
       throw new NotAllowedException();
     }
     dalServices.commitTransaction();
@@ -138,7 +140,8 @@ public class ContactUCCImpl implements ContactUCC {
         Logs.log(Level.ERROR, "ContactUCC (admit) : contact not found");
         throw new ResourceNotFoundException();
       }
-      contactDTO = contactDAO.admitContact(contactId, meeting);
+      int version = contact.getVersion();
+      contactDTO = contactDAO.admitContact(contactId, meeting, version);
     } catch (FatalException e) {
       dalServices.rollbackTransaction();
       throw e;
@@ -177,7 +180,8 @@ public class ContactUCCImpl implements ContactUCC {
         Logs.log(Level.ERROR, "ContactUCC (turnDown) : contact not found");
         throw new ResourceNotFoundException();
       }
-      contactDTO = contactDAO.turnDown(contactId, reasonForRefusal);
+      int version = contact.getVersion();
+      contactDTO = contactDAO.turnDown(contactId, reasonForRefusal, version);
     } catch (FatalException e) {
       dalServices.rollbackTransaction();
       throw e;
