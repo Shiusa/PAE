@@ -28,7 +28,7 @@ Content-Type: application/json
 Authorization: {{eleonoreToken}}
 
 {
-  "contactId": "6",
+  "contactId": "3",
   "meeting": "remote"
 }
 
@@ -38,7 +38,7 @@ Content-Type: application/json
 Authorization: {{eleonoreToken}}
 
 {
-  "contactId":"6"
+  "contactId":"3"
 }
 
 ### Create one contact
@@ -47,6 +47,6 @@ Content-Type: application/json
 Authorization: {{eleonoreToken}}
 
 {
-  "contactId": "6",
+  "contactId": "3",
   "reasonForRefusal": "your profil isn't corresponding to our demand"
 }

@@ -119,15 +119,17 @@ public class ContactDAOImpl implements ContactDAO {
   public ContactDTO unsupervise(int contactId, int version) {
     String requestSql = """
         UPDATE proStage.contacts
-        SET contact_state = 'unsupervised'
+        SET contact_state = ? , version = ?
         WHERE contact_id = ? AND version = ?
         RETURNING *;
         """;
 
     PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql);
     try {
-      ps.setInt(1, contactId);
-      ps.setInt(2, version);
+      ps.setString(1, "unsupervised");
+      ps.setInt(2, version + 1);
+      ps.setInt(3, contactId);
+      ps.setInt(4, version);
     } catch (SQLException e) {
       throw new FatalException(e);
     }
@@ -199,15 +201,17 @@ public class ContactDAOImpl implements ContactDAO {
     Logs.log(Level.INFO, "ContactDAO (admit) : entrance");
     String requestSql = """
         UPDATE proStage.contacts
-        SET meeting = ?, contact_state = 'admitted'
+        SET meeting = ?, contact_state = ?, version = ?
         WHERE contact_id = ? AND version = ?
         RETURNING *;
         """;
     PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql);
     try {
       ps.setString(1, meeting);
-      ps.setInt(2, contactId);
-      ps.setInt(3, version);
+      ps.setString(2, "admitted");
+      ps.setInt(3, version + 1);
+      ps.setInt(4, contactId);
+      ps.setInt(5, version);
     } catch (SQLException e) {
       Logs.log(Level.FATAL, "ContactDAO (admit) : internal error");
       e.printStackTrace();
@@ -229,7 +233,7 @@ public class ContactDAOImpl implements ContactDAO {
     Logs.log(Level.INFO, "ContactDAO (turnDown) : entrance");
     String requestSql = """
                 UPDATE proStage.contacts
-                SET reason_for_refusal = ?, contact_state = 'turned down'
+                SET reason_for_refusal = ?, contact_state = ?, version = ?
                 WHERE contact_id = ? AND version = ?
                 RETURNING *;
                 
@@ -237,11 +241,13 @@ public class ContactDAOImpl implements ContactDAO {
     PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql);
     try {
       ps.setString(1, reasonForRefusal);
-      ps.setInt(2, contactId);
-      ps.setInt(3, version);
+      ps.setString(2, "turned down");
+      ps.setInt(3, version + 1);
+      ps.setInt(4, contactId);
+      ps.setInt(5, version);
     } catch (SQLException e) {
       Logs.log(Level.FATAL, "ContactDAO (turnDown) : internal error");
-      throw new RuntimeException(e);
+      throw new FatalException(e);
     }
 
     ContactDTO contact = buildContactDTO(ps);
