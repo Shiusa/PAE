@@ -1,7 +1,6 @@
 // eslint-disable-next-line import/no-cycle
 import {Redirect} from "../Router/Router";
-import showNavStyle from "../../utils/function";
-// import {setUserSessionData} from "../../utils/session";
+import {showNavStyle} from "../../utils/function";
 import Navbar from "../Navbar/Navbar";
 
 const RegisterPage = () => {
@@ -127,12 +126,6 @@ async function register(e) {
           `fetch error : ${  response.status  } : ${  response.statusText}`
       );
     }
-
-    /* const user = await response.json(); // json() returns a promise => we wait for the data
-
-    // eslint-disable-next-line no-use-before-define
-    await onUserLogin(user); */
-
   } catch (error) {
     errorMessage = document.getElementById("error-message");
     errorMessage.style.display="block";
@@ -141,13 +134,6 @@ async function register(e) {
   Navbar();
   Redirect("/");
 }
-
-/* const onUserLogin = async (userData) => {
-    setUserSessionData(userData);
-  // re-render the navbar for the authenticated user
-  Navbar();
-  Redirect("/");
-}; */
 
 function roleSelector() {
   const emailInput = document.getElementById("input-email").value;

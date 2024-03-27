@@ -1,5 +1,7 @@
 package be.vinci.pae;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -8,7 +10,11 @@ import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.domain.ucc.UserUCC;
 import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.UserDAO;
+import be.vinci.pae.utils.exceptions.FatalException;
 import be.vinci.pae.utils.exceptions.DuplicateException;
+import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
+import be.vinci.pae.utils.exceptions.UnauthorizedAccessException;
+import java.util.List;
 import java.sql.Date;
 import java.time.LocalDate;
 import org.glassfish.hk2.api.ServiceLocator;
@@ -21,8 +27,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 /**
- * Demo test class. Please read the document on Moodle to know how test classes are handled by
- * Jenkins.
+ * UserUCC test class.
  */
 public class UserUCCImplTest {
 
@@ -31,14 +36,14 @@ public class UserUCCImplTest {
   private static final String firstname = "Eléonore";
   private static final String phoneNumber = "+32485123456";
   private static final String password = "123";
-  private static final String hashPassword = "$2a$10$HG7./iX"
-      + "Yemq7gF/v9Hc98eXJFGo3KajGwPLoaiU0r9TlaxlIFxsAu";
+  private static final String hashPassword
+      = "$2a$10$HG7./iXYemq7gF/v9Hc98eXJFGo3KajGwPLoaiU0r9TlaxlIFxsAu";
   private static final String role = "teacher";
   private static final Date registrationDate = Date.valueOf(LocalDate.now());
   private static final String schoolYear = "2023-2024";
+  private static ServiceLocator serviceLocator;
   private static UserDAO userDAOMock;
   private static DalServices dalServicesMock;
-  private static ServiceLocator serviceLocator;
   private UserUCC userUCC;
   private UserFactory userFactory;
   private UserDTO userDTO;
@@ -46,17 +51,15 @@ public class UserUCCImplTest {
   @BeforeAll
   static void init() {
     serviceLocator = ServiceLocatorUtilities.bind(new BinderTest());
-    userDAOMock = Mockito.mock(UserDAO.class);
-    dalServicesMock = Mockito.mock(DalServices.class);
     userDAOMock = serviceLocator.getService(UserDAO.class);
     dalServicesMock = serviceLocator.getService(DalServices.class);
   }
 
   @BeforeEach
   void setup() {
-    this.userUCC = serviceLocator.getService(UserUCC.class);
-    this.userFactory = serviceLocator.getService(UserFactory.class);
-    this.userDTO = userFactory.getUserDTO();
+    userUCC = serviceLocator.getService(UserUCC.class);
+    userFactory = serviceLocator.getService(UserFactory.class);
+    userDTO = userFactory.getUserDTO();
     Mockito.doNothing().when(dalServicesMock).startTransaction();
     Mockito.doNothing().when(dalServicesMock).commitTransaction();
     Mockito.doNothing().when(dalServicesMock).rollbackTransaction();
@@ -65,7 +68,73 @@ public class UserUCCImplTest {
   @AfterEach
   void reset() {
     Mockito.reset(userDAOMock);
-    Mockito.reset(dalServicesMock);
+  }
+
+  @Test
+  @DisplayName("Test login with unknown email")
+  public void testLoginUnknownEmail() {
+    Mockito.when(userDAOMock.getOneUserByEmail(email)).thenReturn(null);
+    assertThrows(ResourceNotFoundException.class, () -> userUCC.login(email, password));
+  }
+
+  @Test
+  @DisplayName("Test login with good email wrong password")
+  public void testLoginGoodEmailWrongPassword() {
+    userDTO.setEmail(email);
+    userDTO.setPassword(hashPassword);
+    Mockito.when(userDAOMock.getOneUserByEmail(email)).thenReturn(userDTO);
+    assertThrows(UnauthorizedAccessException.class, () -> userUCC.login(email, "boom"));
+  }
+
+  @Test
+  @DisplayName("Test login with good email and good password")
+  public void testLoginGoodEmailGoodPassword() {
+    userDTO.setId(42);
+    userDTO.setEmail(email);
+    userDTO.setPassword(hashPassword);
+    Mockito.when(userDAOMock.getOneUserByEmail(email)).thenReturn(userDTO);
+    assertNotNull(userUCC.login(email, password));
+  }
+
+  @Test
+  @DisplayName("Test get all users")
+  public void testGetAllUsers() {
+    userDTO.setId(56);
+    Mockito.when(userDAOMock.getAllUsers()).thenReturn(List.of(userDTO));
+    assertEquals(56, userUCC.getAllUsers().get(0).getId());
+  }
+
+  @Test
+  @DisplayName("Test get one by wrong id")
+  public void testGetOneByUnknownId() {
+    Mockito.when(userDAOMock.getOneUserById(49)).thenReturn(null);
+    assertThrows(ResourceNotFoundException.class, () -> userUCC.getOneById(49));
+  }
+
+  @Test
+  @DisplayName("Test get one by id")
+  public void testGetOneByKnownId() {
+    userDTO.setEmail(email);
+    Mockito.when(userDAOMock.getOneUserById(1)).thenReturn(userDTO);
+    assertNotNull(userUCC.getOneById(1));
+  }
+
+  @Test
+  @DisplayName("Test unsupervise contact crash transaction")
+  public void testCrashTransaction() {
+    Mockito.doThrow(new FatalException(new RuntimeException()))
+        .when(dalServicesMock).startTransaction();
+    assertAll(
+        () -> assertThrows(FatalException.class, () -> {
+          userUCC.login(email, password);
+        }),
+        () -> assertThrows(FatalException.class, () -> {
+          userUCC.getAllUsers();
+        }),
+        () -> assertThrows(FatalException.class, () -> {
+          userUCC.getOneById(1);
+        })
+    );
   }
 
   @Test

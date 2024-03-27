@@ -4,6 +4,46 @@
   --ma-couleur-foncée: #1489a0;
 }
 
+/* await */
+
+.await {
+  height: 700px;
+
+  i {
+    font-size: 35px;
+    padding: 0px 7px;
+    color: var(--ma-couleur);
+    
+  }
+
+  i:nth-child(1) {
+    animation: loading 0.9s infinite linear;
+  }
+
+  i:nth-child(2) {
+    animation: loading 0.9s infinite -0.3s linear;
+  }
+
+  i:nth-child(3) {
+    animation: loading 0.9s infinite -0.6s linear;
+
+  }
+}
+
+@keyframes loading {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-30px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
+
 /* temp */
 
 .container-fluid {

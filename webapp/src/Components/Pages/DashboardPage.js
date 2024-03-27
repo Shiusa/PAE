@@ -1,23 +1,101 @@
-import showNavStyle from "../../utils/function";
+import {showNavStyle, awaitFront} from "../../utils/function";
+/* eslint-disable prefer-template */
 // eslint-disable-next-line import/no-cycle
 import { Redirect } from "../Router/Router";
 
-const DashboardPage = () => {
+import {getUserSessionData} from "../../utils/session";
+
+const DashboardPage = async () => {
+
     const main = document.querySelector('main');
+    awaitFront();
+
+    showNavStyle("dashboard");
+
+    
+
+    const user = getUserSessionData();
+
+    
+
+    const readUserInfo = async () => {
+        try {
+            
+            const response = await fetch('api/users/' + user.user.id);
+
+            if (!response.ok) {
+                throw new Error(
+                    `fetch error : ${response.status} : ${response.statusText}`);
+            }
+            
+            const userInfo = await response.json();
+            return userInfo;
+        } catch (err) {
+            console.error('DashBoardPage::error: ', err);
+            throw err;
+        }
+    };
+
+    const readInternship = async () => {
+        try {
+            
+            const response = await fetch('api/internships/1');
+
+            if (!response.ok) {
+                throw new Error(
+                    `fetch error : ${response.status} : ${response.statusText}`);
+            }
+            
+            const userInfo = await response.json();
+            return userInfo;
+        } catch (err) {
+            console.error('DashBoardPage::error: ', err);
+            throw err;
+        }
+    };
+
+    /*
+
+    const readAllContactsByStudent = async () => {
+        try {
+            const response = await fetch('api/contacts/byStudent/' + user.user.id);
+
+            if (!response.ok) {
+                console.log("le status est" + response.status);
+                if (response.status === 401) {
+                Redirect("/");
+                }
+                throw new Error(
+                    `fetch error : ${response.status} : ${response.statusText}`);
+            }
+            const contactList = await response.json();
+            return contactList;
+        } catch (err) {
+            console.error('userListPage::error: ', err);
+            throw err;
+        }
+    };
+
+    */ 
+
+    const userInfoID = await readUserInfo();
+    const test = await readInternship();
+    console.log(test);
+
     main.innerHTML = `        
         <div class="dash d-flex justify-content-center align-items-center mt-5 mb-5 mx-auto">
             <div class="dash-left d-flex justify-content-center align-items-center flex-column ms-3 me-3">
                 <div class="dash-year d-flex justify-content-center align-items-center flex-column">
                     <i class="fa-solid fa-calendar-days mt-3"></i>
-                    <p class="mt-2">2023 - 2024</p>
+                    <p class="mt-2">${userInfoID.schoolYear}</p>
                 </div>
                 <div class="dash-info mt-4 d-flex justify-content-center align-items-center flex-column">   
                     <i class="fa-solid fa-circle-info"></i>
                     <h1 class="mt-2 mb-5">Informations<br>personnelles</h1>
-                    <p>alice.dubois@vinci.be</p>
-                    <p>Alice</p>
-                    <p>Dubois</p>
-                    <p>0471495595</p>
+                    <p>${userInfoID.email}</p>
+                    <p>${userInfoID.firstname}</p>
+                    <p>${userInfoID.lastname}</p>
+                    <p>${userInfoID.phoneNumber}</p>
                     <span id="btn-info-change" class="mt-4">Changer mes informations</span>
                 </div>
             </div>
@@ -38,23 +116,7 @@ const DashboardPage = () => {
                                 </div>
                         </div>
                         <div class="table-line-box overflow-auto">
-                            <div class="table-line d-flex align-items-center mt-2 mb-2">
-                                <div class="line-col-1">
-                                    <p class="mx-auto mt-3">entreprise.nom<br>entreprise.appellation</p>
-                                </div>
-                                <div class="line-col-2 d-flex justify-content-center">
-                                    <select class="form-select" aria-label="Default select example">
-                                        <option  value="1">State 1</option>
-                                        <option value="2" selected>State 2</option>
-                                        <option value="3">State 3</option>
-                                        <option value="4">State 4</option>
-                                    </select>
-                                </div>
-                                <div class="line-col-3 d-flex justify-content-center align-items-center">
-                                    <button class="btn btn-primary ms-2 me-2" type="submit">Mettre à jour</button>
-                                    <button type="button" class="btn btn-outline-primary ms-2 me-2">Ne plus suivre</button>
-                                </div>
-                            </div>
+                            
                         </div>
                     </div>
                     <div class="entreprise-box d-flex justify-contain-center align-items-center">    
@@ -100,8 +162,49 @@ const DashboardPage = () => {
         </div>
     `;
 
-    const btnChangeInfo = document.getElementById("btn-info-change");
+    showNavStyle("dashboard");
 
+
+    /* 
+
+    const tableContacts = document.querySelector(".table-line-box");
+
+    const contacts = await readAllContactsByStudent();
+
+    showContacts(contacts);
+
+    function showContacts(contactsTable) {
+        tableContacts.innerHTML = ``;
+    
+        let u = 0;
+        let info = ``;
+        while (u < contactsTable.length) {
+            info += `
+                <div class="table-line d-flex align-items-center mt-2 mb-2">
+                    <div class="line-col-1">
+                        <p class="mx-auto mt-3">entreprise.nom<br>entreprise.appellation</p>
+                    </div>
+                    <div class="line-col-2 d-flex justify-content-center">
+                        <select class="form-select" aria-label="Default select example">
+                            <option  value="1">State 1</option>
+                            <option value="2" selected>State 2</option>
+                            <option value="3">State 3</option>
+                            <option value="4">State 4</option>
+                        </select>
+                    </div>
+                    <div class="line-col-3 d-flex justify-content-center align-items-center">
+                        <button class="btn btn-primary ms-2 me-2" type="submit">Mettre à jour</button>
+                        <button type="button" class="btn btn-outline-primary ms-2 me-2">Ne plus suivre</button>
+                    </div>
+                </div>
+            `;
+             u += 1;
+        }
+        tableContacts.innerHTML = info;
+    }
+    */
+
+    const btnChangeInfo = document.getElementById("btn-info-change");
 
     const btnBack = document.getElementById('btn-back2');
     const boxInfo = document.querySelector('.entreprise-box');
@@ -115,7 +218,7 @@ const DashboardPage = () => {
         Redirect('/info');
     });
 
-    showNavStyle("dashboard");
+    
 };
 
 export default DashboardPage;
