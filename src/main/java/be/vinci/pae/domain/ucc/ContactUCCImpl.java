@@ -4,7 +4,7 @@ import be.vinci.pae.domain.Company;
 import be.vinci.pae.domain.Contact;
 import be.vinci.pae.domain.dto.ContactDTO;
 import be.vinci.pae.domain.dto.UserDTO;
-import be.vinci.pae.services.dal.DalServicesConnection;
+import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.CompanyDAO;
 import be.vinci.pae.services.dao.ContactDAO;
 import be.vinci.pae.services.dao.UserDAO;
@@ -27,7 +27,7 @@ public class ContactUCCImpl implements ContactUCC {
   @Inject
   private ContactDAO contactDAO;
   @Inject
-  private DalServicesConnection dalServices;
+  private DalServices dalServices;
   @Inject
   private UserDAO userDAO;
   @Inject
@@ -89,11 +89,17 @@ public class ContactUCCImpl implements ContactUCC {
 
   @Override
   public ContactDTO getOneById(int id) {
-    dalServices.startTransaction();
-    ContactDTO contact = contactDAO.getOneContactById(id);
-    if (contact == null) {
+    ContactDTO contact;
+    try {
+      dalServices.startTransaction();
+      contact = contactDAO.findContactById(id);
+      if (contact == null) {
+        dalServices.rollbackTransaction();
+        throw new ResourceNotFoundException();
+      }
+    } catch (FatalException e) {
       dalServices.rollbackTransaction();
-      throw new IllegalArgumentException("id unknown");
+      throw e;
     }
     dalServices.commitTransaction();
     return contact;
@@ -112,7 +118,8 @@ public class ContactUCCImpl implements ContactUCC {
             "ContactUCC (unsupervise) : contact not found");
         throw new ResourceNotFoundException();
       }
-      contactDTO = contactDAO.unsupervise(contactId);
+      int version = contact.getVersion();
+      contactDTO = contactDAO.unsupervise(contactId, version);
     } catch (FatalException e) {
       dalServices.rollbackTransaction();
       throw e;
@@ -122,6 +129,7 @@ public class ContactUCCImpl implements ContactUCC {
       throw new InvalidRequestException();
     } else if (contact.getStudent() != student) {
       dalServices.rollbackTransaction();
+
       throw new NotAllowedException();
     }
     dalServices.commitTransaction();
@@ -142,7 +150,8 @@ public class ContactUCCImpl implements ContactUCC {
         Logs.log(Level.ERROR, "ContactUCC (admit) : contact not found");
         throw new ResourceNotFoundException();
       }
-      contactDTO = contactDAO.admitContact(contactId, meeting);
+      int version = contact.getVersion();
+      contactDTO = contactDAO.admitContact(contactId, meeting, version);
     } catch (FatalException e) {
       dalServices.rollbackTransaction();
       throw e;
@@ -181,7 +190,8 @@ public class ContactUCCImpl implements ContactUCC {
         Logs.log(Level.ERROR, "ContactUCC (turnDown) : contact not found");
         throw new ResourceNotFoundException();
       }
-      contactDTO = contactDAO.turnDown(contactId, reasonForRefusal);
+      int version = contact.getVersion();
+      contactDTO = contactDAO.turnDown(contactId, reasonForRefusal, version);
     } catch (FatalException e) {
       dalServices.rollbackTransaction();
       throw e;
@@ -195,7 +205,7 @@ public class ContactUCCImpl implements ContactUCC {
     if (!contact.isAdmitted()) {
       Logs.log(Level.ERROR, "ContactUCC (turnDown) : contact's state not admitted");
       dalServices.rollbackTransaction();
-      throw new ResourceNotFoundException();
+      throw new InvalidRequestException();
     }
     dalServices.commitTransaction();
     Logs.log(Level.DEBUG, "ContactUCC (turnDown) : success!");

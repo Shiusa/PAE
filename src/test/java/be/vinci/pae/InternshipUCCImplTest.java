@@ -9,7 +9,7 @@ import be.vinci.pae.domain.InternshipFactory;
 import be.vinci.pae.domain.dto.ContactDTO;
 import be.vinci.pae.domain.dto.InternshipDTO;
 import be.vinci.pae.domain.ucc.InternshipUCC;
-import be.vinci.pae.services.dal.DalServicesConnection;
+import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.ContactDAO;
 import be.vinci.pae.services.dao.InternshipDAO;
 import be.vinci.pae.utils.exceptions.FatalException;
@@ -32,7 +32,7 @@ public class InternshipUCCImplTest {
   private static ServiceLocator serviceLocator;
   private static InternshipDAO internshipDAOMock;
   private static ContactDAO contactDAOMock;
-  private static DalServicesConnection dalServicesMock;
+  private static DalServices dalServicesMock;
   private InternshipUCC internshipUCC;
   private InternshipDTO internshipDTO;
   private ContactDTO contactDTO;
@@ -42,7 +42,7 @@ public class InternshipUCCImplTest {
     serviceLocator = ServiceLocatorUtilities.bind(new BinderTest());
     internshipDAOMock = serviceLocator.getService(InternshipDAO.class);
     contactDAOMock = serviceLocator.getService(ContactDAO.class);
-    dalServicesMock = serviceLocator.getService(DalServicesConnection.class);
+    dalServicesMock = serviceLocator.getService(DalServices.class);
   }
 
   @BeforeEach
@@ -90,7 +90,7 @@ public class InternshipUCCImplTest {
   public void testGetOneByIdWrongUser() {
     contactDTO.setStudent(1);
     internshipDTO.setContact(1);
-    Mockito.when(contactDAOMock.getOneContactById(1)).thenReturn(contactDTO);
+    Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
     Mockito.when(internshipDAOMock.getOneInternshipById(1)).thenReturn(internshipDTO);
     assertThrows(NotAllowedException.class, () -> internshipUCC.getOneById(1, 3));
   }
@@ -100,7 +100,7 @@ public class InternshipUCCImplTest {
   public void testGetOneByIdCorrect() {
     contactDTO.setStudent(1);
     internshipDTO.setContact(1);
-    Mockito.when(contactDAOMock.getOneContactById(1)).thenReturn(contactDTO);
+    Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
     Mockito.when(internshipDAOMock.getOneInternshipById(1)).thenReturn(internshipDTO);
     assertNotNull(internshipUCC.getOneById(1, 1));
   }

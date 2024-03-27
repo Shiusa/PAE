@@ -11,7 +11,7 @@ import be.vinci.pae.domain.dto.CompanyDTO;
 import be.vinci.pae.domain.dto.ContactDTO;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.domain.ucc.ContactUCC;
-import be.vinci.pae.services.dal.DalServicesConnection;
+import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.CompanyDAO;
 import be.vinci.pae.services.dao.ContactDAO;
 import be.vinci.pae.services.dao.UserDAO;
@@ -20,6 +20,7 @@ import be.vinci.pae.utils.exceptions.FatalException;
 import be.vinci.pae.utils.exceptions.InvalidRequestException;
 import be.vinci.pae.utils.exceptions.NotAllowedException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
+import java.util.List;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.junit.jupiter.api.AfterEach;
@@ -38,7 +39,7 @@ public class ContactUCCImplTest {
   private static ContactDAO contactDAOMock;
   private static UserDAO userDAOMock;
   private static CompanyDAO companyDAOMock;
-  private static DalServicesConnection dalServicesMock;
+  private static DalServices dalServicesMock;
   private ContactUCC contactUCC;
   private ContactDTO contactDTO;
   private UserDTO userDTO;
@@ -50,7 +51,7 @@ public class ContactUCCImplTest {
     contactDAOMock = serviceLocator.getService(ContactDAO.class);
     userDAOMock = serviceLocator.getService(UserDAO.class);
     companyDAOMock = serviceLocator.getService(CompanyDAO.class);
-    dalServicesMock = serviceLocator.getService(DalServicesConnection.class);
+    dalServicesMock = serviceLocator.getService(DalServices.class);
   }
 
   @BeforeEach
@@ -160,8 +161,9 @@ public class ContactUCCImplTest {
   public void testUnsuperviseContactCorrectlyStarted() {
     contactDTO.setStudent(1);
     contactDTO.setState("started");
+    contactDTO.setVersion(1);
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
-    Mockito.when(contactDAOMock.unsupervise(1)).thenReturn(contactDTO);
+    Mockito.when(contactDAOMock.unsupervise(1, 1)).thenReturn(contactDTO);
     assertNotNull(contactUCC.unsupervise(1, 1));
   }
 
@@ -170,8 +172,9 @@ public class ContactUCCImplTest {
   public void testUnsuperviseContactCorrectlyAdmitted() {
     contactDTO.setStudent(1);
     contactDTO.setState("admitted");
+    contactDTO.setVersion(2);
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
-    Mockito.when(contactDAOMock.unsupervise(1)).thenReturn(contactDTO);
+    Mockito.when(contactDAOMock.unsupervise(1, 2)).thenReturn(contactDTO);
     assertNotNull(contactUCC.unsupervise(1, 1));
   }
 
@@ -186,7 +189,133 @@ public class ContactUCCImplTest {
         }),
         () -> assertThrows(FatalException.class, () -> {
           contactUCC.unsupervise(1, 1);
+        }),
+        () -> assertThrows(FatalException.class, () -> {
+          contactUCC.admit(1, "on site", 1);
+        }),
+        () -> assertThrows(FatalException.class, () -> {
+          contactUCC.turnDown(1, "Student has not answered fast enough", 1);
+        }),
+        () -> assertThrows(FatalException.class, () -> {
+          contactUCC.getOneById(1);
         })
     );
   }
+
+  @Test
+  @DisplayName("Test admit contact is null")
+  public void testAdmitContactNotFound() {
+    Mockito.when(contactDAOMock.findContactById(1)).thenReturn(null);
+    assertThrows(ResourceNotFoundException.class, () -> contactUCC.admit(1, "on site", 1));
+  }
+
+  @Test
+  @DisplayName("Test admit contact with wrong student")
+  public void testAdmitContactWrongStudent() {
+    contactDTO.setStudent(2);
+    contactDTO.setState("started");
+    Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
+    assertThrows(NotAllowedException.class, () -> contactUCC.admit(1, "remote", 1));
+  }
+
+  @Test
+  @DisplayName("Test admit contact with state different than started")
+  public void testAdmitContactWrongState() {
+    contactDTO.setStudent(1);
+    contactDTO.setState("accepted");
+    Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
+    assertThrows(InvalidRequestException.class, () -> contactUCC.admit(1, "on site", 1));
+  }
+
+  @Test
+  @DisplayName("Test admit contact with type of meeting different than on site or remote")
+  public void testAdmitContactWrongMeeting() {
+    contactDTO.setStudent(1);
+    contactDTO.setState("started");
+    Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
+    assertThrows(InvalidRequestException.class, () -> contactUCC.admit(1, "test", 1));
+  }
+
+  @Test
+  @DisplayName("Test admit contact with type of meeting is null")
+  public void testAdmitContactMeetingIsNull() {
+    contactDTO.setStudent(1);
+    contactDTO.setState("started");
+    Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
+    assertThrows(InvalidRequestException.class, () -> contactUCC.admit(1, "", 1));
+  }
+
+  @Test
+  @DisplayName("Test admit contact correctly started")
+  public void testAdmitContactCorrectlyStarted() {
+    contactDTO.setStudent(1);
+    contactDTO.setState("started");
+    contactDTO.setVersion(1);
+    Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
+    Mockito.when(contactDAOMock.admitContact(1, "on site", 1)).thenReturn(contactDTO);
+    assertNotNull(contactUCC.admit(1, "on site", 1));
+  }
+
+  @Test
+  @DisplayName("Test turn down contact is null")
+  public void testTurnDownContactNotFound() {
+    Mockito.when(contactDAOMock.findContactById(1)).thenReturn(null);
+    assertThrows(ResourceNotFoundException.class,
+        () -> contactUCC.turnDown(1, "Student has not answered fast enough", 1));
+  }
+
+  @Test
+  @DisplayName("Test turn down contact with wrong student")
+  public void testTurnDownContactWrongStudent() {
+    contactDTO.setStudent(5);
+    contactDTO.setState("admitted");
+    Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
+    assertThrows(NotAllowedException.class,
+        () -> contactUCC.turnDown(1, "Student has not answered fast enough", 1));
+  }
+
+  @Test
+  @DisplayName("Test turn down contact with state different than admitted")
+  public void testTurnDownContactWrongState() {
+    contactDTO.setStudent(1);
+    contactDTO.setState("started");
+    Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
+    assertThrows(InvalidRequestException.class,
+        () -> contactUCC.turnDown(1, "Student has not answered fast enough", 1));
+  }
+
+
+  @Test
+  @DisplayName("Test turn down contact correctly admitted")
+  public void testTurnDownContactCorrectlyAdmitted() {
+    contactDTO.setStudent(1);
+    contactDTO.setState("admitted");
+    contactDTO.setVersion(2);
+    Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
+    Mockito.when(contactDAOMock.turnDown(1, "Student has not answered fast enough", 2))
+        .thenReturn(contactDTO);
+    assertNotNull(contactUCC.turnDown(1, "Student has not answered fast enough", 1));
+  }
+
+  @Test
+  @DisplayName("Test get all contact by student")
+  public void testGetAllContactByStudent() {
+    Mockito.when(contactDAOMock.getAllContactsByStudent(1)).thenReturn(List.of(contactDTO));
+    assertNotNull(contactUCC.getAllContactsByStudent(1));
+  }
+
+  @Test
+  @DisplayName("Test get one by id with contact not found")
+  public void testGetOneByIdWithContactNotFound() {
+    Mockito.when(contactDAOMock.findContactById(1)).thenReturn(null);
+    assertThrows(ResourceNotFoundException.class, () -> contactUCC.getOneById(1));
+  }
+
+  @Test
+  @DisplayName("Test get one by id correct")
+  public void testGetOneByIdCorrect() {
+    Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
+    assertNotNull(contactUCC.getOneById(1));
+  }
+
 }

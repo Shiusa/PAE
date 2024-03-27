@@ -17,6 +17,14 @@ public interface UserDAO {
   UserDTO getOneUserByEmail(String email);
 
   /**
+   * Add one user.
+   *
+   * @param user user to add.
+   * @return added user.
+   */
+  UserDTO addOneUser(UserDTO user);
+
+  /**
    * Get one user by id then set the userDTO if user exist.
    *
    * @param id user' id.

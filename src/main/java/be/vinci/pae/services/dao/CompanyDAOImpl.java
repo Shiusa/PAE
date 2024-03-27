@@ -2,7 +2,7 @@ package be.vinci.pae.services.dao;
 
 import be.vinci.pae.domain.CompanyFactory;
 import be.vinci.pae.domain.dto.CompanyDTO;
-import be.vinci.pae.services.dal.DalServices;
+import be.vinci.pae.services.dal.DalBackendServices;
 import be.vinci.pae.utils.Logs;
 import be.vinci.pae.utils.exceptions.FatalException;
 import jakarta.inject.Inject;
@@ -17,7 +17,7 @@ import org.apache.logging.log4j.Level;
 public class CompanyDAOImpl implements CompanyDAO {
 
   @Inject
-  private DalServices dalServices;
+  private DalBackendServices dalServices;
   @Inject
   private CompanyFactory companyFactory;
 

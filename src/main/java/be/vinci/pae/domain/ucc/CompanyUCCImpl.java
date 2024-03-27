@@ -1,7 +1,7 @@
 package be.vinci.pae.domain.ucc;
 
 import be.vinci.pae.domain.dto.CompanyDTO;
-import be.vinci.pae.services.dal.DalServicesConnection;
+import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.CompanyDAO;
 import be.vinci.pae.utils.Logs;
 import be.vinci.pae.utils.exceptions.FatalException;
@@ -16,7 +16,7 @@ public class CompanyUCCImpl implements CompanyUCC {
   @Inject
   private CompanyDAO companyDAO;
   @Inject
-  private DalServicesConnection dalServices;
+  private DalServices dalServices;
 
   @Override
   public CompanyDTO findOneById(int id) {

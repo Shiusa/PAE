@@ -18,6 +18,7 @@ public class ContactImpl implements Contact {
   private String state;
   private String reasonRefusal;
   private String schoolYear;
+  private int version;
 
   @Override
   public boolean checkMeeting(String meeting) {
@@ -113,6 +114,16 @@ public class ContactImpl implements Contact {
   }
 
   @Override
+  public int getVersion() {
+    return version;
+  }
+
+  @Override
+  public void setVersion(int version) {
+    this.version = version;
+  }
+
+  @Override
   @JsonIgnore
   public boolean isStarted() {
     return this.state.equals("started");
@@ -121,6 +132,6 @@ public class ContactImpl implements Contact {
   @Override
   @JsonIgnore
   public boolean isAdmitted() {
-    return getState().equals("admitted");
+    return this.state.equals("admitted");
   }
 }

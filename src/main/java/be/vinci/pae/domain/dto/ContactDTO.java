@@ -99,9 +99,23 @@ public interface ContactDTO {
   /**
    * Set the contact's school year.
    *
-   * @param schoolYear school year to set.
+   * @param version school year to set.
    */
-  void setSchoolYear(String schoolYear);
+  void setSchoolYear(String version);
+
+  /**
+   * Get the contact's version.
+   *
+   * @return the contact's version.
+   */
+  int getVersion();
+
+  /**
+   * Set the contact's version.
+   *
+   * @param version school version.
+   */
+  void setVersion(int version);
 
   /**
    * Get the contact's name company.
@@ -113,7 +127,7 @@ public interface ContactDTO {
   /**
    * Set the contact's name company.
    *
-   * @param name name to set.
+   * @param nameCompany name to set.
    */
   void setNameCompany(String nameCompany);
 
@@ -127,7 +141,8 @@ public interface ContactDTO {
   /**
    * Set the contact's designation company.
    *
-   * @param designation designation to set.
+   * @param designationCompany designation to set.
    */
   void setDesignationCompany(String designationCompany);
+
 }

@@ -16,7 +16,7 @@ import be.vinci.pae.domain.ucc.InternshipUCC;
 import be.vinci.pae.domain.ucc.InternshipUCCImpl;
 import be.vinci.pae.domain.ucc.UserUCC;
 import be.vinci.pae.domain.ucc.UserUCCImpl;
-import be.vinci.pae.services.dal.DalServicesConnection;
+import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.CompanyDAO;
 import be.vinci.pae.services.dao.ContactDAO;
 import be.vinci.pae.services.dao.InternshipDAO;
@@ -50,6 +50,6 @@ public class BinderTest extends AbstractBinder {
     bind(Mockito.mock(ContactDAO.class)).to(ContactDAO.class);
     bind(Mockito.mock(CompanyDAO.class)).to(CompanyDAO.class);
     bind(Mockito.mock(InternshipDAO.class)).to(InternshipDAO.class);
-    bind(Mockito.mock(DalServicesConnection.class)).to(DalServicesConnection.class);
+    bind(Mockito.mock(DalServices.class)).to(DalServices.class);
   }
 }

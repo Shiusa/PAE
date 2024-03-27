@@ -2,7 +2,7 @@ package be.vinci.pae.services.dao;
 
 import be.vinci.pae.domain.InternshipFactory;
 import be.vinci.pae.domain.dto.InternshipDTO;
-import be.vinci.pae.services.dal.DalServices;
+import be.vinci.pae.services.dal.DalBackendServices;
 import be.vinci.pae.utils.exceptions.FatalException;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
@@ -15,7 +15,7 @@ import java.sql.SQLException;
 public class InternshipDAOImpl implements InternshipDAO {
 
   @Inject
-  private DalServices dalServices;
+  private DalBackendServices dalServices;
   @Inject
   private InternshipFactory internshipFactory;
 

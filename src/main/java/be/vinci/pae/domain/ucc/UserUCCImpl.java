@@ -3,9 +3,10 @@ package be.vinci.pae.domain.ucc;
 import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.User;
 import be.vinci.pae.domain.dto.UserDTO;
-import be.vinci.pae.services.dal.DalServicesConnection;
+import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.utils.Logs;
+import be.vinci.pae.utils.exceptions.DuplicateException;
 import be.vinci.pae.utils.exceptions.FatalException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
 import be.vinci.pae.utils.exceptions.UnauthorizedAccessException;
@@ -21,7 +22,7 @@ public class UserUCCImpl implements UserUCC {
   @Inject
   private UserDAO userDAO;
   @Inject
-  private DalServicesConnection dalServices;
+  private DalServices dalServices;
 
   /**
    * Get a user associated with an email and check their password with the password entered.
@@ -104,5 +105,41 @@ public class UserUCCImpl implements UserUCC {
     dalServices.commitTransaction();
     Logs.log(Level.DEBUG, "UserUCC (getOneById) : success!");
     return user;
+  }
+
+  /**
+   * Register a user.
+   *
+   * @param user user to register.
+   * @return a UserDTO of registered user, null otherwise.
+   */
+  @Override
+  public UserDTO register(UserDTO user) {
+
+    Logs.log(Level.DEBUG, "UserUCC (register) : entrance");
+    UserDTO registeredUser;
+
+    try {
+      dalServices.startTransaction();
+      UserDTO existingUser = userDAO.getOneUserByEmail(user.getEmail());
+      if (existingUser != null) {
+        Logs.log(Level.DEBUG, "UserUCC (register) : already existing user");
+        throw new DuplicateException("Cannot add existing user");
+      }
+
+      User userHashPwd = (User) user;
+      userHashPwd.hashPassword();
+
+      registeredUser = userDAO.addOneUser(userHashPwd);
+
+      dalServices.commitTransaction();
+      Logs.log(Level.DEBUG, "UserUCC (register) : success!");
+      return registeredUser;
+    } catch (Exception e) {
+      Logs.log(Level.ERROR, "UserUCC (register) : registration failed");
+      dalServices.rollbackTransaction();
+      throw e;
+    }
+
   }
 }
