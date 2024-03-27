@@ -7,17 +7,18 @@ import {
     getAuthenticatedUser,
 } from "../../utils/session";
 
-document.addEventListener("DOMContentLoaded", getAuthenticatedUser);
 
 const InfoPage = async () => {
 
-    showNavStyle("info");
+    
 
     const main = document.querySelector('main');
     
     awaitFront();
 
     const user = await getAuthenticatedUser();
+
+    showNavStyle("info");
 
     const readUserInfo = async () => {
         try {

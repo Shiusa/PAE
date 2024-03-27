@@ -1,14 +1,15 @@
 import {showNavStyle, awaitFront} from "../../utils/function";
 import {getAuthenticatedUser} from "../../utils/session";
 
-document.addEventListener("DOMContentLoaded", getAuthenticatedUser);
-
-const ContactPage = () => {
-  
+const ContactPage = async () => {
     
+    awaitFront();
+
+    // eslint-disable-next-line
+    const user = await getAuthenticatedUser();
     
     showNavStyle("contact");
-    awaitFront();
+    
 
 };
 

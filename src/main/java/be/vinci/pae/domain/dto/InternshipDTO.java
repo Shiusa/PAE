@@ -91,4 +91,28 @@ public interface InternshipDTO {
    * @param schoolYear school year to set.
    */
   void setSchoolYear(String schoolYear);
+
+  String getFirstnameSupervisor();
+
+  void setFirstnameSupervisor(String firstnameSupervisor);
+
+  String getLastnameSupervisor();
+
+  void setLastnameSupervisor(String lastnameSupervisor);
+
+  String getEmailSupervisor();
+
+  void setEmailSupervisor(String emailSupervisor);
+
+  String getNameInternship();
+
+  void setNameInternship(String nameInternship);
+
+  String getDesignationInternship();
+
+  void setDesignationInternship(String designationInternship);
+
+  String getAddressInternship();
+
+  void setAddressInternship(String addressInternship);
 }

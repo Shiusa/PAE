@@ -102,4 +102,32 @@ public interface ContactDTO {
    * @param schoolYear school year to set.
    */
   void setSchoolYear(String schoolYear);
+
+  /**
+   * Get the contact's name company.
+   *
+   * @return the contact's name company.
+   */
+  String getNameCompany();
+
+  /**
+   * Set the contact's name company.
+   *
+   * @param name name to set.
+   */
+  void setNameCompany(String nameCompany);
+
+  /**
+   * Get the contact's designation company.
+   *
+   * @return the contact's designation company.
+   */
+  String getDesignationCompany();
+
+  /**
+   * Set the contact's designation company.
+   *
+   * @param designation designation to set.
+   */
+  void setDesignationCompany(String designationCompany);
 }

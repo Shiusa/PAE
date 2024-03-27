@@ -4,10 +4,10 @@ import {getAuthenticatedUser} from "../../utils/session";
 import {showNavStyle} from "../../utils/function";
 
 const HomePage = async () => {
-  showNavStyle("home");
+  
 
   const user = await getAuthenticatedUser();
-
+  showNavStyle("home");
 
 
   const main = document.querySelector('main');

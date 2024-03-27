@@ -247,6 +247,57 @@
     height: 150px;
     border: 3px solid var(--ma-couleur);
     border-radius: 10px;
+
+    .stage-bloc {
+      width: 60%;
+      height: 90%;
+      overflow: hidden;
+
+      h1 {
+        color: var(--ma-couleur);
+        font-size: 30px;
+      }
+
+      p {
+        color: var(--ma-couleur);
+        font-size: 20px;
+
+        i {
+          margin-right: 10px;
+        }
+      }
+    }
+
+    .respo-bloc {
+      background: var(--ma-couleur);
+      border-radius: 10px;
+      height: 90%;
+      width: 35%;
+
+      h1 {
+        color: white;
+        font-size: 23px;
+      }
+
+      p {
+        color: white;
+        font-size: 20px;
+        margin-bottom: 5px;
+
+        i {
+          margin-right: 20px;
+        }
+      }
+
+      span {
+        color: white;
+        font-size: 20px;
+
+        i {
+          margin-right: 20px;
+        }
+      }
+    }
   }
 
   .dash-en-container {
@@ -273,6 +324,8 @@
           text-align: center;
           font-weight: bold;
 
+          
+
           .title-col-1 {
             width: 40%;
           }
@@ -290,10 +343,25 @@
           width: 95%;
 
           .table-line {
+          
+            transition: 0.2s ease-in-out;
             text-align: center;
             border-radius: 10px;
             background: white;
-            border-radius: 10px;           
+            border-radius: 10px;     
+            
+            .line-info {
+              font-size: 45px;
+              color: var(--ma-couleur);
+              cursor: pointer;
+              position: absolute;
+              margin-left: 30px;
+              transition: 0.2s ease-in-out;
+            }
+
+            .line-info:hover {
+              transform: scale(1.1);
+            }
   
             .line-col-1{
               width: 40%;
@@ -332,6 +400,7 @@
   height: 100%;
   position: absolute;
   background: rgba(0, 0, 0, 0.544);
+  visibility: hidden;
 
   .entreprise-container {
     width: 80%;

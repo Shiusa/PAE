@@ -117,8 +117,9 @@ public class ContactDAOImpl implements ContactDAO {
   @Override
   public ContactDTO getOneContactById(int id) {
     String requestSql = """
-        SELECT contact_id, company, student, meeting, contact_state, reason_for_refusal, school_year
+        SELECT contact_id, company, name, designation, phone_number, address,  student, meeting, contact_state, reason_for_refusal, school_year
         FROM prostage.contacts
+        LEFT JOIN proStage.companies ON company_id = company
         WHERE contact_id = ?
         """;
     PreparedStatement ps = dalServices.getPreparedStatement(requestSql);
@@ -153,9 +154,10 @@ public class ContactDAOImpl implements ContactDAO {
     List<ContactDTO> contactDTOList = new ArrayList<>();
 
     String requestSql = """
-        SELECT contact_id, company, student, meeting, contact_state, reason_for_refusal, school_year
-        FROM proStage.contacts 
-        WHERE student = ?
+        SELECT ct.contact_id, ct.student, cp.name, cp.designation, ct.company, ct.meeting, ct.contact_state, ct.reason_for_refusal, ct.school_year
+        FROM proStage.contacts ct 
+        LEFT JOIN proStage.companies cp ON cp.company_id = ct.company
+        WHERE ct.student = ?
         """;
 
     try (PreparedStatement ps = dalServices.getPreparedStatement(requestSql)) {
@@ -166,6 +168,8 @@ public class ContactDAOImpl implements ContactDAO {
           contactDTO.setId(rs.getInt(1));
           contactDTO.setCompany(rs.getInt("company"));
           contactDTO.setStudent(rs.getInt("student"));
+          contactDTO.setNameCompany(rs.getString("name"));
+          contactDTO.setDesignationCompany(rs.getString("designation"));
           contactDTO.setMeeting(rs.getString("meeting"));
           contactDTO.setState(rs.getString("contact_state"));
           contactDTO.setReasonRefusal(rs.getString("reason_for_refusal"));
