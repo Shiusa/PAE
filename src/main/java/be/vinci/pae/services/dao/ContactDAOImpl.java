@@ -3,9 +3,9 @@ package be.vinci.pae.services.dao;
 
 import be.vinci.pae.domain.ContactFactory;
 import be.vinci.pae.domain.dto.ContactDTO;
+import be.vinci.pae.services.dal.DalBackendServices;
 import be.vinci.pae.utils.Logs;
 import be.vinci.pae.utils.exceptions.FatalException;
-import be.vinci.pae.services.dal.DalBackendServices;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -154,7 +154,7 @@ public class ContactDAOImpl implements ContactDAO {
 
     String requestSql = """
         SELECT contact_id, company, student, meeting, contact_state, reason_for_refusal, school_year
-        FROM proStage.contacts 
+        FROM proStage.contacts
         WHERE student = ?
         """;
 

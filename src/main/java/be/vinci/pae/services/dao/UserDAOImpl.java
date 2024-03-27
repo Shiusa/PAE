@@ -2,8 +2,8 @@ package be.vinci.pae.services.dao;
 
 import be.vinci.pae.domain.UserFactory;
 import be.vinci.pae.domain.dto.UserDTO;
-import be.vinci.pae.utils.Logs;
 import be.vinci.pae.services.dal.DalBackendServices;
+import be.vinci.pae.utils.Logs;
 import be.vinci.pae.utils.exceptions.FatalException;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
@@ -113,7 +113,8 @@ public class UserDAOImpl implements UserDAO {
     String requestSql = """
         SELECT user_id,email, lastname, firstname,phone_number,password,
         registration_date, school_year, role
-        FROM proStage.users """;
+        FROM proStage.users
+        """;
 
     try (PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql)) {
       try (ResultSet rs = ps.executeQuery()) {
