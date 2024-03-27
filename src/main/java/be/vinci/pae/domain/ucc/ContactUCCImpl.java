@@ -195,7 +195,7 @@ public class ContactUCCImpl implements ContactUCC {
     if (!contact.isAdmitted()) {
       Logs.log(Level.ERROR, "ContactUCC (turnDown) : contact's state not admitted");
       dalServices.rollbackTransaction();
-      throw new ResourceNotFoundException();
+      throw new InvalidRequestException();
     }
     dalServices.commitTransaction();
     Logs.log(Level.DEBUG, "ContactUCC (turnDown) : success!");

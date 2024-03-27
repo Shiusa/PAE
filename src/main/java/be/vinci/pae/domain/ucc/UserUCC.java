@@ -31,4 +31,12 @@ public interface UserUCC {
    * @return the user if found.
    */
   UserDTO getOneById(int id);
+
+  /**
+   * Register a user.
+   *
+   * @param user user to register.
+   * @return a UserDTO of registered user.
+   */
+  UserDTO register(UserDTO user);
 }

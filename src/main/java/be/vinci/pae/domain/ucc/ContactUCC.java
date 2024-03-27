@@ -41,7 +41,7 @@ public interface ContactUCC {
   /**
    * Get a contact by his id.
    *
-   * @param id  the id of the contact.
+   * @param id the id of the contact.
    * @return the contact found.
    */
   ContactDTO getOneById(int id);

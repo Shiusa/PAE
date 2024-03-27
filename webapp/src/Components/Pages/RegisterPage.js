@@ -1,6 +1,7 @@
 // eslint-disable-next-line import/no-cycle
 import {Redirect} from "../Router/Router";
 import {showNavStyle} from "../../utils/function";
+import Navbar from "../Navbar/Navbar";
 
 const RegisterPage = () => {
   const main = document.querySelector('main');
@@ -11,25 +12,36 @@ const RegisterPage = () => {
               <h1>Inscription</h1>
               <div class="input-group mb-3">
                 <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-user"></i></span>
-                <input type="text" class="form-control" placeholder="Prénom" aria-label="Prénom" aria-describedby="basic-addon1">
+                <input type="text" class="form-control" id="input-firstname" placeholder="Prénom" aria-label="Prénom" aria-describedby="basic-addon1">
               </div>
               <div class="input-group mb-3">
                 <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-user"></i></span>
-                <input type="text" class="form-control" placeholder="Nom" aria-label="Nom" aria-describedby="basic-addon1">
+                <input type="text" class="form-control" id="input-lastname" placeholder="Nom" aria-label="Nom" aria-describedby="basic-addon1">
               </div>
               <div class="input-group mb-3">
                 <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-envelope"></i></span>
-                <input type="text" class="form-control" placeholder="Adresse email" aria-label="Adresse email" aria-describedby="basic-addon1">
+                <input type="text" class="form-control" id="input-email" placeholder="Adresse email" aria-label="Adresse email" aria-describedby="basic-addon1">
               </div>
               <div class="input-group mb-3">
                 <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-phone"></i></span>
-                <input type="text" class="form-control" placeholder="Téléphone" aria-label="Téléphone" aria-describedby="basic-addon1">
+                <input type="text" class="form-control" id="input-phone-number" placeholder="Téléphone" aria-label="Téléphone" aria-describedby="basic-addon1">
               </div>
               <div class="input-group mb-3">
                 <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-key"></i></span>
-                <input type="text" class="form-control" placeholder="Mot de passe" aria-label="Mot de passe" aria-describedby="basic-addon1">
+                <input type="text" class="form-control" id="input-pwd" placeholder="Mot de passe" aria-label="Mot de passe" aria-describedby="basic-addon1">
               </div>
-              <p class="btn-login">S'inscrire</p>
+              <div class="input-group-role disable">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="roleTeacher" value="teacher">
+                  <label class="form-check-label" for="roleTeacher">Professeur</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="roleAdministrative" value="administrative employee">
+                  <label class="form-check-label" for="roleAdministrative">Administratif</label>
+                </div>
+              </div>
+              <p class="btn-login" id="register-btn">S'inscrire</p>
+              <h2 id="error-message">L'adresse email ou<br>le mot de passe est incorrect !</h2>
             </div>
           </div>
           <div class="box-register d-flex justify-content-center align-items-center" id="box-register-right">
@@ -40,13 +52,110 @@ const RegisterPage = () => {
 
   showNavStyle("register");
 
-  const registerBtn = document.querySelector(".btn-register");
-  registerBtn.addEventListener('click', () => {
+  const loginBtn = document.querySelector(".btn-register");
+  loginBtn.addEventListener('click', () => {
     Redirect("/login");
   });
 
+  const registerBtn = document.getElementById("register-btn");
+  registerBtn.addEventListener("click", register);
+
+  const emailInput = document.getElementById("input-email");
+  emailInput.addEventListener("change", roleSelector);
 
 };
+
+async function register(e) {
+  e.preventDefault();
+  let errorMessage = null;
+
+  const firstname = document.querySelector("#input-firstname").value;
+  const lastname = document.querySelector("#input-lastname").value;
+  const email = document.querySelector("#input-email").value;
+  const phoneNumber = document.querySelector("#input-phone-number").value;
+  const password = document.querySelector("#input-pwd").value;
+  const roleRadio = document.querySelector(".input-group-role");
+  let role;
+  const roleRadioBtn = document.querySelectorAll('.input-group-role input[type="radio"]');
+
+  errorMessage = document.getElementById("error-message");
+  try {
+    if (roleRadio && !roleRadio.classList.contains("disable")){
+      roleRadioBtn.forEach(button => {
+        if (button.checked) {
+          role = button.value;
+        }
+      })
+      if (!role) {
+        throw new Error(
+            `fetch error : 400 : BADREQUEST`
+        );
+      } else {
+        errorMessage.style.display="none";
+      }
+    }
+
+    if (!role) {
+      role="student";
+    }
+  } catch(error) {
+    errorMessage.style.display="block";
+    errorMessage.innerText="role non choisi";
+    return;
+  }
+
+  try {
+     const options = {
+       method: "POST", // *GET, POST, PUT, DELETE, etc.
+       body: JSON.stringify({
+         email,
+         lastname,
+         firstname,
+         phoneNumber,
+         password,
+         role,
+       }), // body data type must match "Content-Type" header
+       headers: {
+         "Content-Type": "application/json",
+       },
+     };
+
+    const response = await fetch("/api/users/register", options); // fetch return a promise => we wait for the response
+
+    if (!response.ok) {
+      throw new Error(
+          `fetch error : ${  response.status  } : ${  response.statusText}`
+      );
+    }
+  } catch (error) {
+    errorMessage = document.getElementById("error-message");
+    errorMessage.style.display="block";
+    if (error instanceof Error && error.message.startsWith("fetch error : 400")) {
+      errorMessage.innerText="Tous les champs doivent être remplis";
+    }
+    if (error instanceof Error && error.message.startsWith("fetch error : 409")) {
+      errorMessage.innerText="Email déjà utilisé";
+    }
+    if (error instanceof Error && error.message.startsWith("fetch error : 500")) {
+      errorMessage.innerText="Une erreur interne s'est produite, veuillez réssayer";
+    }
+    return;
+  }
+  Navbar();
+  Redirect("/");
+}
+
+function roleSelector() {
+  const emailInput = document.getElementById("input-email").value;
+  const mailStudent = /@student\.vinci\.be$/;
+  const mailNonStudent = /@vinci\.be$/;
+  const roleInput = document.querySelector(".input-group-role")
+  if (mailNonStudent.test(emailInput)) {
+    roleInput.classList.remove("disable");
+  } else if (mailStudent.test(emailInput)) {
+    roleInput.classList.add("disable")
+  }
+}
 
 
 export default RegisterPage;

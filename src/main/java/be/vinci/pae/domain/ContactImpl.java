@@ -117,6 +117,6 @@ public class ContactImpl implements Contact {
   @Override
   @JsonIgnore
   public boolean isAdmitted() {
-    return getState().equals("admitted");
+    return this.state.equals("admitted");
   }
 }
