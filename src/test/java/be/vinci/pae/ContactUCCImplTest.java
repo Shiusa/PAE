@@ -186,7 +186,107 @@ public class ContactUCCImplTest {
         }),
         () -> assertThrows(FatalException.class, () -> {
           contactUCC.unsupervise(1, 1);
+        }),
+        () -> assertThrows(FatalException.class, () -> {
+          contactUCC.admit(1, "on site", 1);
+        }),
+        () -> assertThrows(FatalException.class, () -> {
+          contactUCC.turnDown(1, "Student has not answered fast enough", 1);
         })
     );
   }
+
+  @Test
+  @DisplayName("Test admit contact is null")
+  public void testAdmitContactNotFound() {
+    Mockito.when(contactDAOMock.findContactById(1)).thenReturn(null);
+    assertThrows(ResourceNotFoundException.class, () -> contactUCC.admit(1, "on site", 1));
+  }
+
+  @Test
+  @DisplayName("Test admit contact with wrong student")
+  public void testAdmitContactWrongStudent() {
+    contactDTO.setStudent(2);
+    contactDTO.setState("started");
+    Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
+    assertThrows(NotAllowedException.class, () -> contactUCC.admit(1, "remote", 1));
+  }
+
+  @Test
+  @DisplayName("Test admit contact with state different than started")
+  public void testAdmitContactWrongState() {
+    contactDTO.setStudent(1);
+    contactDTO.setState("accepted");
+    Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
+    assertThrows(InvalidRequestException.class, () -> contactUCC.admit(1, "on site", 1));
+  }
+
+  @Test
+  @DisplayName("Test admit contact with type of meeting different than on site or remote")
+  public void testAdmitContactWrongMeeting() {
+    contactDTO.setStudent(1);
+    contactDTO.setState("started");
+    Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
+    assertThrows(InvalidRequestException.class, () -> contactUCC.admit(1, "test", 1));
+  }
+
+  @Test
+  @DisplayName("Test admit contact with type of meeting is null")
+  public void testAdmitContactMeetingIsNull() {
+    contactDTO.setStudent(1);
+    contactDTO.setState("started");
+    Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
+    assertThrows(InvalidRequestException.class, () -> contactUCC.admit(1, "", 1));
+  }
+
+  @Test
+  @DisplayName("Test admit contact correctly started")
+  public void testAdmitContactCorrectlyStarted() {
+    contactDTO.setStudent(1);
+    contactDTO.setState("started");
+    Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
+    Mockito.when(contactDAOMock.admitContact(1, "on site")).thenReturn(contactDTO);
+    assertNotNull(contactUCC.admit(1, "on site", 1));
+  }
+
+  @Test
+  @DisplayName("Test turn down contact is null")
+  public void testTurnDownContactNotFound() {
+    Mockito.when(contactDAOMock.findContactById(1)).thenReturn(null);
+    assertThrows(ResourceNotFoundException.class,
+        () -> contactUCC.turnDown(1, "Student has not answered fast enough", 1));
+  }
+
+  @Test
+  @DisplayName("Test turn down contact with wrong student")
+  public void testTurnDownContactWrongStudent() {
+    contactDTO.setStudent(5);
+    contactDTO.setState("admitted");
+    Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
+    assertThrows(NotAllowedException.class,
+        () -> contactUCC.turnDown(1, "Student has not answered fast enough", 1));
+  }
+
+  @Test
+  @DisplayName("Test turn down contact with state different than admitted")
+  public void testTurnDownContactWrongState() {
+    contactDTO.setStudent(1);
+    contactDTO.setState("started");
+    Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
+    assertThrows(InvalidRequestException.class,
+        () -> contactUCC.turnDown(1, "Student has not answered fast enough", 1));
+  }
+
+
+  @Test
+  @DisplayName("Test turn down contact correctly admitted")
+  public void testTurnDownContactCorrectlyAdmitted() {
+    contactDTO.setStudent(1);
+    contactDTO.setState("admitted");
+    Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
+    Mockito.when(contactDAOMock.turnDown(1, "Student has not answered fast enough"))
+        .thenReturn(contactDTO);
+    assertNotNull(contactUCC.turnDown(1, "Student has not answered fast enough", 1));
+  }
+
 }
