@@ -257,7 +257,8 @@ const DashboardPage = async () => {
         allUnfollowBtn.forEach(element => {
             element.addEventListener('click', async () => {
                 unfollow(element.id);
-                
+                const contactRefresh = await readAllContactsByStudent();
+                showContacts(contactRefresh);
             });
         });
     }
