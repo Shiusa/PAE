@@ -85,11 +85,17 @@ public class ContactUCCImpl implements ContactUCC {
 
   @Override
   public ContactDTO getOneById(int id) {
-    dalServices.startTransaction();
-    ContactDTO contact = contactDAO.findContactById(id);
-    if (contact == null) {
+    ContactDTO contact;
+    try {
+      dalServices.startTransaction();
+      contact = contactDAO.findContactById(id);
+      if (contact == null) {
+        dalServices.rollbackTransaction();
+        throw new ResourceNotFoundException();
+      }
+    } catch (FatalException e) {
       dalServices.rollbackTransaction();
-      throw new IllegalArgumentException("id unknown");
+      throw e;
     }
     dalServices.commitTransaction();
     return contact;
