@@ -1,6 +1,8 @@
 package be.vinci.pae.services.dao;
 
 import be.vinci.pae.domain.dto.CompanyDTO;
+import be.vinci.pae.domain.dto.UserDTO;
+import java.util.List;
 
 /**
  * CompanyDAO interface.
@@ -14,5 +16,12 @@ public interface CompanyDAO {
    * @return the company if found.
    */
   CompanyDTO getOneCompanyById(int id);
+
+  /**
+   * Get all users.
+   *
+   * @return a list of all users.
+   */
+  List<CompanyDTO> getAllCompanies();
 
 }
