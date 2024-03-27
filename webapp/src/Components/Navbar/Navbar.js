@@ -1,10 +1,10 @@
-import {getUserSessionData} from "../../utils/session";
+import {getAuthenticatedUser} from "../../utils/session";
 
 const Navbar = async () => {
 
   const navbarWrapper = document.querySelector("#navbarWrapper");
 
-  const isConnected = getUserSessionData();
+  const isConnected = await getAuthenticatedUser();
 
   let navbar = ``;
 

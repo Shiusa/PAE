@@ -3,7 +3,11 @@ import {showNavStyle, awaitFront} from "../../utils/function";
 // eslint-disable-next-line import/no-cycle
 import { Redirect } from "../Router/Router";
 
-import {getUserSessionData} from "../../utils/session";
+import {
+    getAuthenticatedUser,
+} from "../../utils/session";
+
+document.addEventListener("DOMContentLoaded", getAuthenticatedUser);
 
 const DashboardPage = async () => {
 
@@ -12,16 +16,20 @@ const DashboardPage = async () => {
 
     showNavStyle("dashboard");
 
-    
-
-    const user = getUserSessionData();
+    const user = await getAuthenticatedUser();
 
     
 
     const readUserInfo = async () => {
         try {
-            
-            const response = await fetch('api/users/' + user.user.id);
+            const options = {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': user.token
+                }
+            }
+            const response = await fetch('api/users/' + user.user.id, options);
 
             if (!response.ok) {
                 throw new Error(
@@ -38,8 +46,14 @@ const DashboardPage = async () => {
 
     const readInternship = async () => {
         try {
-            
-            const response = await fetch('api/internships/1');
+            const options = {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': user.token
+                }
+            }
+            const response = await fetch('api/internships/student/' + user.user.id, options);
 
             if (!response.ok) {
                 throw new Error(

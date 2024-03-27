@@ -1,34 +1,62 @@
 
 
 const STORE_NAME = "user";
+let currentUser;
+let remember = false;
 
-const getUserSessionData = () => {
-  let retrievedUser = localStorage.getItem(STORE_NAME);
-  if (!retrievedUser) {
-    retrievedUser = sessionStorage.getItem(STORE_NAME);
-  }
-  return JSON.parse(retrievedUser);
+const getRemember = () => remember;
+
+const setRemember = (change) => {
+  remember = change;
+}
+
+const setUserSessionStorage = (authenticatedUser) => {
+  const serializedToken = authenticatedUser.token;
+  sessionStorage.setItem(STORE_NAME, serializedToken);
+  currentUser = JSON.stringify(authenticatedUser);
 };
 
-const setUserSessionData = (user) => {
-  const storageValue = JSON.stringify(user);
-  sessionStorage.setItem(STORE_NAME, storageValue);
-};
-
-const setUserStorageData = (user) => {
-  const storageValue = JSON.stringify(user);
-  localStorage.setItem(STORE_NAME, storageValue);
+const setUserLocalStorage = (authenticatedUser) => {
+  const serializedToken = authenticatedUser.token;
+  localStorage.setItem(STORE_NAME, serializedToken);
+  currentUser = JSON.stringify(authenticatedUser);
 };
 
 const removeSessionData = () => {
   localStorage.removeItem(STORE_NAME);
   sessionStorage.removeItem(STORE_NAME);
+  currentUser = null;
+  remember = false;
 };
+
+const getAuthenticatedUser = async () => {
+  let token;
+  if(remember === true) token = localStorage.getItem(STORE_NAME)
+  else token = sessionStorage.getItem(STORE_NAME);
+
+  if(!token) return undefined;
+
+  const options = {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': token
+    }
+  };
+
+  const response = await fetch("/api/users/login", options);
+  if (!response.ok) currentUser = undefined;
+  else currentUser = await response.json();
+
+  return currentUser;
+}
 
 
 export {
-  getUserSessionData,
-  setUserSessionData,
-  setUserStorageData,
+  setRemember,
+  getRemember,
+  getAuthenticatedUser,
+  setUserSessionStorage,
+  setUserLocalStorage,
   removeSessionData,
 };

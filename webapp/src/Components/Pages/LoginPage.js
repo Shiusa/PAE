@@ -6,19 +6,20 @@ import Navbar from "../Navbar/Navbar";
 
 // eslint-disable-next-line import/no-cycle
 import {
-  getUserSessionData,
-  setUserSessionData,
-  setUserStorageData
+  setUserSessionStorage,
+  setUserLocalStorage,
+  setRemember, getAuthenticatedUser,
 } from "../../utils/session";
 
 import {showNavStyle} from "../../utils/function";
 
 const onUserLogin = async (userData) => {
   if (document.getElementById("stayconnected").checked) {
-    setUserStorageData(userData)
+    setRemember(true);
+    setUserLocalStorage(userData);
   }
   else {
-    setUserSessionData(userData);
+    setUserSessionStorage(userData);
   }
   // re-render the navbar for the authenticated user
   Navbar();
@@ -32,7 +33,7 @@ async function login(e){
   const email = document.querySelector("#input-email").value;
   const password = document.querySelector("#input-pwd").value;
 
-  const userTemp = getUserSessionData();
+  const userTemp = await getAuthenticatedUser();
 
   if (userTemp) {
     // re-render the navbar for the authenticated user
@@ -67,8 +68,6 @@ async function login(e){
     } catch (error) {
         errorMessage = document.getElementById("error-message");
         errorMessage.style.display="block";
-
-
     }
   }
 };
@@ -115,6 +114,8 @@ const LoginPage = () => {
 
     loginBtn.addEventListener("click", login);
 };
+
+
 
 
 export default LoginPage;

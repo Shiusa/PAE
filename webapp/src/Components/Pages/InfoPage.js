@@ -3,8 +3,11 @@ import {showNavStyle, awaitFront} from "../../utils/function";
 /* eslint-disable prefer-template */
 // eslint-disable-next-line import/no-cycle
 
-import {getUserSessionData} from "../../utils/session";
+import {
+    getAuthenticatedUser,
+} from "../../utils/session";
 
+document.addEventListener("DOMContentLoaded", getAuthenticatedUser);
 
 const InfoPage = async () => {
 
@@ -14,12 +17,18 @@ const InfoPage = async () => {
     
     awaitFront();
 
-    const user = getUserSessionData();
+    const user = await getAuthenticatedUser();
 
     const readUserInfo = async () => {
         try {
-            
-            const response = await fetch('api/users/' + user.user.id);
+            const options = {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': user.token
+                }
+            }
+            const response = await fetch('api/users/' + user.user.id, options);
 
             if (!response.ok) {
                 throw new Error(

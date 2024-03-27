@@ -29,8 +29,8 @@ public class InternshipUCCImpl implements InternshipUCC {
       dalServices.startTransaction();
       internship = internshipDAO.getOneInternshipByIdUser(student);
       if (internship == null) {
-        dalServices.rollbackTransaction();
-        throw new ResourceNotFoundException();
+        dalServices.commitTransaction();
+        return null;
       }
     } catch (FatalException e) {
       dalServices.rollbackTransaction();
