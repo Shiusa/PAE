@@ -1,7 +1,5 @@
 package be.vinci.pae;
 
-import be.vinci.pae.domain.UserFactory;
-import be.vinci.pae.domain.UserFactoryImpl;
 import be.vinci.pae.domain.CompanyFactory;
 import be.vinci.pae.domain.CompanyFactoryImpl;
 import be.vinci.pae.domain.ContactFactory;
@@ -18,10 +16,10 @@ import be.vinci.pae.domain.ucc.InternshipUCC;
 import be.vinci.pae.domain.ucc.InternshipUCCImpl;
 import be.vinci.pae.domain.ucc.UserUCC;
 import be.vinci.pae.domain.ucc.UserUCCImpl;
+import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.CompanyDAO;
 import be.vinci.pae.services.dao.ContactDAO;
 import be.vinci.pae.services.dao.InternshipDAO;
-import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.UserDAO;
 import jakarta.inject.Singleton;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;

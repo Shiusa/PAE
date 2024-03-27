@@ -113,7 +113,8 @@ public class UserDAOImpl implements UserDAO {
     String requestSql = """
         SELECT user_id,email, lastname, firstname,phone_number,password,
         registration_date, school_year, role
-        FROM proStage.users """;
+        FROM proStage.users
+        """;
 
     try (PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql)) {
       try (ResultSet rs = ps.executeQuery()) {

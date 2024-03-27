@@ -154,7 +154,7 @@ public class ContactDAOImpl implements ContactDAO {
 
     String requestSql = """
         SELECT contact_id, company, student, meeting, contact_state, reason_for_refusal, school_year
-        FROM proStage.contacts 
+        FROM proStage.contacts
         WHERE student = ?
         """;
 
