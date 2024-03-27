@@ -116,4 +116,19 @@ public interface CompanyDTO {
    * @param blacklistMotivation blacklist motivation to set.
    */
   void setBlacklistMotivation(String blacklistMotivation);
+
+  /**
+   * Get the company's version.
+   *
+   * @return the company's version.
+   */
+  int getVersion();
+
+  /**
+   * Set the company's version.
+   *
+   * @param version school version.
+   */
+  void setVersion(int version);
+
 }

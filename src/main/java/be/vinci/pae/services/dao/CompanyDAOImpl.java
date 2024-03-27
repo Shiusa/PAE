@@ -9,6 +9,8 @@ import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.logging.log4j.Level;
 
 /**
@@ -67,4 +69,39 @@ public class CompanyDAOImpl implements CompanyDAO {
     }
     return null;
   }
+
+  @Override
+  public List<CompanyDTO> getAllCompanies() {
+    Logs.log(Level.DEBUG, "CompanyDAO (getAllCompanies) : entrance");
+    List<CompanyDTO> companyDTOList = new ArrayList<>();
+
+    String requestSql = """
+        SELECT *
+        FROM proStage.companies
+        """;
+
+    try (PreparedStatement ps = dalServices.getPreparedStatement(requestSql)) {
+      try (ResultSet rs = ps.executeQuery()) {
+        while (rs.next()) {
+          CompanyDTO companyDTO = companyFactory.getCompanyDTO();
+          companyDTO.setId(rs.getInt("company_id"));
+          companyDTO.setName(rs.getString("name"));
+          companyDTO.setDesignation(rs.getString("designation"));
+          companyDTO.setAddress(rs.getString("address"));
+          companyDTO.setPhoneNumber(rs.getString("phone_number"));
+          companyDTO.setEmail(rs.getString("email"));
+          companyDTO.setIsBlacklisted(rs.getBoolean("is_blacklisted"));
+          companyDTO.setBlacklistMotivation(rs.getString("blacklist_motivation"));
+          companyDTO.setVersion(rs.getInt("version"));
+          companyDTOList.add(companyDTO);
+        }
+      }
+    } catch (SQLException e) {
+      Logs.log(Level.FATAL, "CompanyDAO (getAllCompanies) : internal error!");
+      throw new FatalException(e);
+    }
+    Logs.log(Level.DEBUG, "CompanyDAO (getAllCompanies) : success!");
+    return companyDTOList;
+  }
+
 }
