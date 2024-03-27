@@ -15,6 +15,7 @@ public class ContactImpl implements Contact {
   private String state;
   private String reasonRefusal;
   private String schoolYear;
+  private int version;
 
   @Override
   public boolean checkMeeting(String meeting) {
@@ -95,6 +96,16 @@ public class ContactImpl implements Contact {
   @Override
   public void setSchoolYear(String schoolYear) {
     this.schoolYear = schoolYear;
+  }
+
+  @Override
+  public int getVersion() {
+    return version;
+  }
+
+  @Override
+  public void setVersion(int version) {
+    this.version = version;
   }
 
   @Override

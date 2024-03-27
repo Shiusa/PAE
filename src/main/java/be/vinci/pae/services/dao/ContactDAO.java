@@ -28,13 +28,6 @@ public interface ContactDAO {
    */
   ContactDTO startContact(int company, int student, String schoolYear);
 
-  /**
-   * Get one contact by id then set the contactDTO if contact exist.
-   *
-   * @param id contact' id.
-   * @return contactDTO with setter corresponding to the id, null otherwise.
-   */
-  ContactDTO getOneContactById(int id);
 
   /**
    * Get all contacts by a student id.
@@ -57,24 +50,27 @@ public interface ContactDAO {
    *
    * @param contactId the id of the contact.
    * @param meeting   the way how they met.
+   * @param version   the version of the objet
    * @return the contact updated.
    */
-  ContactDTO admitContact(int contactId, String meeting);
+  ContactDTO admitContact(int contactId, String meeting, int version);
 
   /**
    * Unsupervise the contact.
    *
    * @param contactId the contact id.
+   * @param version   the version of the contact
    * @return the unsupervised contact.
    */
-  ContactDTO unsupervise(int contactId);
+  ContactDTO unsupervise(int contactId, int version);
 
   /**
    * Turn down a contact and give the reason for refusal.
    *
    * @param contactId        the id of the contact.
    * @param reasonForRefusal the reason of the refusal.
+   * @param version          the version of the contact
    * @return a ContactDTO if the update of contact was successful, null otherwise.
    */
-  ContactDTO turnDown(int contactId, String reasonForRefusal);
+  ContactDTO turnDown(int contactId, String reasonForRefusal, int version);
 }
