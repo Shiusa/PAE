@@ -20,6 +20,7 @@ import be.vinci.pae.utils.exceptions.FatalException;
 import be.vinci.pae.utils.exceptions.InvalidRequestException;
 import be.vinci.pae.utils.exceptions.NotAllowedException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
+import java.util.List;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.junit.jupiter.api.AfterEach;
@@ -194,6 +195,9 @@ public class ContactUCCImplTest {
         }),
         () -> assertThrows(FatalException.class, () -> {
           contactUCC.turnDown(1, "Student has not answered fast enough", 1);
+        }),
+        () -> assertThrows(FatalException.class, () -> {
+          contactUCC.getOneById(1);
         })
     );
   }
@@ -291,6 +295,27 @@ public class ContactUCCImplTest {
     Mockito.when(contactDAOMock.turnDown(1, "Student has not answered fast enough", 2))
         .thenReturn(contactDTO);
     assertNotNull(contactUCC.turnDown(1, "Student has not answered fast enough", 1));
+  }
+
+  @Test
+  @DisplayName("Test get all contact by student")
+  public void testGetAllContactByStudent() {
+    Mockito.when(contactDAOMock.getAllContactsByStudent(1)).thenReturn(List.of(contactDTO));
+    assertNotNull(contactUCC.getAllContactsByStudent(1));
+  }
+
+  @Test
+  @DisplayName("Test get one by id with contact not found")
+  public void testGetOneByIdWithContactNotFound() {
+    Mockito.when(contactDAOMock.findContactById(1)).thenReturn(null);
+    assertThrows(ResourceNotFoundException.class, () -> contactUCC.getOneById(1));
+  }
+
+  @Test
+  @DisplayName("Test get one by id correct")
+  public void testGetOneByIdCorrect() {
+    Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
+    assertNotNull(contactUCC.getOneById(1));
   }
 
 }
