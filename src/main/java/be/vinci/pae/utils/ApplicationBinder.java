@@ -16,8 +16,8 @@ import be.vinci.pae.domain.ucc.InternshipUCC;
 import be.vinci.pae.domain.ucc.InternshipUCCImpl;
 import be.vinci.pae.domain.ucc.UserUCC;
 import be.vinci.pae.domain.ucc.UserUCCImpl;
+import be.vinci.pae.services.dal.DalBackendServices;
 import be.vinci.pae.services.dal.DalServices;
-import be.vinci.pae.services.dal.DalServicesConnection;
 import be.vinci.pae.services.dal.DalServicesImpl;
 import be.vinci.pae.services.dao.CompanyDAO;
 import be.vinci.pae.services.dao.CompanyDAOImpl;
@@ -43,7 +43,7 @@ public class ApplicationBinder extends AbstractBinder {
   @Override
   protected void configure() {
     // DAL
-    bind(DalServicesImpl.class).to(DalServicesConnection.class)
+    bind(DalServicesImpl.class).to(DalBackendServices.class)
         .to(DalServices.class).in(Singleton.class);
 
     // USER

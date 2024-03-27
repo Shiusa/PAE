@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import be.vinci.pae.domain.CompanyFactory;
 import be.vinci.pae.domain.dto.CompanyDTO;
 import be.vinci.pae.domain.ucc.CompanyUCC;
-import be.vinci.pae.services.dal.DalServicesConnection;
+import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.CompanyDAO;
 import be.vinci.pae.utils.exceptions.FatalException;
 import org.glassfish.hk2.api.ServiceLocator;
@@ -25,7 +25,7 @@ public class CompanyUCCImplTest {
 
   private static ServiceLocator serviceLocator;
   private static CompanyDAO companyDAOMock;
-  private static DalServicesConnection dalServicesMock;
+  private static DalServices dalServicesMock;
   private CompanyUCC companyUCC;
   private CompanyDTO companyDTO;
 
@@ -33,7 +33,7 @@ public class CompanyUCCImplTest {
   static void init() {
     serviceLocator = ServiceLocatorUtilities.bind(new BinderTest());
     companyDAOMock = serviceLocator.getService(CompanyDAO.class);
-    dalServicesMock = serviceLocator.getService(DalServicesConnection.class);
+    dalServicesMock = serviceLocator.getService(DalServices.class);
   }
 
   @BeforeEach

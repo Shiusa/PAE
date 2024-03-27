@@ -3,7 +3,7 @@ package be.vinci.pae.services.dao;
 
 import be.vinci.pae.domain.ContactFactory;
 import be.vinci.pae.domain.dto.ContactDTO;
-import be.vinci.pae.services.dal.DalServices;
+import be.vinci.pae.services.dal.DalBackendServices;
 import be.vinci.pae.utils.Logs;
 import be.vinci.pae.utils.exceptions.FatalException;
 import jakarta.inject.Inject;
@@ -20,7 +20,7 @@ import org.apache.logging.log4j.Level;
 public class ContactDAOImpl implements ContactDAO {
 
   @Inject
-  private DalServices dalServices;
+  private DalBackendServices dalBackendServices;
   @Inject
   private ContactFactory contactFactory;
 
@@ -34,7 +34,7 @@ public class ContactDAOImpl implements ContactDAO {
         FROM prostage.contacts
         WHERE contacts.company = ? AND contacts.student = ? AND contacts.school_year = ?
         """;
-    PreparedStatement ps = dalServices.getPreparedStatement(requestSql);
+    PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql);
 
     try {
       ps.setInt(1, company);
@@ -65,7 +65,7 @@ public class ContactDAOImpl implements ContactDAO {
         INSERT INTO prostage.contacts (company, student, contact_state, school_year)
          VALUES (?, ?, ?, ?) RETURNING *;
         """;
-    PreparedStatement ps = dalServices.getPreparedStatement(requestSql);
+    PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql);
     try {
       ps.setInt(1, company);
       ps.setInt(2, studentId);
@@ -95,7 +95,7 @@ public class ContactDAOImpl implements ContactDAO {
         FROM prostage.contacts
         WHERE contacts.contact_id = ?
         """;
-    PreparedStatement ps = dalServices.getPreparedStatement(requestSql);
+    PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql);
     try {
       ps.setInt(1, contactId);
     } catch (SQLException e) {
@@ -121,7 +121,7 @@ public class ContactDAOImpl implements ContactDAO {
         FROM prostage.contacts
         WHERE contact_id = ?
         """;
-    PreparedStatement ps = dalServices.getPreparedStatement(requestSql);
+    PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql);
     try {
       ps.setInt(1, id);
     } catch (SQLException e) {
@@ -139,7 +139,7 @@ public class ContactDAOImpl implements ContactDAO {
         RETURNING *;
         """;
 
-    PreparedStatement ps = dalServices.getPreparedStatement(requestSql);
+    PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql);
     try {
       ps.setInt(1, contactId);
     } catch (SQLException e) {
@@ -154,11 +154,11 @@ public class ContactDAOImpl implements ContactDAO {
 
     String requestSql = """
         SELECT contact_id, company, student, meeting, contact_state, reason_for_refusal, school_year
-        FROM proStage.contacts 
+        FROM proStage.contacts
         WHERE student = ?
         """;
 
-    try (PreparedStatement ps = dalServices.getPreparedStatement(requestSql)) {
+    try (PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql)) {
       ps.setInt(1, student);
       try (ResultSet rs = ps.executeQuery()) {
         while (rs.next()) {
@@ -217,7 +217,7 @@ public class ContactDAOImpl implements ContactDAO {
         WHERE contact_id = ?
         RETURNING *;
         """;
-    PreparedStatement ps = dalServices.getPreparedStatement(requestSql);
+    PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql);
     try {
       ps.setString(1, meeting);
       ps.setInt(2, contactId);
@@ -247,7 +247,7 @@ public class ContactDAOImpl implements ContactDAO {
                 RETURNING *;
                 
         """;
-    PreparedStatement ps = dalServices.getPreparedStatement(requestSql);
+    PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql);
     try {
       ps.setString(1, reasonForRefusal);
       ps.setInt(2, contactId);

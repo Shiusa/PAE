@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import be.vinci.pae.domain.UserFactory;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.domain.ucc.UserUCC;
-import be.vinci.pae.services.dal.DalServicesConnection;
+import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.utils.exceptions.FatalException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
@@ -34,7 +34,7 @@ public class UserUCCImplTest {
       = "$2a$10$HG7./iXYemq7gF/v9Hc98eXJFGo3KajGwPLoaiU0r9TlaxlIFxsAu";
   private static ServiceLocator serviceLocator;
   private static UserDAO userDAOMock;
-  private static DalServicesConnection dalServicesMock;
+  private static DalServices dalServicesMock;
   private UserUCC userUCC;
   private UserDTO userDTO;
 
@@ -42,7 +42,7 @@ public class UserUCCImplTest {
   static void init() {
     serviceLocator = ServiceLocatorUtilities.bind(new BinderTest());
     userDAOMock = serviceLocator.getService(UserDAO.class);
-    dalServicesMock = serviceLocator.getService(DalServicesConnection.class);
+    dalServicesMock = serviceLocator.getService(DalServices.class);
   }
 
   @BeforeEach

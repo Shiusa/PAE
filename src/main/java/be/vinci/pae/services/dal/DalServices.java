@@ -1,18 +1,22 @@
 package be.vinci.pae.services.dal;
 
-import java.sql.PreparedStatement;
-
 /**
  * DalService Interface.
  */
 public interface DalServices {
 
   /**
-   * Get a prepared statement.
-   *
-   * @param sql the sql command.
-   * @return the prepared statement.
+   * Start a transaction.
    */
-  PreparedStatement getPreparedStatement(String sql);
+  void startTransaction();
 
+  /**
+   * Commit changes.
+   */
+  void commitTransaction();
+
+  /**
+   * Rollback changes.
+   */
+  void rollbackTransaction();
 }

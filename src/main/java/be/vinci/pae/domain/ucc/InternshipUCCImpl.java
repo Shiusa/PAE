@@ -1,7 +1,7 @@
 package be.vinci.pae.domain.ucc;
 
 import be.vinci.pae.domain.dto.InternshipDTO;
-import be.vinci.pae.services.dal.DalServicesConnection;
+import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.ContactDAO;
 import be.vinci.pae.services.dao.InternshipDAO;
 import be.vinci.pae.utils.exceptions.FatalException;
@@ -17,7 +17,7 @@ public class InternshipUCCImpl implements InternshipUCC {
   @Inject
   private InternshipDAO internshipDAO;
   @Inject
-  private DalServicesConnection dalServices;
+  private DalServices dalServices;
   @Inject
   private ContactDAO contactDAO;
 
