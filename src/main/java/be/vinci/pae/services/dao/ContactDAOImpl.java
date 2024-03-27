@@ -5,6 +5,7 @@ import be.vinci.pae.domain.ContactFactory;
 import be.vinci.pae.domain.dto.ContactDTO;
 import be.vinci.pae.services.dal.DalBackendServices;
 import be.vinci.pae.utils.Logs;
+import be.vinci.pae.utils.exceptions.DuplicateException;
 import be.vinci.pae.utils.exceptions.FatalException;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
@@ -185,7 +186,7 @@ public class ContactDAOImpl implements ContactDAO {
       return null;
     } catch (SQLException e) {
       Logs.log(Level.FATAL, "CompanyDAO (buildCompanyDTO) : internal error!");
-      throw new FatalException(e);
+      throw new DuplicateException();
     } finally {
       try {
         ps.close();
