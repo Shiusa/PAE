@@ -272,15 +272,12 @@ const DashboardPage = async () => {
     }
 
     async function unfollow(idContact) {
-        const contactByIdUser = {
-            user : user.user.id,
-            contactId : idContact
-        }
+
         try {
           const options = {
-            method: 'PUT',
+            method: 'POST',
     
-            body : JSON.stringify(contactByIdUser),
+            body : JSON.stringify({contactId : idContact}),
             headers: {
               'Content-Type': 'application/json',
               'Authorization': user.token
