@@ -50,7 +50,7 @@ public class InternshipUCCImpl implements InternshipUCC {
       if (internship == null) {
         dalServices.rollbackTransaction();
         throw new ResourceNotFoundException();
-      } else if (contactDAO.getOneContactById(internship.getContact()).getStudent()
+      } else if (contactDAO.findContactById(internship.getContact()).getStudent()
           != actualStudent) {
         dalServices.rollbackTransaction();
         throw new NotAllowedException();

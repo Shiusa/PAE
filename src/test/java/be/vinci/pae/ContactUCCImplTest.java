@@ -160,8 +160,9 @@ public class ContactUCCImplTest {
   public void testUnsuperviseContactCorrectlyStarted() {
     contactDTO.setStudent(1);
     contactDTO.setState("started");
+    contactDTO.setVersion(1);
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
-    Mockito.when(contactDAOMock.unsupervise(1)).thenReturn(contactDTO);
+    Mockito.when(contactDAOMock.unsupervise(1, 1)).thenReturn(contactDTO);
     assertNotNull(contactUCC.unsupervise(1, 1));
   }
 
@@ -170,8 +171,9 @@ public class ContactUCCImplTest {
   public void testUnsuperviseContactCorrectlyAdmitted() {
     contactDTO.setStudent(1);
     contactDTO.setState("admitted");
+    contactDTO.setVersion(2);
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
-    Mockito.when(contactDAOMock.unsupervise(1)).thenReturn(contactDTO);
+    Mockito.when(contactDAOMock.unsupervise(1, 2)).thenReturn(contactDTO);
     assertNotNull(contactUCC.unsupervise(1, 1));
   }
 
@@ -244,8 +246,9 @@ public class ContactUCCImplTest {
   public void testAdmitContactCorrectlyStarted() {
     contactDTO.setStudent(1);
     contactDTO.setState("started");
+    contactDTO.setVersion(1);
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
-    Mockito.when(contactDAOMock.admitContact(1, "on site")).thenReturn(contactDTO);
+    Mockito.when(contactDAOMock.admitContact(1, "on site", 1)).thenReturn(contactDTO);
     assertNotNull(contactUCC.admit(1, "on site", 1));
   }
 
@@ -283,8 +286,9 @@ public class ContactUCCImplTest {
   public void testTurnDownContactCorrectlyAdmitted() {
     contactDTO.setStudent(1);
     contactDTO.setState("admitted");
+    contactDTO.setVersion(2);
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
-    Mockito.when(contactDAOMock.turnDown(1, "Student has not answered fast enough"))
+    Mockito.when(contactDAOMock.turnDown(1, "Student has not answered fast enough", 2))
         .thenReturn(contactDTO);
     assertNotNull(contactUCC.turnDown(1, "Student has not answered fast enough", 1));
   }
