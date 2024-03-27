@@ -2,7 +2,6 @@ package be.vinci.pae.services.dao;
 
 import be.vinci.pae.domain.CompanyFactory;
 import be.vinci.pae.domain.dto.CompanyDTO;
-import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.services.dal.DalBackendServices;
 import be.vinci.pae.utils.Logs;
 import be.vinci.pae.utils.exceptions.FatalException;

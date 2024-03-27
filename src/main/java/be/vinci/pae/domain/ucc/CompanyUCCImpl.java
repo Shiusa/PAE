@@ -2,7 +2,6 @@ package be.vinci.pae.domain.ucc;
 
 import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.dto.CompanyDTO;
-import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.CompanyDAO;
 import be.vinci.pae.utils.Logs;
