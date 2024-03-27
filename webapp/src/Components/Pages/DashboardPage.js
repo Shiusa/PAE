@@ -233,10 +233,7 @@ const DashboardPage = async () => {
                     </div>
                     <div class="line-col-2 d-flex justify-content-center">
                         <select class="form-select" aria-label="Default select example">
-                            <option  value="1">State 1</option>
-                            <option value="2" selected>State 2</option>
-                            <option value="3">State 3</option>
-                            <option value="4">State 4</option>
+                            <option  value="1">${contactsTable[u].state}</option>
                         </select>
                     </div>
                     <div class="line-col-3 d-flex justify-content-center align-items-center">
