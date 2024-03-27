@@ -68,11 +68,18 @@ const DashboardPage = async () => {
         }
     };
 
-    /*
 
     const readAllContactsByStudent = async () => {
         try {
-            const response = await fetch('api/contacts/byStudent/' + user.user.id);
+            const options = {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': user.token
+                }
+            }
+
+            const response = await fetch('api/contacts/all/' + user.user.id, options);
 
             if (!response.ok) {
                 console.log("le status est" + response.status);
@@ -85,12 +92,12 @@ const DashboardPage = async () => {
             const contactList = await response.json();
             return contactList;
         } catch (err) {
-            console.error('userListPage::error: ', err);
+            console.error('dashboardPage::error: ', err);
             throw err;
         }
     };
 
-    */ 
+
 
     const userInfoID = await readUserInfo();
     const test = await readInternship();
@@ -178,14 +185,27 @@ const DashboardPage = async () => {
 
     showNavStyle("dashboard");
 
-
-    /* 
-
     const tableContacts = document.querySelector(".table-line-box");
 
     const contacts = await readAllContactsByStudent();
 
     showContacts(contacts);
+
+
+
+    const btnChangeInfo = document.getElementById("btn-info-change");
+
+    const btnBack = document.getElementById('btn-back2');
+    const boxInfo = document.querySelector('.entreprise-box');
+    btnBack.addEventListener('click', () => {
+        boxInfo.style.visibility = "hidden";
+        boxInfo.innerHTML = ``;
+    });
+
+
+    btnChangeInfo.addEventListener('click', () => {
+        Redirect('/info');
+    });
 
     function showContacts(contactsTable) {
         tableContacts.innerHTML = ``;
@@ -216,23 +236,6 @@ const DashboardPage = async () => {
         }
         tableContacts.innerHTML = info;
     }
-    */
-
-    const btnChangeInfo = document.getElementById("btn-info-change");
-
-    const btnBack = document.getElementById('btn-back2');
-    const boxInfo = document.querySelector('.entreprise-box');
-    btnBack.addEventListener('click', () => {
-        boxInfo.style.visibility = "hidden";
-        boxInfo.innerHTML = ``;
-    });
-
-
-    btnChangeInfo.addEventListener('click', () => {
-        Redirect('/info');
-    });
-
-    
 };
 
 export default DashboardPage;

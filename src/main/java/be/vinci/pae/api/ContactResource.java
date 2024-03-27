@@ -107,7 +107,7 @@ public class ContactResource {
   @Path("/all/{idStudent}")
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize
-  public List<ContactDTO> getAllByStudent(@Context ContainerRequest request,
+  public Response getAllByStudent(@Context ContainerRequest request,
       @PathParam("idStudent") int student) {
     Logs.log(Level.INFO, "ContactResource (getAllByStudent) : entrance");
     UserDTO user = (UserDTO) request.getProperty("user");
@@ -115,10 +115,18 @@ public class ContactResource {
       Logs.log(Level.ERROR, "ContactResource (getAllByStudent) : not allowed");
       throw new WebApplicationException("unauthorized", Response.Status.UNAUTHORIZED);
     }
-    List<ContactDTO> contactDTOList;
-    contactDTOList = contactUCC.getAllContactsByStudent(student);
+    List<ContactDTO> contactDTOList = contactUCC.getAllContactsByStudent(student);
+    String r = null;
+
+    try {
+      r = jsonMapper.writeValueAsString(contactDTOList);
+
+    } catch (JsonProcessingException e) {
+      Logs.log(Level.FATAL, "ContactResource (getAllByStudent) : internal error");
+      throw new FatalException(e);
+    }
     Logs.log(Level.DEBUG, "ContactResource (getAllByStudent) : success!");
-    return contactDTOList;
+    return Response.ok(r).build();
   }
 
   /**

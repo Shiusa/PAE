@@ -4,6 +4,7 @@ import {getAuthenticatedUser} from "../../utils/session";
 import {showNavStyle} from "../../utils/function";
 
 const HomePage = async () => {
+  showNavStyle("home");
 
   const user = await getAuthenticatedUser();
 
@@ -33,8 +34,6 @@ const HomePage = async () => {
     lienCon.style.display = "none";
   }
 
-
-  showNavStyle("home");
 };
 
 export default HomePage;
