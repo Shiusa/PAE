@@ -11,7 +11,7 @@ import be.vinci.pae.domain.dto.CompanyDTO;
 import be.vinci.pae.domain.dto.ContactDTO;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.domain.ucc.ContactUCC;
-import be.vinci.pae.services.dal.DalServicesConnection;
+import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.CompanyDAO;
 import be.vinci.pae.services.dao.ContactDAO;
 import be.vinci.pae.services.dao.UserDAO;
@@ -38,7 +38,7 @@ public class ContactUCCImplTest {
   private static ContactDAO contactDAOMock;
   private static UserDAO userDAOMock;
   private static CompanyDAO companyDAOMock;
-  private static DalServicesConnection dalServicesMock;
+  private static DalServices dalServicesMock;
   private ContactUCC contactUCC;
   private ContactDTO contactDTO;
   private UserDTO userDTO;
@@ -50,7 +50,7 @@ public class ContactUCCImplTest {
     contactDAOMock = serviceLocator.getService(ContactDAO.class);
     userDAOMock = serviceLocator.getService(UserDAO.class);
     companyDAOMock = serviceLocator.getService(CompanyDAO.class);
-    dalServicesMock = serviceLocator.getService(DalServicesConnection.class);
+    dalServicesMock = serviceLocator.getService(DalServices.class);
   }
 
   @BeforeEach
