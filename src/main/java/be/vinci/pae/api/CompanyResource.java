@@ -6,6 +6,7 @@ import be.vinci.pae.domain.ucc.CompanyUCC;
 import be.vinci.pae.utils.Logs;
 import be.vinci.pae.utils.exceptions.FatalException;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
@@ -13,6 +14,11 @@ import jakarta.ws.rs.core.MediaType;
 import java.util.List;
 import org.apache.logging.log4j.Level;
 
+/**
+ * CompanyResource class.
+ */
+@Singleton
+@Path("/companies")
 public class CompanyResource {
 
   @Inject
