@@ -20,7 +20,7 @@ public interface InternshipUCC {
   /**
    * Get an internship by his id.
    *
-   * @param id the internship id.
+   * @param id            the internship id.
    * @param actualStudent the student id.
    * @return the internship found.
    */
