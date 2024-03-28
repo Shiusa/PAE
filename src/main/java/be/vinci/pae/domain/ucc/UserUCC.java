@@ -20,6 +20,7 @@ public interface UserUCC {
   /**
    * Get all users.
    *
+   * @param user the user.
    * @return a list containing all the users.
    */
   List<UserDTO> getAllUsers(UserDTO user);
