@@ -2,10 +2,13 @@ package be.vinci.pae.domain.ucc;
 
 import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.dto.CompanyDTO;
+import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.CompanyDAO;
+import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.utils.Logs;
 import be.vinci.pae.utils.exceptions.FatalException;
+import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
 import jakarta.inject.Inject;
 import java.util.List;
 import org.apache.logging.log4j.Level;
@@ -17,6 +20,8 @@ public class CompanyUCCImpl implements CompanyUCC {
 
   @Inject
   private CompanyDAO companyDAO;
+  @Inject
+  private UserDAO userDAO;
   @Inject
   private DalServices dalServices;
 
@@ -70,8 +75,14 @@ public class CompanyUCCImpl implements CompanyUCC {
     try {
       Logs.log(Level.DEBUG, "CompanyUCC (getAllCompaniesByUser) : entrance");
       dalServices.startTransaction();
+      UserDTO user = userDAO.getOneUserById(userId);
+      if (user == null) {
+        dalServices.rollbackTransaction();
+        Logs.log(Level.ERROR, "CompanyUCC (getAllCompaniesByUser) : user not found");
+        throw new ResourceNotFoundException();
+      }
       companyList = companyDAO.getAllCompaniesByUserId(userId);
-    } catch (FatalException e) {
+    } catch (Exception e) {
       dalServices.rollbackTransaction();
       throw e;
     }
