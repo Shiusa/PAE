@@ -77,7 +77,7 @@ public class CompanyDAOImpl implements CompanyDAO {
 
     String requestSql = """
         SELECT *
-        FROM proStage.companies
+        FROM prostage.companies
         """;
 
     try (PreparedStatement ps = dalServices.getPreparedStatement(requestSql)) {
@@ -101,6 +101,46 @@ public class CompanyDAOImpl implements CompanyDAO {
       throw new FatalException(e);
     }
     Logs.log(Level.DEBUG, "CompanyDAO (getAllCompanies) : success!");
+    return companyDTOList;
+  }
+
+  @Override
+  public List<CompanyDTO> getAllCompaniesByUserId(int userId) {
+    Logs.log(Level.DEBUG, "CompanyDAO (getAllCompaniesByUserId) : entrance");
+    List<CompanyDTO> companyDTOList = new ArrayList<>();
+
+    String requestSql = """
+        SELECT *
+        FROM prostage.companies
+        WHERE company_id NOT IN (
+          SELECT DISTINCT company
+          FROM prostage.contacts
+          WHERE student = ?
+        )
+        """;
+
+    try (PreparedStatement ps = dalServices.getPreparedStatement(requestSql)) {
+      ps.setInt(1, userId);
+      try (ResultSet rs = ps.executeQuery()) {
+        while (rs.next()) {
+          CompanyDTO companyDTO = companyFactory.getCompanyDTO();
+          companyDTO.setId(rs.getInt("company_id"));
+          companyDTO.setName(rs.getString("name"));
+          companyDTO.setDesignation(rs.getString("designation"));
+          companyDTO.setAddress(rs.getString("address"));
+          companyDTO.setPhoneNumber(rs.getString("phone_number"));
+          companyDTO.setEmail(rs.getString("email"));
+          companyDTO.setIsBlacklisted(rs.getBoolean("is_blacklisted"));
+          companyDTO.setBlacklistMotivation(rs.getString("blacklist_motivation"));
+          companyDTO.setVersion(rs.getInt("version"));
+          companyDTOList.add(companyDTO);
+        }
+      }
+    } catch (SQLException e) {
+      Logs.log(Level.FATAL, "CompanyDAO (getAllCompaniesByUserId) : internal error!");
+      throw new FatalException(e);
+    }
+    Logs.log(Level.DEBUG, "CompanyDAO (getAllCompaniesByUserId) : success!");
     return companyDTOList;
   }
 
