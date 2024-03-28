@@ -21,27 +21,22 @@ const InfoPage = async () => {
     showNavStyle("info");
 
     const readUserInfo = async () => {
-        try {
-            const options = {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': user.token
-                }
+        const options = {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': user.token
             }
-            const response = await fetch('api/users/' + user.user.id, options);
-
-            if (!response.ok) {
-                throw new Error(
-                    `fetch error : ${response.status} : ${response.statusText}`);
-            }
-            
-            const userInfo = await response.json();
-            return userInfo;
-        } catch (err) {
-            console.error('DashBoardPage::error: ', err);
-            throw err;
         }
+        const response = await fetch('api/users/' + user.user.id, options);
+
+        if (!response.ok) {
+            throw new Error(
+                `fetch error : ${response.status} : ${response.statusText}`);
+        }
+            
+        const userInfo = await response.json();
+        return userInfo;
     };
 
     const userInfoID = await readUserInfo();

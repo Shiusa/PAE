@@ -158,7 +158,7 @@ public interface InternshipDTO {
   /**
    * Set the designation internship.
    *
-   * @param designationInternship
+   * @param designationInternship the designation of the company.
    */
   void setDesignationInternship(String designationInternship);
 

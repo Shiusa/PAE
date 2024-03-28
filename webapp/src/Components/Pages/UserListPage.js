@@ -13,7 +13,6 @@ const UserListPage = async () => {
   showNavStyle("userList");
 
   const readAllUsers = async () => {
-    try {
       const options = {
         method: 'GET',
         headers: {
@@ -30,15 +29,9 @@ const UserListPage = async () => {
 
       const userInfo = await response.json();
       return userInfo;
-    } catch (err) {
-      console.error('DashBoardPage::error: ', err);
-      throw err;
-    }
   };
 
   const usersTable = await readAllUsers();
-
-  console.log(usersTable);
 
   main.innerHTML = `
     <div class="d-flex justify-content-center align-items-center">

@@ -378,25 +378,12 @@ i {
 }
 
 .line-col-1{
-  width: 40%;
+  width: 50%;
 
 }
 
 .line-col-2 {
-  width: 20%;
-
-select {
-  width: 90%;
-}
-}
-
-.line-col-3 {
   width: 40%;
-
-button {
-  width: 40%;
-  font-size: 15px;
-}
 }
 
 }
