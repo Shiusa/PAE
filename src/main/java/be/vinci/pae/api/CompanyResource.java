@@ -46,6 +46,7 @@ public class CompanyResource {
   /**
    * Get all companies available for the logged users.
    *
+   * @param request the token.
    * @return a list containing all the companies.
    */
   @GET

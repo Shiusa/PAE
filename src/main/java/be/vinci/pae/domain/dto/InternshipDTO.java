@@ -92,27 +92,87 @@ public interface InternshipDTO {
    */
   void setSchoolYear(String schoolYear);
 
+  /**
+   * Get the supervisor's firstname.
+   *
+   * @return the supervisor's firstname.
+   */
   String getFirstnameSupervisor();
 
+  /**
+   * Set the supervisor's firstname.
+   *
+   * @param firstnameSupervisor the supervisor's firstname.
+   */
   void setFirstnameSupervisor(String firstnameSupervisor);
 
+  /**
+   * Get the supervisor's lastname.
+   *
+   * @return the supervisor's lastname.
+   */
   String getLastnameSupervisor();
 
+  /**
+   * Set the supervisor's lastname.
+   *
+   * @param lastnameSupervisor lastname to set.
+   */
   void setLastnameSupervisor(String lastnameSupervisor);
 
+  /**
+   * Get the supervisor's email.
+   *
+   * @return the supervisor's email.
+   */
   String getEmailSupervisor();
 
+  /**
+   * Set the supervisor's email.
+   *
+   * @param emailSupervisor email to set.
+   */
   void setEmailSupervisor(String emailSupervisor);
 
+  /**
+   * Get the internship's name.
+   *
+   * @return the internship's name.
+   */
   String getNameInternship();
 
+  /**
+   * Set the internship's name.
+   *
+   * @param nameInternship name to set.
+   */
   void setNameInternship(String nameInternship);
 
+  /**
+   * Get the internship's designation.
+   *
+   * @return the designation.
+   */
   String getDesignationInternship();
 
+  /**
+   * Set the designation internship.
+   *
+   * @param designationInternship
+   */
   void setDesignationInternship(String designationInternship);
 
+  /**
+   * Get the address.
+   *
+   * @return the address.
+   */
   String getAddressInternship();
 
+  /**
+   * Set the internship's address.
+   *
+   * @param addressInternship the address.
+   */
   void setAddressInternship(String addressInternship);
 }

@@ -73,6 +73,7 @@ public class UserResource {
   /**
    * Get all users.
    *
+   * @param request the token.
    * @return a list containing all the users.
    */
   @GET
