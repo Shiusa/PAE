@@ -20,7 +20,7 @@ const ContactPage = async () => {
                     'Authorization': user.token
                 }
             }
-            const response = await fetch('api/companies/all', options);
+            const response = await fetch('api/companies/all/user', options);
 
             if (!response.ok) {
                 throw new Error(
