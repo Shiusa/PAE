@@ -142,8 +142,9 @@ public class ContactDAOImpl implements ContactDAO {
     List<ContactDTO> contactDTOList = new ArrayList<>();
 
     String requestSql = """
-        SELECT ct.contact_id, ct.student, cp.name, cp.designation, ct.company, ct.meeting, ct.contact_state, ct.reason_for_refusal, ct.school_year
-        FROM proStage.contacts ct 
+        SELECT ct.contact_id, ct.student, cp.name, cp.designation, ct.company, ct.meeting,
+        ct.contact_state, ct.reason_for_refusal, ct.school_year
+        FROM proStage.contacts ct
         LEFT JOIN proStage.companies cp ON cp.company_id = ct.company
         WHERE ct.student = ?
         """;
