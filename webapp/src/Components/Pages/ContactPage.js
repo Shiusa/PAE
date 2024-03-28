@@ -72,11 +72,13 @@ const ContactPage = async () => {
 
     const companiesBtn = document.querySelectorAll('.company-btn');
 
-    companiesBtn.forEach(element => {
-        element.addEventListener('click', () => {
-            createContact(element.id);
+    if (companiesBtn) {
+        companiesBtn.forEach(element => {
+            element.addEventListener('click', () => {
+                createContact(element.id);
+            });
         });
-    });
+    }
 
     async function createContact(idCompany) {
         try {
@@ -104,7 +106,6 @@ const ContactPage = async () => {
             throw err;
         }
     }
-
 
 };
 
