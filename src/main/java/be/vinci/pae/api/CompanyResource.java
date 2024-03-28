@@ -5,10 +5,13 @@ import be.vinci.pae.domain.dto.CompanyDTO;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.domain.ucc.CompanyUCC;
 import be.vinci.pae.utils.Logs;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
@@ -23,8 +26,20 @@ import org.glassfish.jersey.server.ContainerRequest;
 @Path("/companies")
 public class CompanyResource {
 
+  private final ObjectMapper jsonMapper = new ObjectMapper();
   @Inject
   private CompanyUCC companyUCC;
+
+  @GET
+  @Path("/{id}")
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize
+  public ObjectNode getOneById(@PathParam("id") int id) {
+    Logs.log(Level.INFO, "CompanyResource (getOneById) : entrance");
+    CompanyDTO company = companyUCC.findOneById(id);
+    Logs.log(Level.DEBUG, "CompanyResource (getOneById) : success!");
+    return jsonMapper.createObjectNode().putPOJO("company", company);
+  }
 
   /**
    * Get all companies.
