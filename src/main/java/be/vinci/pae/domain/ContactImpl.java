@@ -52,16 +52,24 @@ public class ContactImpl implements Contact {
   }
 
   @Override
-  public String getNameCompany() { return this.nameCompany; }
+  public String getNameCompany() {
+    return this.nameCompany;
+  }
 
   @Override
-  public void setNameCompany(String nameCompany) { this.nameCompany = nameCompany;}
+  public void setNameCompany(String nameCompany) {
+    this.nameCompany = nameCompany;
+  }
 
   @Override
-  public String getDesignationCompany() { return this.designationCompany; }
+  public String getDesignationCompany() {
+    return this.designationCompany;
+  }
 
   @Override
-  public void setDesignationCompany(String designationCompany) { this.designationCompany = designationCompany;}
+  public void setDesignationCompany(String designationCompany) {
+    this.designationCompany = designationCompany;
+  }
 
   @Override
   public int getStudent() {
