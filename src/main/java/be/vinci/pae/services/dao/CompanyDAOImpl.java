@@ -42,25 +42,6 @@ public class CompanyDAOImpl implements CompanyDAO {
     return buildCompanyDTO(ps);
   }
 
-  /**
-   * Build the CompanyDTO on the prepared statement.
-   *
-   * @param ps the prepared statement.
-   * @return the CompanyDTO built.
-   */
-  private CompanyDTO buildCompanyDTO(PreparedStatement ps) {
-    try (ResultSet rs = ps.executeQuery()) {
-      if (rs.next()) {
-        CompanyDTO company = buildCompanyDTO(rs);
-        rs.close();
-        return company;
-      }
-    } catch (SQLException e) {
-      throw new FatalException(e);
-    }
-    return null;
-  }
-
   @Override
   public List<CompanyDTO> getAllCompanies() {
     Logs.log(Level.DEBUG, "CompanyDAO (getAllCompanies) : entrance");
@@ -127,6 +108,25 @@ public class CompanyDAOImpl implements CompanyDAO {
       }
     }
     return companyDTOList;
+  }
+
+  /**
+   * Build the CompanyDTO on the prepared statement.
+   *
+   * @param ps the prepared statement.
+   * @return the CompanyDTO built.
+   */
+  private CompanyDTO buildCompanyDTO(PreparedStatement ps) {
+    try (ResultSet rs = ps.executeQuery()) {
+      if (rs.next()) {
+        CompanyDTO company = buildCompanyDTO(rs);
+        rs.close();
+        return company;
+      }
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+    return null;
   }
 
   /**
