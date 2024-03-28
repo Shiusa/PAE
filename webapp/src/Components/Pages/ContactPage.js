@@ -62,9 +62,11 @@ const ContactPage = async () => {
               <p>${companies[u].name} ${companies[u].designation}</p>
               <p>${companies[u].email}</p>
               <p>${companies[u].phoneNumber}</p>
-              <button id="${companies[u].id}" class="company-btn btn btn-primary">
-            </div>
-        `;
+            `;
+            if (companies[u].blacklisted === false) {
+                info += `<button id="${companies[u].id}" class="company-btn btn btn-secondary">Initier</button>`;
+            }
+            info += `</div>`;
             u += 1;
         }
         companiesContainer.innerHTML = info;
