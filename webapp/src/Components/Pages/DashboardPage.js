@@ -6,6 +6,7 @@ import { Redirect } from "../Router/Router";
 import {
     getAuthenticatedUser,
 } from "../../utils/session";
+import error from "babel-loader/lib/Error";
 
 const DashboardPage = async () => {
 
@@ -225,11 +226,17 @@ const DashboardPage = async () => {
         let u = 0;
         let info = ``;
         while (u < contactsTable.length) {
+            let designation;
+            if(contactsTable[u].designationCompany === null) {
+                designation = "";
+            } else {
+                designation = contactsTable[u].designationCompany;
+            }
             info += `
                 <div class="table-line d-flex align-items-center mt-2 mb-2">
                     <i class="line-info fa-solid fa-circle-info" id="${contactsTable[u].id}"></i>
                     <div class="line-col-1">
-                        <p class="mx-auto mt-3">${contactsTable[u].nameCompany}<br>${contactsTable[u].designationCompany}</p>
+                        <p class="mx-auto mt-3">${contactsTable[u].nameCompany}<br>${designation}</p>
                     </div>
                     <div class="line-col-2 d-flex justify-content-center">
                         <select class="form-select" aria-label="Default select example">
@@ -310,22 +317,22 @@ const DashboardPage = async () => {
                             <p class="mt-3"><i class="fa-solid fa-phone"></i> 0412345678</p>
                             <p class="mt-1"><i class="fa-solid fa-map-location-dot"></i> Avenue des marais 80, Scharbeek 1500</p>
                         
-                            <div class="d-flex mt-3 align-items-center">
+                            <div class="radioButton d-flex mt-3 align-items-center">
                                 <p class="fw-bold me-4">Type de rencontre</p>
                                 <div class="ent-radio form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="sur place">
                                     <label class="form-check-label" for="inlineRadio1">Dans l'entreprise</label>
                                 </div>
                                 <div class="ent-radio form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
+                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="à distance">
                                     <label class="form-check-label" for="inlineRadio2">A Distance</label>
                                 </div>
                             </div>
                             <div class="d-flex mt-2">
                                 <p class="fw-bold me-4">Etat</p>
-                                <select class="form-select" aria-label="Default select example">
-                                    <option value="${contactInfoJSON.state}" selected>${contactInfoJSON.state}</option>
-                                    <option  value="started">initié</option>
+                                <select id="selectedState" class="form-select" aria-label="Default select example">
+                                    <option value="basic" selected>${contactInfoJSON.state}</option>
+                                    <option value="started">initié</option>
                                     <option value="admitted">pris</option>
                                     <option value="accepted">accepté</option>
                                     <option value="turnedDown">refusé</option>
@@ -335,12 +342,126 @@ const DashboardPage = async () => {
                             </div>
                             <div class="d-flex mt-4 mb-2"> 
                                 <p class="fw-bold me-4">Raison</p>
-                                <textarea name="raison" placeholder="raison"></textarea>
+                                <textarea id="refusalReason" name="raison" placeholder="raison"></textarea>
                             </div>
-                            <button class="btn btn-primary mb-2 ms-3" type="submit">Mettre à jour</button>
+                            <button id="updateBtn" class="btn btn-primary mb-2 ms-3" type="submit")">Mettre à jour</button>
+                            <h2 id="error-message"></h2>
                         </div>
                     </div>
-        `;
+        `
+        const updateState = document.getElementById("updateBtn");
+        updateState.addEventListener('click', async () => {
+            const options = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': user.token
+                }
+            }
+            const newState = document.getElementById("selectedState").value;
+            let meeting;
+            const refusalReason = document.getElementById("refusalReason").value;
+            const roleRadioBtn = document.querySelectorAll('.radioButton input[type="radio"]');
+            roleRadioBtn.forEach(button => {
+                if (button.checked) {
+                    meeting = button.value;
+                }
+            });
+
+            switch(newState) {
+                case "admitted":
+                    options.body = JSON.stringify({contactId: id, meeting: meeting});
+                try {
+                    const response = await fetch("/api/contacts/admit", options);
+                    if (!response.ok) {
+                        throw new Error(
+                            `fetch error : ${response.status} : ${response.statusText}`
+                        );
+                    }
+                } catch (error) {
+                    const errorMessage = document.getElementById(
+                        "error-message");
+                    if(error instanceof Error && error.message.startsWith("fetch error : 400")) {
+                        errorMessage.innerHTML = "Veuillez renseigner un type de rencontre correct, où vérifier que vous pouvez mettre le nouvel état."
+                        errorMessage.style.display = "block";
+                        return;
+                    } else if(error instanceof Error && error.message.startsWith("fetch error : 403")) {
+                        errorMessage.innerHTML = "Vous ne pouvez pas changer ce contact."
+                        errorMessage.style.display = "block";
+                        return;
+                    } else {
+                        errorMessage.innerHTML = "Erreur interne, veuillez réessayer."
+                        errorMessage.style.display = "block";
+                        return;
+                    }
+                }
+                    await DashboardPage();
+                    break;
+                case "turnedDown":
+                    options.body = JSON.stringify({contactId: id, reasonForRefusal: refusalReason});
+                    try {
+                        const response = await fetch("/api/contacts/turnDown", options);
+                        if(!response.ok) {
+                            throw new Error(
+                                `fetch error : ${response.status} : ${response.statusText}`
+                            );
+                        }
+                    } catch (error) {
+                        const errorMessage = document.getElementById("error-message");
+                        if(error instanceof Error && error.message.startsWith("fetch error : 400")) {
+                            errorMessage.innerHTML = "Veuillez entrer un contact ou vérifiez que vous pouvez effectuer ce changement.";
+                            errorMessage.style.display = "block";
+                            return;
+                        } else if(error instanceof Error && error.message.startsWith("fetch error : 403")) {
+                            errorMessage.innerHTML = "Vous n'avez pas le droit.";
+                            errorMessage.style.display = "block";
+                            return;
+                        } else if(error instanceof Error && error.message.startsWith("fetch error : 404")) {
+                            errorMessage.innerHTML = "Veuillez entrer un contact existant.";
+                            errorMessage.style.display = "block";
+                            return;
+                        } else {
+                            errorMessage.innerHTML = "Erreur interne, veuillez réessayer."
+                            errorMessage.style.display = "block";
+                            return;
+                        }
+                    }
+                    await DashboardPage();
+                    break;
+
+                case "unsupervised":
+                    options.body = JSON.stringify({contactId: id});
+                    try {
+                        const response = await fetch("/api/contacts/unsupervise", options);
+                        if(!response.ok) {
+                            throw new Error(
+                                `fetch error : ${response.status} : ${response.statusText}`
+                            );
+                        }
+                    } catch (error) {
+                        const errorMessage = document.getElementById("error-message");
+                        if(error instanceof Error && error.message.startsWith("fetch error : 400")) {
+                            errorMessage.innerHTML = "Veuillez entrer un contact ou vérifiez que vous pouvez effectuer ce changement.";
+                            errorMessage.style.display = "block";
+                            return;
+                        } else if (error instanceof Error && error.message.startsWith("fetch error : 403")) {
+                            errorMessage.innerHTML = "Vous n'avez pas le droit.";
+                            errorMessage.style.display = "block";
+                            return;
+                        } else if (error instanceof Error && error.message.startsWith("fetch error : 404")) {
+                            errorMessage.innerHTML = "Veuillez entrer un contact existant.";
+                            errorMessage.style.display = "block";
+                            return;
+                        } else {
+                            errorMessage.innerHTML = "Erreur interne, veuillez réessayer."
+                            errorMessage.style.display = "block";
+                            return;
+                        }
+                    }
+                    await DashboardPage();
+                    break;
+            }
+        });
 
         const btnBack = document.getElementById('btn-back2');
         btnBack.addEventListener('click', () => {
@@ -349,5 +470,8 @@ const DashboardPage = async () => {
         });
     }
 };
+
+async function updateContactState(id, user, etat) {
+}
 
 export default DashboardPage;
