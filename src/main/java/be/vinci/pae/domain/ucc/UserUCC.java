@@ -22,7 +22,7 @@ public interface UserUCC {
    *
    * @return a list containing all the users.
    */
-  List<UserDTO> getAllUsers();
+  List<UserDTO> getAllUsers(UserDTO user);
 
   /**
    * Get a user by his id.

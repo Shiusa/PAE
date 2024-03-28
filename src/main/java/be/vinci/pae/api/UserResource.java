@@ -5,7 +5,6 @@ import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.domain.ucc.UserUCC;
 import be.vinci.pae.utils.Config;
 import be.vinci.pae.utils.Logs;
-import be.vinci.pae.utils.exceptions.FatalException;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -24,6 +23,7 @@ import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
@@ -79,14 +79,11 @@ public class UserResource {
   @Path("all")
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize
-  public List<UserDTO> getAll() {
+  public List<UserDTO> getAll(@Context ContainerRequest request) {
+    UserDTO user = (UserDTO) request.getProperty("user");
     Logs.log(Level.INFO, "UserResource (getAll) : entrance");
     List<UserDTO> userDTOList;
-    try {
-      userDTOList = userUCC.getAllUsers();
-    } catch (FatalException e) {
-      throw e;
-    }
+    userDTOList = userUCC.getAllUsers(user);
     Logs.log(Level.DEBUG, "UserResource(getAll) : success!");
     return userDTOList;
   }
@@ -115,19 +112,13 @@ public class UserResource {
    * @return the token built.
    */
   private ObjectNode buildToken(UserDTO userDTO) {
-    String token;
-    try {
-      token = JWT.create().withIssuer("auth0")
-          .withClaim("user", userDTO.getId()).sign(this.jwtAlgorithm);
-      ObjectNode publicUser = jsonMapper.createObjectNode()
-          .put("token", token)
-          .putPOJO("user", userDTO);
-      Logs.log(Level.WARN, "UserResource (login) : success!");
-      return publicUser;
-    } catch (Exception e) {
-      Logs.log(Level.FATAL, "UserResource (login) : internal error");
-      throw new FatalException(e);
-    }
+    String token = JWT.create().withIssuer("auth0")
+        .withClaim("user", userDTO.getId()).sign(this.jwtAlgorithm);
+    ObjectNode publicUser = jsonMapper.createObjectNode()
+        .put("token", token)
+        .putPOJO("user", userDTO);
+    Logs.log(Level.WARN, "UserResource (login) : success!");
+    return publicUser;
   }
 
   /**
@@ -154,7 +145,7 @@ public class UserResource {
       user = jsonMapper.writeValueAsString(userDTO);
     } catch (JsonProcessingException e) {
       Logs.log(Level.FATAL, "UserResource (getOneUser) : internal error");
-      throw new FatalException(e);
+      throw new WebApplicationException("internal error", Status.INTERNAL_SERVER_ERROR);
     }
     Logs.log(Level.INFO, "UserResource (getOneUser) : success!");
     return Response.ok(user).build();

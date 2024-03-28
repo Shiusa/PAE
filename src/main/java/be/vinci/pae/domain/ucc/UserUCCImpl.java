@@ -1,6 +1,5 @@
 package be.vinci.pae.domain.ucc;
 
-import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.User;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.services.dal.DalServices;
@@ -65,8 +64,10 @@ public class UserUCCImpl implements UserUCC {
    * @return a list containing all the users.
    */
   @Override
-  @Authorize
-  public List<UserDTO> getAllUsers() {
+  public List<UserDTO> getAllUsers(UserDTO userDTO) {
+    if (userDTO.getRole().equals("Etudiant")) {
+      throw new UnauthorizedAccessException("Student can't access this.");
+    }
     List<UserDTO> userList;
     try {
       Logs.log(Level.INFO, "UserUCC (getAllUsers) : entrance");

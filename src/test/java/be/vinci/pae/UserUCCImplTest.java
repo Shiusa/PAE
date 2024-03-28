@@ -97,11 +97,19 @@ public class UserUCCImplTest {
   }
 
   @Test
+  @DisplayName("Test get all users as student")
+  public void testGetAllUsersAsStudent() {
+    userDTO.setRole("Etudiant");
+    assertThrows(UnauthorizedAccessException.class, () -> userUCC.getAllUsers(userDTO));
+  }
+
+  @Test
   @DisplayName("Test get all users")
   public void testGetAllUsers() {
     userDTO.setId(56);
+    userDTO.setRole("Professeur");
     Mockito.when(userDAOMock.getAllUsers()).thenReturn(List.of(userDTO));
-    assertEquals(56, userUCC.getAllUsers().get(0).getId());
+    assertEquals(56, userUCC.getAllUsers(userDTO).get(0).getId());
   }
 
   @Test
@@ -124,12 +132,13 @@ public class UserUCCImplTest {
   public void testCrashTransaction() {
     Mockito.doThrow(new FatalException(new RuntimeException()))
         .when(dalServicesMock).startTransaction();
+    userDTO.setRole("Professeur");
     assertAll(
         () -> assertThrows(FatalException.class, () -> {
           userUCC.login(email, password);
         }),
         () -> assertThrows(FatalException.class, () -> {
-          userUCC.getAllUsers();
+          userUCC.getAllUsers(userDTO);
         }),
         () -> assertThrows(FatalException.class, () -> {
           userUCC.getOneById(1);
