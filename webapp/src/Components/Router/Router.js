@@ -7,6 +7,7 @@ import Logout from '../Logout/Logout';
 import ContactPage from '../Pages/ContactPage';
 import InfoPage from '../Pages/InfoPage';
 import DashboardPage from '../Pages/DashboardPage';
+import UserListPage from "../Pages/UserListPage";
 
 const routes = {
   "/": HomePage,
@@ -14,6 +15,7 @@ const routes = {
   "/register": RegisterPage,
   "/logout": Logout,
   "/contact": ContactPage,
+  "/userList": UserListPage,
   "/info": InfoPage,
   "/dashboard": DashboardPage,
 };

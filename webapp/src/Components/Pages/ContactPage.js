@@ -1,7 +1,6 @@
 import {showNavStyle, awaitFront} from "../../utils/function";
 import {getAuthenticatedUser} from "../../utils/session";
-
-
+import {Redirect} from "../Router/Router";
 
 const ContactPage = async () => {
   
@@ -22,7 +21,7 @@ const ContactPage = async () => {
                     'Authorization': user.token
                 }
             }
-            const response = await fetch('api/companies/all', options);
+            const response = await fetch('api/companies/all/user', options);
 
             if (!response.ok) {
                 throw new Error(
@@ -62,29 +61,34 @@ const ContactPage = async () => {
             info += `
             <div class="user-info-box d-flex justify-content-center align-items-center mt-2">
               <p>${companies[u].name} ${companies[u].designation}</p>
-              <p>${companies[u].project}</p>
+              <p>${companies[u].email}</p>
               <p>${companies[u].phoneNumber}</p>
-              <button id="${companies[u].id}" class="company-btn btn btn-primary">
-            </div>
-        `;
+            `;
+            if (companies[u].blacklisted === false) {
+                info += `<button id="${companies[u].id}" class="company-btn btn btn-secondary">Initier</button>`;
+            }
+            info += `</div>`;
             u += 1;
         }
         companiesContainer.innerHTML = info;
     }
 
-    const companiesBtn = document.querySelector('.company-btn');
+    const companiesBtn = document.querySelectorAll('.company-btn');
 
-    companiesBtn.forEach(element => {
-        element.addEventListener('click', () => {
-            createContact(element.id);
+    if (companiesBtn) {
+        companiesBtn.forEach(element => {
+            element.addEventListener('click', () => {
+                createContact(element.id);
+                Redirect("/contact")
+            });
         });
-    });
+    }
 
     async function createContact(idCompany) {
         try {
             const options = {
                 method: 'POST',
-                body: ({
+                body: JSON.stringify({
                     company: idCompany,
                 }),
                 headers: {
@@ -106,7 +110,6 @@ const ContactPage = async () => {
             throw err;
         }
     }
-
 
 };
 

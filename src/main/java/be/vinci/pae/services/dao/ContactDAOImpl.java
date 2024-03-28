@@ -69,7 +69,7 @@ public class ContactDAOImpl implements ContactDAO {
     try {
       ps.setInt(1, company);
       ps.setInt(2, studentId);
-      ps.setString(3, "started");
+      ps.setString(3, "initié");
       ps.setString(4, schoolYear);
       ps.setInt(5, 1);
     } catch (SQLException e) {
@@ -127,7 +127,7 @@ public class ContactDAOImpl implements ContactDAO {
 
     PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql);
     try {
-      ps.setString(1, "unsupervised");
+      ps.setString(1, "non suivi");
       ps.setInt(2, version + 1);
       ps.setInt(3, contactId);
       ps.setInt(4, version);
@@ -142,8 +142,11 @@ public class ContactDAOImpl implements ContactDAO {
     List<ContactDTO> contactDTOList = new ArrayList<>();
 
     String requestSql = """
-        SELECT *
-        WHERE student = ?
+        SELECT ct.contact_id, ct.student, cp.name, cp.designation, ct.company, ct.meeting,
+        ct.contact_state, ct.reason_for_refusal, ct.school_year
+        FROM proStage.contacts ct
+        LEFT JOIN proStage.companies cp ON cp.company_id = ct.company
+        WHERE ct.student = ?
         """;
 
     try (PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql)) {
@@ -154,6 +157,8 @@ public class ContactDAOImpl implements ContactDAO {
           contactDTO.setId(rs.getInt(1));
           contactDTO.setCompany(rs.getInt("company"));
           contactDTO.setStudent(rs.getInt("student"));
+          contactDTO.setNameCompany(rs.getString("name"));
+          contactDTO.setDesignationCompany(rs.getString("designation"));
           contactDTO.setMeeting(rs.getString("meeting"));
           contactDTO.setState(rs.getString("contact_state"));
           contactDTO.setReasonRefusal(rs.getString("reason_for_refusal"));
@@ -209,7 +214,7 @@ public class ContactDAOImpl implements ContactDAO {
     PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql);
     try {
       ps.setString(1, meeting);
-      ps.setString(2, "admitted");
+      ps.setString(2, "pris");
       ps.setInt(3, version + 1);
       ps.setInt(4, contactId);
       ps.setInt(5, version);
@@ -242,7 +247,7 @@ public class ContactDAOImpl implements ContactDAO {
     PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql);
     try {
       ps.setString(1, reasonForRefusal);
-      ps.setString(2, "turned down");
+      ps.setString(2, "refusé");
       ps.setInt(3, version + 1);
       ps.setInt(4, contactId);
       ps.setInt(5, version);

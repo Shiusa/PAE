@@ -14,6 +14,14 @@ class InternshipImpl implements Internship {
   private String project;
   private String schoolYear;
 
+  private String nameInternship;
+  private String designationInternship;
+
+  private String addressInternship;
+  private String firstnameSupervisor;
+  private String lastnameSupervisor;
+  private String emailSupervisor;
+
   @Override
   public int getId() {
     return id;
@@ -73,4 +81,65 @@ class InternshipImpl implements Internship {
   public void setSchoolYear(String schoolYear) {
     this.schoolYear = schoolYear;
   }
+
+  @Override
+  public String getNameInternship() {
+    return nameInternship;
+  }
+
+  @Override
+  public void setNameInternship(String nameInternship) {
+    this.nameInternship = nameInternship;
+  }
+
+  @Override
+  public String getDesignationInternship() {
+    return designationInternship;
+  }
+
+  @Override
+  public void setDesignationInternship(String designationInternship) {
+    this.designationInternship = designationInternship;
+  }
+
+  @Override
+  public String getFirstnameSupervisor() {
+    return firstnameSupervisor;
+  }
+
+  @Override
+  public void setFirstnameSupervisor(String firstnameSupervisor) {
+    this.firstnameSupervisor = firstnameSupervisor;
+  }
+
+  @Override
+  public String getLastnameSupervisor() {
+    return lastnameSupervisor;
+  }
+
+  @Override
+  public void setLastnameSupervisor(String lastnameSupervisor) {
+    this.lastnameSupervisor = lastnameSupervisor;
+  }
+
+  @Override
+  public String getEmailSupervisor() {
+    return emailSupervisor;
+  }
+
+  @Override
+  public void setEmailSupervisor(String emailSupervisor) {
+    this.emailSupervisor = emailSupervisor;
+  }
+
+  @Override
+  public String getAddressInternship() {
+    return addressInternship;
+  }
+
+  @Override
+  public void setAddressInternship(String addressInternship) {
+    this.addressInternship = addressInternship;
+  }
+
 }

@@ -1,10 +1,10 @@
-import {getUserSessionData} from "../../utils/session";
+import {getAuthenticatedUser} from "../../utils/session";
 
 const Navbar = async () => {
 
   const navbarWrapper = document.querySelector("#navbarWrapper");
 
-  const isConnected = getUserSessionData();
+  const isConnected = await getAuthenticatedUser();
 
   let navbar = ``;
 
@@ -19,6 +19,9 @@ const Navbar = async () => {
         </a>
         <a class="nav-link nav-btn d-flex justify-content-center align-items-center" id="contact" href="#" data-uri="/contact">
           <p data-uri="/contact">Contact</p>
+        </a>
+        <a class="nav-link nav-btn d-flex justify-content-center align-items-center" id="userList" href="#" data-uri="/userList">
+          <p data-uri="/userList">Utilisateurs<br>liste</p>
         </a>
         <a class="nav-link nav-btn d-flex justify-content-center align-items-center" id="info" href="#" data-uri="/info">
           <p data-uri="/info">Mes infos</p>

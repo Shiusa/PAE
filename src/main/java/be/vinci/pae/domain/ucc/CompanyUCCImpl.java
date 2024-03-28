@@ -1,6 +1,5 @@
 package be.vinci.pae.domain.ucc;
 
-import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.dto.CompanyDTO;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.services.dal.DalServices;
@@ -47,7 +46,6 @@ public class CompanyUCCImpl implements CompanyUCC {
    * @return a list containing all the companies.
    */
   @Override
-  @Authorize
   public List<CompanyDTO> getAllCompanies() {
     List<CompanyDTO> companyList;
     try {
@@ -69,7 +67,6 @@ public class CompanyUCCImpl implements CompanyUCC {
    * @return a list containing all the companies.
    */
   @Override
-  @Authorize
   public List<CompanyDTO> getAllCompaniesByUser(int userId) {
     List<CompanyDTO> companyList;
     try {

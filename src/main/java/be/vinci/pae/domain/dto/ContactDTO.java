@@ -117,4 +117,32 @@ public interface ContactDTO {
    */
   void setVersion(int version);
 
+  /**
+   * Get the contact's name company.
+   *
+   * @return the contact's name company.
+   */
+  String getNameCompany();
+
+  /**
+   * Set the contact's name company.
+   *
+   * @param nameCompany name to set.
+   */
+  void setNameCompany(String nameCompany);
+
+  /**
+   * Get the contact's designation company.
+   *
+   * @return the contact's designation company.
+   */
+  String getDesignationCompany();
+
+  /**
+   * Set the contact's designation company.
+   *
+   * @param designationCompany designation to set.
+   */
+  void setDesignationCompany(String designationCompany);
+
 }

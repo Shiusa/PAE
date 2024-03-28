@@ -1,12 +1,13 @@
 // eslint-disable-next-line import/no-cycle
 import { Redirect } from "../Router/Router";
-import {getUserSessionData} from "../../utils/session";
+import {getAuthenticatedUser} from "../../utils/session";
 import {showNavStyle} from "../../utils/function";
 
-const HomePage = () => {
+const HomePage = async () => {
+  
 
-  const user = getUserSessionData();
-
+  const user = await getAuthenticatedUser();
+  showNavStyle("home");
 
 
   const main = document.querySelector('main');
@@ -33,8 +34,6 @@ const HomePage = () => {
     lienCon.style.display = "none";
   }
 
-
-  showNavStyle("home");
 };
 
 export default HomePage;

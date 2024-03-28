@@ -73,6 +73,7 @@ public class DalServicesImpl implements DalServices, DalBackendServices {
     Connection connection = connectionThreadLocal.get();
     try {
       if (connection == null || connection.isClosed()) {
+        connectionThreadLocal.remove();
         Logs.log(Level.DEBUG, "DalServices (getConnection) : connection null -> getDataSource");
         connection = getDataSource().getConnection();
         connectionThreadLocal.set(connection);

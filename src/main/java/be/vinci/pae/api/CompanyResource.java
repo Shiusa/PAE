@@ -5,7 +5,6 @@ import be.vinci.pae.domain.dto.CompanyDTO;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.domain.ucc.CompanyUCC;
 import be.vinci.pae.utils.Logs;
-import be.vinci.pae.utils.exceptions.FatalException;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.GET;
@@ -39,11 +38,7 @@ public class CompanyResource {
   public List<CompanyDTO> getAll() {
     Logs.log(Level.INFO, "CompanyResource (getAll) : entrance");
     List<CompanyDTO> companyDTOList;
-    try {
-      companyDTOList = companyUCC.getAllCompanies();
-    } catch (FatalException e) {
-      throw e;
-    }
+    companyDTOList = companyUCC.getAllCompanies();
     Logs.log(Level.INFO, "CompanyResource (getAll) : success!");
     return companyDTOList;
   }
@@ -51,6 +46,7 @@ public class CompanyResource {
   /**
    * Get all companies available for the logged users.
    *
+   * @param request the token.
    * @return a list containing all the companies.
    */
   @GET
@@ -62,11 +58,7 @@ public class CompanyResource {
     UserDTO loggedUser = (UserDTO) request.getProperty("user");
 
     List<CompanyDTO> companyDTOList;
-    try {
-      companyDTOList = companyUCC.getAllCompaniesByUser(loggedUser.getId());
-    } catch (FatalException e) {
-      throw e;
-    }
+    companyDTOList = companyUCC.getAllCompaniesByUser(loggedUser.getId());
     Logs.log(Level.INFO, "CompanyResource (getAllByUser) : success!");
     return companyDTOList;
   }

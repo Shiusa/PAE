@@ -50,3 +50,9 @@ Authorization: {{eleonoreToken}}
   "contactId": "3",
   "reasonForRefusal": "your profil isn't corresponding to our demand"
 }
+
+### Create one contact
+GET {{baseUrl}}/contacts/all/3
+Content-Type: application/json
+Authorization: {{eleonoreToken}}
+

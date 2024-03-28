@@ -80,7 +80,10 @@ public class ContactUCCImpl implements ContactUCC {
 
   @Override
   public List<ContactDTO> getAllContactsByStudent(int student) {
-    return contactDAO.getAllContactsByStudent(student);
+    dalServices.startTransaction();
+    List<ContactDTO> listContactDTO = contactDAO.getAllContactsByStudent(student);
+    dalServices.commitTransaction();
+    return listContactDTO;
   }
 
   @Override

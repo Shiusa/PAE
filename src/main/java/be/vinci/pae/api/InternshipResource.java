@@ -5,7 +5,6 @@ import be.vinci.pae.domain.dto.InternshipDTO;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.domain.ucc.InternshipUCC;
 import be.vinci.pae.utils.Logs;
-import be.vinci.pae.utils.exceptions.FatalException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.inject.Inject;
@@ -18,6 +17,7 @@ import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 import org.apache.logging.log4j.Level;
 import org.glassfish.jersey.server.ContainerRequest;
 
@@ -59,7 +59,7 @@ public class InternshipResource {
     } catch (JsonProcessingException e) {
       Logs.log(Level.FATAL,
           "InternshipResource (getOneInternshipByIdUser) : internal error");
-      throw new FatalException(e);
+      throw new WebApplicationException("internal error", Status.INTERNAL_SERVER_ERROR);
     }
     Logs.log(Level.DEBUG, "InternshipResource (getOneInternshipByIdUser) : success!");
     return Response.ok(internship).build();
@@ -86,7 +86,7 @@ public class InternshipResource {
     } catch (JsonProcessingException e) {
       Logs.log(Level.FATAL,
           "InternshipResource (getOneInternship) : internal error");
-      throw new FatalException(e);
+      throw new WebApplicationException("internal error", Status.INTERNAL_SERVER_ERROR);
     }
     Logs.log(Level.DEBUG, "InternshipResource (getOneInternship) : success!");
     return Response.ok(internship).build();

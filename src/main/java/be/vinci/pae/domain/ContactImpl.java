@@ -11,6 +11,9 @@ public class ContactImpl implements Contact {
   private int id;
   private int company;
   private int student;
+
+  private String nameCompany;
+  private String designationCompany;
   private String meeting;
   private String state;
   private String reasonRefusal;
@@ -19,12 +22,12 @@ public class ContactImpl implements Contact {
 
   @Override
   public boolean checkMeeting(String meeting) {
-    return meeting.equals("remote") || meeting.equals("on site");
+    return meeting.equals("à distance") || meeting.equals("sur place");
   }
 
   @Override
   public boolean checkState(String state) {
-    return List.of("started", "admitted", "turned down", "accepted", "on hold").contains(state);
+    return List.of("initié", "pris", "refusé", "accepté", "non suivi", "suspendu").contains(state);
   }
 
 
@@ -46,6 +49,26 @@ public class ContactImpl implements Contact {
   @Override
   public void setCompany(int company) {
     this.company = company;
+  }
+
+  @Override
+  public String getNameCompany() {
+    return this.nameCompany;
+  }
+
+  @Override
+  public void setNameCompany(String nameCompany) {
+    this.nameCompany = nameCompany;
+  }
+
+  @Override
+  public String getDesignationCompany() {
+    return this.designationCompany;
+  }
+
+  @Override
+  public void setDesignationCompany(String designationCompany) {
+    this.designationCompany = designationCompany;
   }
 
   @Override
@@ -111,12 +134,12 @@ public class ContactImpl implements Contact {
   @Override
   @JsonIgnore
   public boolean isStarted() {
-    return this.state.equals("started");
+    return this.state.equals("initié");
   }
 
   @Override
   @JsonIgnore
   public boolean isAdmitted() {
-    return this.state.equals("admitted");
+    return this.state.equals("pris");
   }
 }

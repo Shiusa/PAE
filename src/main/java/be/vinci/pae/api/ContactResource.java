@@ -5,7 +5,6 @@ import be.vinci.pae.domain.dto.ContactDTO;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.domain.ucc.ContactUCC;
 import be.vinci.pae.utils.Logs;
-import be.vinci.pae.utils.exceptions.FatalException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,6 +21,7 @@ import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 import java.util.List;
 import org.apache.logging.log4j.Level;
 import org.glassfish.jersey.server.ContainerRequest;
@@ -92,7 +92,7 @@ public class ContactResource {
       return Response.ok(contact).build();
     } catch (JsonProcessingException e) {
       Logs.log(Level.FATAL, "ContactResource (getOneContact) : internal error");
-      throw new FatalException(e);
+      throw new WebApplicationException("internal error", Status.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -107,7 +107,7 @@ public class ContactResource {
   @Path("/all/{idStudent}")
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize
-  public List<ContactDTO> getAllByStudent(@Context ContainerRequest request,
+  public Response getAllByStudent(@Context ContainerRequest request,
       @PathParam("idStudent") int student) {
     Logs.log(Level.INFO, "ContactResource (getAllByStudent) : entrance");
     UserDTO user = (UserDTO) request.getProperty("user");
@@ -115,10 +115,19 @@ public class ContactResource {
       Logs.log(Level.ERROR, "ContactResource (getAllByStudent) : not allowed");
       throw new WebApplicationException("unauthorized", Response.Status.UNAUTHORIZED);
     }
-    List<ContactDTO> contactDTOList;
-    contactDTOList = contactUCC.getAllContactsByStudent(student);
+    List<ContactDTO> contactDTOList = contactUCC.getAllContactsByStudent(student);
+    String r = null;
+
+    try {
+      r = jsonMapper.writeValueAsString(contactDTOList);
+    } catch (JsonProcessingException e) {
+      Logs.log(Level.FATAL, "UserResource (getOneUser) : internal error");
+      throw new WebApplicationException("internal error", Status.INTERNAL_SERVER_ERROR);
+    }
+
     Logs.log(Level.DEBUG, "ContactResource (getAllByStudent) : success!");
-    return contactDTOList;
+    return Response.ok(r).build();
+
   }
 
   /**
