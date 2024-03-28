@@ -60,7 +60,7 @@ const ContactPage = async () => {
             info += `
             <div class="user-info-box d-flex justify-content-center align-items-center mt-2">
               <p>${companies[u].name} ${companies[u].designation}</p>
-              <p>${companies[u].project}</p>
+              <p>${companies[u].email}</p>
               <p>${companies[u].phoneNumber}</p>
               <button id="${companies[u].id}" class="company-btn btn btn-primary">
             </div>
@@ -82,7 +82,7 @@ const ContactPage = async () => {
         try {
             const options = {
                 method: 'POST',
-                body: ({
+                body: JSON.stringify({
                     company: idCompany,
                 }),
                 headers: {
