@@ -58,11 +58,32 @@ const ContactPage = async () => {
         let u = 0;
         let info = ``;
         while (u < companies.length) {
+            let designation;
+            let email;
+            let phone;
+
+            if(companies[u].designation === null) {
+                designation = "";
+            } else {
+                designation = companies[u].designation;
+            }
+
+            if(companies[u].email === null) {
+                email = "";
+            } else {
+                email = companies[u].email;
+            }
+
+            if(companies[u].phoneNumber === null) {
+                phone = "";
+            } else {
+                phone = companies[u].phoneNumber;
+            }
             info += `
             <div class="user-info-box d-flex justify-content-center align-items-center mt-2">
-              <p>${companies[u].name} ${companies[u].designation}</p>
-              <p>${companies[u].email}</p>
-              <p>${companies[u].phoneNumber}</p>
+              <p>${companies[u].name} ${designation}</p>
+              <p>${email}</p>
+              <p>${phone}</p>
             `;
             if (companies[u].blacklisted === false) {
                 info += `<button id="${companies[u].id}" class="company-btn btn btn-secondary">Initier</button>`;
