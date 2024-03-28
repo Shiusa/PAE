@@ -126,11 +126,8 @@ const DashboardPage = async () => {
                                 <div class="title-col-1 mt-3">
                                     <p>Nom</p>
                                 </div>
-                                <div class="title-col-2 mt-3">
-                                    <p>Etat</p>
-                                </div>
                                 <div class="title-col-3 mt-3">
-                                    <p>Action</p>
+                                    <p>Etat</p>
                                 </div>
                         </div>
                         <div class="table-line-box overflow-auto">
@@ -204,36 +201,18 @@ const DashboardPage = async () => {
       info += `
                 <div class="table-line d-flex align-items-center mt-2 mb-2">
                     <i class="line-info fa-solid fa-circle-info" id="${contactsTable[u].id}"></i>
-                    <div class="line-col-1">
+                    <div class="line-col-1" >
                         <p class="mx-auto mt-3">${contactsTable[u].nameCompany}<br>${designation}</p>
                     </div>
-                    <div class="line-col-2 d-flex justify-content-center">
-                        <select class="form-select" aria-label="Default select example">
-                            <option  value="1">${contactsTable[u].state}</option>
-                        </select>
-                    </div>
-                    <div class="line-col-3 d-flex justify-content-center align-items-center">
-                        <button class="btn btn-primary ms-2 me-2" type="submit">Mettre à jour</button>
-                        <button type="button" class="btn-unfollow btn btn-outline-primary ms-2 me-2" id="${contactsTable[u].id}">Ne plus suivre</button>
+                    <div class="line-col-2 d-flex align-items-center justify-content-center">
+                      <p><option  value="1">${contactsTable[u].state}</option></p>
                     </div>
                 </div>
             `;
       u += 1;
     }
     tableContacts.innerHTML = info;
-    clickNePlusSuivre();
     clickContactInfo();
-  }
-
-  function clickNePlusSuivre() {
-    const allUnfollowBtn = document.querySelectorAll(".btn-unfollow");
-    allUnfollowBtn.forEach(element => {
-      element.addEventListener('click', async () => {
-        unfollow(element.id);
-        const contactRefresh = await readAllContactsByStudent();
-        showContacts(contactRefresh);
-      });
-    });
   }
 
   function clickContactInfo() {
@@ -245,32 +224,21 @@ const DashboardPage = async () => {
     });
   }
 
-  async function unfollow(idContact) {
-    const options = {
-      method: 'POST',
-
-      body: JSON.stringify({contactId: idContact}),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': user.token
-      },
-    };
-
-    const response = await fetch("/api/contacts/unsupervise", options);
-    if (!response.ok) {
-      if (response.status === 401) {
-        Redirect("/");
-      }
-      throw new Error(
-          `fetch error : ${response.status} : ${response.statusText}`);
-    }
-  }
-
   async function conctactInfo(id) {
     const entrepriseBox = document.querySelector(".entreprise-box");
     const contactInfoJSON = await readContactById(id);
+    const meetingType = contactInfoJSON.meeting;
+
+    const checkedSurPlace = meetingType === "sur place" ? 'checked' : '';
+    const checkedADistance = meetingType === "à distance" ? 'checked' : '';
+
+    let refusal;
+    if(!contactInfoJSON.reasonRefusal) refusal = "";
+    else refusal = contactInfoJSON.reasonRefusal;
 
     boxInfo.style.visibility = "visible";
+
+
     entrepriseBox.innerHTML = `
                     <div class="entreprise-container d-flex justify-contain-center align-items-center flex-column mx-auto">
                         <i id="btn-back2" class="fa-solid fa-circle-arrow-left" title="Retour"></i>
@@ -282,11 +250,11 @@ const DashboardPage = async () => {
                             <div class="radioButton d-flex mt-3 align-items-center">
                                 <p class="fw-bold me-4">Type de rencontre</p>
                                 <div class="ent-radio form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="sur place">
+                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="sur place" ${checkedSurPlace}>
                                     <label class="form-check-label" for="inlineRadio1">Dans l'entreprise</label>
                                 </div>
                                 <div class="ent-radio form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="à distance">
+                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="à distance" ${checkedADistance}>
                                     <label class="form-check-label" for="inlineRadio2">A Distance</label>
                                 </div>
                             </div>
@@ -304,7 +272,7 @@ const DashboardPage = async () => {
                             </div>
                             <div class="d-flex mt-4 mb-2"> 
                                 <p class="fw-bold me-4">Raison</p>
-                                <textarea id="refusalReason" name="raison" placeholder="raison"></textarea>
+                                <textarea id="refusalReason" name="raison" placeholder="Raison du refus">${refusal}</textarea>
                             </div>
                             <button id="updateBtn" class="btn btn-primary mb-2 ms-3" type="submit")">Mettre à jour</button>
                             <h2 id="error-message"></h2>

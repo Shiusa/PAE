@@ -30,6 +30,12 @@ public class CompanyResource {
   @Inject
   private CompanyUCC companyUCC;
 
+  /**
+   * Get one company by its id.
+   *
+   * @param id the company's id.
+   * @return the company in object node.
+   */
   @GET
   @Path("/{id}")
   @Produces(MediaType.APPLICATION_JSON)
