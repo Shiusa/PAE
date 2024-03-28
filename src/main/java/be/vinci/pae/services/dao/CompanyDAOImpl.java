@@ -27,8 +27,7 @@ public class CompanyDAOImpl implements CompanyDAO {
   public CompanyDTO getOneCompanyById(int id) {
     Logs.log(Level.INFO, "UserDAO (getOneUserByEmail) : entrance");
     String requestSql = """
-        SELECT company_id, name, designation, address, phone_number, email, is_blacklisted,
-        blacklist_motivation
+        SELECT *
         FROM prostage.companies
         WHERE company_id = ?
         """;
@@ -43,6 +42,74 @@ public class CompanyDAOImpl implements CompanyDAO {
     return buildCompanyDTO(ps);
   }
 
+  @Override
+  public List<CompanyDTO> getAllCompanies() {
+    Logs.log(Level.DEBUG, "CompanyDAO (getAllCompanies) : entrance");
+
+    String requestSql = """
+        SELECT *
+        FROM prostage.companies
+        """;
+    PreparedStatement ps = dalServices.getPreparedStatement(requestSql);
+
+    List<CompanyDTO> companyDTOList = buildCompanyList(ps);
+
+    Logs.log(Level.DEBUG, "CompanyDAO (getAllCompanies) : success!");
+    return companyDTOList;
+  }
+
+  @Override
+  public List<CompanyDTO> getAllCompaniesByUserId(int userId) {
+    Logs.log(Level.DEBUG, "CompanyDAO (getAllCompaniesByUserId) : entrance");
+
+    String requestSql = """
+        SELECT *
+        FROM prostage.companies
+        WHERE company_id NOT IN (
+          SELECT DISTINCT company
+          FROM prostage.contacts
+          WHERE student = ?
+        )
+        """;
+    PreparedStatement ps = dalServices.getPreparedStatement(requestSql);
+    try {
+      ps.setInt(1, userId);
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+
+    List<CompanyDTO> companyDTOList = buildCompanyList(ps);
+
+    Logs.log(Level.DEBUG, "CompanyDAO (getAllCompaniesByUserId) : success!");
+    return companyDTOList;
+  }
+
+  /**
+   * Build a list of companies based on the prepared statement.
+   *
+   * @param ps the prepared statement.
+   * @return the list of companies.
+   */
+  private List<CompanyDTO> buildCompanyList(PreparedStatement ps) {
+    List<CompanyDTO> companyDTOList = new ArrayList<>();
+    try (ResultSet rs = ps.executeQuery()) {
+      while (rs.next()) {
+        CompanyDTO companyDTO = buildCompanyDTO(rs);
+        companyDTOList.add(companyDTO);
+      }
+    } catch (SQLException e) {
+      Logs.log(Level.FATAL, "CompanyDAO (getAllCompaniesByUserId) : internal error!");
+      throw new FatalException(e);
+    } finally {
+      try {
+        ps.close();
+      } catch (SQLException e) {
+        throw new FatalException(e);
+      }
+    }
+    return companyDTOList;
+  }
+
   /**
    * Build the CompanyDTO on the prepared statement.
    *
@@ -50,17 +117,9 @@ public class CompanyDAOImpl implements CompanyDAO {
    * @return the CompanyDTO built.
    */
   private CompanyDTO buildCompanyDTO(PreparedStatement ps) {
-    CompanyDTO company = companyFactory.getCompanyDTO();
     try (ResultSet rs = ps.executeQuery()) {
       if (rs.next()) {
-        company.setId(rs.getInt("company_id"));
-        company.setName(rs.getString("name"));
-        company.setDesignation(rs.getString("designation"));
-        company.setAddress(rs.getString("address"));
-        company.setPhoneNumber(rs.getString("phone_number"));
-        company.setEmail(rs.getString("email"));
-        company.setIsBlacklisted(rs.getBoolean("is_blacklisted"));
-        company.setBlacklistMotivation(rs.getString("blacklist_motivation"));
+        CompanyDTO company = buildCompanyDTO(rs);
         rs.close();
         return company;
       }
@@ -70,38 +129,28 @@ public class CompanyDAOImpl implements CompanyDAO {
     return null;
   }
 
-  @Override
-  public List<CompanyDTO> getAllCompanies() {
-    Logs.log(Level.DEBUG, "CompanyDAO (getAllCompanies) : entrance");
-    List<CompanyDTO> companyDTOList = new ArrayList<>();
-
-    String requestSql = """
-        SELECT *
-        FROM proStage.companies
-        """;
-
-    try (PreparedStatement ps = dalServices.getPreparedStatement(requestSql)) {
-      try (ResultSet rs = ps.executeQuery()) {
-        while (rs.next()) {
-          CompanyDTO companyDTO = companyFactory.getCompanyDTO();
-          companyDTO.setId(rs.getInt("company_id"));
-          companyDTO.setName(rs.getString("name"));
-          companyDTO.setDesignation(rs.getString("designation"));
-          companyDTO.setAddress(rs.getString("address"));
-          companyDTO.setPhoneNumber(rs.getString("phone_number"));
-          companyDTO.setEmail(rs.getString("email"));
-          companyDTO.setIsBlacklisted(rs.getBoolean("is_blacklisted"));
-          companyDTO.setBlacklistMotivation(rs.getString("blacklist_motivation"));
-          companyDTO.setVersion(rs.getInt("version"));
-          companyDTOList.add(companyDTO);
-        }
-      }
+  /**
+   * Build a companyDTO based on a result set.
+   *
+   * @param rs the result set.
+   * @return the companyDTO built.
+   */
+  private CompanyDTO buildCompanyDTO(ResultSet rs) {
+    try {
+      CompanyDTO companyDTO = companyFactory.getCompanyDTO();
+      companyDTO.setId(rs.getInt("company_id"));
+      companyDTO.setName(rs.getString("name"));
+      companyDTO.setDesignation(rs.getString("designation"));
+      companyDTO.setAddress(rs.getString("address"));
+      companyDTO.setPhoneNumber(rs.getString("phone_number"));
+      companyDTO.setEmail(rs.getString("email"));
+      companyDTO.setIsBlacklisted(rs.getBoolean("is_blacklisted"));
+      companyDTO.setBlacklistMotivation(rs.getString("blacklist_motivation"));
+      companyDTO.setVersion(rs.getInt("version"));
+      return companyDTO;
     } catch (SQLException e) {
-      Logs.log(Level.FATAL, "CompanyDAO (getAllCompanies) : internal error!");
       throw new FatalException(e);
     }
-    Logs.log(Level.DEBUG, "CompanyDAO (getAllCompanies) : success!");
-    return companyDTOList;
   }
 
 }

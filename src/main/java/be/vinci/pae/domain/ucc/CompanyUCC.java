@@ -23,4 +23,12 @@ public interface CompanyUCC {
    */
   List<CompanyDTO> getAllCompanies();
 
+  /**
+   * Get all companies available for one user.
+   *
+   * @param userId the user id.
+   * @return a list containing all companies.
+   */
+  List<CompanyDTO> getAllCompaniesByUser(int userId);
+
 }
