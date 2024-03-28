@@ -96,7 +96,7 @@ public class CompanyUCCImplTest {
   }
 
   @Test
-  @DisplayName("Test get all companies for non existing user should return null")
+  @DisplayName("Test get all companies for non existing user should throw ResourceNotFoundException")
   public void testGetAllCompaniesByNonExistingUser() {
     userDTO.setId(1);
     Mockito.when(userDAOMock.getOneUserById(1)).thenReturn(null);
