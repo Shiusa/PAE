@@ -28,7 +28,7 @@ const RegisterPage = () => {
               </div>
               <div class="input-group mb-3">
                 <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-key"></i></span>
-                <input type="text" class="form-control" id="input-pwd" placeholder="Mot de passe" aria-label="Mot de passe" aria-describedby="basic-addon1">
+                <input type="password" class="form-control" id="input-pwd" placeholder="Mot de passe" aria-label="Mot de passe" aria-describedby="basic-addon1">
               </div>
               <div class="input-group-role disable">
                 <div class="form-check form-check-inline">
