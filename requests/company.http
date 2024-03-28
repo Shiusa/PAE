@@ -14,6 +14,10 @@ Content-Type: application/json
   client.global.set("eleonoreToken", response.body.token);
 %}
 
-###
+### get all companies
 GET http://localhost:3000/companies/all
+Authorization: {{eleonoreToken}}
+
+### get all available companies for eleonore
+GET http://localhost:3000/companies/all/user
 Authorization: {{eleonoreToken}}

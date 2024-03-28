@@ -57,4 +57,26 @@ public class CompanyUCCImpl implements CompanyUCC {
     Logs.log(Level.DEBUG, "CompanyUCC (getAllCompanies) : success!");
     return companyList;
   }
+
+  /**
+   * Get all companies available for one user.
+   *
+   * @return a list containing all the companies.
+   */
+  @Override
+  @Authorize
+  public List<CompanyDTO> getAllCompaniesByUser(int userId) {
+    List<CompanyDTO> companyList;
+    try {
+      Logs.log(Level.DEBUG, "CompanyUCC (getAllCompaniesByUser) : entrance");
+      dalServices.startTransaction();
+      companyList = companyDAO.getAllCompaniesByUserId(userId);
+    } catch (FatalException e) {
+      dalServices.rollbackTransaction();
+      throw e;
+    }
+    dalServices.commitTransaction();
+    Logs.log(Level.DEBUG, "CompanyUCC (getAllCompaniesByUser) : success!");
+    return companyList;
+  }
 }

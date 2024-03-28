@@ -23,4 +23,12 @@ public interface CompanyDAO {
    */
   List<CompanyDTO> getAllCompanies();
 
+  /**
+   * Get all users.
+   *
+   * @param userId the user id.
+   * @return a list of all users.
+   */
+  List<CompanyDTO> getAllCompaniesByUserId(int userId);
+
 }
