@@ -1,5 +1,6 @@
 import {showNavStyle, awaitFront} from "../../utils/function";
 import {getAuthenticatedUser} from "../../utils/session";
+import {Redirect} from "../Router/Router";
 
 const ContactPage = async () => {
   
@@ -78,6 +79,7 @@ const ContactPage = async () => {
         companiesBtn.forEach(element => {
             element.addEventListener('click', () => {
                 createContact(element.id);
+                Redirect("/contact")
             });
         });
     }
