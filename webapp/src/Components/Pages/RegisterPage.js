@@ -96,7 +96,7 @@ async function register(e) {
     }
 
     if (!role) {
-      role="student";
+      role="Etudiant";
     }
   } catch(error) {
     errorMessage.style.display="block";
