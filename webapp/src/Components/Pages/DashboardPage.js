@@ -324,13 +324,16 @@ const DashboardPage = async () => {
                             <div class="d-flex mt-2">
                                 <p class="fw-bold me-4">Etat</p>
                                 <select class="form-select" aria-label="Default select example">
-                                    <option  value="1">State 1</option>
-                                    <option value="2" selected>State 2</option>
-                                    <option value="3">State 3</option>
-                                    <option value="4">State 4</option>
+                                    <option value="${contactInfoJSON.state}" selected>${contactInfoJSON.state}</option>
+                                    <option  value="started">initié</option>
+                                    <option value="admitted">pris</option>
+                                    <option value="accepted">accepté</option>
+                                    <option value="turnedDown">refusé</option>
+                                    <option value="unsupervised">ne plus suivre</option>
+                                    <option value="onHold">suspendu</option>
                                 </select>
                             </div>
-                            <div class="d-flex mt-4 mb-2">
+                            <div class="d-flex mt-4 mb-2"> 
                                 <p class="fw-bold me-4">Raison</p>
                                 <textarea name="raison" placeholder="raison"></textarea>
                             </div>

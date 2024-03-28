@@ -22,12 +22,12 @@ public class ContactImpl implements Contact {
 
   @Override
   public boolean checkMeeting(String meeting) {
-    return meeting.equals("remote") || meeting.equals("on site");
+    return meeting.equals("à distance") || meeting.equals("sur place");
   }
 
   @Override
   public boolean checkState(String state) {
-    return List.of("started", "admitted", "turned down", "accepted", "on hold").contains(state);
+    return List.of("initié", "pris", "refusé", "accepté", "non suivi", "suspendu").contains(state);
   }
 
 
@@ -134,12 +134,12 @@ public class ContactImpl implements Contact {
   @Override
   @JsonIgnore
   public boolean isStarted() {
-    return this.state.equals("started");
+    return this.state.equals("initié");
   }
 
   @Override
   @JsonIgnore
   public boolean isAdmitted() {
-    return this.state.equals("admitted");
+    return this.state.equals("pris");
   }
 }
