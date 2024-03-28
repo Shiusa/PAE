@@ -15,7 +15,6 @@ import be.vinci.pae.utils.exceptions.InvalidRequestException;
 import be.vinci.pae.utils.exceptions.NotAllowedException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
 import jakarta.inject.Inject;
-import java.util.ArrayList;
 import java.util.List;
 import org.apache.logging.log4j.Level;
 
@@ -82,7 +81,7 @@ public class ContactUCCImpl implements ContactUCC {
   @Override
   public List<ContactDTO> getAllContactsByStudent(int student) {
     dalServices.startTransaction();
-    ArrayList listContactDTO = (ArrayList) contactDAO.getAllContactsByStudent(student);
+    List<ContactDTO> listContactDTO = contactDAO.getAllContactsByStudent(student);
     dalServices.commitTransaction();
     return listContactDTO;
   }
