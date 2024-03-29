@@ -29,7 +29,7 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
   private final JWTVerifier jwtVerifier = JWT.require(this.jwtAlgorithm).withIssuer("auth0")
       .build();
   @Inject
-  private UserUCC myUserDataService;
+  private UserUCC userUCC;
 
   /**
    * Filters.
@@ -51,7 +51,7 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
         throw new WebApplicationException(Response.status(Status.UNAUTHORIZED)
             .entity("Malformed token : " + e.getMessage()).type("text/plain").build());
       }
-      UserDTO authenticatedUser = myUserDataService.getOneById(
+      UserDTO authenticatedUser = userUCC.getOneById(
           decodedToken.getClaim("user").asInt());
       if (authenticatedUser == null) {
         requestContext.abortWith(Response.status(Status.FORBIDDEN)
