@@ -15,16 +15,6 @@ import org.apache.logging.log4j.Level;
 public class DalServicesImpl implements DalServices, DalBackendServices {
 
   private static BasicDataSource dataSource;
-  private static final ThreadLocal<Connection> connectionThreadLocal = ThreadLocal.withInitial(
-      () -> {
-        try {
-          Logs.log(Level.DEBUG, "DalServices (connectionThreadLocal) : success!");
-          return dataSource.getConnection();
-        } catch (SQLException e) {
-          Logs.log(Level.FATAL, "DalServices (connectionThreadLocal) : internal error");
-          throw new FatalException(e);
-        }
-      });
 
   static {
     Logs.log(Level.DEBUG, "DalServices (getDataSource) : entrance");
@@ -40,6 +30,18 @@ public class DalServicesImpl implements DalServices, DalBackendServices {
       throw new FatalException(e);
     }
   }
+
+  private static final ThreadLocal<Connection> connectionThreadLocal = ThreadLocal.withInitial(
+      () -> {
+        try {
+          Logs.log(Level.DEBUG, "DalServices (connectionThreadLocal) : success!");
+          return dataSource.getConnection();
+        } catch (SQLException e) {
+          Logs.log(Level.FATAL, "DalServices (connectionThreadLocal) : internal error");
+          throw new FatalException(e);
+        }
+      });
+
 
   /**
    * Close a connection and remove it from ThreadLocal.
