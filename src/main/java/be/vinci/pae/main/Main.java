@@ -2,9 +2,11 @@ package be.vinci.pae.main;
 
 import be.vinci.pae.utils.ApplicationBinder;
 import be.vinci.pae.utils.Config;
+import be.vinci.pae.utils.Logs;
 import be.vinci.pae.utils.WebExceptionMapper;
 import java.io.IOException;
 import java.net.URI;
+import org.apache.logging.log4j.Level;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -48,9 +50,7 @@ public class Main {
    */
   public static void main(String[] args) throws IOException {
     final HttpServer server = startServer();
-    System.out.println(String.format(
-        "Jersey app started with endpoints available at " + "%s%nHit Ctrl-C to stop it...",
-        BASE_URI));
+    Logs.log(Level.INFO, "Starting server ...");
     System.in.read();
     server.stop();
   }

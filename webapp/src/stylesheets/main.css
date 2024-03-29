@@ -287,6 +287,7 @@ i {
   border-radius: 10px;
   height: 90%;
   width: 35%;
+  overflow: hidden;
 
 h1 {
   color: white;
@@ -305,10 +306,11 @@ i {
 
 span {
   color: white;
-  font-size: 20px;
+  font-size: 17px;
 
 i {
   margin-right: 20px;
+  font-size: 20px;
 }
 }
 }
