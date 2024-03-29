@@ -154,19 +154,29 @@ const DashboardPage = async () => {
         `;
 
   } else {
+    let {designation} = stageInfo.company;
+    const {address, name} = stageInfo.company;
+    let {project} = stageInfo.internship;
+    let {email} = stageInfo.supervisor;
+    const {lastname, firstname} = stageInfo.supervisor;
+
+    if(designation === null) designation = "";
+    if(project === null) project = "";
+    if(email === null) email = "";
+
     stageBox.innerHTML = `        
             <div class="stage-bloc">
                 <h1 class="mb-3">Votre stage</h1>
                 <div class="d-flex">
-                    <p class="me-4"><i class="fa-solid fa-signature"></i> ${stageInfo.nameInternship} ${stageInfo.designationInternship}</p>
-                    <p><i class="fa-solid fa-location-dot"></i> ${stageInfo.addressInternship}</p>
+                    <p class="me-4"><i class="fa-solid fa-signature"></i> ${name} ${designation}</p>
+                    <p><i class="fa-solid fa-location-dot"></i> ${address}</p>
                 </div>
-                <p><i class="fa-solid fa-list"></i> ${stageInfo.project}</p>
+                <p><i class="fa-solid fa-list"></i> ${project}</p>
             </div>
             <div class="respo-bloc">
                 <h1 class="mt-3 ms-4">Votre responsable</h1>
-                <p class="mt-2 ms-4"><i class="fa-solid fa-user"></i> ${stageInfo.firstnameSupervisor} ${stageInfo.lastnameSupervisor}</p>
-                <span class="ms-4"><i class="fa-solid fa-at"></i> ${stageInfo.emailSupervisor}</span>
+                <p class="mt-2 ms-4"><i class="fa-solid fa-user"></i> ${firstname} ${lastname}</p>
+                <span class="ms-4"><i class="fa-solid fa-at"></i>${email}</span>
             </div>
         `;
   }

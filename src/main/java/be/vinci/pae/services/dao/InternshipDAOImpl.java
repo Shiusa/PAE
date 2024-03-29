@@ -72,12 +72,6 @@ public class InternshipDAOImpl implements InternshipDAO {
         internship.setSignatureDate(rs.getDate("signature_date"));
         internship.setProject(rs.getString("project"));
         internship.setSchoolYear(rs.getString("school_year"));
-        internship.setNameInternship(rs.getString("name"));
-        internship.setDesignationInternship(rs.getString("designation"));
-        internship.setAddressInternship(rs.getString("address"));
-        internship.setFirstnameSupervisor(rs.getString("firstname"));
-        internship.setLastnameSupervisor(rs.getString("lastname"));
-        internship.setEmailSupervisor(rs.getString("email"));
         rs.close();
         return internship;
       }

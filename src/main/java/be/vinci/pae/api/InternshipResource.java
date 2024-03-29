@@ -1,12 +1,18 @@
 package be.vinci.pae.api;
 
 import be.vinci.pae.api.filters.Authorize;
+import be.vinci.pae.domain.dto.CompanyDTO;
+import be.vinci.pae.domain.dto.ContactDTO;
 import be.vinci.pae.domain.dto.InternshipDTO;
+import be.vinci.pae.domain.dto.SupervisorDTO;
 import be.vinci.pae.domain.dto.UserDTO;
+import be.vinci.pae.domain.ucc.CompanyUCC;
+import be.vinci.pae.domain.ucc.ContactUCC;
 import be.vinci.pae.domain.ucc.InternshipUCC;
+import be.vinci.pae.domain.ucc.SupervisorUCC;
 import be.vinci.pae.utils.Logs;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.GET;
@@ -17,7 +23,6 @@ import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
 import org.apache.logging.log4j.Level;
 import org.glassfish.jersey.server.ContainerRequest;
 
@@ -32,6 +37,12 @@ public class InternshipResource {
 
   @Inject
   private InternshipUCC internshipUCC;
+  @Inject
+  private ContactUCC contactUCC;
+  @Inject
+  private CompanyUCC companyUCC;
+  @Inject
+  private SupervisorUCC supervisorUCC;
 
   /**
    * returns an internship by a student id.
@@ -44,7 +55,7 @@ public class InternshipResource {
   @Path("/student/{idUser}")
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize
-  public Response getOneInternshipByIdUser(@Context ContainerRequest request,
+  public ObjectNode getOneInternshipByIdUser(@Context ContainerRequest request,
       @PathParam("idUser") int idUser) {
     Logs.log(Level.INFO, "InternshipResource (getOneInternshipByIdUser) : entrance");
     UserDTO user = (UserDTO) request.getProperty("user");
@@ -52,44 +63,45 @@ public class InternshipResource {
       Logs.log(Level.ERROR, "InternshipResource (getOneInternshipByIdUser) : unauthorized");
       throw new WebApplicationException("unauthorized", Response.Status.UNAUTHORIZED);
     }
-    InternshipDTO internshipDTO = internshipUCC.getOneByStudent(idUser);
-    String internship;
-    try {
-      internship = jsonMapper.writeValueAsString(internshipDTO);
-    } catch (JsonProcessingException e) {
-      Logs.log(Level.FATAL,
-          "InternshipResource (getOneInternshipByIdUser) : internal error");
-      throw new WebApplicationException("internal error", Status.INTERNAL_SERVER_ERROR);
-    }
-    Logs.log(Level.DEBUG, "InternshipResource (getOneInternshipByIdUser) : success!");
-    return Response.ok(internship).build();
+    InternshipDTO internship = internshipUCC.getOneByStudent(user.getId());
+    return buildJsonMapperInternship(internship, user);
   }
 
   /**
    * returns an internship by its id.
    *
    * @param request the token from the front.
-   * @param id      of the internship
-   * @return internshipDTO
+   * @param id      of the internship.
+   * @return internshipDTO with all details.
    */
   @GET
   @Path("/{id}")
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize
-  public Response getOneInternship(@Context ContainerRequest request, @PathParam("id") int id) {
+  public ObjectNode getOneInternship(@Context ContainerRequest request, @PathParam("id") int id) {
     Logs.log(Level.INFO, "InternshipResource (getOneInternship) : entrance");
     UserDTO user = (UserDTO) request.getProperty("user");
-    InternshipDTO internshipDTO = internshipUCC.getOneById(id, user.getId());
-    String internship;
-    try {
-      internship = jsonMapper.writeValueAsString(internshipDTO);
-    } catch (JsonProcessingException e) {
-      Logs.log(Level.FATAL,
-          "InternshipResource (getOneInternship) : internal error");
-      throw new WebApplicationException("internal error", Status.INTERNAL_SERVER_ERROR);
-    }
-    Logs.log(Level.DEBUG, "InternshipResource (getOneInternship) : success!");
-    return Response.ok(internship).build();
+    InternshipDTO internship = internshipUCC.getOneById(id, user.getId());
+    return buildJsonMapperInternship(internship, user);
+  }
+
+  /**
+   * Build the ObjectNode with user, contact, company, supervisor, and internship.
+   *
+   * @param internship the internship.
+   * @param user       the user.
+   * @return the objectnode built.
+   */
+  private ObjectNode buildJsonMapperInternship(InternshipDTO internship, UserDTO user) {
+    ContactDTO contact = contactUCC.getOneById(internship.getContact());
+    CompanyDTO company = companyUCC.findOneById(contact.getCompany());
+    SupervisorDTO supervisor = supervisorUCC.getOneById(internship.getSupervisor());
+
+    return jsonMapper.createObjectNode().putPOJO("internship", internship)
+        .putPOJO("contact", contact)
+        .putPOJO("company", company)
+        .putPOJO("user", user)
+        .putPOJO("supervisor", supervisor);
   }
 
 }
