@@ -58,7 +58,7 @@ public class DalServicesImpl implements DalServices, DalBackendServices {
       connection.close();
       Logs.log(Level.DEBUG, "DalServices (closeConnection) : success!");
     } catch (SQLException e) {
-      Logs.log(Level.FATAL, "DalServices (closeConnection) : internal error");
+      Logs.log(Level.FATAL, "DalServices (closeConnection) : internal error ! " + e);
       throw new FatalException(e);
     } finally {
       connectionThreadLocal.remove();
@@ -83,7 +83,7 @@ public class DalServicesImpl implements DalServices, DalBackendServices {
         return connectionThreadLocal.get();
       }
     } catch (SQLException e) {
-      Logs.log(Level.FATAL, "DalServices (getConnection) : internal error");
+      Logs.log(Level.FATAL, "DalServices (getConnection) : internal error ! " + e);
       throw new FatalException(e);
     }
     Logs.log(Level.DEBUG, "DalServices (getConnection) : success!");
@@ -104,7 +104,7 @@ public class DalServicesImpl implements DalServices, DalBackendServices {
       Logs.log(Level.DEBUG, "DalServices (getPreparedStatement) : success!");
       return connection.prepareStatement(query);
     } catch (SQLException e) {
-      Logs.log(Level.FATAL, "DalServices (getPreparedStatement) : internal error");
+      Logs.log(Level.FATAL, "DalServices (getPreparedStatement) : internal error ! " + e);
       throw new FatalException(e);
     }
   }
@@ -120,7 +120,7 @@ public class DalServicesImpl implements DalServices, DalBackendServices {
       connection.setAutoCommit(false);
       Logs.log(Level.DEBUG, "DalServices (startTransaction) : success!");
     } catch (SQLException e) {
-      Logs.log(Level.FATAL, "DalServices (startTransaction) : internal error");
+      Logs.log(Level.FATAL, "DalServices (startTransaction) : internal error ! " + e);
       throw new FatalException(e);
     }
   }
@@ -136,7 +136,7 @@ public class DalServicesImpl implements DalServices, DalBackendServices {
       connection.commit();
       Logs.log(Level.DEBUG, "DalServices (commitTransaction) : success!");
     } catch (SQLException e) {
-      Logs.log(Level.FATAL, "DalServices (commitTransaction) : internal error");
+      Logs.log(Level.FATAL, "DalServices (commitTransaction) : internal error ! " + e);
       throw new FatalException(e);
     } finally {
       try {
@@ -159,7 +159,7 @@ public class DalServicesImpl implements DalServices, DalBackendServices {
       connection.rollback();
       Logs.log(Level.DEBUG, "DalServices (rollbackTransaction) : success!");
     } catch (SQLException e) {
-      Logs.log(Level.FATAL, "DalServices (rollbackTransaction) : internal error");
+      Logs.log(Level.FATAL, "DalServices (rollbackTransaction) : internal error ! " + e);
       throw new FatalException(e);
     } finally {
       try {
