@@ -50,11 +50,12 @@ public class DalServicesImpl implements DalServices, DalBackendServices {
     Logs.log(Level.DEBUG, "DalServices (closeConnection) : entrance");
     try {
       connection.close();
-      connectionThreadLocal.remove();
       Logs.log(Level.DEBUG, "DalServices (closeConnection) : success!");
     } catch (SQLException e) {
       Logs.log(Level.FATAL, "DalServices (closeConnection) : internal error");
       throw new FatalException(e);
+    } finally {
+      connectionThreadLocal.remove();
     }
   }
 
