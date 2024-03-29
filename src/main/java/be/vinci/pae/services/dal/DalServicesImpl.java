@@ -18,7 +18,7 @@ public class DalServicesImpl implements DalServices, DalBackendServices {
 
   static {
     Logs.log(Level.DEBUG, "DalServices (getDataSource) : entrance");
-    BasicDataSource dataSource = new BasicDataSource();
+    dataSource = new BasicDataSource();
     try {
       dataSource.setUrl(Config.getProperty("postgresUrl"));
       dataSource.setUsername(Config.getProperty("postgresUser"));
