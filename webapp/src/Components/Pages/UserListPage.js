@@ -17,7 +17,7 @@ const UserListPage = async () => {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': user.token
+          'TeacherAndAdministrative': user.token
         }
       }
       const response = await fetch('api/users/all', options);
@@ -36,7 +36,7 @@ const UserListPage = async () => {
   main.innerHTML = `
     <div class="d-flex justify-content-center align-items-center">
       <div class="users-container w-75 d-flex justify-content-center align-items-center mt-5 flex-column mb-5">
-        <h1>Il n'y a aucun user</h1>
+        <h1>Il n'y a aucun utilisateur.</h1>
       </div>
     </div>
   `;

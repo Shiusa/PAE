@@ -1,6 +1,7 @@
 package be.vinci.pae.api;
 
 import be.vinci.pae.api.filters.Authorize;
+import be.vinci.pae.api.filters.TeacherAndAdministrative;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.domain.ucc.UserUCC;
 import be.vinci.pae.utils.Config;
@@ -79,10 +80,10 @@ public class UserResource {
   @GET
   @Path("all")
   @Produces(MediaType.APPLICATION_JSON)
-  @Authorize
+  @TeacherAndAdministrative
   public List<UserDTO> getAll(@Context ContainerRequest request) {
-    UserDTO user = (UserDTO) request.getProperty("user");
     Logs.log(Level.INFO, "UserResource (getAll) : entrance");
+    UserDTO user = (UserDTO) request.getProperty("user");
     List<UserDTO> userDTOList;
     userDTOList = userUCC.getAllUsers(user);
     Logs.log(Level.DEBUG, "UserResource(getAll) : success!");
