@@ -3,8 +3,8 @@ package be.vinci.pae.domain.ucc;
 import be.vinci.pae.domain.dto.SupervisorDTO;
 import be.vinci.pae.services.dao.SupervisorDAO;
 import be.vinci.pae.utils.Logs;
+import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
 import jakarta.inject.Inject;
-import java.lang.module.ResolutionException;
 import org.apache.logging.log4j.Level;
 
 /**
@@ -21,7 +21,7 @@ public class SupervisorUCCImpl implements SupervisorUCC {
     SupervisorDTO supervisorDTO = supervisorDAO.getOneById(id);
     if (supervisorDTO == null) {
       Logs.log(Level.ERROR, "SupervisorUCCImpl (getOneById) : supervisor not found.");
-      throw new ResolutionException();
+      throw new ResourceNotFoundException();
     }
     Logs.log(Level.DEBUG, "SupervisorUCCImpl (getOneById) : success!");
     return supervisorDTO;
