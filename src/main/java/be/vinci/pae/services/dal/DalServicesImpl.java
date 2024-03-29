@@ -14,23 +14,7 @@ import org.apache.logging.log4j.Level;
  */
 public class DalServicesImpl implements DalServices, DalBackendServices {
 
-  private static BasicDataSource dataSource;
-
-  static {
-    Logs.log(Level.DEBUG, "DalServices (getDataSource) : entrance");
-    dataSource = new BasicDataSource();
-    try {
-      dataSource.setUrl(Config.getProperty("postgresUrl"));
-      dataSource.setUsername(Config.getProperty("postgresUser"));
-      dataSource.setPassword(Config.getProperty("postgresPassword"));
-      dataSource.setMaxTotal(5);
-      Logs.log(Level.DEBUG, "DalServices (getDataSource) : success!");
-    } catch (Exception e) {
-      Logs.log(Level.FATAL, "DalServices (getDataSource) : internal error");
-      throw new FatalException(e);
-    }
-  }
-
+  private static final BasicDataSource dataSource = getDataSource();
   private static final ThreadLocal<Connection> connectionThreadLocal = ThreadLocal.withInitial(
       () -> {
         try {
@@ -42,6 +26,26 @@ public class DalServicesImpl implements DalServices, DalBackendServices {
         }
       });
 
+  /**
+   * Create connection pool.
+   *
+   * @return BasicDataSource of connection.
+   */
+  private static BasicDataSource getDataSource() {
+    Logs.log(Level.DEBUG, "DalServices (getDataSource) : entrance");
+    BasicDataSource dataSource = new BasicDataSource();
+    try {
+      dataSource.setUrl(Config.getProperty("postgresUrl"));
+      dataSource.setUsername(Config.getProperty("postgresUser"));
+      dataSource.setPassword(Config.getProperty("postgresPassword"));
+      dataSource.setMaxTotal(5);
+      Logs.log(Level.DEBUG, "DalServices (getDataSource) : success!");
+      return dataSource;
+    } catch (Exception e) {
+      Logs.log(Level.FATAL, "DalServices (getDataSource) : internal error ! " + e);
+      throw new FatalException(e);
+    }
+  }
 
   /**
    * Close a connection and remove it from ThreadLocal.
