@@ -14,23 +14,19 @@ import org.apache.logging.log4j.Level;
  */
 public class DalServicesImpl implements DalServices, DalBackendServices {
 
+  private static BasicDataSource dataSource;
   private static final ThreadLocal<Connection> connectionThreadLocal = ThreadLocal.withInitial(
       () -> {
         try {
           Logs.log(Level.DEBUG, "DalServices (connectionThreadLocal) : success!");
-          return getDataSource().getConnection();
+          return dataSource.getConnection();
         } catch (SQLException e) {
           Logs.log(Level.FATAL, "DalServices (connectionThreadLocal) : internal error");
           throw new FatalException(e);
         }
       });
 
-  /**
-   * Create connection pool.
-   *
-   * @return BasicDataSource of connection.
-   */
-  private static BasicDataSource getDataSource() {
+  static {
     Logs.log(Level.DEBUG, "DalServices (getDataSource) : entrance");
     BasicDataSource dataSource = new BasicDataSource();
     try {
@@ -38,12 +34,11 @@ public class DalServicesImpl implements DalServices, DalBackendServices {
       dataSource.setUsername(Config.getProperty("postgresUser"));
       dataSource.setPassword(Config.getProperty("postgresPassword"));
       dataSource.setMaxTotal(5);
+      Logs.log(Level.DEBUG, "DalServices (getDataSource) : success!");
     } catch (Exception e) {
       Logs.log(Level.FATAL, "DalServices (getDataSource) : internal error");
       throw new FatalException(e);
     }
-    Logs.log(Level.DEBUG, "DalServices (getDataSource) : success!");
-    return dataSource;
   }
 
   /**
@@ -75,7 +70,7 @@ public class DalServicesImpl implements DalServices, DalBackendServices {
       if (connection == null || connection.isClosed()) {
         connectionThreadLocal.remove();
         Logs.log(Level.DEBUG, "DalServices (getConnection) : connection null -> getDataSource");
-        connection = getDataSource().getConnection();
+        connection = dataSource.getConnection();
         connectionThreadLocal.set(connection);
         Logs.log(Level.DEBUG, "DalServices (getConnection) : success!");
         return connectionThreadLocal.get();
@@ -132,12 +127,16 @@ public class DalServicesImpl implements DalServices, DalBackendServices {
     Connection connection = getConnection();
     try {
       connection.commit();
-      connection.setAutoCommit(true);
       Logs.log(Level.DEBUG, "DalServices (commitTransaction) : success!");
     } catch (SQLException e) {
       Logs.log(Level.FATAL, "DalServices (commitTransaction) : internal error");
       throw new FatalException(e);
     } finally {
+      try {
+        connection.setAutoCommit(true);
+      } catch (SQLException e) {
+        throw new FatalException(e);
+      }
       closeConnection(connection);
     }
   }
@@ -151,12 +150,16 @@ public class DalServicesImpl implements DalServices, DalBackendServices {
     Connection connection = getConnection();
     try {
       connection.rollback();
-      connection.setAutoCommit(true);
       Logs.log(Level.DEBUG, "DalServices (rollbackTransaction) : success!");
     } catch (SQLException e) {
       Logs.log(Level.FATAL, "DalServices (rollbackTransaction) : internal error");
       throw new FatalException(e);
     } finally {
+      try {
+        connection.setAutoCommit(true);
+      } catch (SQLException e) {
+        throw new FatalException(e);
+      }
       closeConnection(connection);
     }
   }
