@@ -172,37 +172,9 @@ public class ContactDAOImpl implements ContactDAO {
       ps.setInt(1, student);
       try (ResultSet rs = ps.executeQuery()) {
         while (rs.next()) {
-          CompanyDTO companyDTO = companyFactory.getCompanyDTO();
-          companyDTO.setId(rs.getInt("company_id"));
-          companyDTO.setName(rs.getString("name"));
-          companyDTO.setDesignation(rs.getString("designation"));
-          companyDTO.setAddress(rs.getString("address"));
-          companyDTO.setPhoneNumber(rs.getString("cm_phone_number"));
-          companyDTO.setEmail(rs.getString("cm_email"));
-          companyDTO.setIsBlacklisted(rs.getBoolean("is_blacklisted"));
-          companyDTO.setBlacklistMotivation(rs.getString("blacklist_motivation"));
-          companyDTO.setVersion(rs.getInt("cm_version"));
-
-          UserDTO studentDTO = userFactory.getUserDTO();
-          studentDTO.setId(rs.getInt("user_id"));
-          studentDTO.setEmail(rs.getString("us_email"));
-          studentDTO.setLastname(rs.getString("us_lastname"));
-          studentDTO.setFirstname(rs.getString("us_firstname"));
-          studentDTO.setPhoneNumber(rs.getString("us_phone_number"));
-          studentDTO.setPassword(rs.getString("password"));
-          studentDTO.setRegistrationDate(rs.getDate("registration_date"));
-          studentDTO.setSchoolYear(rs.getString("us_school_year"));
-          studentDTO.setRole(rs.getString("role"));
-
-          ContactDTO contactDTO = contactFactory.getContactDTO();
-          contactDTO.setId(rs.getInt("contact_id"));
-          contactDTO.setCompany(companyDTO);
-          contactDTO.setStudent(studentDTO);
-          contactDTO.setMeeting(rs.getString("meeting"));
-          contactDTO.setState(rs.getString("contact_state"));
-          contactDTO.setReasonRefusal(rs.getString("reason_for_refusal"));
-          contactDTO.setSchoolYear(rs.getString("ct_school_year"));
-          contactDTO.setVersion(rs.getInt("ct_version"));
+          CompanyDTO companyDTO = setCompanyDTO(rs);
+          UserDTO studentDTO = setUserDTO(rs);
+          ContactDTO contactDTO = setContactDTO(rs, companyDTO, studentDTO);
           contactDTOList.add(contactDTO);
         }
       }
@@ -212,42 +184,65 @@ public class ContactDAOImpl implements ContactDAO {
     }
   }
 
-  private ContactDTO buildContactDTO(PreparedStatement ps) {
-    ContactDTO contactDTO = contactFactory.getContactDTO();
+  private CompanyDTO setCompanyDTO(ResultSet rs) {
+    CompanyDTO companyDTO = companyFactory.getCompanyDTO();
+    try {
+      companyDTO.setId(rs.getInt("company_id"));
+      companyDTO.setName(rs.getString("name"));
+      companyDTO.setDesignation(rs.getString("designation"));
+      companyDTO.setAddress(rs.getString("address"));
+      companyDTO.setPhoneNumber(rs.getString("cm_phone_number"));
+      companyDTO.setEmail(rs.getString("cm_email"));
+      companyDTO.setIsBlacklisted(rs.getBoolean("is_blacklisted"));
+      companyDTO.setBlacklistMotivation(rs.getString("blacklist_motivation"));
+      companyDTO.setVersion(rs.getInt("cm_version"));
+      return companyDTO;
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+  }
 
+  private UserDTO setUserDTO(ResultSet rs) {
+    UserDTO studentDTO = userFactory.getUserDTO();
+    try {
+      studentDTO.setId(rs.getInt("user_id"));
+      studentDTO.setEmail(rs.getString("us_email"));
+      studentDTO.setLastname(rs.getString("us_lastname"));
+      studentDTO.setFirstname(rs.getString("us_firstname"));
+      studentDTO.setPhoneNumber(rs.getString("us_phone_number"));
+      studentDTO.setPassword(rs.getString("password"));
+      studentDTO.setRegistrationDate(rs.getDate("registration_date"));
+      studentDTO.setSchoolYear(rs.getString("us_school_year"));
+      studentDTO.setRole(rs.getString("role"));
+      return studentDTO;
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+  }
+
+  private ContactDTO setContactDTO(ResultSet rs, CompanyDTO companyDTO, UserDTO studentDTO) {
+    ContactDTO contactDTO = contactFactory.getContactDTO();
+    try {
+      contactDTO.setId(rs.getInt("contact_id"));
+      contactDTO.setCompany(companyDTO);
+      contactDTO.setStudent(studentDTO);
+      contactDTO.setMeeting(rs.getString("meeting"));
+      contactDTO.setState(rs.getString("contact_state"));
+      contactDTO.setReasonRefusal(rs.getString("reason_for_refusal"));
+      contactDTO.setSchoolYear(rs.getString("ct_school_year"));
+      contactDTO.setVersion(rs.getInt("ct_version"));
+      return contactDTO;
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+  }
+
+  private ContactDTO buildContactDTO(PreparedStatement ps) {
     try (ResultSet rs = ps.executeQuery()) {
       if (rs.next()) {
-        CompanyDTO companyDTO = companyFactory.getCompanyDTO();
-        companyDTO.setId(rs.getInt("company_id"));
-        companyDTO.setName(rs.getString("name"));
-        companyDTO.setDesignation(rs.getString("designation"));
-        companyDTO.setAddress(rs.getString("address"));
-        companyDTO.setPhoneNumber(rs.getString("cm_phone_number"));
-        companyDTO.setEmail(rs.getString("cm_email"));
-        companyDTO.setIsBlacklisted(rs.getBoolean("is_blacklisted"));
-        companyDTO.setBlacklistMotivation(rs.getString("blacklist_motivation"));
-        companyDTO.setVersion(rs.getInt("cm_version"));
-
-        UserDTO studentDTO = userFactory.getUserDTO();
-        studentDTO.setId(rs.getInt("user_id"));
-        studentDTO.setEmail(rs.getString("us_email"));
-        studentDTO.setLastname(rs.getString("us_lastname"));
-        studentDTO.setFirstname(rs.getString("us_firstname"));
-        studentDTO.setPhoneNumber(rs.getString("us_phone_number"));
-        studentDTO.setPassword(rs.getString("password"));
-        studentDTO.setRegistrationDate(rs.getDate("registration_date"));
-        studentDTO.setSchoolYear(rs.getString("us_school_year"));
-        studentDTO.setRole(rs.getString("role"));
-
-        contactDTO.setId(rs.getInt("contact_id"));
-        contactDTO.setCompany(companyDTO);
-        contactDTO.setStudent(studentDTO);
-        contactDTO.setMeeting(rs.getString("meeting"));
-        contactDTO.setState(rs.getString("contact_state"));
-        contactDTO.setReasonRefusal(rs.getString("reason_for_refusal"));
-        contactDTO.setSchoolYear(rs.getString("ct_school_year"));
-        contactDTO.setVersion(rs.getInt("ct_version"));
-        return contactDTO;
+        CompanyDTO companyDTO = setCompanyDTO(rs);
+        UserDTO studentDTO = setUserDTO(rs);
+        return setContactDTO(rs, companyDTO, studentDTO);
       }
       return null;
     } catch (SQLException e) {
