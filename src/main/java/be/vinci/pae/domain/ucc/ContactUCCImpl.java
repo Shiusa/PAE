@@ -143,9 +143,6 @@ public class ContactUCCImpl implements ContactUCC {
         Logs.log(Level.ERROR, "ContactUCC (admit) : contact not found");
         throw new ResourceNotFoundException();
       }
-
-      int version = contact.getVersion();
-
       if (contact.getStudent().getId() != studentId) {
         Logs.log(Level.ERROR,
             "ContactUCC (admit) : the student of the contact isn't the student from the token");
@@ -160,6 +157,7 @@ public class ContactUCCImpl implements ContactUCC {
         throw new InvalidRequestException();
       }
 
+      int version = contact.getVersion();
       contactDTO = contactDAO.admitContact(contactId, meeting, version);
 
       dalServices.commitTransaction();
