@@ -107,28 +107,28 @@ public class ContactUCCImpl implements ContactUCC {
       dalServices.startTransaction();
       contact = (Contact) contactDAO.findContactById(contactId);
       if (contact == null) {
-        dalServices.rollbackTransaction();
         Logs.log(Level.ERROR,
             "ContactUCC (unsupervise) : contact not found");
         throw new ResourceNotFoundException();
       }
+
       int version = contact.getVersion();
+
+      if (!contact.isStarted() && !contact.isAdmitted()) {
+        throw new NotAllowedException();
+      } else if (contact.getStudent().getId() != student) {
+        throw new NotAllowedException();
+      }
+
       contactDTO = contactDAO.unsupervise(contactId, version);
+
+      dalServices.commitTransaction();
+      Logs.log(Level.DEBUG, "ContactUCC (unsupervise) : success!");
+      return contactDTO;
     } catch (FatalException e) {
       dalServices.rollbackTransaction();
       throw e;
     }
-    if (!contact.isStarted() && !contact.isAdmitted()) {
-      dalServices.rollbackTransaction();
-      throw new InvalidRequestException();
-    } else if (contact.getStudent().getId() != student) {
-      dalServices.rollbackTransaction();
-
-      throw new NotAllowedException();
-    }
-    dalServices.commitTransaction();
-    Logs.log(Level.DEBUG, "ContactUCC (unsupervise) : success!");
-    return contactDTO;
   }
 
   @Override

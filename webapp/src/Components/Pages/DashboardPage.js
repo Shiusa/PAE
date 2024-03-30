@@ -437,7 +437,7 @@ const DashboardPage = async () => {
             }
             if (error instanceof Error && error.message.startsWith(
                 "fetch error : 403")) {
-              errorMessage.innerHTML = "Vous n'avez pas le droit.";
+              errorMessage.innerHTML = "Vous n'avez pas les droits ou vous essayez d'arrêter de suivre un contact non initié ou non pris.";
               errorMessage.style.display = "block";
               return;
             }

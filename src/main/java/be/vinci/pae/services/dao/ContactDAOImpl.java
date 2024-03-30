@@ -116,6 +116,7 @@ public class ContactDAOImpl implements ContactDAO {
 
   @Override
   public ContactDTO unsupervise(int contactId, int version) {
+    Logs.log(Level.DEBUG, "ContactDAO (unsupervise) : entrance");
     String requestSql = """
         UPDATE proStage.contacts
         SET contact_state = ? , version = ?
@@ -123,16 +124,25 @@ public class ContactDAOImpl implements ContactDAO {
         RETURNING *;
         """;
 
-    PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql);
-    try {
+
+    try (PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql)) {
       ps.setString(1, "non suivi");
       ps.setInt(2, version + 1);
       ps.setInt(3, contactId);
       ps.setInt(4, version);
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          ContactDTO contact = findContactById(rs.getInt("contact_id"));
+
+          Logs.log(Level.DEBUG, "ContactDAO (unsupervise) : success!");
+          return contact;
+        }
+        return null;
+      }
     } catch (SQLException e) {
+      Logs.log(Level.FATAL, "ContactDAO (unsupervise) : internal error");
       throw new FatalException(e);
     }
-    return buildContactDTO(ps);
   }
 
   @Override
@@ -230,14 +240,14 @@ public class ContactDAOImpl implements ContactDAO {
       }
       return null;
     } catch (SQLException e) {
-      Logs.log(Level.FATAL, "CompanyDAO (buildCompanyDTO) : internal error!");
+      Logs.log(Level.FATAL, "ContactDAO (buildContactDTO) : internal error!");
       throw new DuplicateException();
     }
   }
 
   @Override
   public ContactDTO admitContact(int contactId, String meeting, int version) {
-    Logs.log(Level.INFO, "ContactDAO (admit) : entrance");
+    Logs.log(Level.DEBUG, "ContactDAO (admit) : entrance");
     String requestSql = """
         UPDATE proStage.contacts
         SET meeting = ?, contact_state = ?, version = ?
@@ -269,7 +279,7 @@ public class ContactDAOImpl implements ContactDAO {
 
   @Override
   public ContactDTO turnDown(int contactId, String reasonForRefusal, int version) {
-    Logs.log(Level.INFO, "ContactDAO (turnDown) : entrance");
+    Logs.log(Level.DEBUG, "ContactDAO (turnDown) : entrance");
     String requestSql = """
         UPDATE proStage.contacts
         SET reason_for_refusal = ?, contact_state = ?, version = ?
