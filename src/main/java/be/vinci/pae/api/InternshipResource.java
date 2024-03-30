@@ -1,7 +1,6 @@
 package be.vinci.pae.api;
 
 import be.vinci.pae.api.filters.Authorize;
-import be.vinci.pae.domain.dto.CompanyDTO;
 import be.vinci.pae.domain.dto.ContactDTO;
 import be.vinci.pae.domain.dto.InternshipDTO;
 import be.vinci.pae.domain.dto.SupervisorDTO;
@@ -94,13 +93,13 @@ public class InternshipResource {
    */
   private ObjectNode buildJsonMapperInternship(InternshipDTO internship, UserDTO user) {
     ContactDTO contact = contactUCC.getOneById(internship.getContact());
-    CompanyDTO company = companyUCC.findOneById(contact.getCompany());
+    // CompanyDTO company = companyUCC.findOneById(contact.getCompany());
     SupervisorDTO supervisor = supervisorUCC.getOneById(internship.getSupervisor());
 
     return jsonMapper.createObjectNode().putPOJO("internship", internship)
         .putPOJO("contact", contact)
-        .putPOJO("company", company)
-        .putPOJO("user", user)
+        .putPOJO("company", contact.getCompany())
+        .putPOJO("user", contact.getStudent())
         .putPOJO("supervisor", supervisor);
   }
 

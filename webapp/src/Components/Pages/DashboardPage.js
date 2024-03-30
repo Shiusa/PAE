@@ -36,23 +36,33 @@ const DashboardPage = async () => {
   };
 
   const readInternship = async () => {
-    const options = {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': user.token
+    try {
+      const options = {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': user.token
+        }
       }
-    }
-    const response = await fetch('api/internships/student/' + user.user.id,
-        options);
+      const response = await fetch('api/internships/student/' + user.user.id,
+          options);
 
-    if (!response.ok) {
-      throw new Error(
-          `fetch error : ${response.status} : ${response.statusText}`);
-    }
+      if (!response.ok) {
+        throw new Error(
+            `fetch error : ${response.status} : ${response.statusText}`);
+      }
 
-    const userInfo = await response.json();
-    return userInfo;
+      const userInfo = await response.json();
+      if (userInfo) {
+        return userInfo;
+      }
+      return null;
+    } catch (error) {
+      if (error instanceof Error && error.message.startsWith("fetch error : 500")) {
+        return null;
+      }
+      return null;
+    }
   };
 
   const readContactById = async (idContact) => {
@@ -75,25 +85,33 @@ const DashboardPage = async () => {
   };
 
   const readAllContactsByStudent = async () => {
-    const options = {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': user.token
+    try {
+      const options = {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': user.token
+        }
       }
+
+      const response = await fetch('api/contacts/all/' + user.user.id, options);
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          Redirect("/");
+        }
+        throw new Error(
+            `fetch error : ${response.status} : ${response.statusText}`);
+      }
+      const contactList = await response.json();
+      if (contactList) {
+        return contactList;
+      }
+      return null;
+    } catch (error) {
+      return null;
     }
 
-    const response = await fetch('api/contacts/all/' + user.user.id, options);
-
-    if (!response.ok) {
-      if (response.status === 401) {
-        Redirect("/");
-      }
-      throw new Error(
-          `fetch error : ${response.status} : ${response.statusText}`);
-    }
-    const contactList = await response.json();
-    return contactList;
   };
 
   const userInfoID = await readUserInfo();
@@ -192,11 +210,17 @@ const DashboardPage = async () => {
 
   const btnChangeInfo = document.getElementById("btn-info-change");
 
-  btnChangeInfo.addEventListener('click', () => {
-    Redirect('/info');
-  });
+  if (btnChangeInfo) {
+    btnChangeInfo.addEventListener('click', () => {
+      Redirect('/info');
+    });
+  }
+
 
   function showContacts(contactsTable) {
+    if (!contactsTable) {
+      return;
+    }
     tableContacts.innerHTML = ``;
 
     let u = 0;
@@ -212,7 +236,7 @@ const DashboardPage = async () => {
                 <div class="table-line d-flex align-items-center mt-2 mb-2">
                     <i class="line-info fa-solid fa-circle-info" id="${contactsTable[u].id}"></i>
                     <div class="line-col-1" >
-                        <p class="mx-auto mt-3">${contactsTable[u].nameCompany}<br>${designation}</p>
+                        <p class="mx-auto mt-3">${contactsTable[u].company.name}<br>${designation}</p>
                     </div>
                     <div class="line-col-2 d-flex align-items-center justify-content-center">
                       <p><option  value="1">${contactsTable[u].state}</option></p>
@@ -228,7 +252,8 @@ const DashboardPage = async () => {
   function clickContactInfo() {
     const allContactsBtn = document.querySelectorAll(".line-info");
     allContactsBtn.forEach(element => {
-      element.addEventListener('click', () => {
+      element.addEventListener('click', (e) => {
+        e.preventDefault();
         conctactInfo(element.id);
       });
     });
@@ -284,32 +309,15 @@ const DashboardPage = async () => {
                                 <p class="fw-bold me-4">Raison</p>
                                 <textarea id="refusalReason" name="raison" placeholder="Raison du refus">${refusal}</textarea>
                             </div>
-                            <button id="updateBtn" class="btn btn-primary mb-2 ms-3" type="submit")">Mettre à jour</button>
+                            <button id="updateBtn" class="btn btn-primary mb-2 ms-3" type="submit">Mettre à jour</button>
                             <h2 id="error-message"></h2>
                         </div>
                     </div>
         `
 
-    const options2 = {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': user.token
-      }
-    }
-    const response = await fetch('api/companies/' + contactInfoJSON.company,
-        options2);
-
-    if (!response.ok) {
-      throw new Error(
-          `fetch error : ${response.status} : ${response.statusText}`);
-    }
-
-    const companyInfo = await response.json();
-
     let phone;
     let address;
-    const {address: address1, phoneNumber} = companyInfo.company;
+    const {address: address1, phoneNumber} = contactInfoJSON.company;
     if (phoneNumber === null) {
       phone = "";
     } else {
@@ -325,7 +333,8 @@ const DashboardPage = async () => {
     document.getElementById("address").innerHTML = address;
 
     const updateState = document.getElementById("updateBtn");
-    updateState.addEventListener('click', async () => {
+    updateState.addEventListener('click', async (e) => {
+      e.preventDefault();
       const options = {
         method: 'POST',
         headers: {
@@ -349,10 +358,10 @@ const DashboardPage = async () => {
         case "admitted":
           options.body = JSON.stringify({"contactId": id, "meeting": meeting});
           try {
-            const response2 = await fetch("/api/contacts/admit", options);
+            const response = await fetch("/api/contacts/admit", options);
             if (!response.ok) {
               throw new Error(
-                  `fetch error : ${response2.status} : ${response2.statusText}`
+                  `fetch error : ${response.status} : ${response.statusText}`
               );
             }
           } catch (error) {
@@ -372,13 +381,13 @@ const DashboardPage = async () => {
             errorMessage.style.display = "block";
             return;
           }
-          await DashboardPage();
+          Redirect("/dashboard");
           break;
         case "turnedDown":
           options.body = JSON.stringify(
               {contactId: id, reasonForRefusal: refusalReason});
           try {
-            await fetch("/api/contacts/turnDown", options);
+            const response = await fetch("/api/contacts/turnDown", options);
             if (!response.ok) {
               throw new Error(
                   `fetch error : ${response.status} : ${response.statusText}`
@@ -387,7 +396,7 @@ const DashboardPage = async () => {
           } catch (error) {
             if (error instanceof Error && error.message.startsWith(
                 "fetch error : 400")) {
-              errorMessage.innerHTML = "Veuillez entrer un contact ou vérifiez que vous pouvez effectuer ce changement.";
+              errorMessage.innerHTML = "Veuillez entrer la raison du refus.";
               errorMessage.style.display = "block";
               return;
             }
@@ -407,13 +416,13 @@ const DashboardPage = async () => {
             errorMessage.style.display = "block";
             return;
           }
-          await DashboardPage();
+          Redirect("/dashboard");
           break;
 
         case "unsupervised":
           options.body = JSON.stringify({contactId: id});
           try {
-            await fetch("/api/contacts/unsupervise", options);
+            const response = await fetch("/api/contacts/unsupervise", options);
             if (!response.ok) {
               throw new Error(
                   `fetch error : ${response.status} : ${response.statusText}`
@@ -442,7 +451,7 @@ const DashboardPage = async () => {
             errorMessage.style.display = "block";
             return;
           }
-          await DashboardPage();
+          Redirect("/dashboard");
           break;
         default:
           errorMessage.innerHTML = "Veuillez entrer un contact ou vérifiez que vous pouvez effectuer ce changement.";

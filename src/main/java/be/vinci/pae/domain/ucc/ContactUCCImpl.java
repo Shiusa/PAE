@@ -93,15 +93,14 @@ public class ContactUCCImpl implements ContactUCC {
       dalServices.startTransaction();
       contact = contactDAO.findContactById(id);
       if (contact == null) {
-        dalServices.rollbackTransaction();
         throw new ResourceNotFoundException();
       }
-    } catch (FatalException e) {
+      dalServices.commitTransaction();
+      return contact;
+    } catch (Exception e) {
       dalServices.rollbackTransaction();
       throw e;
     }
-    dalServices.commitTransaction();
-    return contact;
   }
 
   @Override
@@ -126,7 +125,7 @@ public class ContactUCCImpl implements ContactUCC {
     if (!contact.isStarted() && !contact.isAdmitted()) {
       dalServices.rollbackTransaction();
       throw new InvalidRequestException();
-    } else if (contact.getStudent() != student) {
+    } else if (contact.getStudent().getId() != student) {
       dalServices.rollbackTransaction();
 
       throw new NotAllowedException();
@@ -155,7 +154,7 @@ public class ContactUCCImpl implements ContactUCC {
       dalServices.rollbackTransaction();
       throw e;
     }
-    if (contact.getStudent() != studentId) {
+    if (contact.getStudent().getId() != studentId) {
       Logs.log(Level.ERROR,
           "ContactUCC (admit) : the student of the contact isn't the student from the token");
       dalServices.rollbackTransaction();
@@ -195,7 +194,7 @@ public class ContactUCCImpl implements ContactUCC {
       dalServices.rollbackTransaction();
       throw e;
     }
-    if (contact.getStudent() != studentId) {
+    if (contact.getStudent().getId() != studentId) {
       Logs.log(Level.ERROR,
           "ContactUCC (turnDown) : the student of the contact isn't the student from the token");
       dalServices.rollbackTransaction();
