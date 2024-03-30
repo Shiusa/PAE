@@ -155,7 +155,7 @@ public class ContactUCCImplTest {
     contactDTO.setStudent(userDTO);
     contactDTO.setState("refusé");
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
-    assertThrows(InvalidRequestException.class, () -> contactUCC.unsupervise(1, 1));
+    assertThrows(NotAllowedException.class, () -> contactUCC.unsupervise(1, 1));
   }
 
   @Test
@@ -261,8 +261,8 @@ public class ContactUCCImplTest {
     contactDTO.setState("initié");
     contactDTO.setVersion(1);
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
-    Mockito.when(contactDAOMock.admitContact(1, "sur place", 1)).thenReturn(contactDTO);
-    assertNotNull(contactUCC.admit(1, "sur place", 1));
+    Mockito.when(contactDAOMock.admitContact(1, "Dans l entreprise", 1)).thenReturn(contactDTO);
+    assertNotNull(contactUCC.admit(1, "Dans l entreprise", 1));
   }
 
   @Test
@@ -291,7 +291,7 @@ public class ContactUCCImplTest {
     contactDTO.setStudent(userDTO);
     contactDTO.setState("initié");
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
-    assertThrows(InvalidRequestException.class,
+    assertThrows(NotAllowedException.class,
         () -> contactUCC.turnDown(1, "Student has not answered fast enough", 1));
   }
 
