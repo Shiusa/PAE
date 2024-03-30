@@ -297,12 +297,12 @@ const DashboardPage = async () => {
                                 <p class="fw-bold me-4">Etat</p>
                                 <select id="selectedState" class="form-select" aria-label="Default select example">
                                     <option value="basic" selected>${contactInfoJSON.state}</option>
-                                    <option value="started">initié</option>
+                                    <!--<option value="started">initié</option>-->
                                     <option value="admitted">pris</option>
                                     <option value="accepted">accepté</option>
                                     <option value="turnedDown">refusé</option>
                                     <option value="unsupervised">ne plus suivre</option>
-                                    <option value="onHold">suspendu</option>
+                                    <!--<option value="onHold">suspendu</option>-->
                                 </select>
                             </div>
                             <div class="d-flex mt-4 mb-2"> 
@@ -402,7 +402,7 @@ const DashboardPage = async () => {
             }
             if (error instanceof Error && error.message.startsWith(
                 "fetch error : 403")) {
-              errorMessage.innerHTML = "Vous n'avez pas le droit.";
+              errorMessage.innerHTML = "Vous ne pouvez pas refusé un contact non pris.";
               errorMessage.style.display = "block";
               return;
             }

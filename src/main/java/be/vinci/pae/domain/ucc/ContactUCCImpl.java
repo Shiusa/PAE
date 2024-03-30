@@ -184,25 +184,27 @@ public class ContactUCCImpl implements ContactUCC {
         Logs.log(Level.ERROR, "ContactUCC (turnDown) : contact not found");
         throw new ResourceNotFoundException();
       }
+
       int version = contact.getVersion();
+
+      if (contact.getStudent().getId() != studentId) {
+        Logs.log(Level.ERROR,
+            "ContactUCC (turnDown) : the student of the contact isn't the student from the token");
+        throw new NotAllowedException();
+      }
+      if (!contact.isAdmitted()) {
+        Logs.log(Level.ERROR, "ContactUCC (turnDown) : contact's state not admitted");
+        throw new NotAllowedException();
+      }
+
       contactDTO = contactDAO.turnDown(contactId, reasonForRefusal, version);
+
+      dalServices.commitTransaction();
+      Logs.log(Level.DEBUG, "ContactUCC (turnDown) : success!");
+      return contactDTO;
     } catch (FatalException e) {
       dalServices.rollbackTransaction();
       throw e;
     }
-    if (contact.getStudent().getId() != studentId) {
-      Logs.log(Level.ERROR,
-          "ContactUCC (turnDown) : the student of the contact isn't the student from the token");
-      dalServices.rollbackTransaction();
-      throw new NotAllowedException();
-    }
-    if (!contact.isAdmitted()) {
-      Logs.log(Level.ERROR, "ContactUCC (turnDown) : contact's state not admitted");
-      dalServices.rollbackTransaction();
-      throw new InvalidRequestException();
-    }
-    dalServices.commitTransaction();
-    Logs.log(Level.DEBUG, "ContactUCC (turnDown) : success!");
-    return contactDTO;
   }
 }
