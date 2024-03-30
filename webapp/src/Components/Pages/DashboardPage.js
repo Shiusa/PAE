@@ -97,8 +97,6 @@ const DashboardPage = async () => {
   };
 
   const userInfoID = await readUserInfo();
-  const stageInfo = await readInternship();
-
   main.innerHTML = `        
         <div class="dash d-flex justify-content-center align-items-center mt-5 mb-5 mx-auto">
             <div class="dash-left d-flex justify-content-center align-items-center flex-column ms-3 me-3">
@@ -145,28 +143,40 @@ const DashboardPage = async () => {
 
   const stageBox = document.querySelector('.dash-stage');
 
-  if (stageInfo == null) {
+  try {
+    const stageInfo = await readInternship();
 
-    stageBox.innerHTML = `        
-            <div class="stage-bloc">
-                    <h1 class="mt-3">Vous n'avez pas de stage</h1>
-            </div>
-        `;
+    if (stageInfo) {
+      let {designation} = stageInfo.company;
+      const {address, name} = stageInfo.company;
+      let {project} = stageInfo.internship;
+      let {email} = stageInfo.supervisor;
+      const {lastname, firstname} = stageInfo.supervisor;
 
-  } else {
-    stageBox.innerHTML = `        
+      if(designation === null) designation = "";
+      if(project === null) project = "";
+      if(email === null) email = "";
+
+      stageBox.innerHTML = `        
             <div class="stage-bloc">
                 <h1 class="mb-3">Votre stage</h1>
                 <div class="d-flex">
-                    <p class="me-4"><i class="fa-solid fa-signature"></i> ${stageInfo.nameInternship} ${stageInfo.designationInternship}</p>
-                    <p><i class="fa-solid fa-location-dot"></i> ${stageInfo.addressInternship}</p>
+                    <p class="me-4"><i class="fa-solid fa-signature"></i> ${name} ${designation}</p>
+                    <p><i class="fa-solid fa-location-dot"></i> ${address}</p>
                 </div>
-                <p><i class="fa-solid fa-list"></i> ${stageInfo.project}</p>
+                <p><i class="fa-solid fa-list"></i> ${project}</p>
             </div>
             <div class="respo-bloc">
                 <h1 class="mt-3 ms-4">Votre responsable</h1>
-                <p class="mt-2 ms-4"><i class="fa-solid fa-user"></i> ${stageInfo.firstnameSupervisor} ${stageInfo.lastnameSupervisor}</p>
-                <span class="ms-4"><i class="fa-solid fa-at"></i> ${stageInfo.emailSupervisor}</span>
+                <p class="mt-2 ms-4"><i class="fa-solid fa-user"></i> ${firstname} ${lastname}</p>
+                <span class="ms-4"><i class="fa-solid fa-at"></i>${email}</span>
+            </div>
+        `;
+    }
+  } catch (error) {
+    stageBox.innerHTML = `        
+            <div class="stage-bloc">
+                    <h1 class="mt-3">Vous n'avez pas de stage</h1>
             </div>
         `;
   }
@@ -274,7 +284,7 @@ const DashboardPage = async () => {
                                 <p class="fw-bold me-4">Raison</p>
                                 <textarea id="refusalReason" name="raison" placeholder="Raison du refus">${refusal}</textarea>
                             </div>
-                            <button id="updateBtn" class="btn btn-primary mb-2 ms-3" type="submit")">Mettre à jour</button>
+                            <button id="updateBtn" class="btn btn-primary mb-2 ms-3" type="submit">Mettre à jour</button>
                             <h2 id="error-message"></h2>
                         </div>
                     </div>
