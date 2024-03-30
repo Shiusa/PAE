@@ -46,7 +46,8 @@ public class ContactDAOImpl implements ContactDAO {
         us.phone_number AS us_phone_number, us.password, us.registration_date,
         us.school_year AS us_school_year, us.role
         FROM prostage.contacts ct, prostage.companies cm, prostage.users us
-        WHERE ct.company = ? AND ct.student = ? AND ct.school_year = ? AND ct.company = cm.company_id AND ct.student = us.user_id
+        WHERE ct.company = ? AND ct.student = ? AND ct.school_year = ?
+        AND ct.company = cm.company_id AND ct.student = us.user_id
         """;
 
     try (PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql)) {
