@@ -244,27 +244,27 @@ public class ContactDAOImpl implements ContactDAO {
         WHERE contact_id = ? AND version = ?
         RETURNING *;
         """;
-    PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql);
-    try {
+
+    try (PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql)) {
       ps.setString(1, meeting);
       ps.setString(2, "pris");
       ps.setInt(3, version + 1);
       ps.setInt(4, contactId);
       ps.setInt(5, version);
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          ContactDTO contact = findContactById(rs.getInt("contact_id"));
+
+          Logs.log(Level.DEBUG, "ContactDAO (admit) : success!");
+          return contact;
+        }
+        return null;
+      }
     } catch (SQLException e) {
       Logs.log(Level.FATAL, "ContactDAO (admit) : internal error");
       e.printStackTrace();
       throw new FatalException(e);
     }
-    ContactDTO contact = buildContactDTO(ps);
-    try {
-      ps.close();
-    } catch (SQLException e) {
-      Logs.log(Level.FATAL, "ContactDAO (admit) : internal error");
-      throw new FatalException(e);
-    }
-    Logs.log(Level.DEBUG, "ContactDAO (admit) : success!");
-    return contact;
   }
 
   @Override

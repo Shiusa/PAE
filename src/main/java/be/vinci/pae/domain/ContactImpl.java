@@ -24,7 +24,7 @@ public class ContactImpl implements Contact {
 
   @Override
   public boolean checkMeeting(String meeting) {
-    return meeting.equals("à distance") || meeting.equals("sur place");
+    return meeting.equals("A distance") || meeting.equals("Dans l entreprise");
   }
 
   @Override

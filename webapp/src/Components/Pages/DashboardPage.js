@@ -161,43 +161,43 @@ const DashboardPage = async () => {
 
   const stageBox = document.querySelector('.dash-stage');
 
-  try {
-    const stageInfo = await readInternship();
 
-    if (stageInfo) {
-      let {designation} = stageInfo.company;
-      const {address, name} = stageInfo.company;
-      let {project} = stageInfo.internship;
-      let {email} = stageInfo.supervisor;
-      const {lastname, firstname} = stageInfo.supervisor;
+  const stageInfo = await readInternship();
 
-      if(designation === null) designation = "";
-      if(project === null) project = "";
-      if(email === null) email = "";
+  if (stageInfo) {
+    let {designation} = stageInfo.company;
+    const {address, name} = stageInfo.company;
+    let {project} = stageInfo.internship;
+    let {email} = stageInfo.supervisor;
+    const {lastname, firstname} = stageInfo.supervisor;
 
-      stageBox.innerHTML = `        
-            <div class="stage-bloc">
-                <h1 class="mb-3">Votre stage</h1>
-                <div class="d-flex">
-                    <p class="me-4"><i class="fa-solid fa-signature"></i> ${name} ${designation}</p>
-                    <p><i class="fa-solid fa-location-dot"></i> ${address}</p>
-                </div>
-                <p><i class="fa-solid fa-list"></i> ${project}</p>
-            </div>
-            <div class="respo-bloc">
-                <h1 class="mt-3 ms-4">Votre responsable</h1>
-                <p class="mt-2 ms-4"><i class="fa-solid fa-user"></i> ${firstname} ${lastname}</p>
-                <span class="ms-4"><i class="fa-solid fa-at"></i>${email}</span>
-            </div>
-        `;
-    }
-  } catch (error) {
+    if(designation === null) designation = "";
+    if(project === null) project = "";
+    if(email === null) email = "";
+
     stageBox.innerHTML = `        
-            <div class="stage-bloc">
-                    <h1 class="mt-3">Vous n'avez pas de stage</h1>
-            </div>
-        `;
+          <div class="stage-bloc">
+              <h1 class="mb-3">Votre stage</h1>
+              <div class="d-flex">
+                  <p class="me-4"><i class="fa-solid fa-signature"></i> ${name} ${designation}</p>
+                  <p><i class="fa-solid fa-location-dot"></i> ${address}</p>
+              </div>
+              <p><i class="fa-solid fa-list"></i> ${project}</p>
+          </div>
+          <div class="respo-bloc">
+              <h1 class="mt-3 ms-4">Votre responsable</h1>
+              <p class="mt-2 ms-4"><i class="fa-solid fa-user"></i> ${firstname} ${lastname}</p>
+              <span class="ms-4"><i class="fa-solid fa-at"></i>${email}</span>
+          </div>
+      `;
+  } else {
+    stageBox.innerHTML = `        
+          <div class="stage-bloc">
+                  <h1 class="mt-3">Vous n'avez pas de stage</h1>
+          </div>
+      `;
   }
+
 
   showNavStyle("dashboard");
 
@@ -264,8 +264,8 @@ const DashboardPage = async () => {
     const contactInfoJSON = await readContactById(id);
     const meetingType = contactInfoJSON.meeting;
 
-    const checkedSurPlace = meetingType === "sur place" ? 'checked' : '';
-    const checkedADistance = meetingType === "à distance" ? 'checked' : '';
+    const checkedSurPlace = meetingType === "Dans l entreprise" ? 'checked' : '';
+    const checkedADistance = meetingType === "A distance" ? 'checked' : '';
 
     let refusal;
     if(!contactInfoJSON.reasonRefusal) refusal = "";
@@ -285,11 +285,11 @@ const DashboardPage = async () => {
                             <div class="radioButton d-flex mt-3 align-items-center">
                                 <p class="fw-bold me-4">Type de rencontre</p>
                                 <div class="ent-radio form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="sur place" ${checkedSurPlace}>
+                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="Dans l entreprise" ${checkedSurPlace}>
                                     <label class="form-check-label" for="inlineRadio1">Dans l'entreprise</label>
                                 </div>
                                 <div class="ent-radio form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="à distance" ${checkedADistance}>
+                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="A distance" ${checkedADistance}>
                                     <label class="form-check-label" for="inlineRadio2">A Distance</label>
                                 </div>
                             </div>

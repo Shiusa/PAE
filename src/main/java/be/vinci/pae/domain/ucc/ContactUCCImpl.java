@@ -140,35 +140,35 @@ public class ContactUCCImpl implements ContactUCC {
       dalServices.startTransaction();
       contact = (Contact) contactDAO.findContactById(contactId);
       if (contact == null) {
-        dalServices.rollbackTransaction();
         Logs.log(Level.ERROR, "ContactUCC (admit) : contact not found");
         throw new ResourceNotFoundException();
       }
+
       int version = contact.getVersion();
+
+      if (contact.getStudent().getId() != studentId) {
+        Logs.log(Level.ERROR,
+            "ContactUCC (admit) : the student of the contact isn't the student from the token");
+        throw new NotAllowedException();
+      }
+      if (!contact.checkMeeting(meeting)) {
+        Logs.log(Level.ERROR, "ContactUCC (admit) : type meeting is invalid");
+        throw new InvalidRequestException();
+      }
+      if (!contact.isStarted()) {
+        Logs.log(Level.ERROR, "ContactUCC (admit) : contact's state isn't started");
+        throw new InvalidRequestException();
+      }
+
       contactDTO = contactDAO.admitContact(contactId, meeting, version);
+
+      dalServices.commitTransaction();
+      Logs.log(Level.DEBUG, "ContactUCC (admit) : success!");
+      return contactDTO;
     } catch (FatalException e) {
       dalServices.rollbackTransaction();
       throw e;
     }
-    if (contact.getStudent().getId() != studentId) {
-      Logs.log(Level.ERROR,
-          "ContactUCC (admit) : the student of the contact isn't the student from the token");
-      dalServices.rollbackTransaction();
-      throw new NotAllowedException();
-    }
-    if (!contact.checkMeeting(meeting)) {
-      Logs.log(Level.ERROR, "ContactUCC (admit) : type meeting is invalid");
-      dalServices.rollbackTransaction();
-      throw new InvalidRequestException();
-    }
-    if (!contact.isStarted()) {
-      Logs.log(Level.ERROR, "ContactUCC (admit) : contact's state isn't started");
-      dalServices.rollbackTransaction();
-      throw new InvalidRequestException();
-    }
-    dalServices.commitTransaction();
-    Logs.log(Level.DEBUG, "ContactUCC (admit) : success!");
-    return contactDTO;
   }
 
   @Override
