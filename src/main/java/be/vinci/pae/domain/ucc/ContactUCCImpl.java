@@ -210,4 +210,24 @@ public class ContactUCCImpl implements ContactUCC {
     Logs.log(Level.DEBUG, "ContactUCC (turnDown) : success!");
     return contactDTO;
   }
+
+  @Override
+  public ContactDTO accept(int contactId, int studentId) {
+    Contact contact;
+    ContactDTO contactDTO;
+    dalServices.startTransaction();
+    contact = (Contact) contactDAO.findContactById(contactId);
+    int version = contact.getVersion();
+    contactDTO = contactDAO.accept(contactId, version);
+    dalServices.rollbackTransaction();
+    if (contact.isAccepted()) {
+      dalServices.rollbackTransaction();
+      throw new DuplicateException();
+    }
+    if(contact.getStudent() != studentId){
+      dalServices.rollbackTransaction();
+    }
+    dalServices.commitTransaction();
+    return contactDTO;
+  }
 }

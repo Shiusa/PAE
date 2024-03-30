@@ -267,4 +267,23 @@ public class ContactDAOImpl implements ContactDAO {
     Logs.log(Level.DEBUG, "ContactDAO (turnDown) : success!");
     return contact;
   }
+
+  @Override
+  public ContactDTO accept(int contactId, int version) {
+    String requestSQl = """
+        UPDATE proStage.contacts
+        SET contact_state = ?, version = ?
+        WHERE contact_id = ? AND version = ?
+        RETURNING *""";
+    PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSQl);
+    try {
+      ps.setString(1, "accepté");
+      ps.setInt(2, version + 1);
+      ps.setInt(3, contactId);
+      ps.setInt(4, version);
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+    return buildContactDTO(ps);
+  }
 }

@@ -227,4 +227,20 @@ public class ContactResource {
 
     return contact;
   }
+
+  /**
+   * Accepted contact route.
+   *
+   * @param request the token.
+   * @param json    jsonNode containing contact id to unsupervised the contact.
+   * @return the accepted state of a contact.
+   */
+  @POST
+  @Path("accept")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize
+  public ObjectNode accept(@Context ContainerRequest request, JsonNode json) {
+    return null;
+  }
 }

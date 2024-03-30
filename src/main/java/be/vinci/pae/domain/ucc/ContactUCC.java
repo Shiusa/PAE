@@ -64,4 +64,12 @@ public interface ContactUCC {
    * @return the started contact.
    */
   ContactDTO turnDown(int contactId, String reasonForRefusal, int studentId);
+
+  /**
+   * Accepted the contact.
+   * @param contactId the id of the contact.
+   * @param studentId the id of the student.
+   * @return the accepted contact.
+   */
+  ContactDTO accept(int contactId, int studentId);
 }
