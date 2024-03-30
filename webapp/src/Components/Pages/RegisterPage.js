@@ -32,11 +32,11 @@ const RegisterPage = () => {
               </div>
               <div class="input-group-role disable">
                 <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="roleTeacher" value="teacher">
+                  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="roleTeacher" value="Professeur">
                   <label class="form-check-label" for="roleTeacher">Professeur</label>
                 </div>
                 <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="roleAdministrative" value="administrative employee">
+                  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="roleAdministrative" value="Administratif">
                   <label class="form-check-label" for="roleAdministrative">Administratif</label>
                 </div>
               </div>
