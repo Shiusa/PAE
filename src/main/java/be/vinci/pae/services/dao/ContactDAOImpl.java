@@ -38,7 +38,9 @@ public class ContactDAOImpl implements ContactDAO {
       String schoolYear) {
     Logs.log(Level.INFO, "ContactDAO (findContactByCompanyStudentSchoolYear) : entrance");
     String requestSql = """
-        SELECT ct.*, cm.*, us.*
+        SELECT ct.contact_id, ct.company AS ct_company, ct.student, ct.meeting, ct.contact_state, ct.reason_for_refusal, ct.school_year AS ct_school_year, ct.version AS ct_version,
+        cm.company_id, cm.name, cm.designation, cm.address, cm.phone_number AS cm_phone_number, cm.email AS cm_email, cm.is_blacklisted, cm.blacklist_motivation, cm.version AS cm_version,
+        us.user_id, us.email AS us_email, us.lastname AS us_lastname, us.firstname AS us_firstname, us.phone_number AS us_phone_number, us.password, us.registration_date, us.school_year AS us_school_year, us.role
         FROM prostage.contacts ct, prostage.companies cm, prostage.users us
         WHERE ct.company = ? AND ct.student = ? AND ct.school_year = ? AND ct.company = cm.company_id AND ct.student = us.user_id
         """;
@@ -65,27 +67,27 @@ public class ContactDAOImpl implements ContactDAO {
         INSERT INTO prostage.contacts (company, student, contact_state, school_year, version)
          VALUES (?, ?, ?, ?, ?) RETURNING *;
         """;
-    PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql);
-    try {
+
+    try (PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql)) {
       ps.setInt(1, company);
       ps.setInt(2, studentId);
       ps.setString(3, "initié");
       ps.setString(4, schoolYear);
       ps.setInt(5, 1);
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          ContactDTO contact = findContactById(rs.getInt("contact_id"));
+
+          Logs.log(Level.DEBUG, "ContactDAO (startContact) : success!");
+          return contact;
+        }
+        return null;
+      }
     } catch (SQLException e) {
       Logs.log(Level.FATAL, "ContactDAO (startContact) : internal error");
       throw new FatalException(e);
     }
 
-    ContactDTO contact = buildContactDTO(ps);
-    try {
-      ps.close();
-    } catch (SQLException e) {
-      Logs.log(Level.FATAL, "ContactDAO (startContact) : internal error");
-      throw new FatalException(e);
-    }
-    Logs.log(Level.DEBUG, "ContactDAO (startContact) : success!");
-    return contact;
   }
 
   @Override
@@ -224,8 +226,9 @@ public class ContactDAOImpl implements ContactDAO {
         contactDTO.setReasonRefusal(rs.getString("reason_for_refusal"));
         contactDTO.setSchoolYear(rs.getString("ct_school_year"));
         contactDTO.setVersion(rs.getInt("ct_version"));
+        return contactDTO;
       }
-      return contactDTO;
+      return null;
     } catch (SQLException e) {
       Logs.log(Level.FATAL, "CompanyDAO (buildCompanyDTO) : internal error!");
       throw new DuplicateException();
