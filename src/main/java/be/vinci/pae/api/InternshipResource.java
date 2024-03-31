@@ -14,7 +14,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 import org.apache.logging.log4j.Level;
 import org.glassfish.jersey.server.ContainerRequest;
 
@@ -43,9 +43,10 @@ public class InternshipResource {
       @PathParam("idUser") int idUser) {
     Logs.log(Level.INFO, "InternshipResource (getOneInternshipByIdUser) : entrance");
     UserDTO user = (UserDTO) request.getProperty("user");
-    if (user.getId() != idUser) {
+    if (user.getId() != idUser && (!user.getRole().equals("Professeur") || !user.getRole()
+        .equals("Professeur"))) {
       Logs.log(Level.ERROR, "InternshipResource (getOneInternshipByIdUser) : unauthorized");
-      throw new WebApplicationException("unauthorized", Response.Status.UNAUTHORIZED);
+      throw new WebApplicationException("unauthorized", Status.FORBIDDEN);
     }
     return internshipUCC.getOneByStudent(user.getId());
   }
