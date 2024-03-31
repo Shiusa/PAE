@@ -1,5 +1,6 @@
 package be.vinci.pae.domain;
 
+import be.vinci.pae.domain.dto.CompanyDTO;
 import be.vinci.pae.domain.dto.SupervisorDTO;
 
 /**
@@ -8,7 +9,7 @@ import be.vinci.pae.domain.dto.SupervisorDTO;
 public class SupervisorImpl implements SupervisorDTO {
 
   private int id;
-  private int company;
+  private CompanyDTO company;
   private String lastname;
   private String firstname;
   private String phoneNumber;
@@ -25,12 +26,12 @@ public class SupervisorImpl implements SupervisorDTO {
   }
 
   @Override
-  public int getCompany() {
+  public CompanyDTO getCompany() {
     return this.company;
   }
 
   @Override
-  public void setCompany(int company) {
+  public void setCompany(CompanyDTO company) {
     this.company = company;
   }
 

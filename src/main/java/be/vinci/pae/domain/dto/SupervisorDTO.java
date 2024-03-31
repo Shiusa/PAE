@@ -24,14 +24,14 @@ public interface SupervisorDTO {
    *
    * @return the supervisor's company.
    */
-  int getCompany();
+  CompanyDTO getCompany();
 
   /**
    * Set the supervisor's company.
    *
    * @param company company to set.
    */
-  void setCompany(int company);
+  void setCompany(CompanyDTO company);
 
   /**
    * Get the supervisor's lastname.
