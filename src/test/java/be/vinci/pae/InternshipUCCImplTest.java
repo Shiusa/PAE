@@ -2,7 +2,6 @@ package be.vinci.pae;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import be.vinci.pae.domain.ContactFactory;
@@ -73,7 +72,7 @@ public class InternshipUCCImplTest {
   @DisplayName("Test getOneByStudent student has no internship")
   public void testGetOneByStudentStudentNoInternship() {
     Mockito.when(internshipDAOMock.getOneInternshipByIdUser(1)).thenReturn(null);
-    assertNull(internshipUCC.getOneByStudent(1));
+    assertThrows(ResourceNotFoundException.class, () -> internshipUCC.getOneByStudent(1));
   }
 
   @Test
