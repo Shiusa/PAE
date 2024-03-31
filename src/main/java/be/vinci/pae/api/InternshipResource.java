@@ -1,9 +1,7 @@
 package be.vinci.pae.api;
 
 import be.vinci.pae.api.filters.Authorize;
-import be.vinci.pae.domain.dto.ContactDTO;
 import be.vinci.pae.domain.dto.InternshipDTO;
-import be.vinci.pae.domain.dto.SupervisorDTO;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.domain.ucc.CompanyUCC;
 import be.vinci.pae.domain.ucc.ContactUCC;
@@ -54,7 +52,7 @@ public class InternshipResource {
   @Path("/student/{idUser}")
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize
-  public ObjectNode getOneInternshipByIdUser(@Context ContainerRequest request,
+  public InternshipDTO getOneInternshipByIdUser(@Context ContainerRequest request,
       @PathParam("idUser") int idUser) {
     Logs.log(Level.INFO, "InternshipResource (getOneInternshipByIdUser) : entrance");
     UserDTO user = (UserDTO) request.getProperty("user");
@@ -62,8 +60,8 @@ public class InternshipResource {
       Logs.log(Level.ERROR, "InternshipResource (getOneInternshipByIdUser) : unauthorized");
       throw new WebApplicationException("unauthorized", Response.Status.UNAUTHORIZED);
     }
-    InternshipDTO internship = internshipUCC.getOneByStudent(user.getId());
-    return buildJsonMapperInternship(internship);
+    return internshipUCC.getOneByStudent(user.getId());
+    // return buildJsonMapperInternship(internship);
   }
 
   /**
@@ -91,15 +89,15 @@ public class InternshipResource {
    * @return the objectnode built.
    */
   private ObjectNode buildJsonMapperInternship(InternshipDTO internship) {
-    ContactDTO contact = contactUCC.getOneById(internship.getContact());
+    //ContactDTO contact = contactUCC.getOneById(internship.getContact());
     // CompanyDTO company = companyUCC.findOneById(contact.getCompany());
-    SupervisorDTO supervisor = supervisorUCC.getOneById(internship.getSupervisor());
+    //SupervisorDTO supervisor = supervisorUCC.getOneById(internship.getSupervisor());
 
     return jsonMapper.createObjectNode().putPOJO("internship", internship)
-        .putPOJO("contact", contact)
-        .putPOJO("company", contact.getCompany())
-        .putPOJO("user", contact.getStudent())
-        .putPOJO("supervisor", supervisor);
+        .putPOJO("contact", internship.getContact())
+        .putPOJO("company", internship.getContact().getCompany())
+        .putPOJO("user", internship.getContact().getStudent())
+        .putPOJO("supervisor", internship.getSupervisor());
   }
 
 }

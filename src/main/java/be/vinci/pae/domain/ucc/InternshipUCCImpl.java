@@ -29,15 +29,14 @@ public class InternshipUCCImpl implements InternshipUCC {
       dalServices.startTransaction();
       internship = internshipDAO.getOneInternshipByIdUser(student);
       if (internship == null) {
-        dalServices.commitTransaction();
-        return null;
+        throw new ResourceNotFoundException();
       }
+      dalServices.commitTransaction();
+      return internship;
     } catch (FatalException e) {
       dalServices.rollbackTransaction();
       throw e;
     }
-    dalServices.commitTransaction();
-    return internship;
   }
 
 
@@ -50,7 +49,7 @@ public class InternshipUCCImpl implements InternshipUCC {
       if (internship == null) {
         dalServices.rollbackTransaction();
         throw new ResourceNotFoundException();
-      } else if (contactDAO.findContactById(internship.getContact()).getStudent().getId()
+      } else if (contactDAO.findContactById(internship.getContact().getId()).getStudent().getId()
           != actualStudent) {
         dalServices.rollbackTransaction();
         throw new NotAllowedException();

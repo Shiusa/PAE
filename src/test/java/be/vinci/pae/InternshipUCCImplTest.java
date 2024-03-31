@@ -95,8 +95,9 @@ public class InternshipUCCImplTest {
   @DisplayName("Test getOneById wrong user")
   public void testGetOneByIdWrongUser() {
     userDTO.setId(1);
+    contactDTO.setId(1);
     contactDTO.setStudent(userDTO);
-    internshipDTO.setContact(1);
+    internshipDTO.setContact(contactDTO);
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
     Mockito.when(internshipDAOMock.getOneInternshipById(1)).thenReturn(internshipDTO);
     assertThrows(NotAllowedException.class, () -> internshipUCC.getOneById(1, 3));
@@ -106,8 +107,9 @@ public class InternshipUCCImplTest {
   @DisplayName("Test getOneById correct")
   public void testGetOneByIdCorrect() {
     userDTO.setId(1);
+    contactDTO.setId(1);
     contactDTO.setStudent(userDTO);
-    internshipDTO.setContact(1);
+    internshipDTO.setContact(contactDTO);
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
     Mockito.when(internshipDAOMock.getOneInternshipById(1)).thenReturn(internshipDTO);
     assertNotNull(internshipUCC.getOneById(1, 1));
