@@ -1,11 +1,9 @@
-import {showNavStyle, awaitFront} from "../../utils/function";
+import {awaitFront, showNavStyle} from "../../utils/function";
 /* eslint-disable prefer-template */
 // eslint-disable-next-line import/no-cycle
 import {Redirect} from "../Router/Router";
 
-import {
-  getAuthenticatedUser,
-} from "../../utils/session";
+import {getAuthenticatedUser,} from "../../utils/session";
 
 const DashboardPage = async () => {
 
@@ -58,7 +56,8 @@ const DashboardPage = async () => {
       }
       return null;
     } catch (error) {
-      if (error instanceof Error && error.message.startsWith("fetch error : 500")) {
+      if (error instanceof Error && error.message.startsWith(
+          "fetch error : 500")) {
         return null;
       }
       return null;
@@ -161,7 +160,6 @@ const DashboardPage = async () => {
 
   const stageBox = document.querySelector('.dash-stage');
 
-
   const stageInfo = await readInternship();
 
   if (stageInfo) {
@@ -171,9 +169,15 @@ const DashboardPage = async () => {
     let {email} = stageInfo.supervisor;
     const {lastname, firstname} = stageInfo.supervisor;
 
-    if(designation === null) designation = "";
-    if(project === null) project = "";
-    if(email === null) email = "";
+    if (designation === null) {
+      designation = "";
+    }
+    if (project === null) {
+      project = "";
+    }
+    if (email === null) {
+      email = "";
+    }
 
     stageBox.innerHTML = `        
           <div class="stage-bloc">
@@ -198,7 +202,6 @@ const DashboardPage = async () => {
       `;
   }
 
-
   showNavStyle("dashboard");
 
   const tableContacts = document.querySelector(".table-line-box");
@@ -216,7 +219,6 @@ const DashboardPage = async () => {
     });
   }
 
-
   function showContacts(contactsTable) {
     if (!contactsTable) {
       return;
@@ -227,10 +229,10 @@ const DashboardPage = async () => {
     let info = ``;
     while (u < contactsTable.length) {
       let designation;
-      if (contactsTable[u].designationCompany === null) {
+      if (contactsTable[u].company.designation === null) {
         designation = "";
       } else {
-        designation = contactsTable[u].designationCompany;
+        designation = contactsTable[u].company.designation;
       }
       info += `
                 <div class="table-line d-flex align-items-center mt-2 mb-2">
@@ -264,15 +266,18 @@ const DashboardPage = async () => {
     const contactInfoJSON = await readContactById(id);
     const meetingType = contactInfoJSON.meeting;
 
-    const checkedSurPlace = meetingType === "Dans l entreprise" ? 'checked' : '';
+    const checkedSurPlace = meetingType === "Dans l entreprise" ? 'checked'
+        : '';
     const checkedADistance = meetingType === "A distance" ? 'checked' : '';
 
     let refusal;
-    if(!contactInfoJSON.reasonRefusal) refusal = "";
-    else refusal = contactInfoJSON.reasonRefusal;
+    if (!contactInfoJSON.reasonRefusal) {
+      refusal = "";
+    } else {
+      refusal = contactInfoJSON.reasonRefusal;
+    }
 
     boxInfo.style.visibility = "visible";
-
 
     entrepriseBox.innerHTML = `
                     <div class="entreprise-container d-flex justify-contain-center align-items-center flex-column mx-auto">
