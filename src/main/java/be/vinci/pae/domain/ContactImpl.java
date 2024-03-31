@@ -14,8 +14,6 @@ public class ContactImpl implements Contact {
   private CompanyDTO company;
   private UserDTO student;
 
-  private String nameCompany;
-  private String designationCompany;
   private String meeting;
   private String state;
   private String reasonRefusal;
@@ -51,26 +49,6 @@ public class ContactImpl implements Contact {
   @Override
   public void setCompany(CompanyDTO company) {
     this.company = company;
-  }
-
-  @Override
-  public String getNameCompany() {
-    return this.nameCompany;
-  }
-
-  @Override
-  public void setNameCompany(String nameCompany) {
-    this.nameCompany = nameCompany;
-  }
-
-  @Override
-  public String getDesignationCompany() {
-    return this.designationCompany;
-  }
-
-  @Override
-  public void setDesignationCompany(String designationCompany) {
-    this.designationCompany = designationCompany;
   }
 
   @Override
