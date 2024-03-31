@@ -60,6 +60,10 @@ const DashboardPage = async () => {
           "fetch error : 500")) {
         return null;
       }
+      if (error instanceof Error && error.message.startsWith(
+          "fetch error : 404")) {
+        return null;
+      }
       return null;
     }
   };
@@ -163,11 +167,11 @@ const DashboardPage = async () => {
   const stageInfo = await readInternship();
 
   if (stageInfo) {
-    let {designation} = stageInfo.company;
-    const {address, name} = stageInfo.company;
-    let {project} = stageInfo.internship;
-    let {email} = stageInfo.supervisor;
-    const {lastname, firstname} = stageInfo.supervisor;
+    let {designation} = stageInfo.contact.company;
+    const {address, name} = stageInfo.contact.company;
+    let {project} = stageInfo;
+    let {email} = stageInfo.contact.company;
+    const {lastname, firstname, phoneNumber} = stageInfo.supervisor;
 
     if (designation === null) {
       designation = "";
@@ -191,6 +195,7 @@ const DashboardPage = async () => {
           <div class="respo-bloc">
               <h1 class="mt-3 ms-4">Votre responsable</h1>
               <p class="mt-2 ms-4"><i class="fa-solid fa-user"></i> ${firstname} ${lastname}</p>
+              <span class="ms-4"><i class="fa-solid fa-phone"></i>${phoneNumber}</span>
               <span class="ms-4"><i class="fa-solid fa-at"></i>${email}</span>
           </div>
       `;
