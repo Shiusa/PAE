@@ -4,7 +4,6 @@ import be.vinci.pae.domain.dto.InternshipDTO;
 import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.ContactDAO;
 import be.vinci.pae.services.dao.InternshipDAO;
-import be.vinci.pae.utils.exceptions.FatalException;
 import be.vinci.pae.utils.exceptions.NotAllowedException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
 import jakarta.inject.Inject;
@@ -33,7 +32,7 @@ public class InternshipUCCImpl implements InternshipUCC {
       }
       dalServices.commitTransaction();
       return internship;
-    } catch (FatalException e) {
+    } catch (Exception e) {
       dalServices.rollbackTransaction();
       throw e;
     }
@@ -54,7 +53,7 @@ public class InternshipUCCImpl implements InternshipUCC {
       }
       dalServices.commitTransaction();
       return internship;
-    } catch (FatalException e) {
+    } catch (Exception e) {
       dalServices.rollbackTransaction();
       throw e;
     }
