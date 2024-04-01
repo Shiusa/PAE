@@ -10,7 +10,6 @@ import be.vinci.pae.services.dao.ContactDAO;
 import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.utils.Logs;
 import be.vinci.pae.utils.exceptions.DuplicateException;
-import be.vinci.pae.utils.exceptions.FatalException;
 import be.vinci.pae.utils.exceptions.InvalidRequestException;
 import be.vinci.pae.utils.exceptions.NotAllowedException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
@@ -125,7 +124,7 @@ public class ContactUCCImpl implements ContactUCC {
       dalServices.commitTransaction();
       Logs.log(Level.DEBUG, "ContactUCC (unsupervise) : success!");
       return contactDTO;
-    } catch (FatalException e) {
+    } catch (Exception e) {
       dalServices.rollbackTransaction();
       throw e;
     }
@@ -163,7 +162,7 @@ public class ContactUCCImpl implements ContactUCC {
       dalServices.commitTransaction();
       Logs.log(Level.DEBUG, "ContactUCC (admit) : success!");
       return contactDTO;
-    } catch (FatalException e) {
+    } catch (Exception e) {
       dalServices.rollbackTransaction();
       throw e;
     }
@@ -200,7 +199,7 @@ public class ContactUCCImpl implements ContactUCC {
       dalServices.commitTransaction();
       Logs.log(Level.DEBUG, "ContactUCC (turnDown) : success!");
       return contactDTO;
-    } catch (FatalException e) {
+    } catch (Exception e) {
       dalServices.rollbackTransaction();
       throw e;
     }
