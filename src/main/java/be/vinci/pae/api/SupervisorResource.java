@@ -15,6 +15,9 @@ import jakarta.ws.rs.core.MediaType;
 import org.apache.logging.log4j.Level;
 import org.glassfish.jersey.server.ContainerRequest;
 
+/**
+ * SupervisorResource class.
+ */
 @Singleton
 @Path("/supervisors")
 public class SupervisorResource {

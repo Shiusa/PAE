@@ -19,7 +19,7 @@ import org.apache.logging.log4j.Level;
 import org.glassfish.jersey.server.ContainerRequest;
 
 /**
- * CompanyResource class.
+ * InternshipResource class.
  */
 @Singleton
 @Path("/internships")
