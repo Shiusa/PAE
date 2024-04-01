@@ -26,7 +26,7 @@ public class SupervisorResource {
   private SupervisorUCC supervisorUCC;
 
   /**
-   * returns an internship by a student id.
+   * returns a supervisor by a supervisor id.
    *
    * @param request the token from the front.
    * @param id      of the supervisor
