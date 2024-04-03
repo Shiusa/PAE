@@ -1,4 +1,4 @@
-package be.vinci.pae.services.utils;
+package be.vinci.pae.services.dao;
 
 import be.vinci.pae.domain.dto.CompanyDTO;
 import be.vinci.pae.domain.dto.ContactDTO;
@@ -12,7 +12,7 @@ import java.sql.SQLException;
 /**
  * DTO attribute setter class.
  */
-public class DTOSetServices {
+class DTOSetServices {
 
   /**
    * Set all companyDTO attribute.
