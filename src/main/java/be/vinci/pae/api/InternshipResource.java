@@ -1,7 +1,6 @@
 package be.vinci.pae.api;
 
 import be.vinci.pae.api.filters.Authorize;
-import be.vinci.pae.domain.dto.CompanyDTO;
 import be.vinci.pae.domain.dto.ContactDTO;
 import be.vinci.pae.domain.dto.InternshipDTO;
 import be.vinci.pae.domain.dto.SupervisorDTO;
@@ -64,7 +63,7 @@ public class InternshipResource {
       throw new WebApplicationException("unauthorized", Response.Status.UNAUTHORIZED);
     }
     InternshipDTO internship = internshipUCC.getOneByStudent(user.getId());
-    return buildJsonMapperInternship(internship, user);
+    return buildJsonMapperInternship(internship);
   }
 
   /**
@@ -82,25 +81,24 @@ public class InternshipResource {
     Logs.log(Level.INFO, "InternshipResource (getOneInternship) : entrance");
     UserDTO user = (UserDTO) request.getProperty("user");
     InternshipDTO internship = internshipUCC.getOneById(id, user.getId());
-    return buildJsonMapperInternship(internship, user);
+    return buildJsonMapperInternship(internship);
   }
 
   /**
    * Build the ObjectNode with user, contact, company, supervisor, and internship.
    *
    * @param internship the internship.
-   * @param user       the user.
    * @return the objectnode built.
    */
-  private ObjectNode buildJsonMapperInternship(InternshipDTO internship, UserDTO user) {
+  private ObjectNode buildJsonMapperInternship(InternshipDTO internship) {
     ContactDTO contact = contactUCC.getOneById(internship.getContact());
-    CompanyDTO company = companyUCC.findOneById(contact.getCompany());
+    // CompanyDTO company = companyUCC.findOneById(contact.getCompany());
     SupervisorDTO supervisor = supervisorUCC.getOneById(internship.getSupervisor());
 
     return jsonMapper.createObjectNode().putPOJO("internship", internship)
         .putPOJO("contact", contact)
-        .putPOJO("company", company)
-        .putPOJO("user", user)
+        .putPOJO("company", contact.getCompany())
+        .putPOJO("user", contact.getStudent())
         .putPOJO("supervisor", supervisor);
   }
 

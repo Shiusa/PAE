@@ -71,17 +71,16 @@ public class CompanyDAOImpl implements CompanyDAO {
           WHERE student = ?
         )
         """;
-    PreparedStatement ps = dalServices.getPreparedStatement(requestSql);
-    try {
+
+    try (PreparedStatement ps = dalServices.getPreparedStatement(requestSql)) {
       ps.setInt(1, userId);
+      List<CompanyDTO> companyDTOList = buildCompanyList(ps);
+
+      Logs.log(Level.DEBUG, "CompanyDAO (getAllCompaniesByUserId) : success!");
+      return companyDTOList;
     } catch (SQLException e) {
       throw new FatalException(e);
     }
-
-    List<CompanyDTO> companyDTOList = buildCompanyList(ps);
-
-    Logs.log(Level.DEBUG, "CompanyDAO (getAllCompaniesByUserId) : success!");
-    return companyDTOList;
   }
 
   /**
@@ -97,17 +96,11 @@ public class CompanyDAOImpl implements CompanyDAO {
         CompanyDTO companyDTO = buildCompanyDTO(rs);
         companyDTOList.add(companyDTO);
       }
+      return companyDTOList;
     } catch (SQLException e) {
       Logs.log(Level.FATAL, "CompanyDAO (getAllCompaniesByUserId) : internal error!");
       throw new FatalException(e);
-    } finally {
-      try {
-        ps.close();
-      } catch (SQLException e) {
-        throw new FatalException(e);
-      }
     }
-    return companyDTOList;
   }
 
   /**
@@ -119,14 +112,12 @@ public class CompanyDAOImpl implements CompanyDAO {
   private CompanyDTO buildCompanyDTO(PreparedStatement ps) {
     try (ResultSet rs = ps.executeQuery()) {
       if (rs.next()) {
-        CompanyDTO company = buildCompanyDTO(rs);
-        rs.close();
-        return company;
+        return buildCompanyDTO(rs);
       }
+      return null;
     } catch (SQLException e) {
       throw new FatalException(e);
     }
-    return null;
   }
 
   /**
