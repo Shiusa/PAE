@@ -17,6 +17,15 @@ public interface CompanyDAO {
   CompanyDTO getOneCompanyById(int id);
 
   /**
+   * Get one company by it's name and designation.
+   *
+   * @param name        name of the company.
+   * @param designation designation of the company.
+   * @return the CompanyDTO if found, null otherwise.
+   */
+  CompanyDTO getOneCompanyByNameDesignation(String name, String designation);
+
+  /**
    * Get all users.
    *
    * @return a list of all users.
@@ -30,5 +39,13 @@ public interface CompanyDAO {
    * @return a list of all users.
    */
   List<CompanyDTO> getAllCompaniesByUserId(int userId);
+
+  /**
+   * Add one company.
+   *
+   * @param company company to add.
+   * @return CompanyDTO of added company, null otherwise.
+   */
+  CompanyDTO addOneCompany(CompanyDTO company);
 
 }

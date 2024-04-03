@@ -6,6 +6,7 @@ import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.CompanyDAO;
 import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.utils.Logs;
+import be.vinci.pae.utils.exceptions.DuplicateException;
 import be.vinci.pae.utils.exceptions.FatalException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
 import jakarta.inject.Inject;
@@ -86,5 +87,38 @@ public class CompanyUCCImpl implements CompanyUCC {
       dalServices.rollbackTransaction();
       throw e;
     }
+  }
+
+  /**
+   * Register a company. If existing company with same name, it has to have a new designation.
+   *
+   * @param company company to add.
+   * @return CompanyDTO of added company, null otherwise.
+   */
+  @Override
+  public CompanyDTO registerCompany(CompanyDTO company) {
+
+    CompanyDTO registeredCompany;
+
+    try {
+      dalServices.startTransaction();
+      CompanyDTO existingCompany = companyDAO.getOneCompanyByNameDesignation(company.getName(),
+          company.getDesignation());
+      if (existingCompany != null) {
+        throw new DuplicateException(
+            "Already exist company with same name, add a different designation");
+      }
+
+      company.setIsBlacklisted(false);
+      company.setVersion(1);
+
+      registeredCompany = companyDAO.addOneCompany(company);
+      dalServices.commitTransaction();
+      return registeredCompany;
+    } catch (Exception e) {
+      dalServices.rollbackTransaction();
+      throw e;
+    }
+
   }
 }
