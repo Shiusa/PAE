@@ -81,8 +81,6 @@ public class UserDAOImpl implements UserDAO {
    * @return the userDTO built.
    */
   private UserDTO buildUserDTO(PreparedStatement ps) {
-    UserDTO user = userFactory.getUserDTO();
-
     try (ResultSet rs = ps.executeQuery()) {
       if (rs.next()) {
         return DTOSetServices.setUserDTO(userFactory.getUserDTO(), rs);
