@@ -42,7 +42,6 @@ public class UserDAOImpl implements UserDAO {
     try {
       ps.setString(1, email);
     } catch (SQLException e) {
-      Logs.log(Level.FATAL, "UserDAO (getOneUserByEmail) : internal error");
       throw new FatalException(e);
     }
     Logs.log(Level.DEBUG, "UserDAO (getOneUserByEmail) : success!");
@@ -62,7 +61,6 @@ public class UserDAOImpl implements UserDAO {
     try {
       ps.setInt(1, id);
     } catch (SQLException e) {
-      Logs.log(Level.FATAL, "UserDAO (getOneUserById) : internal error");
       throw new FatalException(e);
     }
     Logs.log(Level.DEBUG, "UserDAO (getOneUserById) : success!");
@@ -93,13 +91,11 @@ public class UserDAOImpl implements UserDAO {
       }
       return null;
     } catch (SQLException e) {
-      Logs.log(Level.FATAL, "UserDAO (buildUserDTO) : internal error!");
       throw new FatalException(e);
     } finally {
       try {
         ps.close();
       } catch (SQLException e) {
-        Logs.log(Level.FATAL, "UserDAO (buildUserDTO) : internal error!");
         throw new FatalException(e);
       }
     }
@@ -133,7 +129,6 @@ public class UserDAOImpl implements UserDAO {
         }
       }
     } catch (SQLException e) {
-      Logs.log(Level.FATAL, "UserDAO (getAllUsers) : internal error!");
       throw new FatalException(e);
     }
     Logs.log(Level.DEBUG, "UserDAO (getAllUsers) : success!");
@@ -173,7 +168,6 @@ public class UserDAOImpl implements UserDAO {
         return null;
       }
     } catch (SQLException e) {
-      Logs.log(Level.FATAL, "UserDAO (addOneUser) : internal error");
       throw new FatalException(e);
     }
 

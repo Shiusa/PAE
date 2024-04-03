@@ -138,7 +138,6 @@ public class UserResource {
     Logs.log(Level.INFO, "UserResource (getOneUser) : entrance");
     UserDTO userCheck = (UserDTO) request.getProperty("user");
     if (userCheck.getId() != id) {
-      Logs.log(Level.ERROR, "UserResource (getOneUser) : unauthorized");
       throw new WebApplicationException("you can't see this user", Response.Status.UNAUTHORIZED);
     }
     UserDTO userDTO = userUCC.getOneById(id);
@@ -146,7 +145,6 @@ public class UserResource {
     try {
       user = jsonMapper.writeValueAsString(userDTO);
     } catch (JsonProcessingException e) {
-      Logs.log(Level.FATAL, "UserResource (getOneUser) : internal error");
       throw new WebApplicationException("internal error", Status.INTERNAL_SERVER_ERROR);
     }
     Logs.log(Level.INFO, "UserResource (getOneUser) : success!");

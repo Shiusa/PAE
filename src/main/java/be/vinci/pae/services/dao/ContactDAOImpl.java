@@ -41,7 +41,6 @@ public class ContactDAOImpl implements ContactDAO {
       ps.setInt(2, studentId);
       ps.setString(3, schoolYear);
     } catch (SQLException e) {
-      Logs.log(Level.FATAL, "ContactDAO (findContactByCompanyStudentSchoolYear) : internal error");
       throw new FatalException(e);
     }
 
@@ -50,7 +49,6 @@ public class ContactDAOImpl implements ContactDAO {
     try {
       ps.close();
     } catch (SQLException e) {
-      Logs.log(Level.FATAL, "ContactDAO (findContactByCompanyStudentSchoolYear) : internal error");
       throw new FatalException(e);
     }
 
@@ -73,7 +71,6 @@ public class ContactDAOImpl implements ContactDAO {
       ps.setString(4, schoolYear);
       ps.setInt(5, 1);
     } catch (SQLException e) {
-      Logs.log(Level.FATAL, "ContactDAO (startContact) : internal error");
       throw new FatalException(e);
     }
 
@@ -81,7 +78,6 @@ public class ContactDAOImpl implements ContactDAO {
     try {
       ps.close();
     } catch (SQLException e) {
-      Logs.log(Level.FATAL, "ContactDAO (startContact) : internal error");
       throw new FatalException(e);
     }
     Logs.log(Level.DEBUG, "ContactDAO (startContact) : success!");
@@ -100,14 +96,12 @@ public class ContactDAOImpl implements ContactDAO {
     try {
       ps.setInt(1, contactId);
     } catch (SQLException e) {
-      Logs.log(Level.FATAL, "ContactDAO (findContactById) : internal error");
       throw new FatalException(e);
     }
     ContactDTO contact = buildContactDTO(ps);
     try {
       ps.close();
     } catch (SQLException e) {
-      Logs.log(Level.FATAL, "ContactDAO (findContactById) : internal error");
       throw new FatalException(e);
     }
 
@@ -190,13 +184,11 @@ public class ContactDAOImpl implements ContactDAO {
       }
       return null;
     } catch (SQLException e) {
-      Logs.log(Level.FATAL, "CompanyDAO (buildCompanyDTO) : internal error!");
       throw new DuplicateException();
     } finally {
       try {
         ps.close();
       } catch (SQLException e) {
-        Logs.log(Level.FATAL, "CompanyDAO (buildCompanyDTO) : internal error!");
         throw new FatalException(e);
       }
     }
@@ -219,15 +211,12 @@ public class ContactDAOImpl implements ContactDAO {
       ps.setInt(4, contactId);
       ps.setInt(5, version);
     } catch (SQLException e) {
-      Logs.log(Level.FATAL, "ContactDAO (admit) : internal error");
-      e.printStackTrace();
       throw new FatalException(e);
     }
     ContactDTO contact = buildContactDTO(ps);
     try {
       ps.close();
     } catch (SQLException e) {
-      Logs.log(Level.FATAL, "ContactDAO (admit) : internal error");
       throw new FatalException(e);
     }
     Logs.log(Level.DEBUG, "ContactDAO (admit) : success!");
@@ -252,7 +241,6 @@ public class ContactDAOImpl implements ContactDAO {
       ps.setInt(4, contactId);
       ps.setInt(5, version);
     } catch (SQLException e) {
-      Logs.log(Level.FATAL, "ContactDAO (turnDown) : internal error");
       throw new FatalException(e);
     }
 
@@ -261,7 +249,6 @@ public class ContactDAOImpl implements ContactDAO {
     try {
       ps.close();
     } catch (SQLException e) {
-      Logs.log(Level.FATAL, "ContactDAO (turnDown) : internal error");
       throw new RuntimeException(e);
     }
     Logs.log(Level.DEBUG, "ContactDAO (turnDown) : success!");

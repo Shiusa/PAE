@@ -17,7 +17,7 @@ const UserListPage = async () => {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'TeacherAndAdministrative': user.token
+          'Authorization': user.token
         }
       }
       const response = await fetch('api/users/all', options);

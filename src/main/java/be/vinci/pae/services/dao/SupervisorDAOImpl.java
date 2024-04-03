@@ -34,7 +34,6 @@ public class SupervisorDAOImpl implements SupervisorDAO {
     try {
       ps.setInt(1, id);
     } catch (SQLException e) {
-      Logs.log(Level.FATAL, "SupervisorDAOImpl (getOneById) : internal error");
       throw new FatalException(e);
     }
 
@@ -57,13 +56,11 @@ public class SupervisorDAOImpl implements SupervisorDAO {
       }
       return null;
     } catch (SQLException e) {
-      Logs.log(Level.FATAL, "CompanyDAO (buildCompanyDTO) : internal error!");
       throw new DuplicateException();
     } finally {
       try {
         ps.close();
       } catch (SQLException e) {
-        Logs.log(Level.FATAL, "CompanyDAO (buildCompanyDTO) : internal error!");
         throw new FatalException(e);
       }
     }

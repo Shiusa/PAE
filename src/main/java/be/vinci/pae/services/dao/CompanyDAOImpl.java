@@ -35,7 +35,6 @@ public class CompanyDAOImpl implements CompanyDAO {
     try {
       ps.setInt(1, id);
     } catch (SQLException e) {
-      Logs.log(Level.FATAL, "CompanyDAO (getOneCompanyById) : internal error");
       throw new FatalException(e);
     }
     Logs.log(Level.DEBUG, "CompanyDAO (getOneCompanyById) : success!");
@@ -98,7 +97,6 @@ public class CompanyDAOImpl implements CompanyDAO {
         companyDTOList.add(companyDTO);
       }
     } catch (SQLException e) {
-      Logs.log(Level.FATAL, "CompanyDAO (getAllCompaniesByUserId) : internal error!");
       throw new FatalException(e);
     } finally {
       try {

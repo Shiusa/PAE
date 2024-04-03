@@ -60,7 +60,7 @@ public class WebExceptionMapper implements ExceptionMapper<Throwable> {
       Logs.log(Level.ERROR, "Error : " + exception);
       return ((WebApplicationException) exception).getResponse();
     }
-    Logs.log(Level.ERROR, "Error : " + exception);
+    Logs.log(Level.FATAL, "Error : " + exception);
     return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
         .entity(exception.getMessage())
         .type(MediaType.TEXT_PLAIN)

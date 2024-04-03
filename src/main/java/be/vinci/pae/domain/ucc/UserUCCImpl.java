@@ -124,7 +124,6 @@ public class UserUCCImpl implements UserUCC {
       dalServices.startTransaction();
       UserDTO existingUser = userDAO.getOneUserByEmail(user.getEmail());
       if (existingUser != null) {
-        Logs.log(Level.DEBUG, "UserUCC (register) : already existing user");
         throw new DuplicateException("Cannot add existing user");
       }
 
@@ -137,7 +136,6 @@ public class UserUCCImpl implements UserUCC {
       Logs.log(Level.DEBUG, "UserUCC (register) : success!");
       return registeredUser;
     } catch (Exception e) {
-      Logs.log(Level.ERROR, "UserUCC (register) : registration failed");
       dalServices.rollbackTransaction();
       throw e;
     }

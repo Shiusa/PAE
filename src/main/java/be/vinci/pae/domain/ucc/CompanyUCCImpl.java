@@ -75,7 +75,6 @@ public class CompanyUCCImpl implements CompanyUCC {
       UserDTO user = userDAO.getOneUserById(userId);
       if (user == null) {
         dalServices.rollbackTransaction();
-        Logs.log(Level.ERROR, "CompanyUCC (getAllCompaniesByUser) : user not found");
         throw new ResourceNotFoundException();
       }
       companyList = companyDAO.getAllCompaniesByUserId(userId);

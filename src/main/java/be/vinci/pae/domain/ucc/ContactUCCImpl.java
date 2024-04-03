@@ -41,20 +41,14 @@ public class ContactUCCImpl implements ContactUCC {
       UserDTO studentDTO = userDAO.getOneUserById(studentId);
       if (studentDTO == null) {
         dalServices.rollbackTransaction();
-        Logs.log(Level.ERROR,
-            "ContactUCC (start) : student not found");
         throw new ResourceNotFoundException();
       }
       Company company2 = (Company) companyDAO.getOneCompanyById(company);
       if (company2 == null) {
         dalServices.rollbackTransaction();
-        Logs.log(Level.ERROR,
-            "ContactUCC (start) : company not found");
         throw new ResourceNotFoundException();
       } else if (!company2.studentCanContact()) {
         dalServices.rollbackTransaction();
-        Logs.log(Level.ERROR,
-            "ContactUCC (start) : company is blacklisted");
         throw new InvalidRequestException();
       }
 
@@ -63,8 +57,6 @@ public class ContactUCCImpl implements ContactUCC {
           .findContactByCompanyStudentSchoolYear(company, studentId, schoolYear);
       if (contactFound != null) {
         dalServices.rollbackTransaction();
-        Logs.log(Level.ERROR,
-            "ContactUCC (start) : contact already exist with this student, company, year");
         throw new DuplicateException("This contact already exist for this year.");
       }
 
@@ -113,8 +105,6 @@ public class ContactUCCImpl implements ContactUCC {
       contact = (Contact) contactDAO.findContactById(contactId);
       if (contact == null) {
         dalServices.rollbackTransaction();
-        Logs.log(Level.ERROR,
-            "ContactUCC (unsupervise) : contact not found");
         throw new ResourceNotFoundException();
       }
       int version = contact.getVersion();
@@ -146,7 +136,6 @@ public class ContactUCCImpl implements ContactUCC {
       contact = (Contact) contactDAO.findContactById(contactId);
       if (contact == null) {
         dalServices.rollbackTransaction();
-        Logs.log(Level.ERROR, "ContactUCC (admit) : contact not found");
         throw new ResourceNotFoundException();
       }
       int version = contact.getVersion();
@@ -156,18 +145,14 @@ public class ContactUCCImpl implements ContactUCC {
       throw e;
     }
     if (contact.getStudent() != studentId) {
-      Logs.log(Level.ERROR,
-          "ContactUCC (admit) : the student of the contact isn't the student from the token");
       dalServices.rollbackTransaction();
       throw new NotAllowedException();
     }
     if (!contact.checkMeeting(meeting)) {
-      Logs.log(Level.ERROR, "ContactUCC (admit) : type meeting is invalid");
       dalServices.rollbackTransaction();
       throw new InvalidRequestException();
     }
     if (!contact.isStarted()) {
-      Logs.log(Level.ERROR, "ContactUCC (admit) : contact's state isn't started");
       dalServices.rollbackTransaction();
       throw new InvalidRequestException();
     }
@@ -186,7 +171,6 @@ public class ContactUCCImpl implements ContactUCC {
       contact = (Contact) contactDAO.findContactById(contactId);
       if (contact == null) {
         dalServices.rollbackTransaction();
-        Logs.log(Level.ERROR, "ContactUCC (turnDown) : contact not found");
         throw new ResourceNotFoundException();
       }
       int version = contact.getVersion();
@@ -196,13 +180,10 @@ public class ContactUCCImpl implements ContactUCC {
       throw e;
     }
     if (contact.getStudent() != studentId) {
-      Logs.log(Level.ERROR,
-          "ContactUCC (turnDown) : the student of the contact isn't the student from the token");
       dalServices.rollbackTransaction();
       throw new NotAllowedException();
     }
     if (!contact.isAdmitted()) {
-      Logs.log(Level.ERROR, "ContactUCC (turnDown) : contact's state not admitted");
       dalServices.rollbackTransaction();
       throw new InvalidRequestException();
     }
