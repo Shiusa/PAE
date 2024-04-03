@@ -5,6 +5,7 @@ import be.vinci.pae.domain.SupervisorFactory;
 import be.vinci.pae.domain.dto.CompanyDTO;
 import be.vinci.pae.domain.dto.SupervisorDTO;
 import be.vinci.pae.services.dal.DalBackendServices;
+import be.vinci.pae.services.utils.DTOSetServices;
 import be.vinci.pae.utils.Logs;
 import be.vinci.pae.utils.exceptions.DuplicateException;
 import be.vinci.pae.utils.exceptions.FatalException;
@@ -51,8 +52,9 @@ public class SupervisorDAOImpl implements SupervisorDAO {
   private SupervisorDTO buildSupervisorDTO(PreparedStatement ps) {
     try (ResultSet rs = ps.executeQuery()) {
       if (rs.next()) {
-        CompanyDTO companyDTO = setCompanyDTO(rs);
-        return setSupervisorDTO(rs, companyDTO);
+        CompanyDTO companyDTO = DTOSetServices.setCompanyDTO(companyFactory.getCompanyDTO(), rs);
+        return DTOSetServices.setSupervisorDTO(supervisorFactory.getSupervisorDTO(), rs,
+            companyDTO);
       }
       return null;
     } catch (SQLException e) {

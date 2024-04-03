@@ -8,6 +8,7 @@ import be.vinci.pae.domain.dto.CompanyDTO;
 import be.vinci.pae.domain.dto.ContactDTO;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.services.dal.DalBackendServices;
+import be.vinci.pae.services.utils.DTOSetServices;
 import be.vinci.pae.utils.Logs;
 import be.vinci.pae.utils.exceptions.DuplicateException;
 import be.vinci.pae.utils.exceptions.FatalException;
@@ -173,9 +174,13 @@ public class ContactDAOImpl implements ContactDAO {
       ps.setInt(1, student);
       try (ResultSet rs = ps.executeQuery()) {
         while (rs.next()) {
-          CompanyDTO companyDTO = setCompanyDTO(rs);
+          /*CompanyDTO companyDTO = setCompanyDTO(rs);
           UserDTO studentDTO = setUserDTO(rs);
-          ContactDTO contactDTO = setContactDTO(rs, companyDTO, studentDTO);
+          ContactDTO contactDTO = setContactDTO(rs, companyDTO, studentDTO);*/
+          CompanyDTO companyDTO = DTOSetServices.setCompanyDTO(companyFactory.getCompanyDTO(), rs);
+          UserDTO studentDTO = DTOSetServices.setUserDTO(userFactory.getUserDTO(), rs);
+          ContactDTO contactDTO = DTOSetServices.setContactDTO(contactFactory.getContactDTO(), rs,
+              companyDTO, studentDTO);
           contactDTOList.add(contactDTO);
         }
       }
@@ -241,9 +246,13 @@ public class ContactDAOImpl implements ContactDAO {
   private ContactDTO buildContactDTO(PreparedStatement ps) {
     try (ResultSet rs = ps.executeQuery()) {
       if (rs.next()) {
-        CompanyDTO companyDTO = setCompanyDTO(rs);
+        /*CompanyDTO companyDTO = setCompanyDTO(rs);
         UserDTO studentDTO = setUserDTO(rs);
-        return setContactDTO(rs, companyDTO, studentDTO);
+        return setContactDTO(rs, companyDTO, studentDTO);*/
+        CompanyDTO companyDTO = DTOSetServices.setCompanyDTO(companyFactory.getCompanyDTO(), rs);
+        UserDTO studentDTO = DTOSetServices.setUserDTO(userFactory.getUserDTO(), rs);
+        return DTOSetServices.setContactDTO(contactFactory.getContactDTO(), rs, companyDTO,
+            studentDTO);
       }
       return null;
     } catch (SQLException e) {

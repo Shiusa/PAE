@@ -11,6 +11,7 @@ import be.vinci.pae.domain.dto.InternshipDTO;
 import be.vinci.pae.domain.dto.SupervisorDTO;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.services.dal.DalBackendServices;
+import be.vinci.pae.services.utils.DTOSetServices;
 import be.vinci.pae.utils.exceptions.FatalException;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
@@ -110,11 +111,14 @@ public class InternshipDAOImpl implements InternshipDAO {
   private InternshipDTO buildInternshipDTO(PreparedStatement ps) {
     try (ResultSet rs = ps.executeQuery()) {
       if (rs.next()) {
-        CompanyDTO companyDTO = setCompanyDTO(rs);
-        UserDTO student = setUserDTO(rs);
-        ContactDTO contactDTO = setContactDTO(rs, companyDTO, student);
-        SupervisorDTO supervisorDTO = setSupervisorDTO(rs, companyDTO);
-        return setInternshipDTO(rs, contactDTO, supervisorDTO);
+        CompanyDTO companyDTO = DTOSetServices.setCompanyDTO(companyFactory.getCompanyDTO(), rs);
+        UserDTO student = DTOSetServices.setUserDTO(userFactory.getUserDTO(), rs);
+        ContactDTO contactDTO = DTOSetServices.setContactDTO(contactFactory.getContactDTO(), rs,
+            companyDTO, student);
+        SupervisorDTO supervisorDTO = DTOSetServices.setSupervisorDTO(
+            supervisorFactory.getSupervisorDTO(), rs, companyDTO);
+        return DTOSetServices.setInternshipDTO(internshipFactory.getInternshipDTO(), rs, contactDTO,
+            supervisorDTO);
       }
       return null;
     } catch (SQLException e) {
