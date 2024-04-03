@@ -71,9 +71,9 @@ public class DalServicesImpl implements DalServices, DalBackendServices {
    * @return Connection.
    */
   private Connection getConnection() {
-    Logs.log(Level.DEBUG, "DalServices (getConnection) : entrance");
-    Connection connection = connectionThreadLocal.get();
     try {
+      Logs.log(Level.DEBUG, "DalServices (getConnection) : entrance");
+      Connection connection = connectionThreadLocal.get();
       if (connection == null || connection.isClosed()) {
         connectionThreadLocal.remove();
         Logs.log(Level.DEBUG, "DalServices (getConnection) : connection null -> getDataSource");
@@ -82,12 +82,12 @@ public class DalServicesImpl implements DalServices, DalBackendServices {
         Logs.log(Level.DEBUG, "DalServices (getConnection) : success!");
         return connectionThreadLocal.get();
       }
+      Logs.log(Level.DEBUG, "DalServices (getConnection) : success!");
+      return connection;
     } catch (SQLException e) {
       Logs.log(Level.FATAL, "DalServices (getConnection) : internal error ! " + e);
       throw new FatalException(e);
     }
-    Logs.log(Level.DEBUG, "DalServices (getConnection) : success!");
-    return connection;
   }
 
   /**

@@ -4,7 +4,6 @@ import be.vinci.pae.domain.dto.InternshipDTO;
 import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.ContactDAO;
 import be.vinci.pae.services.dao.InternshipDAO;
-import be.vinci.pae.utils.exceptions.FatalException;
 import be.vinci.pae.utils.exceptions.NotAllowedException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
 import jakarta.inject.Inject;
@@ -29,15 +28,14 @@ public class InternshipUCCImpl implements InternshipUCC {
       dalServices.startTransaction();
       internship = internshipDAO.getOneInternshipByIdUser(student);
       if (internship == null) {
-        dalServices.commitTransaction();
-        return null;
+        throw new ResourceNotFoundException();
       }
-    } catch (FatalException e) {
+      dalServices.commitTransaction();
+      return internship;
+    } catch (Exception e) {
       dalServices.rollbackTransaction();
       throw e;
     }
-    dalServices.commitTransaction();
-    return internship;
   }
 
 
@@ -48,19 +46,17 @@ public class InternshipUCCImpl implements InternshipUCC {
       dalServices.startTransaction();
       internship = internshipDAO.getOneInternshipById(id);
       if (internship == null) {
-        dalServices.rollbackTransaction();
         throw new ResourceNotFoundException();
-      } else if (contactDAO.findContactById(internship.getContact()).getStudent().getId()
+      } else if (internship.getContact().getStudent().getId()
           != actualStudent) {
-        dalServices.rollbackTransaction();
         throw new NotAllowedException();
       }
-    } catch (FatalException e) {
+      dalServices.commitTransaction();
+      return internship;
+    } catch (Exception e) {
       dalServices.rollbackTransaction();
       throw e;
     }
-    dalServices.commitTransaction();
-    return internship;
   }
 
 }
