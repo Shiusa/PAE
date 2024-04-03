@@ -63,37 +63,4 @@ public class SupervisorDAOImpl implements SupervisorDAO {
     }
   }
 
-  private CompanyDTO setCompanyDTO(ResultSet rs) {
-    CompanyDTO companyDTO = companyFactory.getCompanyDTO();
-    try {
-      companyDTO.setId(rs.getInt("company_id"));
-      companyDTO.setName(rs.getString("name"));
-      companyDTO.setDesignation(rs.getString("designation"));
-      companyDTO.setAddress(rs.getString("address"));
-      companyDTO.setPhoneNumber(rs.getString("cm_phone_number"));
-      companyDTO.setEmail(rs.getString("cm_email"));
-      companyDTO.setIsBlacklisted(rs.getBoolean("is_blacklisted"));
-      companyDTO.setBlacklistMotivation(rs.getString("blacklist_motivation"));
-      companyDTO.setVersion(rs.getInt("cm_version"));
-      return companyDTO;
-    } catch (SQLException e) {
-      throw new FatalException(e);
-    }
-  }
-
-  private SupervisorDTO setSupervisorDTO(ResultSet rs, CompanyDTO companyDTO) {
-    SupervisorDTO supervisorDTO = supervisorFactory.getSupervisorDTO();
-    try {
-      supervisorDTO.setId(rs.getInt("supervisor_id"));
-      supervisorDTO.setCompany(companyDTO);
-      supervisorDTO.setLastname(rs.getString("su_lastname"));
-      supervisorDTO.setFirstname(rs.getString("su_firstname"));
-      supervisorDTO.setPhoneNumber(rs.getString("su_phone_number"));
-      supervisorDTO.setEmail(rs.getString("su_email"));
-      return supervisorDTO;
-    } catch (SQLException e) {
-      throw new FatalException(e);
-    }
-  }
-
 }

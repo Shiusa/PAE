@@ -9,8 +9,18 @@ import be.vinci.pae.utils.exceptions.FatalException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * DTO attribute setter class.
+ */
 public class DTOSetServices {
 
+  /**
+   * Set all companyDTO attribute.
+   *
+   * @param companyDTO CompanyDTO to set attribute on.
+   * @param rs         data to retrieves from.
+   * @return CompanyDTO with its attribute set.
+   */
   public static CompanyDTO setCompanyDTO(CompanyDTO companyDTO, ResultSet rs) {
     try {
       companyDTO.setId(rs.getInt("company_id"));
@@ -28,6 +38,13 @@ public class DTOSetServices {
     }
   }
 
+  /**
+   * Set all contactDTO attribute.
+   *
+   * @param contactDTO ContactDTO to set attribute on.
+   * @param rs         data to retrieves from.
+   * @return ContactDTO with its attribute set.
+   */
   public static ContactDTO setContactDTO(ContactDTO contactDTO, ResultSet rs,
       CompanyDTO companyDTO,
       UserDTO studentDTO) {
@@ -46,6 +63,13 @@ public class DTOSetServices {
     }
   }
 
+  /**
+   * Set all internshipDTO attribute.
+   *
+   * @param internship internshipDTO to set attribute on.
+   * @param rs         data to retrieves from.
+   * @return InternshipDTO with its attribute set.
+   */
   public static InternshipDTO setInternshipDTO(InternshipDTO internship, ResultSet rs,
       ContactDTO contactDTO,
       SupervisorDTO supervisorDTO) {
@@ -62,6 +86,13 @@ public class DTOSetServices {
     }
   }
 
+  /**
+   * Set all companyDTO attribute.
+   *
+   * @param supervisorDTO SupervisorDTO to set attribute on.
+   * @param rs            data to retrieves from.
+   * @return SupervisorDTO with its attribute set.
+   */
   public static SupervisorDTO setSupervisorDTO(SupervisorDTO supervisorDTO, ResultSet rs,
       CompanyDTO companyDTO) {
     try {
@@ -77,6 +108,13 @@ public class DTOSetServices {
     }
   }
 
+  /**
+   * Set all companyDTO attribute.
+   *
+   * @param studentDTO UserDTO to set attribute on.
+   * @param rs         data to retrieves from.
+   * @return UserDTO with its attribute set.
+   */
   public static UserDTO setUserDTO(UserDTO studentDTO, ResultSet rs) {
     try {
       studentDTO.setId(rs.getInt("user_id"));

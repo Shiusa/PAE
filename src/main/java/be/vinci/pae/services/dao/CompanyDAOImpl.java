@@ -28,7 +28,8 @@ public class CompanyDAOImpl implements CompanyDAO {
   public CompanyDTO getOneCompanyById(int id) {
     Logs.log(Level.INFO, "UserDAO (getOneUserByEmail) : entrance");
     String requestSql = """
-        SELECT cm.company_id, cm.name, cm.designation, cm.address, cm.phone_number AS cm_phone_number,
+        SELECT cm.company_id, cm.name, cm.designation, cm.address,
+        cm.phone_number AS cm_phone_number,
         cm.email AS cm_email, cm.is_blacklisted, cm.blacklist_motivation, cm.version AS cm_version
         FROM prostage.companies cm
         WHERE company_id = ?
@@ -49,7 +50,8 @@ public class CompanyDAOImpl implements CompanyDAO {
     Logs.log(Level.DEBUG, "CompanyDAO (getAllCompanies) : entrance");
 
     String requestSql = """
-        SELECT cm.company_id, cm.name, cm.designation, cm.address, cm.phone_number AS cm_phone_number,
+        SELECT cm.company_id, cm.name, cm.designation, cm.address,
+        cm.phone_number AS cm_phone_number,
         cm.email AS cm_email, cm.is_blacklisted, cm.blacklist_motivation, cm.version AS cm_version
         FROM prostage.companies cm
         """;
@@ -66,7 +68,8 @@ public class CompanyDAOImpl implements CompanyDAO {
     Logs.log(Level.DEBUG, "CompanyDAO (getAllCompaniesByUserId) : entrance");
 
     String requestSql = """
-        SELECT cm.company_id, cm.name, cm.designation, cm.address, cm.phone_number AS cm_phone_number,
+        SELECT cm.company_id, cm.name, cm.designation, cm.address,
+        cm.phone_number AS cm_phone_number,
         cm.email AS cm_email, cm.is_blacklisted, cm.blacklist_motivation, cm.version AS cm_version
         FROM prostage.companies cm
         WHERE cm.company_id NOT IN (

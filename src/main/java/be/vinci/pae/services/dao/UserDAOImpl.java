@@ -34,7 +34,8 @@ public class UserDAOImpl implements UserDAO {
   public UserDTO getOneUserByEmail(String email) {
     Logs.log(Level.DEBUG, "UserDAO (getOneUserByEmail) : entrance");
     String requestSql = """
-        SELECT us.user_id, us.email AS us_email, us.lastname AS us_lastname, us.firstname AS us_firstname,
+        SELECT us.user_id, us.email AS us_email, us.lastname AS us_lastname,
+        us.firstname AS us_firstname,
         us.phone_number AS us_phone_number, us.password, us.registration_date,
         us.school_year AS us_school_year, us.role
         FROM prostage.users us
@@ -55,7 +56,8 @@ public class UserDAOImpl implements UserDAO {
   public UserDTO getOneUserById(int id) {
     Logs.log(Level.INFO, "UserDAO (getOneUserById) : entrance");
     String requestSql = """
-        SELECT us.user_id, us.email AS us_email, us.lastname AS us_lastname, us.firstname AS us_firstname,
+        SELECT us.user_id, us.email AS us_email, us.lastname AS us_lastname,
+        us.firstname AS us_firstname,
         us.phone_number AS us_phone_number, us.password, us.registration_date,
         us.school_year AS us_school_year, us.role
         FROM prostage.users us
@@ -83,16 +85,6 @@ public class UserDAOImpl implements UserDAO {
 
     try (ResultSet rs = ps.executeQuery()) {
       if (rs.next()) {
-        /*user.setId(rs.getInt("user_id"));
-        user.setEmail(rs.getString("email"));
-        user.setLastname(rs.getString("lastname"));
-        user.setFirstname(rs.getString("firstname"));
-        user.setPhoneNumber(rs.getString("phone_number"));
-        user.setPassword(rs.getString("password"));
-        user.setRegistrationDate(rs.getDate("registration_date"));
-        user.setSchoolYear(rs.getString("school_year"));
-        user.setRole(rs.getString("role"));
-        return user;*/
         return DTOSetServices.setUserDTO(userFactory.getUserDTO(), rs);
       }
       return null;
@@ -108,7 +100,8 @@ public class UserDAOImpl implements UserDAO {
     List<UserDTO> userDTOList = new ArrayList<>();
 
     String requestSql = """
-        SELECT us.user_id, us.email AS us_email, us.lastname AS us_lastname, us.firstname AS us_firstname,
+        SELECT us.user_id, us.email AS us_email, us.lastname AS us_lastname,
+        us.firstname AS us_firstname,
         us.phone_number AS us_phone_number, us.password, us.registration_date,
         us.school_year AS us_school_year, us.role
         FROM prostage.users us
@@ -117,17 +110,6 @@ public class UserDAOImpl implements UserDAO {
     try (PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql)) {
       try (ResultSet rs = ps.executeQuery()) {
         while (rs.next()) {
-          /*UserDTO userDTO = userFactory.getUserDTO();
-          userDTO.setId(rs.getInt(1));
-          userDTO.setEmail(rs.getString("email"));
-          userDTO.setLastname(rs.getString("lastname"));
-          userDTO.setFirstname(rs.getString("firstname"));
-          userDTO.setPhoneNumber(rs.getString("phone_number"));
-          userDTO.setPassword(rs.getString("password"));
-          userDTO.setRegistrationDate(rs.getDate("registration_date"));
-          userDTO.setSchoolYear(rs.getString("school_year"));
-          userDTO.setRole(rs.getString("role"));
-          userDTOList.add(userDTO);*/
           userDTOList.add(DTOSetServices.setUserDTO(userFactory.getUserDTO(), rs));
         }
       }
