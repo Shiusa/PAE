@@ -1,5 +1,7 @@
 package be.vinci.pae.domain;
 
+import be.vinci.pae.domain.dto.ContactDTO;
+import be.vinci.pae.domain.dto.SupervisorDTO;
 import java.util.Date;
 
 /**
@@ -8,8 +10,8 @@ import java.util.Date;
 class InternshipImpl implements Internship {
 
   private int id;
-  private int contact;
-  private int supervisor;
+  private ContactDTO contact;
+  private SupervisorDTO supervisor;
   private Date signatureDate;
   private String project;
   private String schoolYear;
@@ -25,22 +27,22 @@ class InternshipImpl implements Internship {
   }
 
   @Override
-  public int getContact() {
+  public ContactDTO getContact() {
     return contact;
   }
 
   @Override
-  public void setContact(int contact) {
+  public void setContact(ContactDTO contact) {
     this.contact = contact;
   }
 
   @Override
-  public int getSupervisor() {
+  public SupervisorDTO getSupervisor() {
     return supervisor;
   }
 
   @Override
-  public void setSupervisor(int supervisor) {
+  public void setSupervisor(SupervisorDTO supervisor) {
     this.supervisor = supervisor;
   }
 

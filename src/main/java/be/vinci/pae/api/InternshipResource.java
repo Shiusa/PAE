@@ -1,18 +1,10 @@
 package be.vinci.pae.api;
 
 import be.vinci.pae.api.filters.Authorize;
-import be.vinci.pae.domain.dto.CompanyDTO;
-import be.vinci.pae.domain.dto.ContactDTO;
 import be.vinci.pae.domain.dto.InternshipDTO;
-import be.vinci.pae.domain.dto.SupervisorDTO;
 import be.vinci.pae.domain.dto.UserDTO;
-import be.vinci.pae.domain.ucc.CompanyUCC;
-import be.vinci.pae.domain.ucc.ContactUCC;
 import be.vinci.pae.domain.ucc.InternshipUCC;
-import be.vinci.pae.domain.ucc.SupervisorUCC;
 import be.vinci.pae.utils.Logs;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.GET;
@@ -22,27 +14,19 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 import org.apache.logging.log4j.Level;
 import org.glassfish.jersey.server.ContainerRequest;
 
 /**
- * CompanyResource class.
+ * InternshipResource class.
  */
 @Singleton
 @Path("/internships")
 public class InternshipResource {
 
-  private final ObjectMapper jsonMapper = new ObjectMapper();
-
   @Inject
   private InternshipUCC internshipUCC;
-  @Inject
-  private ContactUCC contactUCC;
-  @Inject
-  private CompanyUCC companyUCC;
-  @Inject
-  private SupervisorUCC supervisorUCC;
 
   /**
    * returns an internship by a student id.
@@ -55,16 +39,16 @@ public class InternshipResource {
   @Path("/student/{idUser}")
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize
-  public ObjectNode getOneInternshipByIdUser(@Context ContainerRequest request,
+  public InternshipDTO getOneInternshipByIdUser(@Context ContainerRequest request,
       @PathParam("idUser") int idUser) {
     Logs.log(Level.INFO, "InternshipResource (getOneInternshipByIdUser) : entrance");
     UserDTO user = (UserDTO) request.getProperty("user");
-    if (user.getId() != idUser) {
+    if (user.getId() != idUser && (!user.getRole().equals("Professeur") || !user.getRole()
+        .equals("Professeur"))) {
       Logs.log(Level.ERROR, "InternshipResource (getOneInternshipByIdUser) : unauthorized");
-      throw new WebApplicationException("unauthorized", Response.Status.UNAUTHORIZED);
+      throw new WebApplicationException("unauthorized", Status.FORBIDDEN);
     }
-    InternshipDTO internship = internshipUCC.getOneByStudent(user.getId());
-    return buildJsonMapperInternship(internship, user);
+    return internshipUCC.getOneByStudent(user.getId());
   }
 
   /**
@@ -78,30 +62,11 @@ public class InternshipResource {
   @Path("/{id}")
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize
-  public ObjectNode getOneInternship(@Context ContainerRequest request, @PathParam("id") int id) {
+  public InternshipDTO getOneInternship(@Context ContainerRequest request,
+      @PathParam("id") int id) {
     Logs.log(Level.INFO, "InternshipResource (getOneInternship) : entrance");
     UserDTO user = (UserDTO) request.getProperty("user");
-    InternshipDTO internship = internshipUCC.getOneById(id, user.getId());
-    return buildJsonMapperInternship(internship, user);
-  }
-
-  /**
-   * Build the ObjectNode with user, contact, company, supervisor, and internship.
-   *
-   * @param internship the internship.
-   * @param user       the user.
-   * @return the objectnode built.
-   */
-  private ObjectNode buildJsonMapperInternship(InternshipDTO internship, UserDTO user) {
-    ContactDTO contact = contactUCC.getOneById(internship.getContact());
-    CompanyDTO company = companyUCC.findOneById(contact.getCompany());
-    SupervisorDTO supervisor = supervisorUCC.getOneById(internship.getSupervisor());
-
-    return jsonMapper.createObjectNode().putPOJO("internship", internship)
-        .putPOJO("contact", contact)
-        .putPOJO("company", company)
-        .putPOJO("user", user)
-        .putPOJO("supervisor", supervisor);
+    return internshipUCC.getOneById(id, user.getId());
   }
 
 }

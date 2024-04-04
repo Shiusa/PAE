@@ -1,5 +1,7 @@
 package be.vinci.pae.domain;
 
+import be.vinci.pae.domain.dto.CompanyDTO;
+import be.vinci.pae.domain.dto.UserDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 
@@ -9,11 +11,9 @@ import java.util.List;
 public class ContactImpl implements Contact {
 
   private int id;
-  private int company;
-  private int student;
+  private CompanyDTO company;
+  private UserDTO student;
 
-  private String nameCompany;
-  private String designationCompany;
   private String meeting;
   private String state;
   private String reasonRefusal;
@@ -22,7 +22,7 @@ public class ContactImpl implements Contact {
 
   @Override
   public boolean checkMeeting(String meeting) {
-    return meeting.equals("à distance") || meeting.equals("sur place");
+    return meeting.equals("A distance") || meeting.equals("Dans l entreprise");
   }
 
   @Override
@@ -42,42 +42,22 @@ public class ContactImpl implements Contact {
   }
 
   @Override
-  public int getCompany() {
+  public CompanyDTO getCompany() {
     return this.company;
   }
 
   @Override
-  public void setCompany(int company) {
+  public void setCompany(CompanyDTO company) {
     this.company = company;
   }
 
   @Override
-  public String getNameCompany() {
-    return this.nameCompany;
-  }
-
-  @Override
-  public void setNameCompany(String nameCompany) {
-    this.nameCompany = nameCompany;
-  }
-
-  @Override
-  public String getDesignationCompany() {
-    return this.designationCompany;
-  }
-
-  @Override
-  public void setDesignationCompany(String designationCompany) {
-    this.designationCompany = designationCompany;
-  }
-
-  @Override
-  public int getStudent() {
+  public UserDTO getStudent() {
     return this.student;
   }
 
   @Override
-  public void setStudent(int student) {
+  public void setStudent(UserDTO student) {
     this.student = student;
   }
 

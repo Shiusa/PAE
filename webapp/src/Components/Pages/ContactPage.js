@@ -89,9 +89,9 @@ const ContactPage = async () => {
 
   if (companiesBtn) {
     companiesBtn.forEach(element => {
-      element.addEventListener('click', () => {
-        createContact(element.id);
-        ContactPage();
+      element.addEventListener('click', async() => {
+        await createContact(element.id);
+        await ContactPage();
       });
     });
   }

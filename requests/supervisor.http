@@ -1,0 +1,18 @@
+### Login the default user & define a Request Variable
+# @name eleonore
+POST http://localhost:3000/users/login
+Content-Type: application/json
+
+{
+  "email": "Ach.ile@student.vinci.be",
+  "password": "mdpuser.1"
+}
+
+> {%
+  client.global.set("eleonoreToken", response.body.token);
+%}
+
+### Create one contact
+GET http://localhost:3000/supervisors/2
+Content-Type: application/json
+Authorization: {{eleonoreToken}}
