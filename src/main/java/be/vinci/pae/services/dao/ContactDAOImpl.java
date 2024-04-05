@@ -252,7 +252,6 @@ public class ContactDAOImpl implements ContactDAO {
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
           ContactDTO contact = findContactById(rs.getInt("contact_id"));
-
           Logs.log(Level.DEBUG, "ContactDAO (turnDown) : success!");
           return contact;
         }
@@ -266,20 +265,30 @@ public class ContactDAOImpl implements ContactDAO {
 
   @Override
   public ContactDTO accept(int contactId, int version) {
-    String requestSQl = """
+    Logs.log(Level.DEBUG, "ContactDAO (accept) : entrance");
+    String requestSql = """
         UPDATE proStage.contacts
-        SET contact_state = ?, version = ?
+        SET contact_state = ? , version = ?
         WHERE contact_id = ? AND version = ?
-        RETURNING *""";
-    PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSQl);
-    try {
+        RETURNING *;
+        """;
+
+    try (PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql)) {
       ps.setString(1, "accepté");
       ps.setInt(2, version + 1);
       ps.setInt(3, contactId);
       ps.setInt(4, version);
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          ContactDTO contact = findContactById(rs.getInt("contact_id"));
+          Logs.log(Level.DEBUG, "ContactDAO (accept) : success!");
+          return contact;
+        }
+        return null;
+      }
     } catch (SQLException e) {
+      Logs.log(Level.FATAL, "ContactDAO (accept) : internal error");
       throw new FatalException(e);
     }
-    return buildContactDTO(ps);
   }
 }
