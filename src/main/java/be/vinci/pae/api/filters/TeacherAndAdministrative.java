@@ -5,7 +5,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
- * Teacher and administrative annotation
+ * Teacher and administrative annotation.
  */
 @NameBinding
 @Retention(RetentionPolicy.RUNTIME)
