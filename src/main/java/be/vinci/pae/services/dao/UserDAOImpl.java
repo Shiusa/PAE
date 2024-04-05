@@ -33,38 +33,44 @@ public class UserDAOImpl implements UserDAO {
   public UserDTO getOneUserByEmail(String email) {
     Logs.log(Level.DEBUG, "UserDAO (getOneUserByEmail) : entrance");
     String requestSql = """
-        SELECT user_id, email, lastname, firstname, phone_number, password,
-        registration_date, school_year, role
-        FROM prostage.users
-        WHERE email = ?
+        SELECT us.user_id, us.email AS us_email, us.lastname AS us_lastname,
+        us.firstname AS us_firstname,
+        us.phone_number AS us_phone_number, us.password, us.registration_date,
+        us.school_year AS us_school_year, us.role
+        FROM prostage.users us
+        WHERE us.email = ?
         """;
-    PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql);
-    try {
+
+    try (PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql)) {
       ps.setString(1, email);
+      Logs.log(Level.DEBUG, "UserDAO (getOneUserByEmail) : success!");
+      return buildUserDTO(ps);
     } catch (SQLException e) {
+      Logs.log(Level.FATAL, "UserDAO (getOneUserByEmail) : internal error");
       throw new FatalException(e);
     }
-    Logs.log(Level.DEBUG, "UserDAO (getOneUserByEmail) : success!");
-    return buildUserDTO(ps);
   }
 
   @Override
   public UserDTO getOneUserById(int id) {
     Logs.log(Level.INFO, "UserDAO (getOneUserById) : entrance");
     String requestSql = """
-        SELECT user_id, email, lastname, firstname, phone_number, password,
-        registration_date, school_year, role
-        FROM prostage.users
-        WHERE user_id = ?
+        SELECT us.user_id, us.email AS us_email, us.lastname AS us_lastname,
+        us.firstname AS us_firstname,
+        us.phone_number AS us_phone_number, us.password, us.registration_date,
+        us.school_year AS us_school_year, us.role
+        FROM prostage.users us
+        WHERE us.user_id = ?
         """;
-    PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql);
-    try {
+
+    try (PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql)) {
       ps.setInt(1, id);
+      Logs.log(Level.DEBUG, "UserDAO (getOneUserById) : success!");
+      return buildUserDTO(ps);
     } catch (SQLException e) {
+      Logs.log(Level.FATAL, "UserDAO (getOneUserById) : internal error");
       throw new FatalException(e);
     }
-    Logs.log(Level.DEBUG, "UserDAO (getOneUserById) : success!");
-    return buildUserDTO(ps);
   }
 
   /**
@@ -74,30 +80,14 @@ public class UserDAOImpl implements UserDAO {
    * @return the userDTO built.
    */
   private UserDTO buildUserDTO(PreparedStatement ps) {
-    UserDTO user = userFactory.getUserDTO();
-
     try (ResultSet rs = ps.executeQuery()) {
       if (rs.next()) {
-        user.setId(rs.getInt("user_id"));
-        user.setEmail(rs.getString("email"));
-        user.setLastname(rs.getString("lastname"));
-        user.setFirstname(rs.getString("firstname"));
-        user.setPhoneNumber(rs.getString("phone_number"));
-        user.setPassword(rs.getString("password"));
-        user.setRegistrationDate(rs.getDate("registration_date"));
-        user.setSchoolYear(rs.getString("school_year"));
-        user.setRole(rs.getString("role"));
-        return user;
+        return DTOSetServices.setUserDTO(userFactory.getUserDTO(), rs);
       }
       return null;
     } catch (SQLException e) {
+      Logs.log(Level.FATAL, "UserDAO (buildUserDTO) : internal error!");
       throw new FatalException(e);
-    } finally {
-      try {
-        ps.close();
-      } catch (SQLException e) {
-        throw new FatalException(e);
-      }
     }
   }
 
@@ -107,28 +97,21 @@ public class UserDAOImpl implements UserDAO {
     List<UserDTO> userDTOList = new ArrayList<>();
 
     String requestSql = """
-        SELECT user_id,email, lastname, firstname,phone_number,password,
-        registration_date, school_year, role
-        FROM proStage.users
+        SELECT us.user_id, us.email AS us_email, us.lastname AS us_lastname,
+        us.firstname AS us_firstname,
+        us.phone_number AS us_phone_number, us.password, us.registration_date,
+        us.school_year AS us_school_year, us.role
+        FROM prostage.users us
         """;
 
     try (PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql)) {
       try (ResultSet rs = ps.executeQuery()) {
         while (rs.next()) {
-          UserDTO userDTO = userFactory.getUserDTO();
-          userDTO.setId(rs.getInt(1));
-          userDTO.setEmail(rs.getString("email"));
-          userDTO.setLastname(rs.getString("lastname"));
-          userDTO.setFirstname(rs.getString("firstname"));
-          userDTO.setPhoneNumber(rs.getString("phone_number"));
-          userDTO.setPassword(rs.getString("password"));
-          userDTO.setRegistrationDate(rs.getDate("registration_date"));
-          userDTO.setSchoolYear(rs.getString("school_year"));
-          userDTO.setRole(rs.getString("role"));
-          userDTOList.add(userDTO);
+          userDTOList.add(DTOSetServices.setUserDTO(userFactory.getUserDTO(), rs));
         }
       }
     } catch (SQLException e) {
+      Logs.log(Level.FATAL, "UserDAO (getAllUsers) : internal error!");
       throw new FatalException(e);
     }
     Logs.log(Level.DEBUG, "UserDAO (getAllUsers) : success!");
@@ -168,6 +151,7 @@ public class UserDAOImpl implements UserDAO {
         return null;
       }
     } catch (SQLException e) {
+      Logs.log(Level.FATAL, "UserDAO (addOneUser) : internal error");
       throw new FatalException(e);
     }
 

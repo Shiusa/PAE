@@ -25,8 +25,6 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
-import java.sql.Date;
-import java.time.LocalDate;
 import java.util.List;
 import org.apache.logging.log4j.Level;
 import org.glassfish.jersey.server.ContainerRequest;
@@ -171,18 +169,6 @@ public class UserResource {
       Logs.log(Level.WARN, "UserResource (register) : missing input");
       throw new WebApplicationException("Inputs cannot be blank", Response.Status.BAD_REQUEST);
     }
-
-    LocalDate localDate = LocalDate.now();
-    Date registrationDate = Date.valueOf(localDate);
-    userToRegister.setRegistrationDate(registrationDate);
-    int monthValue = localDate.getMonthValue();
-    String schoolYear;
-    if (monthValue >= 9) {
-      schoolYear = localDate.getYear() + "-" + localDate.plusYears(1).getYear();
-    } else {
-      schoolYear = localDate.minusYears(1).getYear() + "-" + localDate.getYear();
-    }
-    userToRegister.setSchoolYear(schoolYear);
 
     UserDTO registeredUser;
 

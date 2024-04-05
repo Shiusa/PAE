@@ -27,28 +27,28 @@ public interface InternshipDTO {
    *
    * @return the internship's contact.
    */
-  int getContact();
+  ContactDTO getContact();
 
   /**
    * Set the internship's contact.
    *
    * @param contact contact to set.
    */
-  void setContact(int contact);
+  void setContact(ContactDTO contact);
 
   /**
    * Get the internship's supervisor.
    *
    * @return the internship's supervisor.
    */
-  int getSupervisor();
+  SupervisorDTO getSupervisor();
 
   /**
    * Set the internship's supervisor.
    *
    * @param supervisor supervisor to set.
    */
-  void setSupervisor(int supervisor);
+  void setSupervisor(SupervisorDTO supervisor);
 
   /**
    * Get the internship's signature date.

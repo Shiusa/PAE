@@ -24,28 +24,28 @@ public interface ContactDTO {
    *
    * @return the contact's company.
    */
-  int getCompany();
+  CompanyDTO getCompany();
 
   /**
    * Set the contact's company.
    *
    * @param company company to set.
    */
-  void setCompany(int company);
+  void setCompany(CompanyDTO company);
 
   /**
    * Get the contact's student.
    *
    * @return the contact's student.
    */
-  int getStudent();
+  UserDTO getStudent();
 
   /**
    * Set the contact's student.
    *
    * @param student student to set.
    */
-  void setStudent(int student);
+  void setStudent(UserDTO student);
 
   /**
    * Get the contact's meeting.
@@ -116,33 +116,5 @@ public interface ContactDTO {
    * @param version school version.
    */
   void setVersion(int version);
-
-  /**
-   * Get the contact's name company.
-   *
-   * @return the contact's name company.
-   */
-  String getNameCompany();
-
-  /**
-   * Set the contact's name company.
-   *
-   * @param nameCompany name to set.
-   */
-  void setNameCompany(String nameCompany);
-
-  /**
-   * Get the contact's designation company.
-   *
-   * @return the contact's designation company.
-   */
-  String getDesignationCompany();
-
-  /**
-   * Set the contact's designation company.
-   *
-   * @param designationCompany designation to set.
-   */
-  void setDesignationCompany(String designationCompany);
 
 }
