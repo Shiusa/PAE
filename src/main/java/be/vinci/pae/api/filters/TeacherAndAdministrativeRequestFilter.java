@@ -1,5 +1,6 @@
 package be.vinci.pae.api.filters;
 
+import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.domain.ucc.UserUCC;
 import be.vinci.pae.utils.Config;
 import com.auth0.jwt.JWT;
@@ -10,6 +11,7 @@ import jakarta.inject.Singleton;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerRequestFilter;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 import jakarta.ws.rs.ext.Provider;
 import java.io.IOException;
 
@@ -31,7 +33,16 @@ public class TeacherAndAdministrativeRequestFilter implements ContainerRequestFi
       requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED)
           .entity("A token is needed to access this resource").build());
     } else {
-      TokenUtils.setProperty(requestContext, jwtAlgorithm, jwtVerifier, userUCC, token);
+      UserDTO authenticatedUser = TokenUtils.verifyToken(token, jwtVerifier, userUCC);
+      if (authenticatedUser == null) {
+        requestContext.abortWith(Response.status(Status.FORBIDDEN)
+            .entity("You are forbidden to access this resource").build());
+      } else if (!authenticatedUser.getRole().equals("Professeur")
+          && !authenticatedUser.getRole().equals("Administratif")) {
+        requestContext.abortWith(Response.status(Status.FORBIDDEN)
+            .entity("Only teachers and administratives can access this resource.").build());
+      }
+      requestContext.setProperty("user", authenticatedUser);
     }
   }
 
