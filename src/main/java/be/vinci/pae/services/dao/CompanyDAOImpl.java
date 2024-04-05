@@ -153,4 +153,30 @@ public class CompanyDAOImpl implements CompanyDAO {
     }
   }
 
+  public CompanyDTO blacklist(int companyId, String blackistMotivation, int version) {
+    Logs.log(Level.DEBUG, "CompanyDAO (blacklist) : entrance");
+
+    String requestSql = """
+        UPDATE prostage.companies
+        SET is_blacklisted = true, blacklist_motivation = ?, version = ?
+        WHERE company_id = ? AND version = ?;
+        """;
+    PreparedStatement ps = dalServices.getPreparedStatement(requestSql);
+    try {
+      ps.setString(1, blackistMotivation);
+      ps.setInt(2, version + 1);
+      ps.setInt(3, companyId);
+      ps.setInt(4, version);
+
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+
+    CompanyDTO companyDTOList = buildCompanyDTO(ps);
+
+    Logs.log(Level.DEBUG, "CompanyDAO (getAllCompaniesByUserId) : success!");
+    return companyDTOList;
+  }
+
+
 }

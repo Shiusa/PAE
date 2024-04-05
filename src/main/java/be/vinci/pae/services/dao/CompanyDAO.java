@@ -17,18 +17,27 @@ public interface CompanyDAO {
   CompanyDTO getOneCompanyById(int id);
 
   /**
-   * Get all users.
+   * Get all companies.
    *
-   * @return a list of all users.
+   * @return a list of all companies.
    */
   List<CompanyDTO> getAllCompanies();
 
   /**
-   * Get all users.
+   * Get all companies that the user has not a contact with.
    *
    * @param userId the user id.
-   * @return a list of all users.
+   * @return a list of all companies that the user has not a contact with.
    */
   List<CompanyDTO> getAllCompaniesByUserId(int userId);
 
+  /**
+   * To blacklist a company.
+   *
+   * @param companyId           the company id.
+   * @param version             the last version of the company.
+   * @param blacklistMotivation the motivation of the blackist
+   * @return the company that has been blacklisted.
+   */
+  CompanyDTO blacklist(int companyId, String blacklistMotivation, int version);
 }

@@ -31,4 +31,14 @@ public interface CompanyUCC {
    */
   List<CompanyDTO> getAllCompaniesByUser(int userId);
 
+  /**
+   * To blacklist a company.
+   *
+   * @param companyId           the company id
+   * @param userId              the user id.
+   * @param blacklistMotivation the motivation of the blacklist.
+   * @return a list containing all companies.
+   */
+  CompanyDTO blacklist(int companyId, String blacklistMotivation, int userId);
+
 }
