@@ -159,7 +159,8 @@ public class CompanyDAOImpl implements CompanyDAO {
     String requestSql = """
         UPDATE prostage.companies
         SET is_blacklisted = true, blacklist_motivation = ?, version = ?
-        WHERE company_id = ? AND version = ?;
+        WHERE company_id = ? AND version = ?
+        RETURNING *
         """;
     PreparedStatement ps = dalServices.getPreparedStatement(requestSql);
     try {

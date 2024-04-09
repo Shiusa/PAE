@@ -11,7 +11,7 @@ Content-Type: application/json
 }
 
 ### Login the default user & define a Request Variable
-# @name eleonore
+# @name laurant
 POST http://localhost:3000/users/login
 Content-Type: application/json
 
@@ -21,9 +21,6 @@ Content-Type: application/json
 }
 > {%
   client.global.set("carolineToken", response.body.token);
-%}
-
-> {%
   client.global.set("leleuxToken", response.body.token);
 %}
 

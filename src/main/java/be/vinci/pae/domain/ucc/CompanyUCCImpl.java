@@ -117,6 +117,7 @@ public class CompanyUCCImpl implements CompanyUCC {
       companyDTO = companyDAO.blacklist(companyId, blacklistMotivation, version);
     } catch (FatalException e) {
       dalServices.rollbackTransaction();
+      throw e;
     }
     dalServices.commitTransaction();
     return companyDTO;
