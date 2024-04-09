@@ -10,6 +10,8 @@ import be.vinci.pae.utils.exceptions.FatalException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
 import be.vinci.pae.utils.exceptions.UnauthorizedAccessException;
 import jakarta.inject.Inject;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import org.apache.logging.log4j.Level;
 
@@ -118,6 +120,19 @@ public class UserUCCImpl implements UserUCC {
   public UserDTO register(UserDTO user) {
 
     Logs.log(Level.DEBUG, "UserUCC (register) : entrance");
+
+    LocalDate localDate = LocalDate.now();
+    Date registrationDate = Date.valueOf(localDate);
+    user.setRegistrationDate(registrationDate);
+    int monthValue = localDate.getMonthValue();
+    String schoolYear;
+    if (monthValue >= 9) {
+      schoolYear = localDate.getYear() + "-" + localDate.plusYears(1).getYear();
+    } else {
+      schoolYear = localDate.minusYears(1).getYear() + "-" + localDate.getYear();
+    }
+    user.setSchoolYear(schoolYear);
+
     UserDTO registeredUser;
 
     try {

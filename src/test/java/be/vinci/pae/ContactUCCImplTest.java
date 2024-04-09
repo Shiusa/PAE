@@ -141,7 +141,8 @@ public class ContactUCCImplTest {
   @Test
   @DisplayName("Test unsupervise contact with wrong student")
   public void testUnsuperviseContactWrongStudent() {
-    contactDTO.setStudent(5);
+    userDTO.setId(5);
+    contactDTO.setStudent(userDTO);
     contactDTO.setState("initié");
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
     assertThrows(NotAllowedException.class, () -> contactUCC.unsupervise(1, 1));
@@ -150,16 +151,18 @@ public class ContactUCCImplTest {
   @Test
   @DisplayName("Test unsupervise contact with state different than started or admitted")
   public void testUnsuperviseContactWrongState() {
-    contactDTO.setStudent(1);
+    userDTO.setId(1);
+    contactDTO.setStudent(userDTO);
     contactDTO.setState("refusé");
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
-    assertThrows(InvalidRequestException.class, () -> contactUCC.unsupervise(1, 1));
+    assertThrows(NotAllowedException.class, () -> contactUCC.unsupervise(1, 1));
   }
 
   @Test
   @DisplayName("Test unsupervise contact correctly started")
   public void testUnsuperviseContactCorrectlyStarted() {
-    contactDTO.setStudent(1);
+    userDTO.setId(1);
+    contactDTO.setStudent(userDTO);
     contactDTO.setState("initié");
     contactDTO.setVersion(1);
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
@@ -170,7 +173,8 @@ public class ContactUCCImplTest {
   @Test
   @DisplayName("Test unsupervise contact correctly admitted")
   public void testUnsuperviseContactCorrectlyAdmitted() {
-    contactDTO.setStudent(1);
+    userDTO.setId(1);
+    contactDTO.setStudent(userDTO);
     contactDTO.setState("pris");
     contactDTO.setVersion(2);
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
@@ -212,7 +216,8 @@ public class ContactUCCImplTest {
   @Test
   @DisplayName("Test admit contact with wrong student")
   public void testAdmitContactWrongStudent() {
-    contactDTO.setStudent(2);
+    userDTO.setId(2);
+    contactDTO.setStudent(userDTO);
     contactDTO.setState("initié");
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
     assertThrows(NotAllowedException.class, () -> contactUCC.admit(1, "à distance", 1));
@@ -221,7 +226,8 @@ public class ContactUCCImplTest {
   @Test
   @DisplayName("Test admit contact with state different than started")
   public void testAdmitContactWrongState() {
-    contactDTO.setStudent(1);
+    userDTO.setId(1);
+    contactDTO.setStudent(userDTO);
     contactDTO.setState("accepté");
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
     assertThrows(InvalidRequestException.class, () -> contactUCC.admit(1, "sur place", 1));
@@ -230,7 +236,8 @@ public class ContactUCCImplTest {
   @Test
   @DisplayName("Test admit contact with type of meeting different than on site or remote")
   public void testAdmitContactWrongMeeting() {
-    contactDTO.setStudent(1);
+    userDTO.setId(1);
+    contactDTO.setStudent(userDTO);
     contactDTO.setState("initié");
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
     assertThrows(InvalidRequestException.class, () -> contactUCC.admit(1, "test", 1));
@@ -239,7 +246,8 @@ public class ContactUCCImplTest {
   @Test
   @DisplayName("Test admit contact with type of meeting is null")
   public void testAdmitContactMeetingIsNull() {
-    contactDTO.setStudent(1);
+    userDTO.setId(1);
+    contactDTO.setStudent(userDTO);
     contactDTO.setState("initié");
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
     assertThrows(InvalidRequestException.class, () -> contactUCC.admit(1, "", 1));
@@ -248,12 +256,13 @@ public class ContactUCCImplTest {
   @Test
   @DisplayName("Test admit contact correctly started")
   public void testAdmitContactCorrectlyStarted() {
-    contactDTO.setStudent(1);
+    userDTO.setId(1);
+    contactDTO.setStudent(userDTO);
     contactDTO.setState("initié");
     contactDTO.setVersion(1);
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
-    Mockito.when(contactDAOMock.admitContact(1, "sur place", 1)).thenReturn(contactDTO);
-    assertNotNull(contactUCC.admit(1, "sur place", 1));
+    Mockito.when(contactDAOMock.admitContact(1, "Dans l entreprise", 1)).thenReturn(contactDTO);
+    assertNotNull(contactUCC.admit(1, "Dans l entreprise", 1));
   }
 
   @Test
@@ -267,7 +276,8 @@ public class ContactUCCImplTest {
   @Test
   @DisplayName("Test turn down contact with wrong student")
   public void testTurnDownContactWrongStudent() {
-    contactDTO.setStudent(5);
+    userDTO.setId(5);
+    contactDTO.setStudent(userDTO);
     contactDTO.setState("pris");
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
     assertThrows(NotAllowedException.class,
@@ -277,10 +287,11 @@ public class ContactUCCImplTest {
   @Test
   @DisplayName("Test turn down contact with state different than admitted")
   public void testTurnDownContactWrongState() {
-    contactDTO.setStudent(1);
+    userDTO.setId(1);
+    contactDTO.setStudent(userDTO);
     contactDTO.setState("initié");
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
-    assertThrows(InvalidRequestException.class,
+    assertThrows(NotAllowedException.class,
         () -> contactUCC.turnDown(1, "Student has not answered fast enough", 1));
   }
 
@@ -288,7 +299,8 @@ public class ContactUCCImplTest {
   @Test
   @DisplayName("Test turn down contact correctly admitted")
   public void testTurnDownContactCorrectlyAdmitted() {
-    contactDTO.setStudent(1);
+    userDTO.setId(1);
+    contactDTO.setStudent(userDTO);
     contactDTO.setState("pris");
     contactDTO.setVersion(2);
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);

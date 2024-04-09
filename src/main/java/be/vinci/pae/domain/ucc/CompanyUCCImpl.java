@@ -33,7 +33,7 @@ public class CompanyUCCImpl implements CompanyUCC {
     try {
       dalServices.startTransaction();
       company = companyDAO.getOneCompanyById(id);
-    } catch (FatalException e) {
+    } catch (Exception e) {
       dalServices.rollbackTransaction();
       throw e;
     }
@@ -80,13 +80,13 @@ public class CompanyUCCImpl implements CompanyUCC {
         throw new ResourceNotFoundException();
       }
       companyList = companyDAO.getAllCompaniesByUserId(userId);
-    } catch (FatalException e) {
+      dalServices.commitTransaction();
+      Logs.log(Level.DEBUG, "CompanyUCC (getAllCompaniesByUser) : success!");
+      return companyList;
+    } catch (Exception e) {
       dalServices.rollbackTransaction();
       throw e;
     }
-    dalServices.commitTransaction();
-    Logs.log(Level.DEBUG, "CompanyUCC (getAllCompaniesByUser) : success!");
-    return companyList;
   }
 
   @Override

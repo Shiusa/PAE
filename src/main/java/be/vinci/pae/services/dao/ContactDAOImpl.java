@@ -1,8 +1,12 @@
 package be.vinci.pae.services.dao;
 
 
+import be.vinci.pae.domain.CompanyFactory;
 import be.vinci.pae.domain.ContactFactory;
+import be.vinci.pae.domain.UserFactory;
+import be.vinci.pae.domain.dto.CompanyDTO;
 import be.vinci.pae.domain.dto.ContactDTO;
+import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.services.dal.DalBackendServices;
 import be.vinci.pae.utils.Logs;
 import be.vinci.pae.utils.exceptions.DuplicateException;
@@ -24,38 +28,41 @@ public class ContactDAOImpl implements ContactDAO {
   private DalBackendServices dalBackendServices;
   @Inject
   private ContactFactory contactFactory;
+  @Inject
+  private CompanyFactory companyFactory;
+  @Inject
+  private UserFactory userFactory;
 
   @Override
   public ContactDTO findContactByCompanyStudentSchoolYear(int company, int studentId,
       String schoolYear) {
     Logs.log(Level.INFO, "ContactDAO (findContactByCompanyStudentSchoolYear) : entrance");
     String requestSql = """
-        SELECT *
-        FROM prostage.contacts
-        WHERE contacts.company = ? AND contacts.student = ? AND contacts.school_year = ?
+        SELECT ct.contact_id, ct.company AS ct_company, ct.student, ct.meeting, ct.contact_state,
+        ct.reason_for_refusal, ct.school_year AS ct_school_year, ct.version AS ct_version,
+        cm.company_id, cm.name, cm.designation, cm.address, cm.phone_number AS cm_phone_number,
+        cm.email AS cm_email, cm.is_blacklisted, cm.blacklist_motivation, cm.version AS cm_version,
+        us.user_id, us.email AS us_email, us.lastname AS us_lastname, us.firstname AS us_firstname,
+        us.phone_number AS us_phone_number, us.password, us.registration_date,
+        us.school_year AS us_school_year, us.role
+        FROM prostage.contacts ct, prostage.companies cm, prostage.users us
+        WHERE ct.company = ? AND ct.student = ? AND ct.school_year = ?
+        AND ct.company = cm.company_id AND ct.student = us.user_id
         """;
-    PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql);
 
-    try {
+    try (PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql)) {
       ps.setInt(1, company);
       ps.setInt(2, studentId);
       ps.setString(3, schoolYear);
+      ContactDTO contact = buildContactDTO(ps);
+
+      Logs.log(Level.DEBUG, "ContactDAO (findContactByCompanyStudentSchoolYear) : success!");
+      return contact;
     } catch (SQLException e) {
       Logs.log(Level.FATAL, "ContactDAO (findContactByCompanyStudentSchoolYear) : internal error");
       throw new FatalException(e);
     }
 
-    ContactDTO contact = buildContactDTO(ps);
-
-    try {
-      ps.close();
-    } catch (SQLException e) {
-      Logs.log(Level.FATAL, "ContactDAO (findContactByCompanyStudentSchoolYear) : internal error");
-      throw new FatalException(e);
-    }
-
-    Logs.log(Level.DEBUG, "ContactDAO (findContactByCompanyStudentSchoolYear) : success!");
-    return contact;
   }
 
   @Override
@@ -65,59 +72,60 @@ public class ContactDAOImpl implements ContactDAO {
         INSERT INTO prostage.contacts (company, student, contact_state, school_year, version)
          VALUES (?, ?, ?, ?, ?) RETURNING *;
         """;
-    PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql);
-    try {
+
+    try (PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql)) {
       ps.setInt(1, company);
       ps.setInt(2, studentId);
       ps.setString(3, "initié");
       ps.setString(4, schoolYear);
       ps.setInt(5, 1);
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          ContactDTO contact = findContactById(rs.getInt("contact_id"));
+
+          Logs.log(Level.DEBUG, "ContactDAO (startContact) : success!");
+          return contact;
+        }
+        return null;
+      }
     } catch (SQLException e) {
       Logs.log(Level.FATAL, "ContactDAO (startContact) : internal error");
       throw new FatalException(e);
     }
 
-    ContactDTO contact = buildContactDTO(ps);
-    try {
-      ps.close();
-    } catch (SQLException e) {
-      Logs.log(Level.FATAL, "ContactDAO (startContact) : internal error");
-      throw new FatalException(e);
-    }
-    Logs.log(Level.DEBUG, "ContactDAO (startContact) : success!");
-    return contact;
   }
 
   @Override
   public ContactDTO findContactById(int contactId) {
     Logs.log(Level.INFO, "ContactDAO (findContactById) : entrance");
     String requestSql = """
-        SELECT *
-        FROM prostage.contacts
-        WHERE contacts.contact_id = ?
+        SELECT ct.contact_id, ct.company AS ct_company, ct.student, ct.meeting, ct.contact_state,
+        ct.reason_for_refusal, ct.school_year AS ct_school_year, ct.version AS ct_version,
+        cm.company_id, cm.name, cm.designation, cm.address, cm.phone_number AS cm_phone_number,
+        cm.email AS cm_email, cm.is_blacklisted, cm.blacklist_motivation, cm.version AS cm_version,
+        us.user_id, us.email AS us_email, us.lastname AS us_lastname, us.firstname AS us_firstname,
+        us.phone_number AS us_phone_number, us.password, us.registration_date,
+        us.school_year AS us_school_year, us.role
+        FROM prostage.contacts ct, prostage.companies cm, prostage.users us
+        WHERE ct.contact_id = ? AND ct.company = cm.company_id AND ct.student = us.user_id
         """;
-    PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql);
-    try {
-      ps.setInt(1, contactId);
-    } catch (SQLException e) {
-      Logs.log(Level.FATAL, "ContactDAO (findContactById) : internal error");
-      throw new FatalException(e);
-    }
-    ContactDTO contact = buildContactDTO(ps);
-    try {
-      ps.close();
-    } catch (SQLException e) {
-      Logs.log(Level.FATAL, "ContactDAO (findContactById) : internal error");
-      throw new FatalException(e);
-    }
 
-    Logs.log(Level.DEBUG, "ContactDAO (findContactById) : success!");
-    return contact;
+    try (PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql)) {
+      ps.setInt(1, contactId);
+      ContactDTO contact = buildContactDTO(ps);
+
+      Logs.log(Level.DEBUG, "ContactDAO (findContactById) : success!");
+      return contact;
+    } catch (SQLException e) {
+      Logs.log(Level.FATAL, "ContactDAO (findContactById) : internal error");
+      throw new FatalException(e);
+    }
   }
 
 
   @Override
   public ContactDTO unsupervise(int contactId, int version) {
+    Logs.log(Level.DEBUG, "ContactDAO (unsupervise) : entrance");
     String requestSql = """
         UPDATE proStage.contacts
         SET contact_state = ? , version = ?
@@ -125,16 +133,24 @@ public class ContactDAOImpl implements ContactDAO {
         RETURNING *;
         """;
 
-    PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql);
-    try {
+    try (PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql)) {
       ps.setString(1, "non suivi");
       ps.setInt(2, version + 1);
       ps.setInt(3, contactId);
       ps.setInt(4, version);
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          ContactDTO contact = findContactById(rs.getInt("contact_id"));
+
+          Logs.log(Level.DEBUG, "ContactDAO (unsupervise) : success!");
+          return contact;
+        }
+        return null;
+      }
     } catch (SQLException e) {
+      Logs.log(Level.FATAL, "ContactDAO (unsupervise) : internal error");
       throw new FatalException(e);
     }
-    return buildContactDTO(ps);
   }
 
   @Override
@@ -142,129 +158,109 @@ public class ContactDAOImpl implements ContactDAO {
     List<ContactDTO> contactDTOList = new ArrayList<>();
 
     String requestSql = """
-        SELECT ct.contact_id, ct.student, cp.name, cp.designation, ct.company, ct.meeting,
-        ct.contact_state, ct.reason_for_refusal, ct.school_year
-        FROM proStage.contacts ct
-        LEFT JOIN proStage.companies cp ON cp.company_id = ct.company
-        WHERE ct.student = ?
+        SELECT ct.contact_id, ct.company AS ct_company, ct.student, ct.meeting, ct.contact_state,
+        ct.reason_for_refusal, ct.school_year AS ct_school_year, ct.version AS ct_version,
+        cm.company_id, cm.name, cm.designation, cm.address, cm.phone_number AS cm_phone_number,
+        cm.email AS cm_email, cm.is_blacklisted, cm.blacklist_motivation, cm.version AS cm_version,
+        us.user_id, us.email AS us_email, us.lastname AS us_lastname, us.firstname AS us_firstname,
+        us.phone_number AS us_phone_number, us.password, us.registration_date,
+        us.school_year AS us_school_year, us.role
+        FROM prostage.contacts ct, prostage.companies cm, prostage.users us
+        WHERE ct.student = ? AND cm.company_id = ct.company AND ct.student = us.user_id
         """;
 
     try (PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql)) {
       ps.setInt(1, student);
       try (ResultSet rs = ps.executeQuery()) {
         while (rs.next()) {
-          ContactDTO contactDTO = contactFactory.getContactDTO();
-          contactDTO.setId(rs.getInt(1));
-          contactDTO.setCompany(rs.getInt("company"));
-          contactDTO.setStudent(rs.getInt("student"));
-          contactDTO.setNameCompany(rs.getString("name"));
-          contactDTO.setDesignationCompany(rs.getString("designation"));
-          contactDTO.setMeeting(rs.getString("meeting"));
-          contactDTO.setState(rs.getString("contact_state"));
-          contactDTO.setReasonRefusal(rs.getString("reason_for_refusal"));
-          contactDTO.setSchoolYear(rs.getString("school_year"));
+          CompanyDTO companyDTO = DTOSetServices.setCompanyDTO(companyFactory.getCompanyDTO(), rs);
+          UserDTO studentDTO = DTOSetServices.setUserDTO(userFactory.getUserDTO(), rs);
+          ContactDTO contactDTO = DTOSetServices.setContactDTO(contactFactory.getContactDTO(), rs,
+              companyDTO, studentDTO);
           contactDTOList.add(contactDTO);
         }
       }
+      return contactDTOList;
     } catch (SQLException e) {
       throw new FatalException(e);
     }
-    return contactDTOList;
   }
 
   private ContactDTO buildContactDTO(PreparedStatement ps) {
-    ContactDTO contact = contactFactory.getContactDTO();
-
     try (ResultSet rs = ps.executeQuery()) {
       if (rs.next()) {
-        contact.setId(rs.getInt("contact_id"));
-        contact.setCompany(rs.getInt("company"));
-        contact.setStudent(rs.getInt("student"));
-        contact.setMeeting(rs.getString("meeting"));
-        contact.setState(rs.getString("contact_state"));
-        contact.setReasonRefusal(rs.getString("reason_for_refusal"));
-        contact.setSchoolYear(rs.getString("school_year"));
-        contact.setVersion(rs.getInt("version"));
-        rs.close();
-        return contact;
+        CompanyDTO companyDTO = DTOSetServices.setCompanyDTO(companyFactory.getCompanyDTO(), rs);
+        UserDTO studentDTO = DTOSetServices.setUserDTO(userFactory.getUserDTO(), rs);
+        return DTOSetServices.setContactDTO(contactFactory.getContactDTO(), rs, companyDTO,
+            studentDTO);
       }
       return null;
     } catch (SQLException e) {
-      Logs.log(Level.FATAL, "CompanyDAO (buildCompanyDTO) : internal error!");
+      Logs.log(Level.FATAL, "ContactDAO (buildContactDTO) : internal error!");
       throw new DuplicateException();
-    } finally {
-      try {
-        ps.close();
-      } catch (SQLException e) {
-        Logs.log(Level.FATAL, "CompanyDAO (buildCompanyDTO) : internal error!");
-        throw new FatalException(e);
-      }
     }
   }
 
   @Override
   public ContactDTO admitContact(int contactId, String meeting, int version) {
-    Logs.log(Level.INFO, "ContactDAO (admit) : entrance");
+    Logs.log(Level.DEBUG, "ContactDAO (admit) : entrance");
     String requestSql = """
         UPDATE proStage.contacts
         SET meeting = ?, contact_state = ?, version = ?
         WHERE contact_id = ? AND version = ?
         RETURNING *;
         """;
-    PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql);
-    try {
+
+    try (PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql)) {
       ps.setString(1, meeting);
       ps.setString(2, "pris");
       ps.setInt(3, version + 1);
       ps.setInt(4, contactId);
       ps.setInt(5, version);
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          ContactDTO contact = findContactById(rs.getInt("contact_id"));
+
+          Logs.log(Level.DEBUG, "ContactDAO (admit) : success!");
+          return contact;
+        }
+        return null;
+      }
     } catch (SQLException e) {
       Logs.log(Level.FATAL, "ContactDAO (admit) : internal error");
       e.printStackTrace();
       throw new FatalException(e);
     }
-    ContactDTO contact = buildContactDTO(ps);
-    try {
-      ps.close();
-    } catch (SQLException e) {
-      Logs.log(Level.FATAL, "ContactDAO (admit) : internal error");
-      throw new FatalException(e);
-    }
-    Logs.log(Level.DEBUG, "ContactDAO (admit) : success!");
-    return contact;
   }
 
   @Override
   public ContactDTO turnDown(int contactId, String reasonForRefusal, int version) {
-    Logs.log(Level.INFO, "ContactDAO (turnDown) : entrance");
+    Logs.log(Level.DEBUG, "ContactDAO (turnDown) : entrance");
     String requestSql = """
-                UPDATE proStage.contacts
-                SET reason_for_refusal = ?, contact_state = ?, version = ?
-                WHERE contact_id = ? AND version = ?
-                RETURNING *;
-                
+        UPDATE proStage.contacts
+        SET reason_for_refusal = ?, contact_state = ?, version = ?
+        WHERE contact_id = ? AND version = ?
+        RETURNING *;
         """;
-    PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql);
-    try {
+
+    try (PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql)) {
       ps.setString(1, reasonForRefusal);
       ps.setString(2, "refusé");
       ps.setInt(3, version + 1);
       ps.setInt(4, contactId);
       ps.setInt(5, version);
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          ContactDTO contact = findContactById(rs.getInt("contact_id"));
+
+          Logs.log(Level.DEBUG, "ContactDAO (turnDown) : success!");
+          return contact;
+        }
+        return null;
+      }
     } catch (SQLException e) {
       Logs.log(Level.FATAL, "ContactDAO (turnDown) : internal error");
       throw new FatalException(e);
     }
-
-    ContactDTO contact = buildContactDTO(ps);
-
-    try {
-      ps.close();
-    } catch (SQLException e) {
-      Logs.log(Level.FATAL, "ContactDAO (turnDown) : internal error");
-      throw new RuntimeException(e);
-    }
-    Logs.log(Level.DEBUG, "ContactDAO (turnDown) : success!");
-    return contact;
   }
 }

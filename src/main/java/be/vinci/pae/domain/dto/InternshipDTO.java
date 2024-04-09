@@ -27,28 +27,28 @@ public interface InternshipDTO {
    *
    * @return the internship's contact.
    */
-  int getContact();
+  ContactDTO getContact();
 
   /**
    * Set the internship's contact.
    *
    * @param contact contact to set.
    */
-  void setContact(int contact);
+  void setContact(ContactDTO contact);
 
   /**
    * Get the internship's supervisor.
    *
    * @return the internship's supervisor.
    */
-  int getSupervisor();
+  SupervisorDTO getSupervisor();
 
   /**
    * Set the internship's supervisor.
    *
    * @param supervisor supervisor to set.
    */
-  void setSupervisor(int supervisor);
+  void setSupervisor(SupervisorDTO supervisor);
 
   /**
    * Get the internship's signature date.
@@ -92,87 +92,4 @@ public interface InternshipDTO {
    */
   void setSchoolYear(String schoolYear);
 
-  /**
-   * Get the supervisor's firstname.
-   *
-   * @return the supervisor's firstname.
-   */
-  String getFirstnameSupervisor();
-
-  /**
-   * Set the supervisor's firstname.
-   *
-   * @param firstnameSupervisor the supervisor's firstname.
-   */
-  void setFirstnameSupervisor(String firstnameSupervisor);
-
-  /**
-   * Get the supervisor's lastname.
-   *
-   * @return the supervisor's lastname.
-   */
-  String getLastnameSupervisor();
-
-  /**
-   * Set the supervisor's lastname.
-   *
-   * @param lastnameSupervisor lastname to set.
-   */
-  void setLastnameSupervisor(String lastnameSupervisor);
-
-  /**
-   * Get the supervisor's email.
-   *
-   * @return the supervisor's email.
-   */
-  String getEmailSupervisor();
-
-  /**
-   * Set the supervisor's email.
-   *
-   * @param emailSupervisor email to set.
-   */
-  void setEmailSupervisor(String emailSupervisor);
-
-  /**
-   * Get the internship's name.
-   *
-   * @return the internship's name.
-   */
-  String getNameInternship();
-
-  /**
-   * Set the internship's name.
-   *
-   * @param nameInternship name to set.
-   */
-  void setNameInternship(String nameInternship);
-
-  /**
-   * Get the internship's designation.
-   *
-   * @return the designation.
-   */
-  String getDesignationInternship();
-
-  /**
-   * Set the designation internship.
-   *
-   * @param designationInternship the designation of the company.
-   */
-  void setDesignationInternship(String designationInternship);
-
-  /**
-   * Get the address.
-   *
-   * @return the address.
-   */
-  String getAddressInternship();
-
-  /**
-   * Set the internship's address.
-   *
-   * @param addressInternship the address.
-   */
-  void setAddressInternship(String addressInternship);
 }

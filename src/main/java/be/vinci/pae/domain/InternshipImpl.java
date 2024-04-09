@@ -1,5 +1,7 @@
 package be.vinci.pae.domain;
 
+import be.vinci.pae.domain.dto.ContactDTO;
+import be.vinci.pae.domain.dto.SupervisorDTO;
 import java.util.Date;
 
 /**
@@ -8,19 +10,11 @@ import java.util.Date;
 class InternshipImpl implements Internship {
 
   private int id;
-  private int contact;
-  private int supervisor;
+  private ContactDTO contact;
+  private SupervisorDTO supervisor;
   private Date signatureDate;
   private String project;
   private String schoolYear;
-
-  private String nameInternship;
-  private String designationInternship;
-
-  private String addressInternship;
-  private String firstnameSupervisor;
-  private String lastnameSupervisor;
-  private String emailSupervisor;
 
   @Override
   public int getId() {
@@ -33,22 +27,22 @@ class InternshipImpl implements Internship {
   }
 
   @Override
-  public int getContact() {
+  public ContactDTO getContact() {
     return contact;
   }
 
   @Override
-  public void setContact(int contact) {
+  public void setContact(ContactDTO contact) {
     this.contact = contact;
   }
 
   @Override
-  public int getSupervisor() {
+  public SupervisorDTO getSupervisor() {
     return supervisor;
   }
 
   @Override
-  public void setSupervisor(int supervisor) {
+  public void setSupervisor(SupervisorDTO supervisor) {
     this.supervisor = supervisor;
   }
 
@@ -81,65 +75,4 @@ class InternshipImpl implements Internship {
   public void setSchoolYear(String schoolYear) {
     this.schoolYear = schoolYear;
   }
-
-  @Override
-  public String getNameInternship() {
-    return nameInternship;
-  }
-
-  @Override
-  public void setNameInternship(String nameInternship) {
-    this.nameInternship = nameInternship;
-  }
-
-  @Override
-  public String getDesignationInternship() {
-    return designationInternship;
-  }
-
-  @Override
-  public void setDesignationInternship(String designationInternship) {
-    this.designationInternship = designationInternship;
-  }
-
-  @Override
-  public String getFirstnameSupervisor() {
-    return firstnameSupervisor;
-  }
-
-  @Override
-  public void setFirstnameSupervisor(String firstnameSupervisor) {
-    this.firstnameSupervisor = firstnameSupervisor;
-  }
-
-  @Override
-  public String getLastnameSupervisor() {
-    return lastnameSupervisor;
-  }
-
-  @Override
-  public void setLastnameSupervisor(String lastnameSupervisor) {
-    this.lastnameSupervisor = lastnameSupervisor;
-  }
-
-  @Override
-  public String getEmailSupervisor() {
-    return emailSupervisor;
-  }
-
-  @Override
-  public void setEmailSupervisor(String emailSupervisor) {
-    this.emailSupervisor = emailSupervisor;
-  }
-
-  @Override
-  public String getAddressInternship() {
-    return addressInternship;
-  }
-
-  @Override
-  public void setAddressInternship(String addressInternship) {
-    this.addressInternship = addressInternship;
-  }
-
 }

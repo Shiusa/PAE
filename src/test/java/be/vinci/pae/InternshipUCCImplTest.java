@@ -2,13 +2,14 @@ package be.vinci.pae;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import be.vinci.pae.domain.ContactFactory;
 import be.vinci.pae.domain.InternshipFactory;
+import be.vinci.pae.domain.UserFactory;
 import be.vinci.pae.domain.dto.ContactDTO;
 import be.vinci.pae.domain.dto.InternshipDTO;
+import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.domain.ucc.InternshipUCC;
 import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.ContactDAO;
@@ -37,6 +38,7 @@ public class InternshipUCCImplTest {
   private InternshipUCC internshipUCC;
   private InternshipDTO internshipDTO;
   private ContactDTO contactDTO;
+  private UserDTO userDTO;
 
   @BeforeAll
   static void init() {
@@ -51,8 +53,10 @@ public class InternshipUCCImplTest {
     internshipUCC = serviceLocator.getService(InternshipUCC.class);
     InternshipFactory internshipFactory = serviceLocator.getService(InternshipFactory.class);
     ContactFactory contactFactory = serviceLocator.getService(ContactFactory.class);
+    UserFactory userFactory = serviceLocator.getService(UserFactory.class);
     internshipDTO = internshipFactory.getInternshipDTO();
     contactDTO = contactFactory.getContactDTO();
+    userDTO = userFactory.getUserDTO();
     Mockito.doNothing().when(dalServicesMock).startTransaction();
     Mockito.doNothing().when(dalServicesMock).commitTransaction();
     Mockito.doNothing().when(dalServicesMock).rollbackTransaction();
@@ -68,7 +72,7 @@ public class InternshipUCCImplTest {
   @DisplayName("Test getOneByStudent student has no internship")
   public void testGetOneByStudentStudentNoInternship() {
     Mockito.when(internshipDAOMock.getOneInternshipByIdUser(1)).thenReturn(null);
-    assertNull(internshipUCC.getOneByStudent(1));
+    assertThrows(ResourceNotFoundException.class, () -> internshipUCC.getOneByStudent(1));
   }
 
   @Test
@@ -89,8 +93,10 @@ public class InternshipUCCImplTest {
   @Test
   @DisplayName("Test getOneById wrong user")
   public void testGetOneByIdWrongUser() {
-    contactDTO.setStudent(1);
-    internshipDTO.setContact(1);
+    userDTO.setId(1);
+    contactDTO.setId(1);
+    contactDTO.setStudent(userDTO);
+    internshipDTO.setContact(contactDTO);
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
     Mockito.when(internshipDAOMock.getOneInternshipById(1)).thenReturn(internshipDTO);
     assertThrows(NotAllowedException.class, () -> internshipUCC.getOneById(1, 3));
@@ -99,8 +105,10 @@ public class InternshipUCCImplTest {
   @Test
   @DisplayName("Test getOneById correct")
   public void testGetOneByIdCorrect() {
-    contactDTO.setStudent(1);
-    internshipDTO.setContact(1);
+    userDTO.setId(1);
+    contactDTO.setId(1);
+    contactDTO.setStudent(userDTO);
+    internshipDTO.setContact(contactDTO);
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
     Mockito.when(internshipDAOMock.getOneInternshipById(1)).thenReturn(internshipDTO);
     assertNotNull(internshipUCC.getOneById(1, 1));
