@@ -8,6 +8,7 @@ import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.utils.Logs;
 import be.vinci.pae.utils.exceptions.DuplicateException;
 import be.vinci.pae.utils.exceptions.FatalException;
+import be.vinci.pae.utils.exceptions.InvalidRequestException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
 import jakarta.inject.Inject;
 import java.util.List;
@@ -102,11 +103,20 @@ public class CompanyUCCImpl implements CompanyUCC {
 
     try {
       dalServices.startTransaction();
-      CompanyDTO existingCompany = companyDAO.getOneCompanyByNameDesignation(company.getName(),
-          company.getDesignation());
-      if (existingCompany != null) {
-        throw new DuplicateException(
-            "Already exist company with same name, add a different designation");
+      CompanyDTO existingCompany;
+      if (company.getDesignation() == null) {
+        List<CompanyDTO> existingCompaniesWithNullDesignation = companyDAO.getAllCompaniesByName(
+            company.getName());
+        if (existingCompaniesWithNullDesignation.size() > 0) {
+          throw new InvalidRequestException();
+        }
+      } else {
+        existingCompany = companyDAO.getOneCompanyByNameDesignation(company.getName(),
+            company.getDesignation());
+        if (existingCompany != null) {
+          throw new DuplicateException(
+              "Already exist company with same name and designation, add a different designation");
+        }
       }
 
       company.setIsBlacklisted(false);
