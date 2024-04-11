@@ -33,12 +33,20 @@ public interface CompanyDAO {
   List<CompanyDTO> getAllCompanies();
 
   /**
-   * Get all users.
+   * Get all companies by company by user id.
    *
    * @param userId the user id.
-   * @return a list of all users.
+   * @return a list of all companies.
    */
   List<CompanyDTO> getAllCompaniesByUserId(int userId);
+
+  /**
+   * Get all companies by company name.
+   *
+   * @param name the company name.
+   * @return a list of all companies.
+   */
+  List<CompanyDTO> getAllCompaniesByName(String name);
 
   /**
    * Add one company.

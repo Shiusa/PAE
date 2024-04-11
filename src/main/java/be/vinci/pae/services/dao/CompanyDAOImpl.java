@@ -52,7 +52,7 @@ public class CompanyDAOImpl implements CompanyDAO {
         cm.phone_number AS cm_phone_number,
         cm.email AS cm_email, cm.is_blacklisted, cm.blacklist_motivation, cm.version AS cm_version
         FROM prostage.companies cm
-        WHERE cm.name = ? AND cm.desination = ?
+        WHERE cm.name = ? AND cm.designation = ?
         """;
 
     try (PreparedStatement ps = dalServices.getPreparedStatement(requestSql)) {
@@ -111,6 +111,27 @@ public class CompanyDAOImpl implements CompanyDAO {
     }
   }
 
+  @Override
+  public List<CompanyDTO> getAllCompaniesByName(String name) {
+    String requestSql = """
+        SELECT cm.company_id, cm.name, cm.designation, cm.address,
+        cm.phone_number AS cm_phone_number,
+        cm.email AS cm_email, cm.is_blacklisted, cm.blacklist_motivation, cm.version AS cm_version
+        FROM prostage.companies cm
+        WHERE cm.name = ? AND cm.designation IS NULL
+        """;
+
+    try (PreparedStatement ps = dalServices.getPreparedStatement(requestSql)) {
+      ps.setString(1, name);
+      List<CompanyDTO> companyDTOList = buildCompanyList(ps);
+
+      Logs.log(Level.DEBUG, "CompanyDAO (getAllCompaniesByName) : success!");
+      return companyDTOList;
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+  }
+
   /**
    * Add one company.
    *
@@ -123,7 +144,7 @@ public class CompanyDAOImpl implements CompanyDAO {
     Logs.log(Level.DEBUG, "UserDAO (addOneUser) : entrance");
     String requestSql = """
         INSERT INTO prostage.companies(name, designation, address, phone_number, email, is_blacklisted, blacklist_motivation, version) VALUES (?,?,?,?,?,?,?,?)
-        RETURNING name AS inserted_name, designation AS inserted_designation
+        RETURNING name AS inserted_name, designation AS inserted_designation, company_id
         """;
 
     try (PreparedStatement ps = dalServices.getPreparedStatement(requestSql)) {
@@ -137,9 +158,23 @@ public class CompanyDAOImpl implements CompanyDAO {
       ps.setInt(8, company.getVersion());
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
-          Logs.log(Level.DEBUG, "UserDAO (addOneUser) : success!");
-          return getOneCompanyByNameDesignation(rs.getString("inserted_name"),
+          /*CompanyDTO insertedCompany;
+          insertedCompany = getOneCompanyByNameDesignation(rs.getString("inserted_name"),
               rs.getString("inserted_designation"));
+          if (insertedCompany == null) {
+            insertedCompany = getOneCompanyById(rs.getInt("company_id"));
+            if (insertedCompany != null) {
+              return insertedCompany;
+            }
+            return null;
+          }*/
+          Logs.log(Level.DEBUG, "UserDAO (addOneUser) : success!");
+          /*if (company.getDesignation()==null) {
+            return getOneCompanyById(rs.getInt("company_id"));
+          }
+          return getOneCompanyByNameDesignation(rs.getString("inserted_name"),
+              rs.getString("inserted_designation"));*/
+          return getOneCompanyById(rs.getInt("company_id"));
         }
         return null;
       }
@@ -184,30 +219,6 @@ public class CompanyDAOImpl implements CompanyDAO {
         return DTOSetServices.setCompanyDTO(companyFactory.getCompanyDTO(), rs);
       }
       return null;
-    } catch (SQLException e) {
-      throw new FatalException(e);
-    }
-  }
-
-  /**
-   * Build a companyDTO based on a result set.
-   *
-   * @param rs the result set.
-   * @return the companyDTO built.
-   */
-  private CompanyDTO buildCompanyDTO(ResultSet rs) {
-    try {
-      CompanyDTO companyDTO = companyFactory.getCompanyDTO();
-      companyDTO.setId(rs.getInt("company_id"));
-      companyDTO.setName(rs.getString("name"));
-      companyDTO.setDesignation(rs.getString("designation"));
-      companyDTO.setAddress(rs.getString("address"));
-      companyDTO.setPhoneNumber(rs.getString("phone_number"));
-      companyDTO.setEmail(rs.getString("email"));
-      companyDTO.setIsBlacklisted(rs.getBoolean("is_blacklisted"));
-      companyDTO.setBlacklistMotivation(rs.getString("blacklist_motivation"));
-      companyDTO.setVersion(rs.getInt("version"));
-      return companyDTO;
     } catch (SQLException e) {
       throw new FatalException(e);
     }
