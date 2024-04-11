@@ -119,6 +119,14 @@ public class CompanyUCCImpl implements CompanyUCC {
         }
       }
 
+      if (company.getEmail().isBlank()) {
+        company.setEmail(null);
+      }
+
+      if (company.getPhoneNumber().isBlank()) {
+        company.setPhoneNumber(null);
+      }
+
       company.setIsBlacklisted(false);
       company.setVersion(1);
 
