@@ -101,6 +101,27 @@ public class InternshipDAOImpl implements InternshipDAO {
     }
   }
 
+  @Override
+  public int getInternshipCountByYear(String year) {
+    String requestSql = """
+        SELECT count(i.*) AS internship_count
+        FROM prostage.internships i
+        WHERE i.school_year = ?
+        """;
+
+    try (PreparedStatement ps = dalServices.getPreparedStatement(requestSql)) {
+      ps.setString(1, year);
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          return rs.getInt("internship_count");
+        }
+      }
+      return -1;
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+  }
+
   /**
    * Build the InternshipDTO based on the prepared statement.
    *

@@ -24,4 +24,12 @@ public interface InternshipDAO {
    * @return internshipDTO with setter corresponding to the id, null otherwise.
    */
   InternshipDTO getOneInternshipById(int id);
+
+  /**
+   * Get internship count by year.
+   *
+   * @param year year to get internship count.
+   * @return internship count.
+   */
+  int getInternshipCountByYear(String year);
 }

@@ -25,4 +25,12 @@ public interface InternshipUCC {
    * @return the internship found.
    */
   InternshipDTO getOneById(int id, int actualStudent);
+
+  /**
+   * Get number of student with internship.
+   *
+   * @param year year to get count of.
+   * @return the number of student with internship.
+   */
+  int getInternshipCountByYear(String year);
 }
