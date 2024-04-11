@@ -6,6 +6,7 @@ import be.vinci.pae.services.dao.InternshipDAO;
 import be.vinci.pae.utils.exceptions.NotAllowedException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
 import jakarta.inject.Inject;
+import java.util.Map;
 
 /**
  * Implementation of InternshipUCC.
@@ -57,8 +58,8 @@ public class InternshipUCCImpl implements InternshipUCC {
   }
 
   @Override
-  public int getInternshipCountByYear(String year) {
-    return internshipDAO.getInternshipCountByYear(year);
+  public Map<String, Integer[]> getInternshipCountByYear() {
+    return internshipDAO.getInternshipCountByYear();
   }
 
 }

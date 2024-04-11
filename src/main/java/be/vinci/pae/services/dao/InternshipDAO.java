@@ -1,6 +1,7 @@
 package be.vinci.pae.services.dao;
 
 import be.vinci.pae.domain.dto.InternshipDTO;
+import java.util.Map;
 
 /**
  * InternshipDAO interface.
@@ -28,8 +29,7 @@ public interface InternshipDAO {
   /**
    * Get internship count by year.
    *
-   * @param year year to get internship count.
-   * @return internship count.
+   * @return map with number of internship and total student by year.
    */
-  int getInternshipCountByYear(String year);
+  Map<String, Integer[]> getInternshipCountByYear();
 }
