@@ -5,6 +5,8 @@ import be.vinci.pae.domain.dto.InternshipDTO;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.domain.ucc.InternshipUCC;
 import be.vinci.pae.utils.Logs;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.GET;
@@ -15,6 +17,7 @@ import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response.Status;
+import java.util.Map;
 import org.apache.logging.log4j.Level;
 import org.glassfish.jersey.server.ContainerRequest;
 
@@ -25,6 +28,7 @@ import org.glassfish.jersey.server.ContainerRequest;
 @Path("/internships")
 public class InternshipResource {
 
+  private final ObjectMapper jsonMapper = new ObjectMapper();
   @Inject
   private InternshipUCC internshipUCC;
 
@@ -67,6 +71,37 @@ public class InternshipResource {
     Logs.log(Level.INFO, "InternshipResource (getOneInternship) : entrance");
     UserDTO user = (UserDTO) request.getProperty("user");
     return internshipUCC.getOneById(id, user.getId());
+  }
+
+  /**
+   * get internship count and total student by school year.
+   *
+   * @return an object containing internship count and total student by year.
+   */
+  @GET
+  @Path("/stats/year")
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize
+  public ObjectNode getInternshipCountStat() {
+
+    ObjectNode statObject = jsonMapper.createObjectNode();
+    Map<String, Integer[]> internshipStat = internshipUCC.getInternshipCountByYear();
+
+    for (Map.Entry<String, Integer[]> stats : internshipStat.entrySet()) {
+
+      String year = stats.getKey();
+      Integer[] statsByYear = stats.getValue();
+
+      ObjectNode statsByYearObject = jsonMapper.createObjectNode();
+      statsByYearObject.put("internshipCount", statsByYear[0]);
+      statsByYearObject.put("totalStudents", statsByYear[1]);
+
+      statObject.set(year, statsByYearObject);
+
+    }
+
+    return statObject;
+
   }
 
 }
