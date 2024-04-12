@@ -92,4 +92,18 @@ public interface InternshipDTO {
    */
   void setSchoolYear(String schoolYear);
 
+  /**
+   * Get the internship's database version.
+   *
+   * @return the internship's database version.
+   */
+  int getVersion();
+
+  /**
+   * Set the internship's database version.
+   *
+   * @param version version to set.
+   */
+  void setVersion(int version);
+
 }

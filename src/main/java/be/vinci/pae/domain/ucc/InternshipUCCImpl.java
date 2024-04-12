@@ -1,12 +1,17 @@
 package be.vinci.pae.domain.ucc;
 
+import be.vinci.pae.domain.Contact;
 import be.vinci.pae.domain.dto.InternshipDTO;
 import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.ContactDAO;
 import be.vinci.pae.services.dao.InternshipDAO;
+import be.vinci.pae.utils.Logs;
+import be.vinci.pae.utils.exceptions.DuplicateException;
+import be.vinci.pae.utils.exceptions.InvalidRequestException;
 import be.vinci.pae.utils.exceptions.NotAllowedException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
 import jakarta.inject.Inject;
+import org.apache.logging.log4j.Level;
 
 /**
  * Implementation of InternshipUCC.
@@ -54,6 +59,33 @@ public class InternshipUCCImpl implements InternshipUCC {
       dalServices.commitTransaction();
       return internship;
     } catch (Exception e) {
+      dalServices.rollbackTransaction();
+      throw e;
+    }
+  }
+
+  @Override
+  public InternshipDTO createInternship(InternshipDTO internshipDTO) {
+    internshipDTO.setSchoolYear(internshipDTO.getContact().getSchoolYear());
+    try {
+      dalServices.startTransaction();
+      InternshipDTO existingInternship = internshipDAO.getOneByContact(
+          internshipDTO.getContact().getId());
+      if (existingInternship != null) {
+        Logs.log(Level.ERROR, "InternshipUCC (createInternship) : internship already created");
+        throw new DuplicateException("Cannot add existing internship");
+      }
+      if (!((Contact) internshipDTO.getContact()).isAccepted()) {
+        Logs.log(Level.ERROR, "InternshipUCC (createInternship) : contact is not accepted");
+        throw new InvalidRequestException("Contact is not accepted");
+      }
+
+      InternshipDTO internship = internshipDAO.createInternship(internshipDTO);
+      dalServices.commitTransaction();
+      Logs.log(Level.DEBUG, "InternshipUCC (createInternship) : success!");
+      return internship;
+    } catch (Exception e) {
+      Logs.log(Level.ERROR, "InternshipUCC (createInternship) : creation failed");
       dalServices.rollbackTransaction();
       throw e;
     }

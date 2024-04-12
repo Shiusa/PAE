@@ -25,4 +25,12 @@ public interface InternshipUCC {
    * @return the internship found.
    */
   InternshipDTO getOneById(int id, int actualStudent);
+
+  /**
+   * Create an internship.
+   *
+   * @param internshipDTO the dto containing the new internship datas.
+   * @return the created internship.
+   */
+  InternshipDTO createInternship(InternshipDTO internshipDTO);
 }

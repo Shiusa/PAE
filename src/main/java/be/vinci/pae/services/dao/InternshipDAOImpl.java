@@ -13,6 +13,7 @@ import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.services.dal.DalBackendServices;
 import be.vinci.pae.utils.exceptions.FatalException;
 import jakarta.inject.Inject;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -96,6 +97,41 @@ public class InternshipDAOImpl implements InternshipDAO {
     try (PreparedStatement ps = dalServices.getPreparedStatement(requestSql)) {
       ps.setInt(1, id);
       return buildInternshipDTO(ps);
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+  }
+
+  @Override
+  public InternshipDTO getOneByContact(int id) {
+    String requestSql = """
+        SELECT * FROM prostage.internships i, prostage.contacts c, prostage.users u, prostage.companies cm
+        prostage.supervisors s
+        WHERE i.contact = ? AND i.supervisor = u.supervisor_id AND i.contact = c.contact_id
+        AND c.user = u.user_id AND c.company = cm.company_id
+        """;
+
+    try (PreparedStatement ps = dalServices.getPreparedStatement(requestSql)) {
+      ps.setInt(1, id);
+      return buildInternshipDTO(ps);
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+  }
+
+  @Override
+  public InternshipDTO createInternship(InternshipDTO internshipDTO) {
+    String requestSql = """
+        INSERT INTO prostage.internships VALUES (DEFAULT, ?, ?, ?, ?, ?, 1);
+        """;
+
+    try (PreparedStatement ps = dalServices.getPreparedStatement(requestSql)) {
+      ps.setInt(1, internshipDTO.getContact().getId());
+      ps.setInt(2, internshipDTO.getSupervisor().getId());
+      ps.setDate(3, (Date) internshipDTO.getSignatureDate());
+      ps.setString(4, internshipDTO.getProject());
+      ps.setString(5, internshipDTO.getSchoolYear());
+      return getOneByContact(internshipDTO.getContact().getId());
     } catch (SQLException e) {
       throw new FatalException(e);
     }

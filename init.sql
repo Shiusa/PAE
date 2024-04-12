@@ -51,7 +51,8 @@ CREATE TABLE proStage.internships (
                                       supervisor INTEGER NOT NULL REFERENCES proStage.supervisors (supervisor_id),
                                       signature_date DATE NOT NULL,
                                       project TEXT,
-                                      school_year TEXT NOT NULL
+                                      school_year TEXT NOT NULL,
+    version INTEGER NOT NULL
 );
 
 --companies

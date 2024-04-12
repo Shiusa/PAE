@@ -122,4 +122,10 @@ public class ContactImpl implements Contact {
   public boolean isAdmitted() {
     return this.state.equals("pris");
   }
+
+  @Override
+  @JsonIgnore
+  public boolean isAccepted() {
+    return this.state.equals("accepté");
+  }
 }
