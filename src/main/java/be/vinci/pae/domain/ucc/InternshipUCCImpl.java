@@ -59,7 +59,15 @@ public class InternshipUCCImpl implements InternshipUCC {
 
   @Override
   public Map<String, Integer[]> getInternshipCountByYear() {
-    return internshipDAO.getInternshipCountByYear();
+    try {
+      dalServices.startTransaction();
+      Map<String, Integer[]> returnedMap = internshipDAO.getInternshipCountByYear();
+      dalServices.commitTransaction();
+      return returnedMap;
+    } catch (Exception e) {
+      dalServices.rollbackTransaction();
+      throw e;
+    }
   }
 
 }
