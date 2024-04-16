@@ -64,4 +64,14 @@ public interface ContactUCC {
    * @return the started contact.
    */
   ContactDTO turnDown(int contactId, String reasonForRefusal, int studentId);
+
+
+  /**
+   * Get all contacts by a company id.
+   *
+   * @param company the company.
+   * @return a list containing all the contacts.
+   */
+  List<ContactDTO> getAllContactsByCompany(int company);
 }
+

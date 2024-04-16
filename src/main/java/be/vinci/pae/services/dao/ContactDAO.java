@@ -73,4 +73,12 @@ public interface ContactDAO {
    * @return a ContactDTO if the update of contact was successful, null otherwise.
    */
   ContactDTO turnDown(int contactId, String reasonForRefusal, int version);
+
+  /**
+   * Get all contacts by a company id.
+   *
+   * @param company company's id.
+   * @return a list of all contacts.
+   */
+  List<ContactDTO> getAllContactsByCompany(int company);
 }

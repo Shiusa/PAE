@@ -227,4 +227,25 @@ public class ContactResource {
 
     return contact;
   }
+
+  /**
+   * Get all contacts by a student id.
+   *
+   * @param company the student.
+   * @return a list containing all the contacts by a student id.
+   */
+  @GET
+  @Path("/all/company/{companyId}")
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize
+  public List<ContactDTO> getAllByCompany(@PathParam("companyId") int company) {
+    if (company == 0) {
+      Logs.log(Level.INFO, "ContactResource (getAllByCompany) : entrance");
+    }
+    List<ContactDTO> contactDTOList = contactUCC.getAllContactsByCompany(company);
+
+    Logs.log(Level.DEBUG, "ContactResource (getAllByCompany) : success!");
+    return contactDTOList;
+
+  }
 }

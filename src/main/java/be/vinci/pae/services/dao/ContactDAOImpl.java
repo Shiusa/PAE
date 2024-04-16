@@ -263,4 +263,37 @@ public class ContactDAOImpl implements ContactDAO {
       throw new FatalException(e);
     }
   }
+
+  @Override
+  public List<ContactDTO> getAllContactsByCompany(int company) {
+    List<ContactDTO> contactDTOList = new ArrayList<>();
+
+    String requestSql = """
+        SELECT ct.contact_id, ct.company AS ct_company, ct.student, ct.meeting, ct.contact_state,
+        ct.reason_for_refusal, ct.school_year AS ct_school_year, ct.version AS ct_version,
+        cm.company_id, cm.name, cm.designation, cm.address, cm.phone_number AS cm_phone_number,
+        cm.email AS cm_email, cm.is_blacklisted, cm.blacklist_motivation, cm.version AS cm_version,
+        us.user_id, us.email AS us_email, us.lastname AS us_lastname, us.firstname AS us_firstname,
+        us.phone_number AS us_phone_number, us.password, us.registration_date,
+        us.school_year AS us_school_year, us.role
+        FROM prostage.contacts ct, prostage.companies cm, prostage.users us
+        WHERE ct.company = ? AND cm.company_id = ct.company AND ct.student = us.user_id
+        """;
+
+    try (PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql)) {
+      ps.setInt(1, company);
+      try (ResultSet rs = ps.executeQuery()) {
+        while (rs.next()) {
+          CompanyDTO companyDTO = DTOSetServices.setCompanyDTO(companyFactory.getCompanyDTO(), rs);
+          UserDTO studentDTO = DTOSetServices.setUserDTO(userFactory.getUserDTO(), rs);
+          ContactDTO contactDTO = DTOSetServices.setContactDTO(contactFactory.getContactDTO(), rs,
+              companyDTO, studentDTO);
+          contactDTOList.add(contactDTO);
+        }
+      }
+      return contactDTOList;
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+  }
 }

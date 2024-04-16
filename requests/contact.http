@@ -6,8 +6,8 @@ POST {{baseUrl}}/users/login
 Content-Type: application/json
 
 {
-  "email":"eleonore.martin@vinci.be",
-  "password":"123"
+  "email":"Ach.ile@student.vinci.be",
+  "password":"mdpuser.1"
 }
 
 > {%
@@ -41,7 +41,7 @@ Authorization: {{eleonoreToken}}
   "contactId":"3"
 }
 
-### Create one contact
+### turndown one contact
 POST {{baseUrl}}/contacts/turnDown
 Content-Type: application/json
 Authorization: {{eleonoreToken}}
@@ -51,8 +51,8 @@ Authorization: {{eleonoreToken}}
   "reasonForRefusal": "your profil isn't corresponding to our demand"
 }
 
-### Create one contact
-GET {{baseUrl}}/contacts/all/3
+### get all contacts
+GET {{baseUrl}}/contacts/all/company/3
 Content-Type: application/json
 Authorization: {{eleonoreToken}}
 

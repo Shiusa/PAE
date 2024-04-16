@@ -204,4 +204,12 @@ public class ContactUCCImpl implements ContactUCC {
       throw e;
     }
   }
+
+  @Override
+  public List<ContactDTO> getAllContactsByCompany(int company) {
+    dalServices.startTransaction();
+    List<ContactDTO> listContactDTO = contactDAO.getAllContactsByCompany(company);
+    dalServices.commitTransaction();
+    return listContactDTO;
+  }
 }
