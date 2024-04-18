@@ -66,9 +66,11 @@ public class InternshipUCCImpl implements InternshipUCC {
 
   @Override
   public InternshipDTO createInternship(InternshipDTO internshipDTO) {
+    Logs.log(Level.INFO, "InternshipUCC (createInternship) : entrance");
     internshipDTO.setSchoolYear(internshipDTO.getContact().getSchoolYear());
     try {
       dalServices.startTransaction();
+      System.out.println(1);
       InternshipDTO existingInternship = internshipDAO.getOneByContact(
           internshipDTO.getContact().getId());
       if (existingInternship != null) {
@@ -85,7 +87,8 @@ public class InternshipUCCImpl implements InternshipUCC {
       Logs.log(Level.DEBUG, "InternshipUCC (createInternship) : success!");
       return internship;
     } catch (Exception e) {
-      Logs.log(Level.ERROR, "InternshipUCC (createInternship) : creation failed");
+      System.out.println(e);
+      Logs.log(Level.ERROR, "InternshipUCC (createInternship) : creation failed " + e);
       dalServices.rollbackTransaction();
       throw e;
     }

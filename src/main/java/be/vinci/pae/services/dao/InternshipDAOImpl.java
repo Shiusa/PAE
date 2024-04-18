@@ -11,12 +11,14 @@ import be.vinci.pae.domain.dto.InternshipDTO;
 import be.vinci.pae.domain.dto.SupervisorDTO;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.services.dal.DalBackendServices;
+import be.vinci.pae.utils.Logs;
 import be.vinci.pae.utils.exceptions.FatalException;
 import jakarta.inject.Inject;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import org.apache.logging.log4j.Level;
 
 /**
  * Implementation of InternshipDAO.
@@ -38,6 +40,7 @@ public class InternshipDAOImpl implements InternshipDAO {
 
   @Override
   public InternshipDTO getOneInternshipByIdUser(int student) {
+    Logs.log(Level.INFO, "InternshipDAO (getOneByIdUser) : entrance");
     String requestSql = """
         SELECT i.internship_id, i.contact, i.supervisor, i.signature_date, i.project, i.school_year,
                 
@@ -65,12 +68,14 @@ public class InternshipDAOImpl implements InternshipDAO {
       ps.setInt(1, student);
       return buildInternshipDTO(ps);
     } catch (SQLException e) {
+      Logs.log(Level.ERROR, "InternshipDAO (getOneByIdUser) : error");
       throw new FatalException(e);
     }
   }
 
   @Override
   public InternshipDTO getOneInternshipById(int id) {
+    Logs.log(Level.INFO, "InternshipDAO (getOneById) : entrance");
     String requestSql = """
         SELECT i.internship_id, i.contact, i.supervisor, i.signature_date, i.project, i.school_year,
                 
@@ -98,12 +103,14 @@ public class InternshipDAOImpl implements InternshipDAO {
       ps.setInt(1, id);
       return buildInternshipDTO(ps);
     } catch (SQLException e) {
+      Logs.log(Level.ERROR, "InternshipDAO (getOneById) : error");
       throw new FatalException(e);
     }
   }
 
   @Override
   public InternshipDTO getOneByContact(int id) {
+    Logs.log(Level.INFO, "InternshipDAO (getOneByContact) : entrance");
     String requestSql = """
         SELECT * FROM prostage.internships i, prostage.contacts c, prostage.users u, prostage.companies cm
         prostage.supervisors s
@@ -115,14 +122,17 @@ public class InternshipDAOImpl implements InternshipDAO {
       ps.setInt(1, id);
       return buildInternshipDTO(ps);
     } catch (SQLException e) {
+      Logs.log(Level.ERROR, "InternshipDAO (getOneByContact) : error");
       throw new FatalException(e);
     }
   }
 
   @Override
   public InternshipDTO createInternship(InternshipDTO internshipDTO) {
+    Logs.log(Level.INFO, "DAO : entrance createInternship");
     String requestSql = """
-        INSERT INTO prostage.internships VALUES (DEFAULT, ?, ?, ?, ?, ?, 1);
+        INSERT INTO prostage.internships(contact, supervisor, signature_date, project, school_year,
+        version) VALUES (?, ?, ?, ?, ?, 1)
         """;
 
     try (PreparedStatement ps = dalServices.getPreparedStatement(requestSql)) {
@@ -131,6 +141,7 @@ public class InternshipDAOImpl implements InternshipDAO {
       ps.setDate(3, (Date) internshipDTO.getSignatureDate());
       ps.setString(4, internshipDTO.getProject());
       ps.setString(5, internshipDTO.getSchoolYear());
+      ps.executeQuery();
       return getOneByContact(internshipDTO.getContact().getId());
     } catch (SQLException e) {
       throw new FatalException(e);

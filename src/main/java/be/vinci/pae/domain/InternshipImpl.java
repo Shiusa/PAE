@@ -7,7 +7,7 @@ import java.util.Date;
 /**
  * Implementation of Internship.
  */
-class InternshipImpl implements Internship {
+public class InternshipImpl implements Internship {
 
   private int id;
   private ContactDTO contact;

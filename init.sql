@@ -95,9 +95,9 @@ INSERT INTO proStage.contacts VALUES (DEFAULT,2,5,NULL,'initié',NULL,'2023-2024
 INSERT INTO proStage.contacts VALUES (DEFAULT,4,8,NULL,'initié',NULL,'2023-2024',1);
 
 --internships
-INSERT INTO proStage.internships VALUES (DEFAULT,1,1,'2023-10-10','Un ERP : Odoo','2023-2024');
-INSERT INTO proStage.internships VALUES (DEFAULT,2,2,'2023-11-23','sBMS project - a complex environment','2023-2024');
-INSERT INTO proStage.internships VALUES (DEFAULT,4,3,'2023-10-12','CRM : Microsoft Dynamics 365 For Sales','2023-2024');
+INSERT INTO proStage.internships VALUES (DEFAULT,1,1,'2023-10-10','Un ERP : Odoo','2023-2024', 1);
+INSERT INTO proStage.internships VALUES (DEFAULT,2,2,'2023-11-23','sBMS project - a complex environment','2023-2024', 1);
+INSERT INTO proStage.internships VALUES (DEFAULT,4,3,'2023-10-12','CRM : Microsoft Dynamics 365 For Sales','2023-2024', 1);
 
 SELECT COUNT(*) AS nbUsers FROM proStage.users;
 SELECT COUNT(*) AS nbCompanies FROM proStage.companies;
