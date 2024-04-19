@@ -1,9 +1,37 @@
-import {awaitFront} from "../../utils/function";
+import {awaitFront, showNavStyle} from "../../utils/function";
+import {getAuthenticatedUser} from "../../utils/session";
+
+const renderYearOptions = (internshipStats) => {
+  const selectYear = document.querySelector('.year-list');
+  // let optionsYear = '';
+  /* let i = 0;
+  while (i < internshipStats.length) {
+    optionsYear += `<option value="${internshipStats.year}">${internshipStats.year}</option>`
+    i += 1;
+  } */
+  selectYear.innerHTML = Object.keys(internshipStats).map(
+      year => `<option value="${year}">${year}</option>`).join('');
+}
+
+const fetchInternshipStat = async () => {
+  const user = getAuthenticatedUser();
+  const response = await fetch('api/internships/stats/year', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': user.token
+    }
+  });
+  return response.json();
+}
 
 const AdminDashboardPage = async () => {
 
   const main = document.querySelector('main');
   awaitFront();
+  const internshipStats = await fetchInternshipStat();
+  console.log(internshipStats);
+  showNavStyle("dashboard");
 
   main.innerHTML = `
     <div class="container-fluid justify-content-center align-items-center mt-5 mb-5 mx-auto">
@@ -13,7 +41,7 @@ const AdminDashboardPage = async () => {
             <div class="card-body d-flex flex-column align-items-center">
             
               <p class="mb-0">Année académique</p>
-              <select class="custom-select-options w-50 rounded-1 text-center mb-5">
+              <select class="year-list custom-select-options w-50 rounded-1 text-center mb-5">
                 <option selected>2023-2024</option>
                 <option value="1">One</option>
                 <option value="2">Two</option>
@@ -40,6 +68,8 @@ const AdminDashboardPage = async () => {
       </div>
     </div>
   `;
+
+  renderYearOptions(internshipStats);
 
 }
 
