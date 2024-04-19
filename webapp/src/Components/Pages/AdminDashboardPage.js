@@ -14,7 +14,7 @@ const renderYearOptions = (internshipStats) => {
 }
 
 const fetchInternshipStat = async () => {
-  const user = getAuthenticatedUser();
+  const user = await getAuthenticatedUser();
   const response = await fetch('api/internships/stats/year', {
     method: 'GET',
     headers: {

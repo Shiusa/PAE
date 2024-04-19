@@ -15,13 +15,10 @@ import jakarta.ws.rs.core.Response.Status;
 import jakarta.ws.rs.ext.Provider;
 import java.io.IOException;
 
-/**
- * AuthorizationRequestFilter class.
- */
 @Singleton
 @Provider
-@Authorize
-public class AuthorizationRequestFilter implements ContainerRequestFilter {
+@TeacherAndAdministrative
+public class TeacherAndAdministrativeRequestFilter implements ContainerRequestFilter {
 
   private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
   private final JWTVerifier jwtVerifier = JWT.require(this.jwtAlgorithm).withIssuer("auth0")
@@ -29,12 +26,6 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
   @Inject
   private UserUCC userUCC;
 
-  /**
-   * Filters.
-   *
-   * @param requestContext requestContext.
-   * @throws IOException exception.
-   */
   @Override
   public void filter(ContainerRequestContext requestContext) throws IOException {
     String token = requestContext.getHeaderString("Authorization");
@@ -46,8 +37,11 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
       if (authenticatedUser == null) {
         requestContext.abortWith(Response.status(Status.FORBIDDEN)
             .entity("You are forbidden to access this resource").build());
+      } else if (!authenticatedUser.getRole().equals("Professeur")
+          && !authenticatedUser.getRole().equals("Administratif")) {
+        requestContext.abortWith(Response.status(Status.FORBIDDEN)
+            .entity("Only teachers and administratives can access this resource.").build());
       }
-
       requestContext.setProperty("user", authenticatedUser);
     }
   }

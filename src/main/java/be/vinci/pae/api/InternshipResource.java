@@ -1,6 +1,7 @@
 package be.vinci.pae.api;
 
 import be.vinci.pae.api.filters.Authorize;
+import be.vinci.pae.api.filters.TeacherAndAdministrative;
 import be.vinci.pae.domain.dto.InternshipDTO;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.domain.ucc.InternshipUCC;
@@ -81,7 +82,7 @@ public class InternshipResource {
   @GET
   @Path("/stats/year")
   @Produces(MediaType.APPLICATION_JSON)
-  @Authorize
+  @TeacherAndAdministrative
   public ObjectNode getInternshipCountStat() {
 
     ObjectNode statObject = jsonMapper.createObjectNode();
