@@ -116,4 +116,12 @@ public class CompanyUCCImplTest {
     );
   }
 
+  @Test
+  @DisplayName("Test blacklist crash transaction")
+  public void testBlacklistCrashTransaction() {
+    Mockito.doThrow(new FatalException(new RuntimeException()))
+        .when(dalServicesMock).startTransaction();
+    assertThrows(FatalException.class,
+        () -> companyUCC.blacklist(1, "l'entreprise pratique la fraude", 1));
+  }
 }
