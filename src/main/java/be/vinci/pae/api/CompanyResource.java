@@ -1,6 +1,7 @@
 package be.vinci.pae.api;
 
 import be.vinci.pae.api.filters.Authorize;
+import be.vinci.pae.api.filters.Teacher;
 import be.vinci.pae.domain.dto.CompanyDTO;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.domain.ucc.CompanyUCC;
@@ -98,7 +99,7 @@ public class CompanyResource {
   @POST
   @Path("/blacklist")
   @Produces(MediaType.APPLICATION_JSON)
-  @Authorize
+  @Teacher
   public ObjectNode blacklist(@Context ContainerRequest request, JsonNode json) {
     Logs.log(Level.INFO, "CompanyResource (blacklist) : entrance");
     if (!json.hasNonNull("company")) {
