@@ -2,7 +2,7 @@ package be.vinci.pae.domain;
 
 import be.vinci.pae.domain.dto.ContactDTO;
 import be.vinci.pae.domain.dto.SupervisorDTO;
-import java.util.Date;
+import java.sql.Date;
 
 /**
  * Implementation of Internship.

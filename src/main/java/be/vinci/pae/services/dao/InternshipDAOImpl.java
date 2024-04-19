@@ -14,7 +14,6 @@ import be.vinci.pae.services.dal.DalBackendServices;
 import be.vinci.pae.utils.Logs;
 import be.vinci.pae.utils.exceptions.FatalException;
 import jakarta.inject.Inject;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -43,6 +42,7 @@ public class InternshipDAOImpl implements InternshipDAO {
     Logs.log(Level.INFO, "InternshipDAO (getOneByIdUser) : entrance");
     String requestSql = """
         SELECT i.internship_id, i.contact, i.supervisor, i.signature_date, i.project, i.school_year,
+        i.version
                 
         ct.contact_id, ct.company AS ct_company, ct.student, ct.meeting, ct.contact_state,
         ct.reason_for_refusal, ct.school_year AS ct_school_year, ct.version AS ct_version,
@@ -78,6 +78,7 @@ public class InternshipDAOImpl implements InternshipDAO {
     Logs.log(Level.INFO, "InternshipDAO (getOneById) : entrance");
     String requestSql = """
         SELECT i.internship_id, i.contact, i.supervisor, i.signature_date, i.project, i.school_year,
+        i.version
                 
         ct.contact_id, ct.company AS ct_company, ct.student, ct.meeting, ct.contact_state,
         ct.reason_for_refusal, ct.school_year AS ct_school_year, ct.version AS ct_version,
@@ -149,13 +150,13 @@ public class InternshipDAOImpl implements InternshipDAO {
     Logs.log(Level.INFO, "DAO : entrance createInternship");
     String requestSql = """
         INSERT INTO prostage.internships(contact, supervisor, signature_date, project, school_year,
-        version) VALUES (?, ?, ?, ?, ?, 1)
+        version) VALUES (?, ?, ?, ?, ?, 1) RETURNING *
         """;
 
     try (PreparedStatement ps = dalServices.getPreparedStatement(requestSql)) {
       ps.setInt(1, internshipDTO.getContact().getId());
       ps.setInt(2, internshipDTO.getSupervisor().getId());
-      ps.setDate(3, (Date) internshipDTO.getSignatureDate());
+      ps.setDate(3, internshipDTO.getSignatureDate());
       ps.setString(4, internshipDTO.getProject());
       ps.setString(5, internshipDTO.getSchoolYear());
       ps.executeQuery();

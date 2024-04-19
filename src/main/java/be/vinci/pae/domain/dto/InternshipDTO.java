@@ -2,7 +2,7 @@ package be.vinci.pae.domain.dto;
 
 import be.vinci.pae.domain.InternshipImpl;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.util.Date;
+import java.sql.Date;
 
 /**
  * InternshipDTO interface.

@@ -30,11 +30,13 @@ Content-Type: application/json
 {
   "id": 0,
   "contact": {
-    "id": 3
+    "id": 3,
+    "state": "accepté",
+    "schoolYear": "2023-2024"
   },
   "supervisor": {
     "id": 3
-    },
+  },
   "signatureDate": "2024-04-12",
   "project": null,
   "schoolYear": "2023-2024",
