@@ -70,7 +70,6 @@ public class InternshipUCCImpl implements InternshipUCC {
     internshipDTO.setSchoolYear(internshipDTO.getContact().getSchoolYear());
     try {
       dalServices.startTransaction();
-      System.out.println(1);
       InternshipDTO existingInternship = internshipDAO.getOneByContact(
           internshipDTO.getContact().getId());
       if (existingInternship != null) {

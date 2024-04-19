@@ -112,10 +112,27 @@ public class InternshipDAOImpl implements InternshipDAO {
   public InternshipDTO getOneByContact(int id) {
     Logs.log(Level.INFO, "InternshipDAO (getOneByContact) : entrance");
     String requestSql = """
-        SELECT * FROM prostage.internships i, prostage.contacts c, prostage.users u, prostage.companies cm
-        prostage.supervisors s
-        WHERE i.contact = ? AND i.supervisor = u.supervisor_id AND i.contact = c.contact_id
-        AND c.user = u.user_id AND c.company = cm.company_id
+        SELECT i.internship_id, i.contact, i.supervisor, i.signature_date, i.project, i.school_year,
+        i.version,
+                
+        ct.contact_id, ct.company AS ct_company, ct.student, ct.meeting, ct.contact_state,
+        ct.reason_for_refusal, ct.school_year AS ct_school_year, ct.version AS ct_version,
+                
+        cm.company_id, cm.name, cm.designation, cm.address, cm.phone_number AS cm_phone_number,
+        cm.email AS cm_email, cm.is_blacklisted, cm.blacklist_motivation, cm.version AS cm_version,
+                
+        us.user_id, us.email AS us_email, us.lastname AS us_lastname, us.firstname AS us_firstname,
+        us.phone_number AS us_phone_number, us.password, us.registration_date,
+        us.school_year AS us_school_year, us.role,
+                
+        su.supervisor_id, su.company AS su_company, su.lastname AS su_lastname,
+        su.firstname AS su_firstname, su.phone_number AS su_phone_number, su.email AS su_email
+                
+        FROM prostage.internships i, prostage.contacts ct, prostage.companies cm,
+        prostage.supervisors su, prostage.users us
+        WHERE i.contact = ct.contact_id AND i.supervisor = su.supervisor_id
+        AND ct.company = cm.company_id AND ct.student = us.user_id
+        AND i.contact = ?
         """;
 
     try (PreparedStatement ps = dalServices.getPreparedStatement(requestSql)) {

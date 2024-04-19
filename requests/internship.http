@@ -30,53 +30,11 @@ Content-Type: application/json
 {
   "id": 0,
   "contact": {
-    "id": 1,
-    "company": {
-      "id": 2,
-      "name": "Assyst Europe",
-      "designation": null,
-      "address": "Avenue du Japon, 1/B9 1420 Braine-l Alleud",
-      "phoneNumber": "02.609.25.00",
-      "email": null,
-      "isBlacklisted": false,
-      "blacklistMotivation": null,
-      "version": 1
-    },
-    "student": {
-      "id": 9,
-      "email": "Carole.skile@student.vinci.be",
-      "lastname": "skile",
-      "firstname": "Carole",
-      "phoneNumber": "0489 00 00 01",
-      "password": "eee",
-      "registrationDate": "2023-09-18",
-      "schoolYear": "2023-2024",
-      "role": "Etudiant"
-    },
-    "meeting": "A distance",
-    "state": "accepté",
-    "reasonRefusal": null,
-    "schoolYear": "2023-2024",
-    "version": 1
+    "id": 3
   },
   "supervisor": {
-    "id": 3,
-    "company": {
-      "id": 2,
-      "name": "Assyst Europe",
-      "designation": null,
-      "address": "Avenue du Japon, 1/B9 1420 Braine-l Alleud",
-      "phoneNumber": "02.609.25.00",
-      "email": null,
-      "isBlacklisted": false,
-      "blacklistMotivation": null,
-      "version": 1
+    "id": 3
     },
-    "lastname": "Assal",
-    "firstname": "Farid",
-    "phoneNumber": "0474 39 69 09",
-    "email": "f.assal@assyst-europe.com"
-  },
   "signatureDate": "2024-04-12",
   "project": null,
   "schoolYear": "2023-2024",
