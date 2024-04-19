@@ -680,10 +680,14 @@ input::placeholder {
 }
 
 #chart {
-  fill: transparent;
+  border-radius: 50%;
+  width: 160px;
+  height: 160px;
+  background: #119DB8;
+  /*fill: transparent;
   stroke-width: 30;
   stroke: #119DB8;
   stroke-dasharray: 94.1;
-  stroke-dashoffset: calc(94.1 * 5 / 100);
+  stroke-dashoffset: calc(94.1 * 5 / 100);*/
 }
 

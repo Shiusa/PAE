@@ -30,7 +30,7 @@ const AdminDashboardPage = async () => {
   const main = document.querySelector('main');
   awaitFront();
   const internshipStats = await fetchInternshipStat();
-  console.log(internshipStats);
+  console.log(internshipStats["2023-2024"]);
   showNavStyle("dashboard");
 
   main.innerHTML = `
@@ -48,9 +48,12 @@ const AdminDashboardPage = async () => {
                 <option value="3">Three</option>
               </select>
               <div class="bg-secondary w-75 mb-4 d-flex justify-content-center align-items-center" style="--percent:85; width: 100%; height: 200px;">
-                <svg viewBox="0 0 100 100">
+                <!--<svg viewBox="0 0 100 100">
                   <circle cx="50" cy="50" r="15" id="chart"></circle>
-                </svg>
+                </svg>-->
+                <div id="chart" style="background: conic-gradient(blue 0% 25%, white 25% 100%)">
+                  
+                </div>
               </div>
               <div class="legende bg-primary w-75 d-flex flex-column align-items-center rounded-3">
                 <p class="mt-3 mb-3">Total : 115 étudiants</p>
