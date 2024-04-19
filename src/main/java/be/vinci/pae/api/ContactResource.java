@@ -240,7 +240,7 @@ public class ContactResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize
-  public ObjectNode accept(@Context ContainerRequest request, JsonNode json) {
+  public ContactDTO accept(@Context ContainerRequest request, JsonNode json) {
     Logs.log(Level.INFO, "ContactResource (accept) : entrance");
     UserDTO userDTO = (UserDTO) request.getProperty("user");
     if (!json.hasNonNull("contactId")) {
@@ -255,7 +255,6 @@ public class ContactResource {
     int studentId = userDTO.getId();
 
     Logs.log(Level.DEBUG, "ContactResource (accept) : success!");
-    ContactDTO contactDTO = contactUCC.accept(contactId, studentId);
-    return jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
+    return contactUCC.accept(contactId, studentId);
   }
 }
