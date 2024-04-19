@@ -679,15 +679,58 @@ input::placeholder {
   transform: translateX(-5px);
 }
 
+.dash-row {
+  height: 65vh;
+}
+
 #chart {
   border-radius: 50%;
   width: 160px;
   height: 160px;
   background: #119DB8;
-  /*fill: transparent;
-  stroke-width: 30;
-  stroke: #119DB8;
-  stroke-dasharray: 94.1;
-  stroke-dashoffset: calc(94.1 * 5 / 100);*/
+  border: 0.5rem solid white;
 }
 
+.year-list {
+  color: #119DB8;
+}
+
+.chart-card {
+  background-color: #119DB8;
+  color: white;
+}
+
+.chart-container {
+  background-color: #119DB8;
+}
+
+.stat-caption {
+  border: 0.2rem solid white;
+  background-color: #119DB8;
+}
+
+.cap-1 {
+  background-color: white;
+  color: #119DB8;
+}
+
+.cap-2 {
+  background-color: #119DB8;
+  border: 0.2rem solid white;
+}
+
+.left-zone, .right-zone {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.left-zone {
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.right-zone {
+  right: 50%;
+  transform: translate(50%, -50%);
+}
