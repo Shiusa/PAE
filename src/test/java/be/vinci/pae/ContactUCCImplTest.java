@@ -330,4 +330,42 @@ public class ContactUCCImplTest {
     assertNotNull(contactUCC.getOneById(1));
   }
 
+  @Test
+  @DisplayName("Test accept contact is null")
+  public void testAcceptContactNull() {
+    Mockito.when(contactDAOMock.findContactById(1)).thenReturn(null);
+    assertThrows(ResourceNotFoundException.class, () -> contactUCC.accept(1, 1));
+  }
+
+  @Test
+  @DisplayName("Test accept contact with state different than admitted")
+  public void testAcceptContactStartedState() {
+    userDTO.setId(1);
+    contactDTO.setStudent(userDTO);
+    contactDTO.setState("initié");
+    Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
+    assertThrows(NotAllowedException.class, () -> contactUCC.accept(1, 1));
+  }
+
+  @Test
+  @DisplayName("Test accept contact with wrong state")
+  public void testAcceptContactAdmittedState() {
+    userDTO.setId(2);
+    contactDTO.setStudent(userDTO);
+    contactDTO.setState("pris");
+    Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
+    assertThrows(NotAllowedException.class, () -> contactUCC.accept(1, 1));
+  }
+
+  @Test
+  @DisplayName("Test accept contact correctly accepted")
+  public void testAcceptContactCorrectlyAccepted() {
+    userDTO.setId(1);
+    contactDTO.setStudent(userDTO);
+    contactDTO.setState("pris");
+    contactDTO.setVersion(1);
+    Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
+    Mockito.when(contactDAOMock.accept(1,1)).thenReturn(contactDTO);
+    assertNotNull(contactUCC.accept(1, 1));
+  }
 }
