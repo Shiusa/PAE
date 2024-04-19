@@ -215,7 +215,6 @@ public class ContactUCCImpl implements ContactUCC {
       contact = (Contact) contactDAO.findContactById(contactId);
 
       if (contact == null) {
-        dalServices.rollbackTransaction();
         Logs.log(Level.ERROR,
             "ContactUCC (accept) : contact not found");
         throw new ResourceNotFoundException();
