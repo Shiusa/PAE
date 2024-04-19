@@ -28,6 +28,7 @@ i:nth-child(3) {
   animation: loading 0.9s infinite -0.6s linear;
 
 }
+
 }
 
 @keyframes loading {
@@ -77,6 +78,7 @@ p {
   padding: 10px 25px;
   border-radius: 10px;
 }
+
 }
 
 /* bootstrap settings */
@@ -144,10 +146,11 @@ p {
   text-align: center;
 
 p {
-  color : var(--ma-couleur);
+  color: var(--ma-couleur);
   font-size: 22px;
   margin-top: 11px;
 }
+
 }
 
 .nav-btn:hover {
@@ -170,6 +173,7 @@ p {
 p {
   margin-top: 15px;
 }
+
 }
 
 .nav-logout:hover {
@@ -188,6 +192,7 @@ p {
   font-size: 22px;
   padding: 0px 5px;
 }
+
 }
 
 /* dashboard */
@@ -215,6 +220,7 @@ p {
   color: white;
   font-size: 25px;
 }
+
 }
 
 .dash-info {
@@ -250,6 +256,7 @@ span:hover {
   color: white;
 
 }
+
 }
 }
 
@@ -279,6 +286,7 @@ p {
 i {
   margin-right: 10px;
 }
+
 }
 }
 
@@ -302,6 +310,7 @@ p {
 i {
   margin-right: 20px;
 }
+
 }
 
 span {
@@ -312,6 +321,7 @@ i {
   margin-right: 20px;
   font-size: 20px;
 }
+
 }
 }
 }
@@ -341,7 +351,6 @@ i {
   font-weight: bold;
 
 
-
 .title-col-1 {
   width: 40%;
 }
@@ -353,6 +362,7 @@ i {
 .title-col-3 {
   width: 40%;
 }
+
 }
 
 .table-line-box {
@@ -379,7 +389,7 @@ i {
   transform: scale(1.1);
 }
 
-.line-col-1{
+.line-col-1 {
   width: 50%;
 
 }
@@ -455,6 +465,7 @@ i {
   font-size: 25px;
   margin-right: 10px;
 }
+
 }
 
 .ent-radio {
@@ -470,14 +481,12 @@ textarea {
   resize: none;
   width: 70%;
 }
-}
-
 
 }
+
+
 }
-
-
-
+}
 
 
 /* page-login */
@@ -507,6 +516,7 @@ textarea {
 .btn-register:hover {
   transform: translateY(-3px);
 }
+
 }
 
 .box-login {
@@ -525,7 +535,7 @@ textarea {
   border-radius: 30px;
 
 
-h1{
+h1 {
   color: var(--ma-couleur);
   margin-bottom: 30px;
 }
@@ -564,6 +574,7 @@ p {
 p:hover {
   transform: scale(1.1);
 }
+
 }
 
 #box-register-left {
@@ -603,6 +614,7 @@ h4, h5 {
 
 .input-group {
   width: 60%;
+
 span {
   background: var(--ma-couleur);
   border: 2px solid var(--ma-couleur);
@@ -617,6 +629,7 @@ input {
 input::placeholder {
   color: var(--ma-couleur);
 }
+
 }
 }
 
@@ -666,4 +679,11 @@ input::placeholder {
   transform: translateX(-5px);
 }
 
+#chart {
+  fill: transparent;
+  stroke-width: 30;
+  stroke: #119DB8;
+  stroke-dasharray: 94.1;
+  stroke-dashoffset: calc(94.1 * 5 / 100);
+}
 
