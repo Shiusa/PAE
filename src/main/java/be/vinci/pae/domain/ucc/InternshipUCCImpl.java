@@ -69,6 +69,11 @@ public class InternshipUCCImpl implements InternshipUCC {
     Logs.log(Level.INFO, "InternshipUCC (createInternship) : entrance");
     internshipDTO.setSchoolYear(internshipDTO.getContact().getSchoolYear());
     try {
+      if (!((Contact) internshipDTO.getContact()).isAccepted()) {
+        Logs.log(Level.ERROR, "InternshipUCC (createInternship) : contact is not accepted");
+        throw new InvalidRequestException("Contact is not accepted");
+      }
+
       dalServices.startTransaction();
       InternshipDTO existingInternship = internshipDAO.getOneByContact(
           internshipDTO.getContact().getId());
@@ -76,17 +81,12 @@ public class InternshipUCCImpl implements InternshipUCC {
         Logs.log(Level.ERROR, "InternshipUCC (createInternship) : internship already created");
         throw new DuplicateException("Cannot add existing internship");
       }
-      if (!((Contact) internshipDTO.getContact()).isAccepted()) {
-        Logs.log(Level.ERROR, "InternshipUCC (createInternship) : contact is not accepted");
-        throw new InvalidRequestException("Contact is not accepted");
-      }
 
       InternshipDTO internship = internshipDAO.createInternship(internshipDTO);
       dalServices.commitTransaction();
       Logs.log(Level.DEBUG, "InternshipUCC (createInternship) : success!");
       return internship;
     } catch (Exception e) {
-      System.out.println(e);
       Logs.log(Level.ERROR, "InternshipUCC (createInternship) : creation failed " + e);
       dalServices.rollbackTransaction();
       throw e;
