@@ -704,6 +704,13 @@ input::placeholder {
   background-color: #119DB8;
 }
 
+.chartCT {
+  border: 2rem solid white;
+  border-radius: 50%;
+  width: 165px;
+  height: 165px;
+}
+
 .stat-caption {
   border: 0.2rem solid white;
   background-color: #119DB8;
@@ -717,20 +724,4 @@ input::placeholder {
 .cap-2 {
   background-color: #119DB8;
   border: 0.2rem solid white;
-}
-
-.left-zone, .right-zone {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-.left-zone {
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.right-zone {
-  right: 50%;
-  transform: translate(50%, -50%);
 }
