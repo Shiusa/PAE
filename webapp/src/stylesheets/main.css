@@ -391,7 +391,6 @@ i {
 
 .line-col-1 {
   width: 50%;
-
 }
 
 .line-col-2 {
@@ -400,10 +399,7 @@ i {
 
 }
 }
-
-
 }
-
 }
 }
 
@@ -707,8 +703,8 @@ input::placeholder {
 .chartCT {
   border: 2rem solid white;
   border-radius: 50%;
-  width: 165px;
-  height: 165px;
+  width: 180px;
+  height: 180px;
   background-color: white;
 }
 
@@ -730,4 +726,19 @@ input::placeholder {
   /*
   border: 0.2rem solid white;
   */
+}
+
+.adminCompanyListTitle {
+  font-weight: bold;
+  background: var(--ma-couleur);
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  color: white;
+  font-size: 20px;
+  text-align: center;
+}
+
+.adminCompanyListTile {
+  background: var(--ma-couleur);
+  color: white;
 }

@@ -122,7 +122,7 @@ const renderChart = (internshipStats) => {
   console.log(percent)
 
   chartContainer.innerHTML = `
-    <canvas class="myChart" width="150" height="150"></canvas>
+    <canvas class="myChart" width="164" height="164"></canvas>
   `;
   const chartCanvas = document.querySelector('.myChart');
   drawPieChart(chartCanvas, [percent, 100 - percent], ['#119DB8', 'white']);
@@ -181,19 +181,22 @@ const AdminDashboardPage = async () => {
   showNavStyle("dashboard");
 
   main.innerHTML = `
-    <div class="container-fluid justify-content-center align-items-center mt-5 mb-5 mx-auto">
-      <div class="row">
+    <div class="container-fluid justify-content-center align-items-center mt-5 mb-5 mx-auto" style="border: none">
+      <div class="row mx-2">
         <div class="col-md-3">
-          <div class="card chart-card dash-row">
-            <div class="card-body d-flex flex-column align-items-center">
+          <div class="card chart-card dash-row rounded-4">
+            <div class="card-body d-flex flex-column align-items-center justify-content-around py-4">
             
-              <p class="mb-0 mt-1">Année académique</p>
-              <select class="year-list custom-select-options w-50 rounded-1 text-center mb-4 py-1 border-0">
-                <option selected>2023-2024</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
-              </select>
+              <div class="d-flex flex-column align-items-center w-50">
+                <p class="mb-0 mb-2">Année académique</p>
+                <select class="year-list custom-select-options rounded-1 text-center mb-4 py-1 border-0 w-100">
+                  <option selected>2023-2024</option>
+                  <option value="1">One</option>
+                  <option value="2">Two</option>
+                  <option value="3">Three</option>
+                </select>
+              </div>
+              
               <div class="chart-container w-75 mb-4 d-flex justify-content-center align-items-center" style="width: 100%; height: 200px;">
                 <div class="chart-container" >
                   <div class="chartCT d-flex justify-content-center align-items-center">
@@ -201,6 +204,7 @@ const AdminDashboardPage = async () => {
                   </div>
                 </div>
               </div>
+              
               <div class="stat-caption w-75 d-flex flex-column align-items-center rounded-3">
                 <p class="mt-3 mb-3">Total : 115 étudiants</p>
                 <div class="rounded-5 mb-2 cap-1 px-2">
@@ -215,7 +219,53 @@ const AdminDashboardPage = async () => {
           </div>
         </div>
         <div class="col-md-9">
-          <p>test 3/4</p>
+          <div class="dash-row">
+            <div class="rounded-4 dash-row p-4" style="border: 1px solid #119DB8; margin-left: 4rem;">
+              <div class="col-md-12 d-flex flex-column justify-content-center align-items-center overflow-hidden">
+              
+                <div class="w-100 d-flex justify-content-center align-items-center border adminCompanyListTitle">
+                  <div class="d-flex align-items-center justify-content-center" style="width: 30%">
+                      <p class="p-2 m-0 text-center">Nom</p>
+                  </div>
+                  <div class="d-flex align-items-center justify-content-center" style="width: 30%">
+                      <p class="p-2 m-0 text-center">Appellation</p>
+                  </div>
+                  <div class="d-flex align-items-center justify-content-center" style="width: 20%">
+                      <p class="p-2 m-0 text-center">Numéro de téléphone</p>
+                  </div>
+                  <div class="d-flex align-items-center justify-content-center" style="width: 10%">
+                      <p class="p-2 m-0 text-center">Pris en stage</p>
+                  </div>
+                  <div class="d-flex align-items-center justify-content-center" style="width: 10%">
+                      <p class="p-2 m-0 text-center">Black-listé</p>
+                  </div>
+                </div>
+                
+                <div class="w-100 d-flex flex-column justify-content-center align-items-center overflow-auto">
+                
+                  <div class="w-100 d-flex align-items-center justify-content-center rounded-3 border my-3 py-3 adminCompanyListTile">
+                    <div class="d-flex align-items-center justify-content-center" style="width: 30%; border-right: 2px solid white;">
+                      <p class="p-0 m-0 text-center">BNP Paribas</p>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-center" style="width: 30%; border-right: 2px solid white;">
+                      <p class="p-0 m-0 text-center">Bruxelles</p>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-center" style="width: 20%; border-right: 2px solid white;">
+                      <p class="p-0 m-0 text-center">02700500400</p>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-center" style="width: 10%; border-right: 2px solid white;">
+                      <p class="p-0 m-0 text-center">60</p>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-center" style="width: 10%">
+                      <p class="p-0 m-0 text-center">NON</p>
+                    </div>
+                  </div>
+                  
+                </div>
+                <!--<p>test 3/4</p>-->
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
