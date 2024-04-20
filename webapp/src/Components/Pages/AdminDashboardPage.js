@@ -160,6 +160,13 @@ const renderYearOptions = (internshipStats) => {
     let selectedStats;
 
     if (selectedYear === "Par défaut") {
+      /* const allYearsStats = Object.values(internshipStats).reduce(
+          (acc, curr) => {
+            acc.internshipCount += curr.internshipCount;
+            acc.totalStudents += curr.totalStudents;
+            return acc;
+          }, {internshipCount: 0, totalStudents: 0});
+      selectedStats = allYearsStats; */
       selectedStats = internshipStats[years[1]];
     } else {
       selectedStats = internshipStats[selectedYear];
