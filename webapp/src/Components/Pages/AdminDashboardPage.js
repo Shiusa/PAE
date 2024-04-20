@@ -147,13 +147,24 @@ const renderCaption = (internshipStats) => {
 
 const renderYearOptions = (internshipStats) => {
   const selectYear = document.querySelector('.year-list');
-  selectYear.innerHTML = Object.keys(internshipStats).map(
+  const years = Object.keys(internshipStats);
+
+  years.unshift("Par défaut");
+
+  selectYear.innerHTML = years.map(
       year => `<option value="${year}" onclick="renderChart(internshipStats.internshipCount)">${year}</option>`).join(
       '');
 
   selectYear.addEventListener('change', (e) => {
     const selectedYear = e.target.value;
-    const selectedStats = internshipStats[selectedYear];
+    let selectedStats;
+
+    if (selectedYear === "Par défaut") {
+      selectedStats = internshipStats[years[1]];
+    } else {
+      selectedStats = internshipStats[selectedYear];
+    }
+
     renderChart(selectedStats);
     renderCaption(selectedStats);
     hideTooltip();
