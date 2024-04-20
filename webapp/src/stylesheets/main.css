@@ -709,6 +709,7 @@ input::placeholder {
   border-radius: 50%;
   width: 165px;
   height: 165px;
+  background-color: white;
 }
 
 .stat-caption {

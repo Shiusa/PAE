@@ -32,14 +32,27 @@ const drawPieChart = (canvas, percentages, colors) => {
   let startAngle = 0;
 
   // Draw slice
-  const drawSlice = (currentAngle, endAngle, color) => {
-    ctx.fillStyle = color;
-    ctx.beginPath();
-    ctx.moveTo(centerX, centerY);
-    ctx.arc(centerX, centerY, radius, currentAngle, endAngle);
-    ctx.closePath();
-    ctx.fill();
-  }
+  const drawSlice = (currentAngle, endAngle, color, duration) => {
+    const startTime = performance.now();
+    const endTime = startTime + duration;
+    const draw = () => {
+      const now = performance.now();
+      const progress = Math.min((now - startTime) / duration, 1);
+      const angle = currentAngle + (endAngle - currentAngle) * progress;
+
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.moveTo(centerX, centerY);
+      ctx.arc(centerX, centerY, radius, currentAngle, angle);
+      ctx.closePath();
+      ctx.fill();
+
+      if (now < endTime) {
+        requestAnimationFrame(draw);
+      }
+    };
+    requestAnimationFrame(draw);
+  };
 
   // Draw each slice of pie chart
   percentages.forEach((percentage, index) => {
@@ -47,7 +60,8 @@ const drawPieChart = (canvas, percentages, colors) => {
     const sliceAngle = (percentage / totalPercentage) * 2 * Math.PI;
 
     // Draw slice
-    drawSlice(startAngle, startAngle + sliceAngle, colors[index]);
+    drawSlice(startAngle, startAngle + sliceAngle, colors[index],
+        sliceAngle * 100);
 
     // Update starting angle for next slice
     startAngle += sliceAngle;
