@@ -719,9 +719,14 @@ input::placeholder {
 .cap-1 {
   background-color: white;
   color: #119DB8;
+  /*
+  border: 0.15rem solid white;
+  */
 }
 
 .cap-2 {
-  background-color: #119DB8;
+  background-color: var(--ma-couleur-foncée);
+  /*
   border: 0.2rem solid white;
+  */
 }

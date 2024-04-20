@@ -93,12 +93,12 @@ const drawPieChart = (canvas, percentages, colors) => {
         tooltip.style.top = `${event.pageY - 20}px`;
         tooltip.style.display = 'block';
       }
-    } else {
-      // If cursor out of bond, hide tooltip
-      hideTooltip();
     }
-
   });
+
+  canvas.addEventListener('mouseleave', () => {
+    hideTooltip();
+  })
 
 }
 
@@ -126,7 +126,7 @@ const renderChart = (internshipStats) => {
     </div>
   `; */
   chartContainer.innerHTML = `
-    <canvas class="myChart"></canvas>
+    <canvas class="myChart" width="150" height="150"></canvas>
   `;
   const chartCanvas = document.querySelector('.myChart');
   drawPieChart(chartCanvas, [percent, 100 - percent], ['#119DB8', 'white']);
@@ -200,7 +200,7 @@ const AdminDashboardPage = async () => {
                   <!--<div id="chart" style="background: conic-gradient(white 0% 25%, #119DB8 25% 100%);">
                   </div>-->
                   <div class="chartCT d-flex justify-content-center align-items-center">
-                    <canvas id="myChart"></canvas>
+                    <canvas class="myChart"></canvas>
                   </div>
                 </div>
               </div>
