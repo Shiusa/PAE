@@ -5,9 +5,10 @@ const hideTooltip = () => {
   document.getElementById('tooltip').style.display = 'none';
 }
 
-const drawPieChart = (canvas, percentages, colors) => {
+const drawPieChart = (canvas, dataSet, colors) => {
+
   // Check percentage & colors having same length
-  if (percentages.length !== colors.length) {
+  if (dataSet.length !== colors.length) {
     console.error(
         "Les tableaux de pourcentages et de couleurs doivent avoir la même longueur.");
     return;
@@ -24,11 +25,10 @@ const drawPieChart = (canvas, percentages, colors) => {
   const radius = Math.min(centerX, centerY);
 
   // Total percentage
-  const totalPercentage = percentages.reduce(
-      (total, percentage) => total + percentage, 0);
+  const totalValue = dataSet.reduce(
+      (total, currentValue) => total + currentValue, 0);
 
   // Start angle for each slice
-  // let startAngle = -0.5 * Math.PI;
   let startAngle = 0;
 
   // Draw slice
@@ -55,13 +55,13 @@ const drawPieChart = (canvas, percentages, colors) => {
   };
 
   // Draw each slice of pie chart
-  percentages.forEach((percentage, index) => {
+  dataSet.forEach((percentage, index) => {
     // Calc angle for each slice
-    const sliceAngle = (percentage / totalPercentage) * 2 * Math.PI;
+    const sliceAngle = (percentage / totalValue) * 2 * Math.PI;
 
     // Draw slice
     drawSlice(startAngle, startAngle + sliceAngle, colors[index],
-        sliceAngle * 100);
+        250);
 
     // Update starting angle for next slice
     startAngle += sliceAngle;
@@ -85,8 +85,8 @@ const drawPieChart = (canvas, percentages, colors) => {
       // Find hovered slice index
       let hoveredSliceIndex = -1;
       let cumulativeAngle = 0;
-      for (let i = 0; i < percentages.length; i += 1) {
-        const sliceAngle = (percentages[i] / totalPercentage) * 2 * Math.PI;
+      for (let i = 0; i < dataSet.length; i += 1) {
+        const sliceAngle = (dataSet[i] / totalValue) * 2 * Math.PI;
         if (normalizedAngle >= cumulativeAngle && normalizedAngle
             <= cumulativeAngle + sliceAngle) {
           hoveredSliceIndex = i;
@@ -97,12 +97,10 @@ const drawPieChart = (canvas, percentages, colors) => {
 
       // If hovered slice, show tooltip
       if (hoveredSliceIndex !== -1) {
-        const percentage = (percentages[hoveredSliceIndex] / totalPercentage)
+        const percentage = (dataSet[hoveredSliceIndex] / totalValue)
             * 100;
-        const text = `${percentage.toFixed(2)}%`;
-
         // Show tooltip next to cursor
-        tooltip.textContent = text;
+        tooltip.textContent = `${percentage.toFixed(2)}%`;
         tooltip.style.left = `${event.pageX + 10}px`;
         tooltip.style.top = `${event.pageY - 20}px`;
         tooltip.style.display = 'block';
@@ -117,28 +115,12 @@ const drawPieChart = (canvas, percentages, colors) => {
 }
 
 const renderChart = (internshipStats) => {
+
   const chartContainer = document.querySelector('.chartCT');
   const percent = (internshipStats.internshipCount
       / internshipStats.totalStudents) * 100;
   console.log(percent)
 
-  // const leftPercentage = 100-percent;
-  // const rightPercentage = percent;
-
-  // const leftRotateAngle = -90 + (leftPercentage * 1.8);
-  // const rightRotateAngle = 90 - (rightPercentage * 1.8);
-
-  /* const percentInternship = `<div class="percentage-value left">${percent.toFixed(
-      2)}%</div>`;
-  const percentTotal = `<div class="percentage-value right">${(100
-      - percent).toFixed(2)}%</div>`; */
-  /* chartContainer.innerHTML = `
-    <div id="chart" style="background: conic-gradient(white 0% ${100
-  - percent}%, #119DB8 ${100 - percent}% 100%);">
-      <div class="left-zone">${percentInternship}</div>
-      <div class="right-zone">${percentTotal}</div>
-    </div>
-  `; */
   chartContainer.innerHTML = `
     <canvas class="myChart" width="150" height="150"></canvas>
   `;
@@ -148,6 +130,7 @@ const renderChart = (internshipStats) => {
 }
 
 const renderCaption = (internshipStats) => {
+
   const caption = document.querySelector('.stat-caption');
   caption.innerHTML = `
     <p class="mt-3 mb-0">Total : ${internshipStats.totalStudents} étudiants</p>
@@ -159,6 +142,7 @@ const renderCaption = (internshipStats) => {
       <p class="m-0">Ont un stage</p>
     </div>
   `;
+
 }
 
 const renderYearOptions = (internshipStats) => {
@@ -212,8 +196,6 @@ const AdminDashboardPage = async () => {
               </select>
               <div class="chart-container w-75 mb-4 d-flex justify-content-center align-items-center" style="width: 100%; height: 200px;">
                 <div class="chart-container" >
-                  <!--<div id="chart" style="background: conic-gradient(white 0% 25%, #119DB8 25% 100%);">
-                  </div>-->
                   <div class="chartCT d-flex justify-content-center align-items-center">
                     <canvas class="myChart"></canvas>
                   </div>
@@ -239,7 +221,7 @@ const AdminDashboardPage = async () => {
     </div>
   `;
 
-  // Créer un élément pour le tooltip
+  // Create tooltip
   const tooltip = document.createElement('div');
   tooltip.id = 'tooltip';
   tooltip.style.position = 'absolute';
