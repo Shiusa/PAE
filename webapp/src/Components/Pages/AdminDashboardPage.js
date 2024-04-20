@@ -136,7 +136,8 @@ const renderChart = (internshipStats) => {
 const renderCaption = (internshipStats) => {
   const caption = document.querySelector('.stat-caption');
   caption.innerHTML = `
-    <p class="mt-3 mb-3">Total : ${internshipStats.totalStudents} étudiants</p>
+    <p class="mt-3 mb-0">Total : ${internshipStats.totalStudents} étudiants</p>
+    <p class="mt-0 mb-3">Ont un stage : ${internshipStats.internshipCount} étudiants</p>
     <div class="rounded-5 mb-2 cap-1 px-2">
       <p class="m-0">Pas de stage</p>
     </div>
