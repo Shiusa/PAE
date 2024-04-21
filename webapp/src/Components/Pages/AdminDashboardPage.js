@@ -5,7 +5,7 @@ const dataCompany = {
   "1": {
     "id": 1,
     "name": "BNP Paribas",
-    "designation": "Bruxelles",
+    "designation": "ZBruxelles",
     "address": "Jsp qsdkj qsdlkjqsd",
     "phoneNumber": "027001313",
     "email": "",
@@ -33,6 +33,18 @@ const dataCompany = {
     }
   }
 }
+
+const sortData = (data, sortingType) => Object.values(data).sort((a, b) => {
+  const valueA = a[sortingType].toLowerCase();
+  const valueB = b[sortingType].toLowerCase();
+
+  if (sortingType === 'name' && valueA === valueB) {
+    const designationA = a.designation.toLowerCase();
+    const designationB = b.designation.toLowerCase();
+    return designationA.localeCompare(designationB);
+  }
+  return valueA.localeCompare(valueB);
+})
 
 const hideTooltip = () => {
   document.getElementById('tooltip').style.display = 'none';
@@ -267,6 +279,8 @@ const AdminDashboardPage = async () => {
   console.log(internshipStats["2023-2024"]);
   showNavStyle("dashboard");
 
+  const sortDataCompany = sortData(dataCompany, 'name');
+
   main.innerHTML = `
     <div class="container-fluid justify-content-center align-items-center mt-5 mb-5 mx-auto" style="border: none">
       <div class="row mx-2">
@@ -373,7 +387,7 @@ const AdminDashboardPage = async () => {
   renderChart(internshipStats[Object.keys(internshipStats)[0]]);
   renderCaption(internshipStats[Object.keys(internshipStats)[0]]);
 
-  renderCompanyList(dataCompany);
+  renderCompanyList(sortDataCompany);
 
 }
 
