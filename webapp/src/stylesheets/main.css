@@ -691,6 +691,10 @@ input::placeholder {
   color: #119DB8;
 }
 
+.year-list:focus {
+  outline: none;
+}
+
 .chart-card {
   background-color: #119DB8;
   color: white;

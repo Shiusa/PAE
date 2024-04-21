@@ -152,7 +152,7 @@ const renderYearOptions = (internshipStats) => {
   years.unshift("Par défaut");
 
   selectYear.innerHTML = years.map(
-      year => `<option value="${year}" onclick="renderChart(internshipStats.internshipCount)">${year}</option>`).join(
+      year => `<option value="${year}">${year}</option>`).join(
       '');
 
   selectYear.addEventListener('change', (e) => {
