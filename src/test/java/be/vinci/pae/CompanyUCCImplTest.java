@@ -14,7 +14,6 @@ import be.vinci.pae.services.dao.CompanyDAO;
 import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.utils.exceptions.DuplicateException;
 import be.vinci.pae.utils.exceptions.FatalException;
-import be.vinci.pae.utils.exceptions.InvalidRequestException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
@@ -182,7 +181,7 @@ public class CompanyUCCImplTest {
     Mockito.when(companyDAOMock.getAllCompaniesByName(companyDTO.getName()))
         .thenReturn(notEmptyList);
 
-    assertThrows(InvalidRequestException.class, () -> companyUCC.registerCompany(companyDTO));
+    assertThrows(DuplicateException.class, () -> companyUCC.registerCompany(companyDTO));
   }
 
   @Test
