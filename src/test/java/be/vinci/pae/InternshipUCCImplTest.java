@@ -119,9 +119,11 @@ public class InternshipUCCImplTest {
   @Test
   @DisplayName("Test create one internship already exist")
   public void testCreateOneInternshipAlreadyExist() {
-    contactDTO.setId(1);
+    userDTO.setId(1);
+    contactDTO.setStudent(userDTO);
+    contactDTO.setState("accepté");
     internshipDTO.setContact(contactDTO);
-    Mockito.when(internshipDAOMock.getOneByContact(1)).thenReturn(internshipDTO);
+    Mockito.when(internshipDAOMock.getOneInternshipByIdUser(1)).thenReturn(internshipDTO);
     assertThrows(DuplicateException.class, () -> internshipUCC.createInternship(internshipDTO));
   }
 
@@ -137,10 +139,11 @@ public class InternshipUCCImplTest {
   @Test
   @DisplayName("Test create one internship")
   public void testCreateOneInternship() {
-    contactDTO.setId(1);
+    userDTO.setId(1);
+    contactDTO.setStudent(userDTO);
     contactDTO.setState("accepté");
     internshipDTO.setContact(contactDTO);
-    Mockito.when(internshipDAOMock.getOneByContact(1)).thenReturn(null);
+    Mockito.when(internshipDAOMock.getOneInternshipById(1)).thenReturn(null);
     Mockito.when(internshipDAOMock.createInternship(internshipDTO)).thenReturn(internshipDTO);
     assertNotNull(internshipUCC.createInternship(internshipDTO));
   }
@@ -148,6 +151,8 @@ public class InternshipUCCImplTest {
   @Test
   @DisplayName("Test crash transaction")
   public void testCrashTransaction() {
+    contactDTO.setState("accepté");
+    internshipDTO.setContact(contactDTO);
     Mockito.doThrow(new FatalException(new RuntimeException()))
         .when(dalServicesMock).startTransaction();
     assertAll(
