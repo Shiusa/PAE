@@ -73,4 +73,12 @@ public interface ContactDAO {
    * @return a ContactDTO if the update of contact was successful, null otherwise.
    */
   ContactDTO turnDown(int contactId, String reasonForRefusal, int version);
+
+  /**
+   *
+   * @param contactId the contact id.
+   * @param version the version of the contact.
+   * @return the accepted contact.
+   */
+  ContactDTO accept(int contactId,int version);
 }
