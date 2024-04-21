@@ -3,7 +3,6 @@ package be.vinci.pae.domain.ucc;
 import be.vinci.pae.domain.Contact;
 import be.vinci.pae.domain.dto.InternshipDTO;
 import be.vinci.pae.services.dal.DalServices;
-import be.vinci.pae.services.dao.ContactDAO;
 import be.vinci.pae.services.dao.InternshipDAO;
 import be.vinci.pae.utils.Logs;
 import be.vinci.pae.utils.exceptions.DuplicateException;
@@ -23,7 +22,7 @@ public class InternshipUCCImpl implements InternshipUCC {
   @Inject
   private DalServices dalServices;
   @Inject
-  private ContactDAO contactDAO;
+  private ContactUCC contactUCC;
 
 
   @Override
@@ -85,6 +84,7 @@ public class InternshipUCCImpl implements InternshipUCC {
       InternshipDTO internship = internshipDAO.createInternship(internshipDTO);
       dalServices.commitTransaction();
       Logs.log(Level.DEBUG, "InternshipUCC (createInternship) : success!");
+      contactUCC.putStudentContactsOnHold(internshipDTO.getContact().getStudent().getId());
       return internship;
     } catch (Exception e) {
       Logs.log(Level.ERROR, "InternshipUCC (createInternship) : creation failed " + e);

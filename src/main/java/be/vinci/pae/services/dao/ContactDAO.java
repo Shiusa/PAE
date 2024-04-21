@@ -73,4 +73,20 @@ public interface ContactDAO {
    * @return a ContactDTO if the update of contact was successful, null otherwise.
    */
   ContactDTO turnDown(int contactId, String reasonForRefusal, int version);
+
+  /**
+   * Get all the student's contact that are in started or admitted state.
+   *
+   * @param student the student to get contacts from.
+   * @return a list containing all the contacts in the right state.
+   */
+  List<ContactDTO> getAllContactsByStudentStartedOrAdmitted(int student);
+
+  /**
+   * Put a contact on hold.
+   *
+   * @param contactDTO the contact to put on hold.
+   * @return the updated contactDTO.
+   */
+  ContactDTO putContactOnHold(ContactDTO contactDTO);
 }

@@ -204,4 +204,21 @@ public class ContactUCCImpl implements ContactUCC {
       throw e;
     }
   }
+
+  @Override
+  public void putStudentContactsOnHold(int studentId) {
+    Logs.log(Level.DEBUG, "ContactUCC (putStudentContactsOnHold) : entrance");
+    try {
+      dalServices.startTransaction();
+      List<ContactDTO> contactDTOList =
+          contactDAO.getAllContactsByStudentStartedOrAdmitted(studentId);
+      for (ContactDTO c : contactDTOList) {
+        contactDAO.putContactOnHold(c);
+      }
+      dalServices.commitTransaction();
+    } catch (Exception e) {
+      dalServices.rollbackTransaction();
+      throw e;
+    }
+  }
 }
