@@ -73,7 +73,13 @@ async function login(e) {
       errorMessage.style.display = "block";
     }
   }
-};
+}
+
+const keypressSubmit = async (e) => {
+  if (e.key === 'Enter') {
+    await login(e);
+  }
+}
 
 const LoginPage = () => {
   const main = document.querySelector('main');
@@ -116,6 +122,12 @@ const LoginPage = () => {
   const loginBtn = document.getElementById("login-btn");
 
   loginBtn.addEventListener("click", login);
+
+  const inputEmail = document.getElementById("input-email");
+  const inputPwd = document.getElementById("input-pwd");
+
+  inputEmail.addEventListener("keypress", keypressSubmit);
+  inputPwd.addEventListener("keypress", keypressSubmit);
 };
 
 export default LoginPage;
