@@ -103,8 +103,9 @@ const ContactPage = async () => {
     <div class="container-fluid mt-5 d-flex flex-column rounded-3 overflow-hidden" style="width: 100%; height: 74vh; border: none; border-radius: 0; background: white; position: relative">
       <div class="row">
       
-        <div class="col-md-6 offset-md-3 d-flex justify-content-center align-items-center">
-          <input type="text" class="form-control rounded-5" placeholder="Rechercher une entreprise">
+        <div class="col-md-6 offset-md-3 d-flex justify-content-center align-items-center input-group w-50">
+          <input type="text" class="search-company form-control rounded-start-5 px-5 text-center" placeholder="Rechercher une entreprise" style="transform: none;">
+          <span class="input-group-text prepend-add-company rounded-end-5" id="basic-addon1"><i class="fa-solid fa-search" style="font-size: 22px;"></i></span>
         </div>
         <div class="col-md-3 d-flex justify-content-end align-items-center" style="padding-right: 5rem">
           <button class="add-company-btn rounded-1 px-2 py-3">Ajouter une entreprise</button>

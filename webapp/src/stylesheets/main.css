@@ -680,6 +680,29 @@ input::placeholder {
 }
 
 /*register company in contact page*/
+.search-company {
+  border: 1px solid var(--ma-couleur);
+  color: var(--ma-couleur);
+  transition: 200ms ease-in-out;
+}
+
+.search-company::placeholder {
+  color: var(--ma-couleur);
+}
+
+.search-company:focus {
+  color: white;
+  transition: 300ms ease-in-out;
+  border: 1px solid var(--ma-couleur);
+  background-color: var(--ma-couleur);
+  caret-shape: underscore;
+}
+
+.search-company:focus::placeholder {
+  color: white;
+  transition: 200ms ease-in-out;
+}
+
 .add-company-btn {
   background: var(--ma-couleur);
   color: white;
