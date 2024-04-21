@@ -1,10 +1,23 @@
 import {awaitFront, showNavStyle} from "../../utils/function";
 import {getAuthenticatedUser} from "../../utils/session";
 
+const closeForm = () => {
+  const addCompanyContainer = document.querySelector(
+      '.add-company-container');
+  addCompanyContainer.classList.remove('slide-in');
+  addCompanyContainer.classList.add('slide-out');
+  const entrepriseBox = document.querySelector(".add-company-box");
+
+  setTimeout(() => {
+    entrepriseBox.style.visibility = "hidden";
+    entrepriseBox.innerHTML = ``;
+  }, 300);
+}
+
 const renderRegisterCompanyForm = async () => {
   const entrepriseBox = document.querySelector(".add-company-box");
   entrepriseBox.innerHTML = `
-    <div class="add-company-container d-flex justify-contain-center align-items-center flex-column mx-auto rounded-4 shadow">
+    <div class="add-company-container d-flex justify-contain-center align-items-center flex-column mx-auto rounded-4">
       <div class="w-100 h-100 rounded-4 py-1" style="background: #119DB8">
         <div class="h-100 col-md-8 offset-md-2 rounded-1 py-3 px-5" style="background: white">
           <i id="company-back-btn" class="fa-solid fa-circle-arrow-left" title="Retour"></i>
@@ -40,11 +53,20 @@ const renderRegisterCompanyForm = async () => {
   `;
   entrepriseBox.style.visibility = "visible";
 
+  const addCompanyContainer = document.querySelector(
+      '.add-company-container');
+  addCompanyContainer.classList.add('slide-in');
+
   const btnBack = document.getElementById('company-back-btn');
   btnBack.addEventListener('click', () => {
-    entrepriseBox.style.visibility = "hidden";
-    entrepriseBox.innerHTML = ``;
+    closeForm();
   });
+
+  const registerBtn = document.querySelector('.register-company-btn');
+  registerBtn.addEventListener('click', async (e) => {
+    e.preventDefault();
+    closeForm();
+  })
 }
 
 const ContactPage = async () => {
@@ -78,7 +100,7 @@ const ContactPage = async () => {
   const companiesTable = await readAllCompanies();
 
   main.innerHTML = `
-    <div class="container-fluid mt-5 d-flex flex-column rounded-3" style="width: 100%; height: 74vh; border: none; border-radius: 0; background: white; position: relative">
+    <div class="container-fluid mt-5 d-flex flex-column rounded-3 overflow-hidden" style="width: 100%; height: 74vh; border: none; border-radius: 0; background: white; position: relative">
       <div class="row">
       
         <div class="col-md-6 offset-md-3 d-flex justify-content-center align-items-center">

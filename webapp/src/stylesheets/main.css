@@ -701,6 +701,35 @@ input::placeholder {
   height: 90%;
   position: relative;
   color: var(--ma-couleur);
+  transition: ease-in-out;
+}
+
+@keyframes slideInFromRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOutToRight {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(200%);
+    opacity: 0;
+  }
+}
+
+.slide-in {
+  animation: slideInFromRight 400ms forwards;
+}
+
+.slide-out {
+  animation: slideOutToRight 800ms forwards;
 }
 
 .prepend-add-company {
