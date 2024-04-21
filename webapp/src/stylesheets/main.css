@@ -692,14 +692,13 @@ input::placeholder {
 
 .add-company-box {
   position: absolute;
-  background: rgba(20, 137, 160, 0.2);
+  background: white;
   visibility: hidden;
 }
 
 .add-company-container {
   width: 80%;
-  height: 85%;
-  background: rgba(255, 255, 255, 0.947);
+  height: 90%;
   position: relative;
   color: var(--ma-couleur);
 }

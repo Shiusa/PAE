@@ -4,7 +4,7 @@ import {getAuthenticatedUser} from "../../utils/session";
 const renderRegisterCompanyForm = async () => {
   const entrepriseBox = document.querySelector(".add-company-box");
   entrepriseBox.innerHTML = `
-    <div class="add-company-container d-flex justify-contain-center align-items-center flex-column mx-auto rounded-4 shadow" style="height: 90%">
+    <div class="add-company-container d-flex justify-contain-center align-items-center flex-column mx-auto rounded-4 shadow">
       <div class="w-100 h-100 rounded-4 py-1" style="background: #119DB8">
         <div class="h-100 col-md-8 offset-md-2 rounded-1 py-3 px-5" style="background: white">
           <i id="company-back-btn" class="fa-solid fa-circle-arrow-left" title="Retour"></i>
