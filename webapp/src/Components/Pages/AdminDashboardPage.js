@@ -259,6 +259,31 @@ const renderYearOptions = (internshipStats) => {
   })
 }
 
+const addColumnHeaderListeners = () => {
+  const headers = document.querySelectorAll('.adminCompanyListTitle div');
+  headers.forEach(header => {
+    header.addEventListener('click', () => {
+      const paragraph = header.querySelector('p');
+      let sortingType;
+      switch (paragraph.textContent.trim()) {
+        case 'Nom':
+          sortingType = 'name';
+          break;
+        case 'Appellation':
+          sortingType = 'designation';
+          break;
+        case 'Numéro de téléphone':
+          sortingType = 'phoneNumber';
+          break;
+        default:
+          sortingType = 'name'; // Par défaut, tri par nom
+      }
+      const sortedData = sortData(dataCompany, sortingType);
+      renderCompanyList(sortedData);
+    });
+  });
+}
+
 const fetchInternshipStat = async () => {
   const user = await getAuthenticatedUser();
   const response = await fetch('api/internships/stats/year', {
@@ -388,6 +413,7 @@ const AdminDashboardPage = async () => {
   renderCaption(internshipStats[Object.keys(internshipStats)[0]]);
 
   renderCompanyList(sortDataCompany);
+  addColumnHeaderListeners();
 
 }
 
