@@ -365,7 +365,7 @@ public class ContactUCCImplTest {
     contactDTO.setState("pris");
     contactDTO.setVersion(1);
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
-    Mockito.when(contactDAOMock.accept(1,1)).thenReturn(contactDTO);
+    Mockito.when(contactDAOMock.accept(1, 1)).thenReturn(contactDTO);
     assertNotNull(contactUCC.accept(1, 1));
   }
 }

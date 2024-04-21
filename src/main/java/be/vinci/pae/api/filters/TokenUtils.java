@@ -13,6 +13,14 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public class TokenUtils {
 
+  /**
+   * Verify token and return a userDTO.
+   *
+   * @param token       user token.
+   * @param jwtVerifier Object containing assert method.
+   * @param userUCC     user compared to token.
+   * @return userDTO of user token.
+   */
   public static UserDTO verifyToken(String token, JWTVerifier jwtVerifier,
       UserUCC userUCC) {
     DecodedJWT decodedToken = null;

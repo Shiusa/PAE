@@ -106,7 +106,8 @@ public class InternshipDAOImpl implements InternshipDAO {
   @Override
   public Map<String, Integer[]> getInternshipCountByYear() {
     String requestSql = """
-        SELECT cn.school_year, count(i.internship_id) AS internship_count, count(DISTINCT us.user_id) AS total_students
+        SELECT cn.school_year, count(i.internship_id) AS internship_count,
+        count(DISTINCT us.user_id) AS total_students
         FROM prostage.contacts cn
         left outer join prostage.internships i on cn.contact_id = i.contact
         left outer join prostage.users us on cn.student = us.user_id
