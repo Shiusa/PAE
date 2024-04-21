@@ -42,7 +42,7 @@ public class InternshipDAOImpl implements InternshipDAO {
     Logs.log(Level.INFO, "InternshipDAO (getOneByIdUser) : entrance");
     String requestSql = """
         SELECT i.internship_id, i.contact, i.supervisor, i.signature_date, i.project, i.school_year,
-        i.version
+        i.version,
                 
         ct.contact_id, ct.company AS ct_company, ct.student, ct.meeting, ct.contact_state,
         ct.reason_for_refusal, ct.school_year AS ct_school_year, ct.version AS ct_version,
@@ -78,7 +78,7 @@ public class InternshipDAOImpl implements InternshipDAO {
     Logs.log(Level.INFO, "InternshipDAO (getOneById) : entrance");
     String requestSql = """
         SELECT i.internship_id, i.contact, i.supervisor, i.signature_date, i.project, i.school_year,
-        i.version
+        i.version,
                 
         ct.contact_id, ct.company AS ct_company, ct.student, ct.meeting, ct.contact_state,
         ct.reason_for_refusal, ct.school_year AS ct_school_year, ct.version AS ct_version,
@@ -160,7 +160,7 @@ public class InternshipDAOImpl implements InternshipDAO {
       ps.setDate(3, internshipDTO.getSignatureDate());
       ps.setString(4, internshipDTO.getProject());
       ps.setString(5, internshipDTO.getSchoolYear());
-      ps.executeQuery();
+      ps.execute();
       return getOneByContact(internshipDTO.getContact().getId());
     } catch (SQLException e) {
       throw new FatalException(e);

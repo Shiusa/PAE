@@ -75,8 +75,8 @@ public class InternshipUCCImpl implements InternshipUCC {
       }
 
       dalServices.startTransaction();
-      InternshipDTO existingInternship = internshipDAO.getOneByContact(
-          internshipDTO.getContact().getId());
+      InternshipDTO existingInternship = internshipDAO.getOneInternshipByIdUser(
+          internshipDTO.getContact().getStudent().getId());
       if (existingInternship != null) {
         Logs.log(Level.ERROR, "InternshipUCC (createInternship) : internship already created");
         throw new DuplicateException("Cannot add existing internship");
