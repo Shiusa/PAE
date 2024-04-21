@@ -150,7 +150,8 @@ public class InternshipDAOImpl implements InternshipDAO {
     Logs.log(Level.INFO, "DAO : entrance createInternship");
     String requestSql = """
         INSERT INTO prostage.internships(contact, supervisor, signature_date, project, school_year,
-        version) VALUES (?, ?, ?, ?, ?, 1) RETURNING *
+        version) VALUES (?, ?, ?, ?, ?, 1)
+                
         """;
 
     try (PreparedStatement ps = dalServices.getPreparedStatement(requestSql)) {
