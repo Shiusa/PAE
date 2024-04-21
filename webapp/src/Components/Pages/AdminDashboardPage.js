@@ -1,6 +1,39 @@
 import {awaitFront, showNavStyle} from "../../utils/function";
 import {getAuthenticatedUser} from "../../utils/session";
 
+const dataCompany = {
+  "1": {
+    "id": 1,
+    "name": "BNP Paribas",
+    "designation": "Bruxelles",
+    "address": "Jsp qsdkj qsdlkjqsd",
+    "phoneNumber": "027001313",
+    "email": "",
+    "isBlacklisted": false,
+    "blacklistMotivation": "",
+    "version": 1,
+    "data": {
+      "2023-2024": 4,
+      "2022-2023": 1
+    }
+  },
+  "2": {
+    "id": 2,
+    "name": "BNP Paribas",
+    "designation": "Namur",
+    "address": "2 Jsp qsdkj qsdlkjqsd",
+    "phoneNumber": "2027001313",
+    "email": "",
+    "isBlacklisted": false,
+    "blacklistMotivation": "",
+    "version": 1,
+    "data": {
+      "2023-2024": 3,
+      "2022-2023": 3
+    }
+  }
+}
+
 const hideTooltip = () => {
   document.getElementById('tooltip').style.display = 'none';
 }
@@ -145,6 +178,40 @@ const renderCaption = (internshipStats) => {
 
 }
 
+const renderCompanyList = (companyData) => {
+  const listContainer = document.querySelector(
+      '.adminCompanyListTileContainer');
+  const selectedYear = document.querySelector('.year-list').value;
+
+  listContainer.innerHTML = Object.values(companyData).map((data) => {
+    let dataValue;
+    if (selectedYear !== "Par défaut") {
+      dataValue = data.data[selectedYear];
+    } else {
+      dataValue = Object.values(data.data).reduce((acc, curr) => acc + curr, 0);
+    }
+    return `
+      <div class="w-100 d-flex align-items-center justify-content-center rounded-3 border mt-3 py-3 adminCompanyListTile">
+        <div class="d-flex align-items-center justify-content-center" style="width: 30%; border-right: 2px solid white;">
+          <p class="p-0 m-0 text-center">${data.name}</p>
+        </div>
+        <div class="d-flex align-items-center justify-content-center" style="width: 30%; border-right: 2px solid white;">
+          <p class="p-0 m-0 text-center">${data.designation}</p>
+        </div>
+        <div class="d-flex align-items-center justify-content-center" style="width: 20%; border-right: 2px solid white;">
+          <p class="p-0 m-0 text-center">${data.phoneNumber}</p>
+        </div>
+        <div class="d-flex align-items-center justify-content-center" style="width: 10%; border-right: 2px solid white;">
+          <p class="p-0 m-0 text-center">${dataValue}</p>
+        </div>
+        <div class="d-flex align-items-center justify-content-center" style="width: 10%">
+          <p class="p-0 m-0 text-center">NON</p>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
 const renderYearOptions = (internshipStats) => {
   const selectYear = document.querySelector('.year-list');
   const years = Object.keys(internshipStats);
@@ -175,6 +242,8 @@ const renderYearOptions = (internshipStats) => {
     renderChart(selectedStats);
     renderCaption(selectedStats);
     hideTooltip();
+
+    renderCompanyList(dataCompany);
   })
 }
 
@@ -238,7 +307,7 @@ const AdminDashboardPage = async () => {
         </div>
         <div class="col-md-9">
           <div class="dash-row">
-            <div class="rounded-4 dash-row p-4" style="border: 1px solid #119DB8; margin-left: 4rem;">
+            <div class="rounded-4 dash-row p-4" style="border: 2px solid #119cb8c7; margin-left: 4rem;">
               <div class="col-md-12 d-flex flex-column justify-content-center align-items-center overflow-hidden">
               
                 <div class="w-100 d-flex justify-content-center align-items-center border adminCompanyListTitle">
@@ -259,7 +328,7 @@ const AdminDashboardPage = async () => {
                   </div>
                 </div>
                 
-                <div class="w-100 d-flex flex-column justify-content-center align-items-center overflow-auto">
+                <div class="w-100 d-flex flex-column justify-content-center align-items-center overflow-auto adminCompanyListTileContainer">
                 
                   <div class="w-100 d-flex align-items-center justify-content-center rounded-3 border my-3 py-3 adminCompanyListTile">
                     <div class="d-flex align-items-center justify-content-center" style="width: 30%; border-right: 2px solid white;">
@@ -303,6 +372,8 @@ const AdminDashboardPage = async () => {
   renderYearOptions(internshipStats);
   renderChart(internshipStats[Object.keys(internshipStats)[0]]);
   renderCaption(internshipStats[Object.keys(internshipStats)[0]]);
+
+  renderCompanyList(dataCompany);
 
 }
 
