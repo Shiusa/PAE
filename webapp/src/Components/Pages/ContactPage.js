@@ -1,3 +1,5 @@
+// eslint-disable-next-line import/no-cycle
+import {Redirect} from "../Router/Router";
 import {awaitFront, showNavStyle} from "../../utils/function";
 import {getAuthenticatedUser} from "../../utils/session";
 
@@ -12,6 +14,68 @@ const closeForm = () => {
     entrepriseBox.style.visibility = "hidden";
     entrepriseBox.innerHTML = ``;
   }, 300);
+}
+
+const submitRegistration = async (e) => {
+  e.preventDefault();
+
+  const user = await getAuthenticatedUser();
+
+  const name = document.querySelector("#input-name").value;
+  const designation = document.querySelector("#input-designation").value;
+  const address = document.querySelector("#input-adress").value;
+  const phoneNumber = document.querySelector("#input-phone-number").value;
+  const email = document.querySelector("#input-email").value;
+
+  try {
+
+    const options = {
+      method: "POST", // *GET, POST, PUT, DELETE, etc.
+      body: JSON.stringify({
+        "name": name,
+        "designation": designation,
+        "address": address,
+        "phoneNumber": phoneNumber,
+        "email": email,
+      }), // body data type must match "Content-Type" header
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": user.token
+      },
+    };
+
+    const response = await fetch('api/companies/register', options);
+    if (!response.ok) {
+      throw new Error(
+          `fetch error : ${response.status} : ${response.statusText}`
+      );
+    }
+
+  } catch (error) {
+    const errorMessage = document.getElementById("error-message");
+    errorMessage.style.display = "block";
+
+    if (error instanceof Error && error.message.startsWith(
+        "fetch error : 400") && (!name || !address)) {
+      errorMessage.innerText = "Le nom et l'addresse ne peuvent pas être vide";
+    } else if (error instanceof Error && error.message.startsWith(
+        "fetch error : 400") && (!phoneNumber && !email)) {
+      errorMessage.innerText = "Veuillez entrer au moins un numéro de téléphone ou une adresse e-mail";
+    }
+
+    if (error instanceof Error && error.message.startsWith(
+        "fetch error : 409")) {
+      errorMessage.innerText = "Entreprise déjà existante de même nom (et designation), veuillez ajouter une nouvelle designation";
+    }
+
+    if (error instanceof Error && error.message.startsWith(
+        "fetch error : 500")) {
+      errorMessage.innerText = "Une erreur interne s'est produite, veuillez réssayer";
+    }
+    return;
+  }
+  closeForm();
+  Redirect('/contact')
 }
 
 const renderRegisterCompanyForm = async () => {
@@ -45,7 +109,7 @@ const renderRegisterCompanyForm = async () => {
             </div>
             <!--<p class="btn-login" id="register-btn">Ajouter l'entreprise</p>-->
             <button class="register-company-btn rounded-1 px-2 py-3 w-50 mt-5">Ajouter l'entreprise</button>
-            <h2 id="error-message">L'adresse email ou<br>le mot de passe est incorrect !</h2>
+            <h2 id="error-message"></h2>
           </div>
         </div>
       </div>
@@ -65,7 +129,7 @@ const renderRegisterCompanyForm = async () => {
   const registerBtn = document.querySelector('.register-company-btn');
   registerBtn.addEventListener('click', async (e) => {
     e.preventDefault();
-    closeForm();
+    await submitRegistration(e);
   })
 }
 
