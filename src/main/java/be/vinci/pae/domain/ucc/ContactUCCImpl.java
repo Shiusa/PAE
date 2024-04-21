@@ -99,7 +99,7 @@ public class ContactUCCImpl implements ContactUCC {
   }
 
   @Override
-  public ContactDTO unsupervise(int contactId, int student) {
+  public ContactDTO unsupervise(int contactId, int studentId) {
     Contact contact;
     ContactDTO contactDTO;
     try {
@@ -115,7 +115,7 @@ public class ContactUCCImpl implements ContactUCC {
 
       if (!contact.isStarted() && !contact.isAdmitted()) {
         throw new NotAllowedException();
-      } else if (contact.getStudent().getId() != student) {
+      } else if (contact.getStudent().getId() != studentId) {
         throw new NotAllowedException();
       }
 
@@ -198,6 +198,37 @@ public class ContactUCCImpl implements ContactUCC {
 
       dalServices.commitTransaction();
       Logs.log(Level.DEBUG, "ContactUCC (turnDown) : success!");
+      return contactDTO;
+    } catch (Exception e) {
+      dalServices.rollbackTransaction();
+      throw e;
+    }
+  }
+
+  @Override
+  public ContactDTO accept(int contactId, int studentId) {
+    Logs.log(Level.DEBUG, "ContactUCC (accept) : entrance");
+    Contact contact;
+    ContactDTO contactDTO;
+    try {
+      dalServices.startTransaction();
+      contact = (Contact) contactDAO.findContactById(contactId);
+
+      if (contact == null) {
+        Logs.log(Level.ERROR,
+            "ContactUCC (accept) : contact not found");
+        throw new ResourceNotFoundException();
+      }
+      int version = contact.getVersion();
+
+      if (!contact.isAdmitted()) {
+        Logs.log(Level.ERROR, "ContactUCC (accept) : contact's state not admitted");
+        throw new NotAllowedException();
+      } else if (contact.getStudent().getId() != studentId) {
+        throw new NotAllowedException();
+      }
+      contactDTO = contactDAO.accept(contactId, version);
+      dalServices.commitTransaction();
       return contactDTO;
     } catch (Exception e) {
       dalServices.rollbackTransaction();
