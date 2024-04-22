@@ -33,6 +33,111 @@ const dataCompany = {
       "2023-2024": 3,
       "2022-2023": 3
     }
+  },
+  "3": {
+    "id": 2,
+    "name": "BNP Paribas",
+    "designation": "Namur",
+    "address": "2 Jsp qsdkj qsdlkjqsd",
+    "phoneNumber": "2027001313",
+    "email": "",
+    "isBlacklisted": false,
+    "blacklistMotivation": "",
+    "version": 1,
+    "data": {
+      "2023-2024": 3,
+      "2022-2023": 3
+    }
+  },
+  "4": {
+    "id": 2,
+    "name": "BNP Paribas",
+    "designation": "Namur",
+    "address": "2 Jsp qsdkj qsdlkjqsd",
+    "phoneNumber": "2027001313",
+    "email": "",
+    "isBlacklisted": false,
+    "blacklistMotivation": "",
+    "version": 1,
+    "data": {
+      "2023-2024": 3,
+      "2022-2023": 3
+    }
+  },
+  "5": {
+    "id": 2,
+    "name": "BNP Paribas",
+    "designation": "Namur",
+    "address": "2 Jsp qsdkj qsdlkjqsd",
+    "phoneNumber": "2027001313",
+    "email": "",
+    "isBlacklisted": false,
+    "blacklistMotivation": "",
+    "version": 1,
+    "data": {
+      "2023-2024": 3,
+      "2022-2023": 3
+    }
+  },
+  "6": {
+    "id": 2,
+    "name": "BNP Paribas",
+    "designation": "Namur",
+    "address": "2 Jsp qsdkj qsdlkjqsd",
+    "phoneNumber": "2027001313",
+    "email": "",
+    "isBlacklisted": false,
+    "blacklistMotivation": "",
+    "version": 1,
+    "data": {
+      "2023-2024": 3,
+      "2022-2023": 3
+    }
+  },
+  "7": {
+    "id": 2,
+    "name": "BNP Paribas",
+    "designation": "Namur",
+    "address": "2 Jsp qsdkj qsdlkjqsd",
+    "phoneNumber": "2027001313",
+    "email": "",
+    "isBlacklisted": false,
+    "blacklistMotivation": "",
+    "version": 1,
+    "data": {
+      "2023-2024": 3,
+      "2022-2023": 3
+    }
+  },
+  "8": {
+    "id": 2,
+    "name": "BNP Paribas",
+    "designation": "Namur",
+    "address": "2 Jsp qsdkj qsdlkjqsd",
+    "phoneNumber": "2027001313",
+    "email": "",
+    "isBlacklisted": false,
+    "blacklistMotivation": "",
+    "version": 1,
+    "data": {
+      "2023-2024": 3,
+      "2022-2023": 3
+    }
+  },
+  "9": {
+    "id": 2,
+    "name": "BNP Paribas",
+    "designation": "Namur",
+    "address": "2 Jsp qsdkj qsdlkjqsd",
+    "phoneNumber": "2027001313",
+    "email": "",
+    "isBlacklisted": false,
+    "blacklistMotivation": "",
+    "version": 1,
+    "data": {
+      "2023-2024": 3,
+      "2022-2023": 3
+    }
   }
 }
 
@@ -368,7 +473,7 @@ const AdminDashboardPage = async () => {
         <div class="col-md-9">
           <div class="dash-row">
             <div class="rounded-4 dash-row p-4" style="border: 2px solid #119cb8c7; margin-left: 4rem;">
-              <div class="col-md-12 d-flex flex-column justify-content-center align-items-center overflow-auto">
+              <div class="col-md-12 d-flex flex-column h-100">
               
                 <div class="w-100 d-flex justify-content-center align-items-center border adminCompanyListTitle">
                   <div class="d-flex align-items-center justify-content-center" style="width: 30%">
@@ -388,7 +493,7 @@ const AdminDashboardPage = async () => {
                   </div>
                 </div>
                 
-                <div class="w-100 d-flex flex-column justify-content-center align-items-center overflow-auto adminCompanyListTileContainer">
+                <div class="w-100 d-flex flex-column overflow-y-auto adminCompanyListTileContainer" style="scrollbar-width:none;">
                 
                   <div class="w-100 d-flex align-items-center justify-content-center rounded-3 border my-3 py-3 adminCompanyListTile">
                     <div class="d-flex align-items-center justify-content-center" style="width: 30%; border-right: 2px solid white;">
