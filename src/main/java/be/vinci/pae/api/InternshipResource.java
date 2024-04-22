@@ -85,7 +85,8 @@ public class InternshipResource {
       throw new WebApplicationException("Inputs cannot be blank", Response.Status.BAD_REQUEST);
     }
 
-    InternshipDTO internshipDTO = internshipUCC.createInternship(internship);
+    InternshipDTO internshipDTO = internshipUCC.createInternship(internship,
+        ((UserDTO) request.getProperty("user")).getId());
     Logs.log(Level.DEBUG, "InternshipResource (create) : success!");
     return internshipDTO;
   }

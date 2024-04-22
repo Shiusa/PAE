@@ -9,6 +9,7 @@ import be.vinci.pae.utils.exceptions.DuplicateException;
 import be.vinci.pae.utils.exceptions.InvalidRequestException;
 import be.vinci.pae.utils.exceptions.NotAllowedException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
+import be.vinci.pae.utils.exceptions.UnauthorizedAccessException;
 import jakarta.inject.Inject;
 import org.apache.logging.log4j.Level;
 
@@ -64,8 +65,12 @@ public class InternshipUCCImpl implements InternshipUCC {
   }
 
   @Override
-  public InternshipDTO createInternship(InternshipDTO internshipDTO) {
+  public InternshipDTO createInternship(InternshipDTO internshipDTO, int studentId) {
     Logs.log(Level.INFO, "InternshipUCC (createInternship) : entrance");
+    if (studentId != internshipDTO.getContact().getStudent().getId()) {
+      Logs.log(Level.ERROR, "InternshipUCC (createInternship) : wrong student");
+      throw new UnauthorizedAccessException("This user can't create this internship");
+    }
     internshipDTO.setSchoolYear(internshipDTO.getContact().getSchoolYear());
     try {
       if (!((Contact) internshipDTO.getContact()).isAccepted()) {

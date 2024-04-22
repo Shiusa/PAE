@@ -32,5 +32,5 @@ public interface InternshipUCC {
    * @param internshipDTO the dto containing the new internship datas.
    * @return the created internship.
    */
-  InternshipDTO createInternship(InternshipDTO internshipDTO);
+  InternshipDTO createInternship(InternshipDTO internshipDTO, int studentId);
 }
