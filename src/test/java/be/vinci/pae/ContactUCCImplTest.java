@@ -343,4 +343,20 @@ public class ContactUCCImplTest {
     assertNotNull(contactUCC.getAllContactsByCompany(1));
   }
 
+  @Test
+  @DisplayName("Test get all contact by company returning null")
+  public void testGetAllContactByCompanyReturningNull() {
+    Mockito.when(contactDAOMock.getAllContactsByCompany(1)).thenReturn(null);
+    assertThrows(ResourceNotFoundException.class,
+        () -> contactUCC.getAllContactsByCompany(1));
+  }
+
+  @Test
+  @DisplayName("Test get all contact by student returning null")
+  public void testGetAllContactByStudentReturningNull() {
+    Mockito.when(contactDAOMock.getAllContactsByStudent(1)).thenReturn(null);
+    assertThrows(ResourceNotFoundException.class,
+        () -> contactUCC.getAllContactsByStudent(1));
+  }
+
 }
