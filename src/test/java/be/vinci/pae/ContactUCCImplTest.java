@@ -297,7 +297,7 @@ public class ContactUCCImplTest {
     contactDTO.setStudent(userDTO);
     contactDTO.setState("initié");
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
-    assertThrows(InvalidRequestException.class,
+    assertThrows(NotAllowedException.class,
         () -> contactUCC.turnDown(1, "Student has not answered fast enough", 1));
   }
 
