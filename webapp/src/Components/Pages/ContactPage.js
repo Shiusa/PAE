@@ -192,11 +192,21 @@ const ContactPage = async () => {
         </div>
       </div>
     </div>
-    
-    
-    
-    
   `;
+
+  const searchBox = document.querySelector('.search-company');
+  searchBox.addEventListener("input", (e) => {
+    const value = e.target.value.toLowerCase();
+    const filteredCompanies = companiesTable.filter(company => (
+        (company.name && company.name.toLowerCase().includes(value)) ||
+        (company.designation && company.designation.toLowerCase().includes(
+            value)) ||
+        (company.email && company.email.toLowerCase().includes(value)) ||
+        (company.phoneNumber && company.phoneNumber.toLowerCase().includes(
+            value))
+    ));
+    showCompaniesList(filteredCompanies);
+  })
 
   const addCompanyBtn = document.querySelector('.add-company-btn');
   addCompanyBtn.addEventListener('click', () => {
@@ -237,7 +247,7 @@ const ContactPage = async () => {
         phone = companies[u].phoneNumber;
       }
       info += `
-            <div class="w-100 d-flex justify-content-center align-items-center mt-2 py-2 border rounded-3 adminCompanyListTile">
+            <div data-${companies[u].id} class="w-100 d-flex justify-content-center align-items-center mt-2 py-2 border rounded-3 adminCompanyListTile">
               <div class="d-flex align-items-center justify-content-center h-75" style="width: 25%; border-right: 2px solid white;">
                 <p class="p-0 m-0 text-center">${companies[u].name}</p>
               </div>
@@ -254,13 +264,13 @@ const ContactPage = async () => {
       if (companies[u].blacklisted === false) {
         info += `
           <div class="d-flex align-items-center justify-content-center h-75" style="width: 10%;">
-            <button id="${companies[u].id}" class="company-btn btn btn-secondary">Initier</button>
+            <button id="${companies[u].id}" class="company-btn btn">Initier</button>
           </div>
         `;
       } else {
         info += `
           <div class="d-flex align-items-center justify-content-center" style="width: 10%;">
-            <button id="${companies[u].id}" class="company-btn btn btn-secondary disabled">Initier</button>
+            <button id="${companies[u].id}" class="company-btn btn disabled">Initier</button>
           </div>
         `;
       }

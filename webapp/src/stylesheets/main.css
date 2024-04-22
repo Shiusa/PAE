@@ -680,6 +680,16 @@ input::placeholder {
 }
 
 /*register company in contact page*/
+.company-btn {
+  background-color: white;
+  color: var(--ma-couleur);
+  border: 2px solid;
+}
+
+.company-btn:hover {
+  background-color: var(--ma-couleur-foncée);
+}
+
 .search-company {
   border: 1px solid var(--ma-couleur);
   color: var(--ma-couleur);
