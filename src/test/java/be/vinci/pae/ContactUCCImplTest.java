@@ -202,6 +202,12 @@ public class ContactUCCImplTest {
         }),
         () -> assertThrows(FatalException.class, () -> {
           contactUCC.getOneById(1);
+        }),
+        () -> assertThrows(FatalException.class, () -> {
+          contactUCC.getAllContactsByStudent(1);
+        }),
+        () -> assertThrows(FatalException.class, () -> {
+          contactUCC.getAllContactsByCompany(1);
         })
     );
   }
@@ -228,7 +234,7 @@ public class ContactUCCImplTest {
   public void testAdmitContactWrongState() {
     userDTO.setId(1);
     contactDTO.setStudent(userDTO);
-    contactDTO.setState("accepté");
+    contactDTO.setState("pris");
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
     assertThrows(InvalidRequestException.class, () -> contactUCC.admit(1, "sur place", 1));
   }
@@ -328,6 +334,13 @@ public class ContactUCCImplTest {
   public void testGetOneByIdCorrect() {
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
     assertNotNull(contactUCC.getOneById(1));
+  }
+
+  @Test
+  @DisplayName("Test get all contact by company")
+  public void testGetAllContactByCompany() {
+    Mockito.when(contactDAOMock.getAllContactsByCompany(1)).thenReturn(List.of(contactDTO));
+    assertNotNull(contactUCC.getAllContactsByCompany(1));
   }
 
 }
