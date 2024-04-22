@@ -175,7 +175,7 @@ const ContactPage = async () => {
           <button class="add-company-btn rounded-1 px-2 py-3">Ajouter une entreprise</button>
         </div>
         
-        <div class="add-company-box w-100 h-100 d-flex justify-contain-center align-items-center">                    
+        <div class="add-company-box w-100 h-100 d-flex justify-contain-center align-items-center" style="z-index: 1;">                    
         </div>
         
       </div>
