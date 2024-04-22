@@ -368,7 +368,7 @@ const AdminDashboardPage = async () => {
         <div class="col-md-9">
           <div class="dash-row">
             <div class="rounded-4 dash-row p-4" style="border: 2px solid #119cb8c7; margin-left: 4rem;">
-              <div class="col-md-12 d-flex flex-column justify-content-center align-items-center overflow-hidden">
+              <div class="col-md-12 d-flex flex-column justify-content-center align-items-center overflow-auto">
               
                 <div class="w-100 d-flex justify-content-center align-items-center border adminCompanyListTitle">
                   <div class="d-flex align-items-center justify-content-center" style="width: 30%">
