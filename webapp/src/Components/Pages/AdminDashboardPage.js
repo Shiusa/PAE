@@ -1,5 +1,7 @@
 import {awaitFront, showNavStyle} from "../../utils/function";
 import {getAuthenticatedUser} from "../../utils/session";
+// eslint-disable-next-line import/no-cycle
+import {Redirect} from "../Router/Router";
 
 const dataCompany = {
   "1": {
@@ -286,14 +288,30 @@ const addColumnHeaderListeners = () => {
 
 const fetchInternshipStat = async () => {
   const user = await getAuthenticatedUser();
-  const response = await fetch('api/internships/stats/year', {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': user.token
+  try {
+    const response = await fetch('api/internships/stats/year', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': user.token
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(
+          `fetch error : ${response.status} : ${response.statusText}`
+      );
     }
-  });
-  return response.json();
+
+    return response.json();
+  } catch (error) {
+    if (error instanceof Error && error.message.startsWith(
+        "fetch error : 403")) {
+      Redirect('/');
+    }
+    return null;
+  }
+
 }
 
 const AdminDashboardPage = async () => {
@@ -301,6 +319,9 @@ const AdminDashboardPage = async () => {
   const main = document.querySelector('main');
   awaitFront();
   const internshipStats = await fetchInternshipStat();
+  if (internshipStats === null) {
+    return;
+  }
   console.log(internshipStats["2023-2024"]);
   showNavStyle("dashboard");
 
