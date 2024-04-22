@@ -75,10 +75,19 @@ public class ContactUCCImpl implements ContactUCC {
 
   @Override
   public List<ContactDTO> getAllContactsByStudent(int student) {
-    dalServices.startTransaction();
-    List<ContactDTO> listContactDTO = contactDAO.getAllContactsByStudent(student);
-    dalServices.commitTransaction();
-    return listContactDTO;
+    List<ContactDTO> listContactDTO;
+    try {
+      dalServices.startTransaction();
+      listContactDTO = contactDAO.getAllContactsByStudent(student);
+      if (listContactDTO == null) {
+        throw new ResourceNotFoundException();
+      }
+      dalServices.commitTransaction();
+      return listContactDTO;
+    } catch (Exception e) {
+      dalServices.rollbackTransaction();
+      throw e;
+    }
   }
 
   @Override
@@ -207,9 +216,18 @@ public class ContactUCCImpl implements ContactUCC {
 
   @Override
   public List<ContactDTO> getAllContactsByCompany(int company) {
-    dalServices.startTransaction();
-    List<ContactDTO> listContactDTO = contactDAO.getAllContactsByCompany(company);
-    dalServices.commitTransaction();
-    return listContactDTO;
+    List<ContactDTO> listContactDTO;
+    try {
+      dalServices.startTransaction();
+      listContactDTO = contactDAO.getAllContactsByCompany(company);
+      if (listContactDTO == null) {
+        throw new ResourceNotFoundException();
+      }
+      dalServices.commitTransaction();
+      return listContactDTO;
+    } catch (Exception e) {
+      dalServices.rollbackTransaction();
+      throw e;
+    }
   }
 }
