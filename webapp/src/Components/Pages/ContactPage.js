@@ -184,28 +184,10 @@ const ContactPage = async () => {
         <div class="rounded-4 p-4 w-75" style="border: 2px solid #119cb8c7; height: 58vh;">
           <div class="col-md-12 d-flex flex-column h-100">
           
-            <div class="w-100 d-flex justify-content-center align-items-center border adminCompanyListTitle">
-              <div class="d-flex align-items-center justify-content-center" style="width: 25%">
-                  <p class="p-2 m-0 text-center">Nom</p>
-              </div>
-              <div class="d-flex align-items-center justify-content-center" style="width: 25%">
-                  <p class="p-2 m-0 text-center">Appellation</p>
-              </div>
-              <div class="d-flex align-items-center justify-content-center" style="width: 20%">
-                  <p class="p-2 m-0 text-center">Email</p>
-              </div>
-              <div class="d-flex align-items-center justify-content-center" style="width: 20%">
-                  <p class="p-2 m-0 text-center">Numéro de téléphone</p>
-              </div>
-              <div class="d-flex align-items-center justify-content-center" style="width: 10%">
-                  <p class="p-2 m-0 text-center">Action</p>
-              </div>
-            </div>
-
-          
             <div class="users-container w-100 d-flex flex-column overflow-y-auto adminCompanyListTileContainer" style="scrollbar-width:none;">
               <h1>Il n'y a aucune entreprise</h1>
             </div>
+            
           </div>
         </div>
       </div>
@@ -255,7 +237,7 @@ const ContactPage = async () => {
         phone = companies[u].phoneNumber;
       }
       info += `
-            <div class="user-info-box w-100 d-flex justify-content-center align-items-center mt-2 py-2">
+            <div class="w-100 d-flex justify-content-center align-items-center mt-2 py-2 border rounded-3 adminCompanyListTile">
               <div class="d-flex align-items-center justify-content-center h-75" style="width: 25%; border-right: 2px solid white;">
                 <p class="p-0 m-0 text-center">${companies[u].name}</p>
               </div>
@@ -277,7 +259,7 @@ const ContactPage = async () => {
         `;
       } else {
         info += `
-          <div class="d-flex align-items-center justify-content-center" style="width: 10%; border-right: 2px solid white;">
+          <div class="d-flex align-items-center justify-content-center" style="width: 10%;">
             <button id="${companies[u].id}" class="company-btn btn btn-secondary disabled">Initier</button>
           </div>
         `;
