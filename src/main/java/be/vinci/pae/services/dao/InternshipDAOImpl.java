@@ -16,6 +16,8 @@ import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Implementation of InternshipDAO.
@@ -96,6 +98,34 @@ public class InternshipDAOImpl implements InternshipDAO {
     try (PreparedStatement ps = dalServices.getPreparedStatement(requestSql)) {
       ps.setInt(1, id);
       return buildInternshipDTO(ps);
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+  }
+
+  @Override
+  public Map<String, Integer[]> getInternshipCountByYear() {
+    String requestSql = """
+        SELECT cn.school_year, count(i.internship_id) AS internship_count,
+        count(DISTINCT us.user_id) AS total_students
+        FROM prostage.contacts cn
+        left outer join prostage.internships i on cn.contact_id = i.contact
+        left outer join prostage.users us on cn.student = us.user_id
+        WHERE us.role = 'Etudiant'
+        GROUP BY cn.school_year;
+        """;
+
+    try (PreparedStatement ps = dalServices.getPreparedStatement(requestSql)) {
+      try (ResultSet rs = ps.executeQuery()) {
+        Map<String, Integer[]> internshipCountMap = new HashMap<>();
+        while (rs.next()) {
+          String year = rs.getString("school_year");
+          int internshipCount = rs.getInt("internship_count");
+          int totalStudent = rs.getInt("total_students");
+          internshipCountMap.put(year, new Integer[]{internshipCount, totalStudent});
+        }
+        return internshipCountMap;
+      }
     } catch (SQLException e) {
       throw new FatalException(e);
     }

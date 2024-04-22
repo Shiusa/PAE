@@ -1,6 +1,7 @@
 package be.vinci.pae.domain.ucc;
 
 import be.vinci.pae.domain.dto.InternshipDTO;
+import java.util.Map;
 
 /**
  * InternshipUCC interface.
@@ -25,4 +26,11 @@ public interface InternshipUCC {
    * @return the internship found.
    */
   InternshipDTO getOneById(int id, int actualStudent);
+
+  /**
+   * Get number of student with internship.
+   *
+   * @return map with number of internship and total student by year.
+   */
+  Map<String, Integer[]> getInternshipCountByYear();
 }

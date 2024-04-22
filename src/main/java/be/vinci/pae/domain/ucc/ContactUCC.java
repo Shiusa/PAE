@@ -67,6 +67,7 @@ public interface ContactUCC {
 
   /**
    * Accepted the contact.
+   *
    * @param contactId the id of the contact.
    * @param studentId the id of the student.
    * @return the accepted contact.

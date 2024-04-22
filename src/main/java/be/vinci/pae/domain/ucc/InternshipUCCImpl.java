@@ -2,11 +2,11 @@ package be.vinci.pae.domain.ucc;
 
 import be.vinci.pae.domain.dto.InternshipDTO;
 import be.vinci.pae.services.dal.DalServices;
-import be.vinci.pae.services.dao.ContactDAO;
 import be.vinci.pae.services.dao.InternshipDAO;
 import be.vinci.pae.utils.exceptions.NotAllowedException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
 import jakarta.inject.Inject;
+import java.util.Map;
 
 /**
  * Implementation of InternshipUCC.
@@ -17,8 +17,6 @@ public class InternshipUCCImpl implements InternshipUCC {
   private InternshipDAO internshipDAO;
   @Inject
   private DalServices dalServices;
-  @Inject
-  private ContactDAO contactDAO;
 
 
   @Override
@@ -53,6 +51,19 @@ public class InternshipUCCImpl implements InternshipUCC {
       }
       dalServices.commitTransaction();
       return internship;
+    } catch (Exception e) {
+      dalServices.rollbackTransaction();
+      throw e;
+    }
+  }
+
+  @Override
+  public Map<String, Integer[]> getInternshipCountByYear() {
+    try {
+      dalServices.startTransaction();
+      Map<String, Integer[]> returnedMap = internshipDAO.getInternshipCountByYear();
+      dalServices.commitTransaction();
+      return returnedMap;
     } catch (Exception e) {
       dalServices.rollbackTransaction();
       throw e;
