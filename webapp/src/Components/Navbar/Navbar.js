@@ -25,10 +25,10 @@ const Navbar = async () => {
             <p data-uri="/dashboard">Tableau de<br>bord</p>
           </a>
           <a class="nav-link nav-btn d-flex justify-content-center align-items-center" id="contact" href="#" data-uri="/contact">
-            <p data-uri="/contact">Contact</p>
+            <p data-uri="/contact">Prendre<br>contact</p>
           </a>
           <a class="nav-link nav-btn d-flex justify-content-center align-items-center" id="info" href="#" data-uri="/info">
-            <p data-uri="/info">Mes infos</p>
+            <p data-uri="/">Modifier mon stage</p>
           </a>
           <a class="nav-link nav-logout d-flex justify-content-center align-items-center" href="#" data-uri="/logout">
             <p data-uri="/logout"><i class="fa-solid fa-arrow-right-from-bracket" data-uri="/logout"></i></p>
