@@ -102,6 +102,7 @@ public class UserDAOImpl implements UserDAO {
         us.phone_number AS us_phone_number, us.password, us.registration_date,
         us.school_year AS us_school_year, us.role
         FROM prostage.users us
+        ORDER BY us.user_id
         """;
 
     try (PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql)) {
