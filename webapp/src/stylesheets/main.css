@@ -391,6 +391,7 @@ i {
 
 .line-col-1 {
   width: 50%;
+
 }
 
 .line-col-2 {
@@ -399,7 +400,10 @@ i {
 
 }
 }
+
+
 }
+
 }
 }
 
@@ -675,6 +679,132 @@ input::placeholder {
   transform: translateX(-5px);
 }
 
+/*register company in contact page*/
+.company-btn {
+  background-color: white;
+  color: var(--ma-couleur);
+  border: 2px solid;
+}
+
+.company-btn:hover {
+  background-color: var(--ma-couleur-foncée);
+}
+
+.search-company {
+  border: 1px solid var(--ma-couleur);
+  color: var(--ma-couleur);
+  transition: 200ms ease-in-out;
+}
+
+.search-company::placeholder {
+  color: var(--ma-couleur);
+}
+
+.search-company:focus {
+  color: white;
+  transition: 300ms ease-in-out;
+  border: 1px solid var(--ma-couleur);
+  background-color: var(--ma-couleur);
+  caret-shape: underscore;
+}
+
+.search-company:focus::placeholder {
+  color: white;
+  transition: 200ms ease-in-out;
+}
+
+.add-company-btn {
+  background: var(--ma-couleur);
+  color: white;
+  border: none;
+}
+
+.add-company-btn:hover {
+  background: var(--ma-couleur-foncée);
+}
+
+.add-company-box {
+  position: absolute;
+  background: white;
+  visibility: hidden;
+}
+
+.add-company-container {
+  width: 80%;
+  height: 90%;
+  position: relative;
+  color: var(--ma-couleur);
+  transition: ease-in-out;
+}
+
+@keyframes slideInFromRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOutToRight {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(200%);
+    opacity: 0;
+  }
+}
+
+.slide-in {
+  animation: slideInFromRight 400ms forwards;
+}
+
+.slide-out {
+  animation: slideOutToRight 800ms forwards;
+}
+
+.prepend-add-company {
+  background: var(--ma-couleur);
+  border: 2px solid var(--ma-couleur);
+  color: white;
+}
+
+.input-add-company {
+  color: var(--ma-couleur);
+  border: 2px solid var(--ma-couleur);
+}
+
+.input-add-company::placeholder {
+  color: var(--ma-couleur);
+}
+
+#company-back-btn {
+  color: var(--ma-couleur);
+  top: 3.5%;
+  position: absolute;
+  font-size: 50px;
+  left: 18%;
+  transition: 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+#company-back-btn:hover {
+  transform: translateX(-3px);
+}
+
+.register-company-btn {
+  background: var(--ma-couleur);
+  color: white;
+  border: none;
+}
+
+.register-company-btn:hover {
+  background: var(--ma-couleur-foncée);
+}
+
+/* Admin dashboard */
 .dash-row {
   height: 65vh;
 }
