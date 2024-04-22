@@ -136,18 +136,8 @@ public class InternshipDAOImpl implements InternshipDAO {
       ps.setString(1, project);
       ps.setInt(2, internshipId);
       ps.setInt(3, version);
-      return buildInternshipDTOV2(ps);
-    } catch (SQLException e) {
-      throw new FatalException(e);
-    }
-  }
-
-  private InternshipDTO buildInternshipDTOV2(PreparedStatement ps) {
-    try (ResultSet rs = ps.executeQuery()) {
-      if (rs.next()) {
-
-      }
-      return null;
+      ps.executeQuery();
+      return getOneInternshipById(internshipId);
     } catch (SQLException e) {
       throw new FatalException(e);
     }
