@@ -65,7 +65,7 @@ const submitRegistration = async (e) => {
 
     if (error instanceof Error && error.message.startsWith(
         "fetch error : 409")) {
-      errorMessage.innerText = "Entreprise déjà existante de même nom (et designation), veuillez ajouter une nouvelle designation";
+      errorMessage.innerText = "Entreprise de même nom (et appellation) déjà existante, veuillez ajouter une nouvelle appellation";
     }
 
     if (error instanceof Error && error.message.startsWith(
