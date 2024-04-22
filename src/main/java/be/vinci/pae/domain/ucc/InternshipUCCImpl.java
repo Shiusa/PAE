@@ -88,7 +88,6 @@ public class InternshipUCCImpl implements InternshipUCC {
 
       InternshipDTO internship = internshipDAO.createInternship(internshipDTO);
       dalServices.commitTransaction();
-      Logs.log(Level.DEBUG, "InternshipUCC (createInternship) : success!");
       contactUCC.putStudentContactsOnHold(internshipDTO.getContact().getStudent().getId());
       return internship;
     } catch (Exception e) {

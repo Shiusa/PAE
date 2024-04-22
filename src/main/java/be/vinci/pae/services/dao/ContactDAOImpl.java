@@ -278,6 +278,12 @@ public class ContactDAOImpl implements ContactDAO {
     return contactDTOList;
   }
 
+  /**
+   * Put a contact on hold.
+   *
+   * @param contactDTO the contact to put on hold.
+   * @return the contact putted on hold.
+   */
   public ContactDTO putContactOnHold(ContactDTO contactDTO) {
     String requestSql = """
         UPDATE proStage.contacts
@@ -294,7 +300,7 @@ public class ContactDAOImpl implements ContactDAO {
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
           ContactDTO contact = findContactById(rs.getInt("contact_id"));
-          
+
           Logs.log(Level.DEBUG, "ContactDAO (unsupervise) : success!");
           return contact;
         }

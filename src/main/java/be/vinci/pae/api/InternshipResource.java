@@ -72,6 +72,13 @@ public class InternshipResource {
     return internshipUCC.getOneById(id, user.getId());
   }
 
+  /**
+   * create an internship and return it.
+   *
+   * @param request    the user token.
+   * @param internship the internship to create.
+   * @return the internship created.
+   */
   @POST
   @Path("create")
   @Consumes(MediaType.APPLICATION_JSON)
