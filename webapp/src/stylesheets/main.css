@@ -793,3 +793,76 @@ input::placeholder {
 .register-company-btn:hover {
   background: var(--ma-couleur-foncée);
 }
+
+/* Admin dashboard */
+.dash-row {
+  height: 65vh;
+}
+
+#chart {
+  border-radius: 50%;
+  width: 160px;
+  height: 160px;
+  background: #119DB8;
+  border: 0.5rem solid white;
+}
+
+.year-list {
+  color: #119DB8;
+}
+
+.year-list:focus {
+  outline: none;
+}
+
+.chart-card {
+  background-color: #119DB8;
+  color: white;
+}
+
+.chart-container {
+  background-color: #119DB8;
+}
+
+.chartCT {
+  border: 2rem solid white;
+  border-radius: 50%;
+  width: 180px;
+  height: 180px;
+  background-color: white;
+}
+
+.stat-caption {
+  border: 0.2rem solid white;
+  background-color: #119DB8;
+}
+
+.cap-1 {
+  background-color: white;
+  color: #119DB8;
+  /*
+  border: 0.15rem solid white;
+  */
+}
+
+.cap-2 {
+  background-color: var(--ma-couleur-foncée);
+  /*
+  border: 0.2rem solid white;
+  */
+}
+
+.adminCompanyListTitle {
+  font-weight: bold;
+  background: var(--ma-couleur);
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  color: white;
+  font-size: 20px;
+  text-align: center;
+}
+
+.adminCompanyListTile {
+  background: var(--ma-couleur);
+  color: white;
+}

@@ -180,10 +180,32 @@ const ContactPage = async () => {
         
       </div>
       
-      <div class="row">
-        <div class="d-flex justify-content-center align-items-center">
-          <div class="users-container w-75 d-flex justify-content-center align-items-center mt-5 flex-column mb-5">
-            <h1>Il n'y a aucune entreprise</h1>
+      <div class="row mt-5 d-flex flex-column align-items-center">
+        <div class="rounded-4 p-4 w-75" style="border: 2px solid #119cb8c7; height: 58vh;">
+          <div class="col-md-12 d-flex flex-column h-100">
+          
+            <div class="w-100 d-flex justify-content-center align-items-center border adminCompanyListTitle">
+              <div class="d-flex align-items-center justify-content-center" style="width: 25%">
+                  <p class="p-2 m-0 text-center">Nom</p>
+              </div>
+              <div class="d-flex align-items-center justify-content-center" style="width: 25%">
+                  <p class="p-2 m-0 text-center">Appellation</p>
+              </div>
+              <div class="d-flex align-items-center justify-content-center" style="width: 20%">
+                  <p class="p-2 m-0 text-center">Email</p>
+              </div>
+              <div class="d-flex align-items-center justify-content-center" style="width: 20%">
+                  <p class="p-2 m-0 text-center">Numéro de téléphone</p>
+              </div>
+              <div class="d-flex align-items-center justify-content-center" style="width: 10%">
+                  <p class="p-2 m-0 text-center">Action</p>
+              </div>
+            </div>
+
+          
+            <div class="users-container w-100 d-flex flex-column overflow-y-auto adminCompanyListTileContainer" style="scrollbar-width:none;">
+              <h1>Il n'y a aucune entreprise</h1>
+            </div>
           </div>
         </div>
       </div>
@@ -213,31 +235,52 @@ const ContactPage = async () => {
       let email;
       let phone;
 
-      if (companies[u].designation === null) {
-        designation = "";
+      if (companies[u].designation === null || companies[u].designation
+          === '') {
+        designation = "Appellation";
       } else {
         designation = companies[u].designation;
       }
 
-      if (companies[u].email === null) {
-        email = "";
+      if (companies[u].email === null || companies[u].email === '') {
+        email = "Email";
       } else {
         email = companies[u].email;
       }
 
-      if (companies[u].phoneNumber === null) {
-        phone = "";
+      if (companies[u].phoneNumber === null || companies[u].phoneNumber
+          === '') {
+        phone = "Numéro de téléphone";
       } else {
         phone = companies[u].phoneNumber;
       }
       info += `
-            <div class="user-info-box d-flex justify-content-center align-items-center mt-2">
-              <p>${companies[u].name} ${designation}</p>
-              <p>${email}</p>
-              <p>${phone}</p>
+            <div class="user-info-box w-100 d-flex justify-content-center align-items-center mt-2 py-2">
+              <div class="d-flex align-items-center justify-content-center h-75" style="width: 25%; border-right: 2px solid white;">
+                <p class="p-0 m-0 text-center">${companies[u].name}</p>
+              </div>
+              <div class="d-flex align-items-center justify-content-center h-75" style="width: 25%; border-right: 2px solid white;">
+                <p class="p-0 m-0 text-center">${designation}</p>
+              </div>
+              <div class="d-flex align-items-center justify-content-center h-75" style="width: 20%; border-right: 2px solid white;">
+                <p class="p-0 m-0 text-center">${email}</p>
+              </div>
+              <div class="d-flex align-items-center justify-content-center h-75" style="width: 20%; border-right: 2px solid white;">
+                <p class="p-0 m-0 text-center">${phone}</p>
+              </div>
             `;
       if (companies[u].blacklisted === false) {
-        info += `<button id="${companies[u].id}" class="company-btn btn btn-secondary">Initier</button>`;
+        info += `
+          <div class="d-flex align-items-center justify-content-center h-75" style="width: 10%;">
+            <button id="${companies[u].id}" class="company-btn btn btn-secondary">Initier</button>
+          </div>
+        `;
+      } else {
+        info += `
+          <div class="d-flex align-items-center justify-content-center" style="width: 10%; border-right: 2px solid white;">
+            <button id="${companies[u].id}" class="company-btn btn btn-secondary disabled">Initier</button>
+          </div>
+        `;
       }
       info += `</div>`;
       u += 1;
