@@ -324,7 +324,7 @@ const renderCompanyList = (companyData) => {
           <p class="p-0 m-0 text-center">${dataValue}</p>
         </div>
         <div class="d-flex align-items-center justify-content-center" style="width: 10%">
-          <p class="p-0 m-0 text-center">NON</p>
+          <p class="p-0 m-0 text-center">${data.isBlacklisted ? "OUI" : "NON"}</p>
         </div>
       </div>
     `;
