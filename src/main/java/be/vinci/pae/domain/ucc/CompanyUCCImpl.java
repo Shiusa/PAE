@@ -9,7 +9,6 @@ import be.vinci.pae.utils.Logs;
 import be.vinci.pae.utils.exceptions.DuplicateException;
 import be.vinci.pae.utils.exceptions.FatalException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
-import be.vinci.pae.utils.exceptions.UnauthorizedAccessException;
 import jakarta.inject.Inject;
 import java.util.List;
 import org.apache.logging.log4j.Level;
@@ -91,23 +90,11 @@ public class CompanyUCCImpl implements CompanyUCC {
 
   @Override
   public CompanyDTO blacklist(int companyId, String blacklistMotivation, int userId) {
-    CompanyDTO companyDTO = null;
-    UserDTO userDTO;
+    CompanyDTO companyDTO;
     Logs.log(Level.DEBUG, "CompanyUCC (blacklist) : entrance");
     try {
       dalServices.startTransaction();
-      userDTO = userDAO.getOneUserById(userId);
       companyDTO = companyDAO.getOneCompanyById(companyId);
-      if (userDTO == null) {
-        Logs.log(Level.ERROR, "CompanyUCC (blacklist) : user not found");
-        dalServices.rollbackTransaction();
-        throw new ResourceNotFoundException();
-      }
-      if (!userDTO.isTeacher()) {
-        Logs.log(Level.ERROR, "CompanyUCC (blacklist) : user isn't a teacher");
-        dalServices.rollbackTransaction();
-        throw new UnauthorizedAccessException();
-      }
       if (companyDTO.isBlacklisted()) {
         Logs.log(Level.ERROR, "CompanyUCC (blacklist) : the company is already blacklisted");
         dalServices.rollbackTransaction();
