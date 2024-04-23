@@ -124,10 +124,8 @@ public class CompanyResource {
 
     int companyId = json.get("company").asInt();
     String blacklistMotivation = json.get("blacklistMotivation").asText();
-    UserDTO userDTO = (UserDTO) request.getProperty("user");
-    int userId = userDTO.getId();
 
-    CompanyDTO company = companyUCC.blacklist(companyId, blacklistMotivation, userId);
+    CompanyDTO company = companyUCC.blacklist(companyId, blacklistMotivation);
 
     Logs.log(Level.DEBUG, "CompanyResource (getOneById) : success!");
     return jsonMapper.createObjectNode().putPOJO("company", company);

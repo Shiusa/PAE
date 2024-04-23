@@ -115,7 +115,7 @@ public class CompanyUCCImplTest {
         () -> assertThrows(FatalException.class, () -> companyUCC.getAllCompanies()),
         () -> assertThrows(FatalException.class, () -> companyUCC.getAllCompaniesByUser(1)),
         () -> assertThrows(FatalException.class,
-            () -> companyUCC.blacklist(1, "l'entreprise pratique la fraude", 1))
+            () -> companyUCC.blacklist(1, "l'entreprise pratique la fraude"))
 
     );
   }
@@ -126,7 +126,7 @@ public class CompanyUCCImplTest {
     companyDTO.setIsBlacklisted(true);
     Mockito.when(companyDAOMock.getOneCompanyById(1)).thenReturn(companyDTO);
     assertThrows(DuplicateException.class,
-        () -> companyUCC.blacklist(1, "l'entreprise pratique la fraude", 1));
+        () -> companyUCC.blacklist(1, "l'entreprise pratique la fraude"));
   }
 
   @Test
@@ -138,6 +138,6 @@ public class CompanyUCCImplTest {
     Mockito.when(companyDAOMock.getOneCompanyById(1)).thenReturn(companyDTO);
     Mockito.when(companyDAOMock.blacklist(1, "l'entreprise pratique la fraude", 1))
         .thenReturn(companyDTO);
-    assertNotNull(companyUCC.blacklist(1, "l'entreprise pratique la fraude", 1));
+    assertNotNull(companyUCC.blacklist(1, "l'entreprise pratique la fraude"));
   }
 }

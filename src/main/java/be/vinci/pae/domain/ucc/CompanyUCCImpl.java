@@ -89,7 +89,7 @@ public class CompanyUCCImpl implements CompanyUCC {
   }
 
   @Override
-  public CompanyDTO blacklist(int companyId, String blacklistMotivation, int userId) {
+  public CompanyDTO blacklist(int companyId, String blacklistMotivation) {
     CompanyDTO companyDTO;
     Logs.log(Level.DEBUG, "CompanyUCC (blacklist) : entrance");
     try {

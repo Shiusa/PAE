@@ -8,6 +8,7 @@ import ContactPage from '../Pages/ContactPage';
 import InfoPage from '../Pages/InfoPage';
 import DashboardPage from '../Pages/DashboardPage';
 import UserListPage from "../Pages/UserListPage";
+import BlacklistPage from "../Pages/BlacklistPage";
 
 const routes = {
   "/": HomePage,
@@ -18,6 +19,7 @@ const routes = {
   "/userList": UserListPage,
   "/info": InfoPage,
   "/dashboard": DashboardPage,
+  "/blacklist": BlacklistPage,
 };
 
 /**

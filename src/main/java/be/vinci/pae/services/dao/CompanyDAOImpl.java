@@ -159,7 +159,9 @@ public class CompanyDAOImpl implements CompanyDAO {
         UPDATE prostage.companies
         SET is_blacklisted = true, blacklist_motivation = ?, version = ?
         WHERE company_id = ? AND version = ?
-        RETURNING *
+        RETURNING company_id, name, designation, address,
+        phone_number AS cm_phone_number,
+        email AS cm_email, is_blacklisted, blacklist_motivation, version AS cm_version
         """;
     PreparedStatement ps = dalServices.getPreparedStatement(requestSql);
     try {

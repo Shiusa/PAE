@@ -666,4 +666,11 @@ input::placeholder {
   transform: translateX(-5px);
 }
 
+#blacklistMotivation {
+  border-color: var(--ma-couleur);
+}
+#title {
+  color: var(--ma-couleur);
+}
+
 
