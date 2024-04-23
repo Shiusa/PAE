@@ -138,6 +138,10 @@ const ContactPage = async () => {
   const main = document.querySelector('main');
 
   const userToken = getToken();
+  if (!userToken) {
+    Redirect('/');
+    return;
+  }
 
   showNavStyle("contact");
   awaitFront();

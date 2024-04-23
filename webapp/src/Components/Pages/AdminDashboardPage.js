@@ -255,8 +255,12 @@ const addColumnHeaderListeners = () => {
 }
 
 const fetchInternshipStat = async () => {
-  const user = getToken();
   try {
+    const user = getToken();
+    if (!user) {
+      throw new Error("fetch error : 403");
+    }
+
     const response = await fetch('api/internships/stats/year', {
       method: 'GET',
       headers: {
