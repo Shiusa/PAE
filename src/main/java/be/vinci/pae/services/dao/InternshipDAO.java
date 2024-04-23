@@ -27,6 +27,22 @@ public interface InternshipDAO {
   InternshipDTO getOneInternshipById(int id);
 
   /**
+   * Get one internship by a contact id.
+   *
+   * @param id the contact id.
+   * @return the internship found.
+   */
+  InternshipDTO getOneByContact(int id);
+
+  /**
+   * Create one internship.
+   *
+   * @param internshipDTO the dto containing the internship datas.
+   * @return the created internship.
+   */
+  InternshipDTO createInternship(InternshipDTO internshipDTO);
+
+  /**
    * Get internship count by year.
    *
    * @return map with number of internship and total student by year.

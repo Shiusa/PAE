@@ -1,6 +1,7 @@
 package be.vinci.pae;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -328,6 +329,17 @@ public class ContactUCCImplTest {
   public void testGetOneByIdCorrect() {
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
     assertNotNull(contactUCC.getOneById(1));
+  }
+
+  @Test
+  @DisplayName("Test put contact on hold")
+  public void testPutContactOnHold() {
+    Mockito.when(contactDAOMock.getAllContactsByStudentStartedOrAdmitted(1))
+        .thenReturn(List.of(contactDTO));
+    contactDTO.setState("suspendu");
+    Mockito.when(contactDAOMock.putContactOnHold(contactDTO)).thenReturn(contactDTO);
+    contactUCC.putStudentContactsOnHold(1);
+    assertEquals("suspendu", contactDTO.getState());
   }
 
   @Test

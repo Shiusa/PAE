@@ -876,3 +876,7 @@ input::placeholder {
   background: var(--ma-couleur);
   color: white;
 }
+
+.noInternship{
+  color: #119DB8;
+}
