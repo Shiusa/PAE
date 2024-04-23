@@ -135,4 +135,18 @@ public interface UserDTO {
    * @param role role to set.
    */
   void setRole(String role);
+
+  /**
+   * Get the contact's version.
+   *
+   * @return the contact's version.
+   */
+  int getVersion();
+
+  /**
+   * Set the contact's version.
+   *
+   * @param version school version.
+   */
+  void setVersion(int version);
 }
