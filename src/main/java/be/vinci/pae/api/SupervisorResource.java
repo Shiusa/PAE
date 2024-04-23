@@ -12,6 +12,7 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
+import java.util.List;
 import org.apache.logging.log4j.Level;
 import org.glassfish.jersey.server.ContainerRequest;
 
@@ -40,6 +41,21 @@ public class SupervisorResource {
       @PathParam("id") int id) {
     Logs.log(Level.INFO, "SupervisorResource (getOneSupervisorById) : entrance");
     return supervisorUCC.getOneById(id);
+  }
+
+  /**
+   * Get all supervisors of a company.
+   *
+   * @param companyId the company's id.
+   * @return all the possible supervisors.
+   */
+  @GET
+  @Path("allByCompany/{id}")
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize
+  public List<SupervisorDTO> getAllByCompany(@PathParam("id") int companyId) {
+    Logs.log(Level.INFO, "SupervisorResource (getAllCompany) : entrance");
+    return supervisorUCC.getAllByCompany(companyId);
   }
 
 }

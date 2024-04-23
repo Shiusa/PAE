@@ -5,6 +5,7 @@ import be.vinci.pae.services.dao.SupervisorDAO;
 import be.vinci.pae.utils.Logs;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
 import jakarta.inject.Inject;
+import java.util.List;
 import org.apache.logging.log4j.Level;
 
 /**
@@ -25,5 +26,11 @@ public class SupervisorUCCImpl implements SupervisorUCC {
     }
     Logs.log(Level.DEBUG, "SupervisorUCCImpl (getOneById) : success!");
     return supervisorDTO;
+  }
+
+  @Override
+  public List<SupervisorDTO> getAllByCompany(int companyId) {
+    Logs.log(Level.INFO, "SupervisorUCCImpl (getAll) : entrance");
+    return supervisorDAO.getAllByCompany(companyId);
   }
 }
