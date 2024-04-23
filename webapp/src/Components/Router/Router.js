@@ -10,6 +10,7 @@ import DashboardPage from '../Pages/DashboardPage';
 import UserListPage from "../Pages/UserListPage";
 import AdminDashboardPage from "../Pages/AdminDashboardPage";
 import InternshipPage from "../Pages/InternshipPage";
+import CreateInternshipPage from "../Pages/CreateInternshipPage";
 
 const routes = {
   "/": HomePage,
@@ -22,6 +23,7 @@ const routes = {
   "/dashboard": DashboardPage,
   "/adminBoard": AdminDashboardPage,
   "/internship": InternshipPage,
+  "/createInternship": CreateInternshipPage,
 };
 
 /**
