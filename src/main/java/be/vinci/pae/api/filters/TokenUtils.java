@@ -52,4 +52,18 @@ public class TokenUtils {
     }
     return null;
   }
+
+  public static UserDTO verifyToken(String token, JWTVerifier jwtVerifier,
+      UserUCC userUCC) {
+    DecodedJWT decodedToken = null;
+    try {
+      decodedToken = jwtVerifier.verify(token);
+    } catch (Exception e) {
+      throw new WebApplicationException(Response.status(Status.UNAUTHORIZED)
+          .entity("Malformed token : " + e.getMessage()).type("text/plain").build());
+    }
+    return userUCC.getOneById(
+        decodedToken.getClaim("user").asInt());
+  }
+
 }

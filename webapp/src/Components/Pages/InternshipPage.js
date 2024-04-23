@@ -64,7 +64,7 @@ const InternshipPage = async () => {
       Redirect('/dashboard');
     });
   } else {
-    //TODO (Brian)
+    //  TODO (Brian)
   }
 }
 
