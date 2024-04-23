@@ -72,4 +72,13 @@ public interface ContactUCC {
    * @param studentId the id of the student to put contacts on hold.
    */
   void putStudentContactsOnHold(int studentId);
+
+  /**
+   * Accepted the contact.
+   *
+   * @param contactId the id of the contact.
+   * @param studentId the id of the student.
+   * @return the accepted contact.
+   */
+  ContactDTO accept(int contactId, int studentId);
 }

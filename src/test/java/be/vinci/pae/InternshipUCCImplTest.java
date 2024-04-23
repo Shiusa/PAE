@@ -20,6 +20,8 @@ import be.vinci.pae.utils.exceptions.InvalidRequestException;
 import be.vinci.pae.utils.exceptions.NotAllowedException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
 import be.vinci.pae.utils.exceptions.UnauthorizedAccessException;
+import java.util.HashMap;
+import java.util.Map;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.junit.jupiter.api.AfterEach;
@@ -162,6 +164,16 @@ public class InternshipUCCImplTest {
   }
 
   @Test
+  @DisplayName("Test get internship stat for every year should return not null")
+  public void testgetInternshipCountByYear() {
+    Map<String, Integer[]> internshipStats = new HashMap<>();
+    //internshipStats.put("2023-2024", new Integer[]{3, 5});
+    Mockito.when(internshipDAOMock.getInternshipCountByYear()).thenReturn(internshipStats);
+    Map<String, Integer[]> testInternshipMap = internshipUCC.getInternshipCountByYear();
+    assertNotNull(testInternshipMap);
+  }
+
+  @Test
   @DisplayName("Test crash transaction")
   public void testCrashTransaction() {
     userDTO.setId(1);
@@ -179,6 +191,9 @@ public class InternshipUCCImplTest {
         }),
         () -> assertThrows(FatalException.class, () -> {
           internshipUCC.createInternship(internshipDTO, 1);
+        }),
+        () -> assertThrows(FatalException.class, () -> {
+          internshipUCC.getInternshipCountByYear();
         })
     );
   }

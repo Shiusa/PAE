@@ -5,10 +5,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
- * Authorize annotation.
+ * Teacher and administrative annotation.
  */
 @NameBinding
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Authorize {
+public @interface TeacherAndAdministrative {
 
 }

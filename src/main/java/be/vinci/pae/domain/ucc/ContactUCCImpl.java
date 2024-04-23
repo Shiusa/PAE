@@ -221,4 +221,35 @@ public class ContactUCCImpl implements ContactUCC {
       throw e;
     }
   }
+
+  @Override
+  public ContactDTO accept(int contactId, int studentId) {
+    Logs.log(Level.DEBUG, "ContactUCC (accept) : entrance");
+    Contact contact;
+    ContactDTO contactDTO;
+    try {
+      dalServices.startTransaction();
+      contact = (Contact) contactDAO.findContactById(contactId);
+
+      if (contact == null) {
+        Logs.log(Level.ERROR,
+            "ContactUCC (accept) : contact not found");
+        throw new ResourceNotFoundException();
+      }
+      int version = contact.getVersion();
+
+      if (!contact.isAdmitted()) {
+        Logs.log(Level.ERROR, "ContactUCC (accept) : contact's state not admitted");
+        throw new NotAllowedException();
+      } else if (contact.getStudent().getId() != studentId) {
+        throw new NotAllowedException();
+      }
+      contactDTO = contactDAO.accept(contactId, version);
+      dalServices.commitTransaction();
+      return contactDTO;
+    } catch (Exception e) {
+      dalServices.rollbackTransaction();
+      throw e;
+    }
+  }
 }

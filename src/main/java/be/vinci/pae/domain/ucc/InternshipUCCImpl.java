@@ -3,6 +3,7 @@ package be.vinci.pae.domain.ucc;
 import be.vinci.pae.domain.Contact;
 import be.vinci.pae.domain.dto.InternshipDTO;
 import be.vinci.pae.services.dal.DalServices;
+import be.vinci.pae.services.dao.ContactDAO;
 import be.vinci.pae.services.dao.InternshipDAO;
 import be.vinci.pae.utils.Logs;
 import be.vinci.pae.utils.exceptions.DuplicateException;
@@ -11,6 +12,7 @@ import be.vinci.pae.utils.exceptions.NotAllowedException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
 import be.vinci.pae.utils.exceptions.UnauthorizedAccessException;
 import jakarta.inject.Inject;
+import java.util.Map;
 import org.apache.logging.log4j.Level;
 
 /**
@@ -92,6 +94,19 @@ public class InternshipUCCImpl implements InternshipUCC {
       return internship;
     } catch (Exception e) {
       Logs.log(Level.ERROR, "InternshipUCC (createInternship) : creation failed " + e);
+      dalServices.rollbackTransaction();
+      throw e;
+    }
+  }
+
+  @Override
+  public Map<String, Integer[]> getInternshipCountByYear() {
+    try {
+      dalServices.startTransaction();
+      Map<String, Integer[]> returnedMap = internshipDAO.getInternshipCountByYear();
+      dalServices.commitTransaction();
+      return returnedMap;
+    } catch (Exception e) {
       dalServices.rollbackTransaction();
       throw e;
     }

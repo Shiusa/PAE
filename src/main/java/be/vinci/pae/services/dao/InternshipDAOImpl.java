@@ -17,7 +17,10 @@ import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.logging.log4j.Level;
+
 
 /**
  * Implementation of InternshipDAO.
@@ -39,10 +42,8 @@ public class InternshipDAOImpl implements InternshipDAO {
 
   @Override
   public InternshipDTO getOneInternshipByIdUser(int student) {
-    Logs.log(Level.INFO, "InternshipDAO (getOneByIdUser) : entrance");
     String requestSql = """
         SELECT i.internship_id, i.contact, i.supervisor, i.signature_date, i.project, i.school_year,
-        i.version,
                 
         ct.contact_id, ct.company AS ct_company, ct.student, ct.meeting, ct.contact_state,
         ct.reason_for_refusal, ct.school_year AS ct_school_year, ct.version AS ct_version,
@@ -68,17 +69,14 @@ public class InternshipDAOImpl implements InternshipDAO {
       ps.setInt(1, student);
       return buildInternshipDTO(ps);
     } catch (SQLException e) {
-      Logs.log(Level.ERROR, "InternshipDAO (getOneByIdUser) : error");
       throw new FatalException(e);
     }
   }
 
   @Override
   public InternshipDTO getOneInternshipById(int id) {
-    Logs.log(Level.INFO, "InternshipDAO (getOneById) : entrance");
     String requestSql = """
         SELECT i.internship_id, i.contact, i.supervisor, i.signature_date, i.project, i.school_year,
-        i.version,
                 
         ct.contact_id, ct.company AS ct_company, ct.student, ct.meeting, ct.contact_state,
         ct.reason_for_refusal, ct.school_year AS ct_school_year, ct.version AS ct_version,
@@ -104,7 +102,6 @@ public class InternshipDAOImpl implements InternshipDAO {
       ps.setInt(1, id);
       return buildInternshipDTO(ps);
     } catch (SQLException e) {
-      Logs.log(Level.ERROR, "InternshipDAO (getOneById) : error");
       throw new FatalException(e);
     }
   }
@@ -162,6 +159,34 @@ public class InternshipDAOImpl implements InternshipDAO {
       ps.setString(5, internshipDTO.getSchoolYear());
       ps.execute();
       return getOneByContact(internshipDTO.getContact().getId());
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+  }
+
+  @Override
+  public Map<String, Integer[]> getInternshipCountByYear() {
+    String requestSql = """
+        SELECT cn.school_year, count(i.internship_id) AS internship_count,
+        count(DISTINCT us.user_id) AS total_students
+        FROM prostage.contacts cn
+        left outer join prostage.internships i on cn.contact_id = i.contact
+        left outer join prostage.users us on cn.student = us.user_id
+        WHERE us.role = 'Etudiant'
+        GROUP BY cn.school_year;
+        """;
+
+    try (PreparedStatement ps = dalServices.getPreparedStatement(requestSql)) {
+      try (ResultSet rs = ps.executeQuery()) {
+        Map<String, Integer[]> internshipCountMap = new HashMap<>();
+        while (rs.next()) {
+          String year = rs.getString("school_year");
+          int internshipCount = rs.getInt("internship_count");
+          int totalStudent = rs.getInt("total_students");
+          internshipCountMap.put(year, new Integer[]{internshipCount, totalStudent});
+        }
+        return internshipCountMap;
+      }
     } catch (SQLException e) {
       throw new FatalException(e);
     }
