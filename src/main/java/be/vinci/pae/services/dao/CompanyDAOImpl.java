@@ -225,6 +225,7 @@ public class CompanyDAOImpl implements CompanyDAO {
     }
   }
 
+  @Override
   public CompanyDTO blacklist(int companyId, String blackistMotivation, int version) {
     Logs.log(Level.DEBUG, "CompanyDAO (blacklist) : entrance");
 

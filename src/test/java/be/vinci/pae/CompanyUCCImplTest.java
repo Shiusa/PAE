@@ -208,7 +208,8 @@ public class CompanyUCCImplTest {
     assertAll(
         () -> assertThrows(FatalException.class, () -> companyUCC.getAllCompanies()),
         () -> assertThrows(FatalException.class, () -> companyUCC.getAllCompaniesByUser(1)),
-        () -> assertThrows(FatalException.class, () -> companyUCC.blacklist(1, "l'entreprise pratique la fraude")),
+        () -> assertThrows(FatalException.class, () ->
+            companyUCC.blacklist(1, "l'entreprise pratique la fraude")),
         () -> assertThrows(FatalException.class, () -> companyUCC.getAllCompaniesByUser(1)),
         () -> assertThrows(FatalException.class, () -> companyUCC.registerCompany(companyDTO))
     );
