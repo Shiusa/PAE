@@ -1,10 +1,4 @@
-import {
-  getAuthenticatedUser,
-  getRemember,
-  setLocalUser,
-  setUserLocalStorage,
-  setUserSessionStorage
-} from "../../utils/session";
+import {getAuthenticatedUser, setAuthenticatedUser} from "../../utils/session";
 
 const Navbar = async () => {
 
@@ -12,19 +6,12 @@ const Navbar = async () => {
 
   const userConnected = await getAuthenticatedUser();
   if (userConnected) {
-    if (getRemember()) {
-      setUserLocalStorage(userConnected);
-      setLocalUser(userConnected.user);
-    } else {
-      setUserSessionStorage(userConnected);
-      setLocalUser(userConnected.user);
-    }
+    setAuthenticatedUser(userConnected);
   }
   /* if (isConnected) {
     setLocalUser(isConnected.user)
   } */
   // console.log(getLocalUser())
-  console.log(userConnected);
 
   let navbar = ``;
 

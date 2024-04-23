@@ -1,7 +1,13 @@
 // eslint-disable-next-line import/no-cycle
 import {Redirect} from "../Router/Router";
 import {awaitFront, showNavStyle} from "../../utils/function";
-import {getAuthenticatedUser, getToken} from "../../utils/session";
+import {
+  getAuthenticatedUser,
+  getToken,
+  setAuthenticatedUser
+} from "../../utils/session";
+
+let userToken;
 
 const closeForm = () => {
   const addCompanyContainer = document.querySelector(
@@ -20,6 +26,11 @@ const submitRegistration = async (e) => {
   e.preventDefault();
 
   const user = await getAuthenticatedUser();
+  if (user) {
+    setAuthenticatedUser(user);
+  } else {
+    return;
+  }
 
   const name = document.querySelector("#input-name").value;
   const designation = document.querySelector("#input-designation").value;
@@ -137,14 +148,11 @@ const ContactPage = async () => {
 
   const main = document.querySelector('main');
 
-  const userToken = getToken();
+  userToken = getToken();
   if (!userToken) {
     Redirect('/');
     return;
   }
-
-  showNavStyle("contact");
-  awaitFront();
 
   const readAllCompanies = async () => {
     const options = {
@@ -166,6 +174,9 @@ const ContactPage = async () => {
   };
 
   const companiesTable = await readAllCompanies();
+
+  showNavStyle("contact");
+  awaitFront();
 
   main.innerHTML = `
     <div class="container-fluid mt-5 d-flex flex-column rounded-3 overflow-hidden" style="width: 100%; height: 74vh; border: none; border-radius: 0; background: white; position: relative">
