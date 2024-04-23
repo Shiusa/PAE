@@ -3,144 +3,6 @@ import {getToken} from "../../utils/session";
 // eslint-disable-next-line import/no-cycle
 import {Redirect} from "../Router/Router";
 
-/* const dataCompany = {
-  "1": {
-    "id": 1,
-    "name": "BNP Paribas",
-    "designation": "ZBruxelles",
-    "address": "Jsp qsdkj qsdlkjqsd",
-    "phoneNumber": "027001313",
-    "email": "",
-    "isBlacklisted": false,
-    "blacklistMotivation": "",
-    "version": 1,
-    "data": {
-      "2023-2024": 4,
-      "2022-2023": 1
-    }
-  },
-  "2": {
-    "id": 2,
-    "name": "BNP Paribas",
-    "designation": "Namur",
-    "address": "2 Jsp qsdkj qsdlkjqsd",
-    "phoneNumber": "2027001313",
-    "email": "",
-    "isBlacklisted": false,
-    "blacklistMotivation": "",
-    "version": 1,
-    "data": {
-      "2023-2024": 3,
-      "2022-2023": 3
-    }
-  },
-  "3": {
-    "id": 2,
-    "name": "BNP Paribas",
-    "designation": "Namur",
-    "address": "2 Jsp qsdkj qsdlkjqsd",
-    "phoneNumber": "2027001313",
-    "email": "",
-    "isBlacklisted": false,
-    "blacklistMotivation": "",
-    "version": 1,
-    "data": {
-      "2023-2024": 3,
-      "2022-2023": 3
-    }
-  },
-  "4": {
-    "id": 2,
-    "name": "BNP Paribas",
-    "designation": "Namur",
-    "address": "2 Jsp qsdkj qsdlkjqsd",
-    "phoneNumber": "2027001313",
-    "email": "",
-    "isBlacklisted": false,
-    "blacklistMotivation": "",
-    "version": 1,
-    "data": {
-      "2023-2024": 3,
-      "2022-2023": 3
-    }
-  },
-  "5": {
-    "id": 2,
-    "name": "BNP Paribas",
-    "designation": "Namur",
-    "address": "2 Jsp qsdkj qsdlkjqsd",
-    "phoneNumber": "2027001313",
-    "email": "",
-    "isBlacklisted": false,
-    "blacklistMotivation": "",
-    "version": 1,
-    "data": {
-      "2023-2024": 3,
-      "2022-2023": 3
-    }
-  },
-  "6": {
-    "id": 2,
-    "name": "BNP Paribas",
-    "designation": "Namur",
-    "address": "2 Jsp qsdkj qsdlkjqsd",
-    "phoneNumber": "2027001313",
-    "email": "",
-    "isBlacklisted": false,
-    "blacklistMotivation": "",
-    "version": 1,
-    "data": {
-      "2023-2024": 3,
-      "2022-2023": 3
-    }
-  },
-  "7": {
-    "id": 2,
-    "name": "BNP Paribas",
-    "designation": "Namur",
-    "address": "2 Jsp qsdkj qsdlkjqsd",
-    "phoneNumber": "2027001313",
-    "email": "",
-    "isBlacklisted": false,
-    "blacklistMotivation": "",
-    "version": 1,
-    "data": {
-      "2023-2024": 3,
-      "2022-2023": 3
-    }
-  },
-  "8": {
-    "id": 2,
-    "name": "BNP Paribas",
-    "designation": "Namur",
-    "address": "2 Jsp qsdkj qsdlkjqsd",
-    "phoneNumber": "2027001313",
-    "email": "",
-    "isBlacklisted": false,
-    "blacklistMotivation": "",
-    "version": 1,
-    "data": {
-      "2023-2024": 3,
-      "2022-2023": 3
-    }
-  },
-  "9": {
-    "id": 2,
-    "name": "BNP Paribas",
-    "designation": "Namur",
-    "address": "2 Jsp qsdkj qsdlkjqsd",
-    "phoneNumber": "2027001313",
-    "email": "",
-    "isBlacklisted": false,
-    "blacklistMotivation": "",
-    "version": 1,
-    "data": {
-      "2023-2024": 3,
-      "2022-2023": 3
-    }
-  }
-} */
-
 let dataCompany;
 
 const sortData = (data, sortingType) => Object.values(data).sort((a, b) => {
@@ -163,8 +25,6 @@ const drawPieChart = (canvas, dataSet, colors) => {
 
   // Check percentage & colors having same length
   if (dataSet.length !== colors.length) {
-    console.error(
-        "Les tableaux de pourcentages et de couleurs doivent avoir la même longueur.");
     return;
   }
 
@@ -273,7 +133,6 @@ const renderChart = (internshipStats) => {
   const chartContainer = document.querySelector('.chartCT');
   const percent = (internshipStats.internshipCount
       / internshipStats.totalStudents) * 100;
-  console.log(percent)
 
   chartContainer.innerHTML = `
     <canvas class="myChart" width="164" height="164"></canvas>
@@ -458,7 +317,6 @@ const AdminDashboardPage = async () => {
     return;
   }
   dataCompany = await fetchCompaniesData();
-  console.log(internshipStats["2023-2024"]);
   showNavStyle("dashboard");
 
   const sortDataCompany = sortData(dataCompany, 'name');
@@ -474,9 +332,6 @@ const AdminDashboardPage = async () => {
                 <p class="mb-0 mb-2">Année académique</p>
                 <select class="year-list custom-select-options rounded-1 text-center mb-4 py-1 border-0 w-100">
                   <option selected>2023-2024</option>
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3">Three</option>
                 </select>
               </div>
               
@@ -525,27 +380,9 @@ const AdminDashboardPage = async () => {
                 </div>
                 
                 <div class="w-100 d-flex flex-column overflow-y-auto adminCompanyListTileContainer" style="scrollbar-width:none;">
-                
-                  <div class="w-100 d-flex align-items-center justify-content-center rounded-3 border my-3 py-3 adminCompanyListTile">
-                    <div class="d-flex align-items-center justify-content-center" style="width: 30%; border-right: 2px solid white;">
-                      <p class="p-0 m-0 text-center">BNP Paribas</p>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-center" style="width: 30%; border-right: 2px solid white;">
-                      <p class="p-0 m-0 text-center">Bruxelles</p>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-center" style="width: 20%; border-right: 2px solid white;">
-                      <p class="p-0 m-0 text-center">02700500400</p>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-center" style="width: 10%; border-right: 2px solid white;">
-                      <p class="p-0 m-0 text-center">60</p>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-center" style="width: 10%">
-                      <p class="p-0 m-0 text-center">NON</p>
-                    </div>
-                  </div>
                   
                 </div>
-                <!--<p>test 3/4</p>-->
+                
               </div>
             </div>
           </div>
