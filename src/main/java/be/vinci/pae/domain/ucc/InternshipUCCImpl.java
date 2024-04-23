@@ -1,12 +1,18 @@
 package be.vinci.pae.domain.ucc;
 
+import be.vinci.pae.domain.Contact;
 import be.vinci.pae.domain.dto.InternshipDTO;
 import be.vinci.pae.services.dal.DalServices;
-import be.vinci.pae.services.dao.ContactDAO;
 import be.vinci.pae.services.dao.InternshipDAO;
+import be.vinci.pae.utils.Logs;
+import be.vinci.pae.utils.exceptions.DuplicateException;
+import be.vinci.pae.utils.exceptions.InvalidRequestException;
 import be.vinci.pae.utils.exceptions.NotAllowedException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
+import be.vinci.pae.utils.exceptions.UnauthorizedAccessException;
 import jakarta.inject.Inject;
+import java.util.Map;
+import org.apache.logging.log4j.Level;
 
 /**
  * Implementation of InternshipUCC.
@@ -18,7 +24,7 @@ public class InternshipUCCImpl implements InternshipUCC {
   @Inject
   private DalServices dalServices;
   @Inject
-  private ContactDAO contactDAO;
+  private ContactUCC contactUCC;
 
 
   @Override
@@ -53,6 +59,52 @@ public class InternshipUCCImpl implements InternshipUCC {
       }
       dalServices.commitTransaction();
       return internship;
+    } catch (Exception e) {
+      dalServices.rollbackTransaction();
+      throw e;
+    }
+  }
+
+  @Override
+  public InternshipDTO createInternship(InternshipDTO internshipDTO, int studentId) {
+    Logs.log(Level.INFO, "InternshipUCC (createInternship) : entrance");
+    if (studentId != internshipDTO.getContact().getStudent().getId()) {
+      Logs.log(Level.ERROR, "InternshipUCC (createInternship) : wrong student");
+      throw new UnauthorizedAccessException("This user can't create this internship");
+    }
+    internshipDTO.setSchoolYear(internshipDTO.getContact().getSchoolYear());
+    try {
+      if (!((Contact) internshipDTO.getContact()).isAccepted()) {
+        Logs.log(Level.ERROR, "InternshipUCC (createInternship) : contact is not accepted");
+        throw new InvalidRequestException("Contact is not accepted");
+      }
+
+      dalServices.startTransaction();
+      InternshipDTO existingInternship = internshipDAO.getOneInternshipByIdUser(
+          internshipDTO.getContact().getStudent().getId());
+      if (existingInternship != null) {
+        Logs.log(Level.ERROR, "InternshipUCC (createInternship) : internship already created");
+        throw new DuplicateException("Cannot add existing internship");
+      }
+
+      InternshipDTO internship = internshipDAO.createInternship(internshipDTO);
+      dalServices.commitTransaction();
+      contactUCC.putStudentContactsOnHold(internshipDTO.getContact().getStudent().getId());
+      return internship;
+    } catch (Exception e) {
+      Logs.log(Level.ERROR, "InternshipUCC (createInternship) : creation failed " + e);
+      dalServices.rollbackTransaction();
+      throw e;
+    }
+  }
+
+  @Override
+  public Map<String, Integer[]> getInternshipCountByYear() {
+    try {
+      dalServices.startTransaction();
+      Map<String, Integer[]> returnedMap = internshipDAO.getInternshipCountByYear();
+      dalServices.commitTransaction();
+      return returnedMap;
     } catch (Exception e) {
       dalServices.rollbackTransaction();
       throw e;

@@ -14,9 +14,14 @@ import be.vinci.pae.domain.ucc.InternshipUCC;
 import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.ContactDAO;
 import be.vinci.pae.services.dao.InternshipDAO;
+import be.vinci.pae.utils.exceptions.DuplicateException;
 import be.vinci.pae.utils.exceptions.FatalException;
+import be.vinci.pae.utils.exceptions.InvalidRequestException;
 import be.vinci.pae.utils.exceptions.NotAllowedException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
+import be.vinci.pae.utils.exceptions.UnauthorizedAccessException;
+import java.util.HashMap;
+import java.util.Map;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.junit.jupiter.api.AfterEach;
@@ -115,6 +120,60 @@ public class InternshipUCCImplTest {
   }
 
   @Test
+  @DisplayName("Test create one internship wrong user")
+  public void testCreateOneInternshipWrongUser() {
+    userDTO.setId(2);
+    contactDTO.setStudent(userDTO);
+    internshipDTO.setContact(contactDTO);
+    assertThrows(UnauthorizedAccessException.class,
+        () -> internshipUCC.createInternship(internshipDTO, 1));
+  }
+
+  @Test
+  @DisplayName("Test create one internship already exist")
+  public void testCreateOneInternshipAlreadyExist() {
+    userDTO.setId(1);
+    contactDTO.setStudent(userDTO);
+    contactDTO.setState("accepté");
+    internshipDTO.setContact(contactDTO);
+    Mockito.when(internshipDAOMock.getOneInternshipByIdUser(1)).thenReturn(internshipDTO);
+    assertThrows(DuplicateException.class, () -> internshipUCC.createInternship(internshipDTO, 1));
+  }
+
+  @Test
+  @DisplayName("Test create one internship contact not accepted")
+  public void testCreateOneInternshipContactNotAccepted() {
+    userDTO.setId(1);
+    contactDTO.setStudent(userDTO);
+    contactDTO.setState("initié");
+    internshipDTO.setContact(contactDTO);
+    assertThrows(InvalidRequestException.class,
+        () -> internshipUCC.createInternship(internshipDTO, 1));
+  }
+
+  @Test
+  @DisplayName("Test create one internship")
+  public void testCreateOneInternship() {
+    userDTO.setId(1);
+    contactDTO.setStudent(userDTO);
+    contactDTO.setState("accepté");
+    internshipDTO.setContact(contactDTO);
+    Mockito.when(internshipDAOMock.getOneInternshipById(1)).thenReturn(null);
+    Mockito.when(internshipDAOMock.createInternship(internshipDTO)).thenReturn(internshipDTO);
+    assertNotNull(internshipUCC.createInternship(internshipDTO, 1));
+  }
+
+  @Test
+  @DisplayName("Test get internship stat for every year should return not null")
+  public void testgetInternshipCountByYear() {
+    Map<String, Integer[]> internshipStats = new HashMap<>();
+    //internshipStats.put("2023-2024", new Integer[]{3, 5});
+    Mockito.when(internshipDAOMock.getInternshipCountByYear()).thenReturn(internshipStats);
+    Map<String, Integer[]> testInternshipMap = internshipUCC.getInternshipCountByYear();
+    assertNotNull(testInternshipMap);
+  }
+
+  @Test
   @DisplayName("Test editProject correctly")
   public void testEditProjectCorrectly() {
     Mockito.when(internshipDAOMock.editProject("test", 1, 1)).thenReturn(internshipDTO);
@@ -124,6 +183,10 @@ public class InternshipUCCImplTest {
   @Test
   @DisplayName("Test crash transaction")
   public void testCrashTransaction() {
+    userDTO.setId(1);
+    contactDTO.setStudent(userDTO);
+    contactDTO.setState("accepté");
+    internshipDTO.setContact(contactDTO);
     Mockito.doThrow(new FatalException(new RuntimeException()))
         .when(dalServicesMock).startTransaction();
     assertAll(
@@ -135,7 +198,14 @@ public class InternshipUCCImplTest {
         }),
         () -> assertThrows(FatalException.class, () -> {
           internshipUCC.editProject("test", 1, 1);
-        }));
+        }),
+        () -> assertThrows(FatalException.class, () -> {
+          internshipUCC.createInternship(internshipDTO, 1);
+        }),
+        () -> assertThrows(FatalException.class, () -> {
+          internshipUCC.getInternshipCountByYear();
+        })
+    );
   }
 }
 

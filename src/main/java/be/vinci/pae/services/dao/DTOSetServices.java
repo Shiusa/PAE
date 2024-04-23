@@ -80,6 +80,7 @@ class DTOSetServices {
       internship.setSignatureDate(rs.getDate("signature_date"));
       internship.setProject(rs.getString("project"));
       internship.setSchoolYear(rs.getString("school_year"));
+      internship.setVersion(rs.getInt("version"));
       return internship;
     } catch (SQLException e) {
       throw new FatalException(e);

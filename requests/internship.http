@@ -22,6 +22,30 @@ Authorization: {{caroleToken}}
 GET {{baseUrl}}/internships/1
 Authorization: {{caroleToken}}
 
+### Create a internship
+POST {{baseUrl}}/internships/create
+Authorization: {{caroleToken}}
+Content-Type: application/json
+
+{
+  "id": 0,
+  "contact": {
+    "id": 1,
+    "student": {
+      "id": 9
+    },
+    "state": "accepté",
+    "schoolYear": "2023-2024"
+  },
+  "supervisor": {
+    "id": 1
+  },
+  "signatureDate": "2023-10-10",
+  "project": "Un ERP : Odoo",
+  "schoolYear": "2023-2024",
+  "version": 1
+}
+
 ### POST update internship's project
 POST {{baseUrl}}/internships/editProject
 Content-Type: application/json

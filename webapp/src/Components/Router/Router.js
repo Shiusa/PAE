@@ -8,6 +8,8 @@ import ContactPage from '../Pages/ContactPage';
 import InfoPage from '../Pages/InfoPage';
 import DashboardPage from '../Pages/DashboardPage';
 import UserListPage from "../Pages/UserListPage";
+import AdminDashboardPage from "../Pages/AdminDashboardPage";
+import InternshipPage from "../Pages/InternshipPage";
 
 const routes = {
   "/": HomePage,
@@ -18,6 +20,8 @@ const routes = {
   "/userList": UserListPage,
   "/info": InfoPage,
   "/dashboard": DashboardPage,
+  "/adminBoard": AdminDashboardPage,
+  "/internship": InternshipPage,
 };
 
 /**

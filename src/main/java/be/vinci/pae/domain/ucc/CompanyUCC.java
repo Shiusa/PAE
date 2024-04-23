@@ -31,4 +31,12 @@ public interface CompanyUCC {
    */
   List<CompanyDTO> getAllCompaniesByUser(int userId);
 
+  /**
+   * Register a company. If existing company with same name, it has to have a new designation.
+   *
+   * @param company company to add.
+   * @return CompanyDTO of added company, null otherwise.
+   */
+  CompanyDTO registerCompany(CompanyDTO company);
+
 }
