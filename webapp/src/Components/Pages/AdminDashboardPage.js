@@ -1,9 +1,9 @@
 import {awaitFront, showNavStyle} from "../../utils/function";
-import {getAuthenticatedUser} from "../../utils/session";
+import {getToken} from "../../utils/session";
 // eslint-disable-next-line import/no-cycle
 import {Redirect} from "../Router/Router";
 
-const dataCompany = {
+/* const dataCompany = {
   "1": {
     "id": 1,
     "name": "BNP Paribas",
@@ -139,15 +139,17 @@ const dataCompany = {
       "2022-2023": 3
     }
   }
-}
+} */
+
+let dataCompany;
 
 const sortData = (data, sortingType) => Object.values(data).sort((a, b) => {
-  const valueA = a[sortingType].toLowerCase();
-  const valueB = b[sortingType].toLowerCase();
+  const valueA = a[sortingType] ? a[sortingType].toLowerCase() : '';
+  const valueB = b[sortingType] ? b[sortingType].toLowerCase() : '';
 
   if (sortingType === 'name' && valueA === valueB) {
-    const designationA = a.designation.toLowerCase();
-    const designationB = b.designation.toLowerCase();
+    const designationA = a.designation ? a.designation.toLowerCase() : '';
+    const designationB = b.designation ? b.designation.toLowerCase() : '';
     return designationA.localeCompare(designationB);
   }
   return valueA.localeCompare(valueB);
@@ -315,13 +317,15 @@ const renderCompanyList = (companyData) => {
           <p class="p-0 m-0 text-center">${data.name}</p>
         </div>
         <div class="d-flex align-items-center justify-content-center" style="width: 30%; border-right: 2px solid white;">
-          <p class="p-0 m-0 text-center">${data.designation}</p>
+          <p class="p-0 m-0 text-center">${data.designation ? data.designation
+        : '-'}</p>
         </div>
         <div class="d-flex align-items-center justify-content-center" style="width: 20%; border-right: 2px solid white;">
           <p class="p-0 m-0 text-center">${data.phoneNumber}</p>
         </div>
         <div class="d-flex align-items-center justify-content-center" style="width: 10%; border-right: 2px solid white;">
-          <p class="p-0 m-0 text-center">${dataValue}</p>
+          <p class="p-0 m-0 text-center">${dataValue === undefined ? 0
+        : dataValue}</p>
         </div>
         <div class="d-flex align-items-center justify-content-center" style="width: 10%">
           <p class="p-0 m-0 text-center">${data.isBlacklisted ? "OUI" : "NON"}</p>
@@ -392,13 +396,13 @@ const addColumnHeaderListeners = () => {
 }
 
 const fetchInternshipStat = async () => {
-  const user = await getAuthenticatedUser();
+  const user = getToken();
   try {
     const response = await fetch('api/internships/stats/year', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': user.token
+        'Authorization': user
       }
     });
 
@@ -416,7 +420,33 @@ const fetchInternshipStat = async () => {
     }
     return null;
   }
+}
 
+const fetchCompaniesData = async () => {
+  const user = getToken();
+  try {
+    const response = await fetch('api/companies/all', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': user
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(
+          `fetch error : ${response.status} : ${response.statusText}`
+      );
+    }
+
+    return response.json();
+  } catch (error) {
+    if (error instanceof Error && error.message.startsWith(
+        "fetch error : 403")) {
+      Redirect('/');
+    }
+    return null;
+  }
 }
 
 const AdminDashboardPage = async () => {
@@ -427,6 +457,7 @@ const AdminDashboardPage = async () => {
   if (internshipStats === null) {
     return;
   }
+  dataCompany = await fetchCompaniesData();
   console.log(internshipStats["2023-2024"]);
   showNavStyle("dashboard");
 
