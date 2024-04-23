@@ -158,4 +158,25 @@ public class UserUCCImpl implements UserUCC {
     }
 
   }
+
+  @Override
+  public UserDTO editOneUser(UserDTO user) {
+    UserDTO editedUser;
+    try {
+      dalServices.startTransaction();
+      UserDTO userDTOFound = userDAO.getOneUserById(user.getId());
+      if (userDTOFound == null) {
+        Logs.log(Level.ERROR, "UserUCC (editOneUser) : user not found");
+        throw new ResourceNotFoundException("User not found.");
+      }
+      int version = user.getVersion();
+      editedUser = userDAO.editOneUser(user,version);
+      dalServices.commitTransaction();
+      Logs.log(Level.DEBUG, "UserUCC (editOneUser) : success!");
+      return editedUser;
+    } catch (Exception e) {
+      dalServices.rollbackTransaction();
+      throw e;
+    }
+  }
 }

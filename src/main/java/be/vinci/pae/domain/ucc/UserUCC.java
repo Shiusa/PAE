@@ -40,4 +40,12 @@ public interface UserUCC {
    * @return a UserDTO of registered user.
    */
   UserDTO register(UserDTO user);
+
+  /**
+   * Edit one user.
+   *
+   * @param user the user to edit.
+   * @return the edited user.
+   */
+  UserDTO editOneUser(UserDTO user);
 }

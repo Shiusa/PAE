@@ -179,5 +179,23 @@ public class UserResource {
     return registeredUser;
 
   }
+
+  @POST
+  @Path("editUser")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize
+  public UserDTO editUser(@Context ContainerRequest request,UserDTO userDTOEdit){
+    Logs.log(Level.INFO, "UserResource (editUser) : entrance");
+    UserDTO userDTO = (UserDTO) request.getProperty("user");
+    if(userDTOEdit.getId() != userDTO.getId()){
+      Logs.log(Level.ERROR, "UserResource (editUser) : unauthorized");
+      throw new WebApplicationException("you can't see this user", Response.Status.UNAUTHORIZED);
+    }
+    UserDTO editedUser;
+    editedUser = userUCC.editOneUser(userDTOEdit);
+    Logs.log(Level.INFO, "UserResource (editUser) : success!");
+    return editedUser;
+  }
 }
 

@@ -118,6 +118,39 @@ public class UserDAOImpl implements UserDAO {
     return userDTOList;
   }
 
+  @Override
+  public UserDTO editOneUser(UserDTO user, int version) {
+    Logs.log(Level.DEBUG, "UserDAO (editOneUser) : entrance");
+    String requestSql = """
+        UPDATE prostage.users 
+        SET email = ?, lastname = ?, firstname = ?, 
+            phone_number = ?, registration_date = ?, school_year = ?, role = ?, 
+            version = ?
+        WHERE user_id = ?
+        RETURNING *""";
+
+    try (PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql)) {
+      ps.setString(1, user.getEmail());
+      ps.setString(2, user.getLastname());
+      ps.setString(3, user.getFirstname());
+      ps.setString(4, user.getPhoneNumber());
+      ps.setDate(5, user.getRegistrationDate());
+      ps.setString(6, user.getSchoolYear());
+      ps.setString(7, user.getRole());
+      ps.setInt(8, user.getId());
+      ps.setInt(9, version + 1);
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          return getOneUserById(user.getId());
+        }
+      }
+      return null;
+    } catch (SQLException e) {
+      Logs.log(Level.FATAL, "UserDAO (editOneUser) : internal error!");
+      throw new FatalException(e);
+    }
+  }
+
   /**
    * Add one user.
    *

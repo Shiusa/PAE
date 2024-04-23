@@ -38,4 +38,12 @@ public interface UserDAO {
    * @return a list of all users.
    */
   List<UserDTO> getAllUsers();
+
+  /**
+   * Edit one user.
+   * @param user the user to edit.
+   * @param version the version of the user.
+   * @return
+   */
+  UserDTO editOneUser(UserDTO user, int version);
 }
