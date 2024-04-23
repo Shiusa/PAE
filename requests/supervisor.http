@@ -12,7 +12,12 @@ Content-Type: application/json
   client.global.set("eleonoreToken", response.body.token);
 %}
 
-### Create one contact
+### Get one supervisor
 GET http://localhost:3000/supervisors/2
+Content-Type: application/json
+Authorization: {{eleonoreToken}}
+
+### Get all supervisors from a company
+GET http://localhost:3000/supervisors/allByCompany/1
 Content-Type: application/json
 Authorization: {{eleonoreToken}}
