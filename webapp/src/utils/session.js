@@ -32,6 +32,7 @@ const removeSessionData = () => {
   sessionStorage.removeItem(STORE_NAME);
   currentUser = null;
   remember = false;
+  setLocalUser(null);
 };
 
 const getToken = () => {
@@ -47,6 +48,16 @@ const getToken = () => {
   }
 
   return token;
+}
+
+const setAuthenticatedUser = (authenticatedUser) => {
+  if (getRemember()) {
+    setUserLocalStorage(authenticatedUser);
+    setLocalUser(authenticatedUser.user);
+  } else {
+    setUserSessionStorage(authenticatedUser);
+    setLocalUser(authenticatedUser.user);
+  }
 }
 
 const getAuthenticatedUser = async () => {
@@ -85,6 +96,7 @@ export {
   setRemember,
   getRemember,
   getToken,
+  setAuthenticatedUser,
   getAuthenticatedUser,
   setUserSessionStorage,
   setUserLocalStorage,
