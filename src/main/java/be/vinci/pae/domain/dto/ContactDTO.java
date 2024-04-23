@@ -1,8 +1,12 @@
 package be.vinci.pae.domain.dto;
 
+import be.vinci.pae.domain.ContactImpl;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 /**
  * ContactDTO interface.
  */
+@JsonDeserialize(as = ContactImpl.class)
 public interface ContactDTO {
 
   /**

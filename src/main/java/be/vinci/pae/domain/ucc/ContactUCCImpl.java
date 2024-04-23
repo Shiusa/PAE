@@ -99,7 +99,7 @@ public class ContactUCCImpl implements ContactUCC {
   }
 
   @Override
-  public ContactDTO unsupervise(int contactId, int studentId) {
+  public ContactDTO unsupervise(int contactId, int student) {
     Contact contact;
     ContactDTO contactDTO;
     try {
@@ -115,7 +115,7 @@ public class ContactUCCImpl implements ContactUCC {
 
       if (!contact.isStarted() && !contact.isAdmitted()) {
         throw new NotAllowedException();
-      } else if (contact.getStudent().getId() != studentId) {
+      } else if (contact.getStudent().getId() != student) {
         throw new NotAllowedException();
       }
 
@@ -199,6 +199,23 @@ public class ContactUCCImpl implements ContactUCC {
       dalServices.commitTransaction();
       Logs.log(Level.DEBUG, "ContactUCC (turnDown) : success!");
       return contactDTO;
+    } catch (Exception e) {
+      dalServices.rollbackTransaction();
+      throw e;
+    }
+  }
+
+  @Override
+  public void putStudentContactsOnHold(int studentId) {
+    Logs.log(Level.DEBUG, "ContactUCC (putStudentContactsOnHold) : entrance");
+    try {
+      dalServices.startTransaction();
+      List<ContactDTO> contactDTOList =
+          contactDAO.getAllContactsByStudentStartedOrAdmitted(studentId);
+      for (ContactDTO c : contactDTOList) {
+        contactDAO.putContactOnHold(c);
+      }
+      dalServices.commitTransaction();
     } catch (Exception e) {
       dalServices.rollbackTransaction();
       throw e;

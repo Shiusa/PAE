@@ -27,8 +27,8 @@ const Navbar = async () => {
           <a class="nav-link nav-btn d-flex justify-content-center align-items-center" id="contact" href="#" data-uri="/contact">
             <p data-uri="/contact">Prendre<br>contact</p>
           </a>
-          <a class="nav-link nav-btn d-flex justify-content-center align-items-center" id="info" href="#" data-uri="/info">
-            <p data-uri="/">Modifier mon stage</p>
+          <a class="nav-link nav-btn d-flex justify-content-center align-items-center" id="internship" href="#" data-uri="/internship">
+            <p data-uri="/internship">Modifier mon stage</p>
           </a>
           <a class="nav-link nav-logout d-flex justify-content-center align-items-center" href="#" data-uri="/logout">
             <p data-uri="/logout"><i class="fa-solid fa-arrow-right-from-bracket" data-uri="/logout"></i></p>

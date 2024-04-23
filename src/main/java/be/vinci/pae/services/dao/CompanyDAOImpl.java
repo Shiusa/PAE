@@ -189,7 +189,8 @@ public class CompanyDAOImpl implements CompanyDAO {
 
     Logs.log(Level.DEBUG, "UserDAO (addOneUser) : entrance");
     String requestSql = """
-        INSERT INTO prostage.companies(name, designation, address, phone_number, email, is_blacklisted, blacklist_motivation, version) VALUES (?,?,?,?,?,?,?,?)
+        INSERT INTO prostage.companies(name, designation, address, phone_number, email,
+        is_blacklisted, blacklist_motivation, version) VALUES (?,?,?,?,?,?,?,?)
         RETURNING name AS inserted_name, designation AS inserted_designation, company_id
         """;
 
