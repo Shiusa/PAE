@@ -5,33 +5,56 @@ const Navbar = async () => {
   const navbarWrapper = document.querySelector("#navbarWrapper");
 
   const isConnected = await getAuthenticatedUser();
+  /* if (isConnected) {
+    setLocalUser(isConnected.user)
+  } */
+  // console.log(getLocalUser())
+  console.log(isConnected);
 
   let navbar = ``;
 
-  if(isConnected) {
-    navbar = `
-      <nav class="d-flex justify-content-center align-items-center flex-wrap">
-        <a class="nav-link nav-btn d-flex justify-content-center align-items-center" id="home" href="#" data-uri="/">
-          <p data-uri="/">Accueil</p>
-        </a>
-        <a class="nav-link nav-btn d-flex justify-content-center align-items-center" id="dashboard" href="#" data-uri="/dashboard">
-          <p data-uri="/dashboard">Tableau de<br>bord</p>
-        </a>
-        <a class="nav-link nav-btn d-flex justify-content-center align-items-center" id="contact" href="#" data-uri="/contact">
-          <p data-uri="/contact">Contact</p>
-        </a>
-        <a class="nav-link nav-btn d-flex justify-content-center align-items-center" id="userList" href="#" data-uri="/userList">
-          <p data-uri="/userList">Utilisateurs<br>liste</p>
-        </a>
-        <a class="nav-link nav-btn d-flex justify-content-center align-items-center" id="info" href="#" data-uri="/info">
-          <p data-uri="/info">Mes infos</p>
-        </a>
-        <a class="nav-link nav-logout d-flex justify-content-center align-items-center" href="#" data-uri="/logout">
-          <p data-uri="/logout"><i class="fa-solid fa-arrow-right-from-bracket" data-uri="/logout"></i></p>
-        </a>
-      </nav>
-    `;
+  if (isConnected) {
+    const userRole = isConnected.user.role;
+    if (userRole === "Etudiant") {
+      navbar = `
+        <nav class="d-flex justify-content-center align-items-center flex-wrap">
+          <a class="nav-link nav-btn d-flex justify-content-center align-items-center" id="home" href="#" data-uri="/">
+            <p data-uri="/">Accueil</p>
+          </a>
+          <a class="nav-link nav-btn d-flex justify-content-center align-items-center" id="dashboard" href="#" data-uri="/dashboard">
+            <p data-uri="/dashboard">Tableau de<br>bord</p>
+          </a>
+          <a class="nav-link nav-btn d-flex justify-content-center align-items-center" id="contact" href="#" data-uri="/contact">
+            <p data-uri="/contact">Prendre<br>contact</p>
+          </a>
+          <a class="nav-link nav-btn d-flex justify-content-center align-items-center" id="internship" href="#" data-uri="/internship">
+            <p data-uri="/internship">Modifier mon stage</p>
+          </a>
+          <a class="nav-link nav-logout d-flex justify-content-center align-items-center" href="#" data-uri="/logout">
+            <p data-uri="/logout"><i class="fa-solid fa-arrow-right-from-bracket" data-uri="/logout"></i></p>
+          </a>
+        </nav>
+      `;
+    }
 
+    if (userRole === "Professeur" || userRole === "Administratif") {
+      navbar = `
+        <nav class="d-flex justify-content-center align-items-center flex-wrap">
+          <a class="nav-link nav-btn d-flex justify-content-center align-items-center" id="home" href="#" data-uri="/">
+            <p data-uri="/">Accueil</p>
+          </a>
+          <a class="nav-link nav-btn d-flex justify-content-center align-items-center" id="dashboard" href="#" data-uri="/adminBoard">
+            <p data-uri="/adminBoard">Tableau de<br>bord</p>
+          </a>
+          <a class="nav-link nav-btn d-flex justify-content-center align-items-center" id="userList" href="#" data-uri="/userList">
+            <p data-uri="/userList">Utilisateurs<br>liste</p>
+          </a>
+          <a class="nav-link nav-logout d-flex justify-content-center align-items-center" href="#" data-uri="/logout">
+            <p data-uri="/logout"><i class="fa-solid fa-arrow-right-from-bracket" data-uri="/logout"></i></p>
+          </a>
+        </nav>
+      `;
+    }
   } else {
     navbar = `
       <nav class="d-flex justify-content-center align-items-center flex-wrap">

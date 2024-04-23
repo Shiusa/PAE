@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -19,6 +20,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response.Status;
 import jakarta.ws.rs.core.Response;
 import java.util.List;
 import org.apache.logging.log4j.Level;
@@ -87,6 +89,38 @@ public class CompanyResource {
     companyDTOList = companyUCC.getAllCompaniesByUser(loggedUser.getId());
     Logs.log(Level.INFO, "CompanyResource (getAllByUser) : success!");
     return companyDTOList;
+  }
+
+  /**
+   * Register route.
+   *
+   * @param companyToRegister CompanyDTO object containing name, designation if needed, address,
+   *                          phone number or email not null.
+   * @return a CompanyDTO.
+   */
+  @POST
+  @Path("register")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  public CompanyDTO register(CompanyDTO companyToRegister) {
+
+    Logs.log(Level.INFO, "CompanyResource (register) : entrance");
+    if (companyToRegister.getName().isBlank() || companyToRegister.getAddress().isBlank()) {
+      Logs.log(Level.WARN, "CompanyResource (register) : missing input");
+      throw new WebApplicationException("Inputs cannot be blank", Status.BAD_REQUEST);
+    }
+    if (companyToRegister.getEmail().isBlank() && companyToRegister.getPhoneNumber().isBlank()) {
+      Logs.log(Level.WARN, "CompanyResource (register) : missing phoneNumber or email");
+      throw new WebApplicationException("Need to have either a phone number or email",
+          Status.BAD_REQUEST);
+    }
+
+    CompanyDTO registeredCompany;
+
+    registeredCompany = companyUCC.registerCompany(companyToRegister);
+    Logs.log(Level.INFO, "CompanyResource (register) : success!");
+    return registeredCompany;
+
   }
 
   /**

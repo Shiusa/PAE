@@ -61,7 +61,7 @@ const RegisterPage = () => {
   registerBtn.addEventListener("click", register);
 
   const emailInput = document.getElementById("input-email");
-  emailInput.addEventListener("change", roleSelector);
+  emailInput.addEventListener("input", roleSelector);
 
 };
 
@@ -76,11 +76,12 @@ async function register(e) {
   const password = document.querySelector("#input-pwd").value;
   const roleRadio = document.querySelector(".input-group-role");
   let role;
-  const roleRadioBtn = document.querySelectorAll('.input-group-role input[type="radio"]');
+  const roleRadioBtn = document.querySelectorAll(
+      '.input-group-role input[type="radio"]');
 
   errorMessage = document.getElementById("error-message");
   try {
-    if (roleRadio && !roleRadio.classList.contains("disable")){
+    if (roleRadio && !roleRadio.classList.contains("disable")) {
       roleRadioBtn.forEach(button => {
         if (button.checked) {
           role = button.value;
@@ -91,53 +92,56 @@ async function register(e) {
             `fetch error : 400 : BADREQUEST`
         );
       } else {
-        errorMessage.style.display="none";
+        errorMessage.style.display = "none";
       }
     }
 
     if (!role) {
-      role="Etudiant";
+      role = "Etudiant";
     }
-  } catch(error) {
-    errorMessage.style.display="block";
-    errorMessage.innerText="role non choisi";
+  } catch (error) {
+    errorMessage.style.display = "block";
+    errorMessage.innerText = "role non choisi";
     return;
   }
 
   try {
-     const options = {
-       method: "POST", // *GET, POST, PUT, DELETE, etc.
-       body: JSON.stringify({
-         email,
-         lastname,
-         firstname,
-         phoneNumber,
-         password,
-         role,
-       }), // body data type must match "Content-Type" header
-       headers: {
-         "Content-Type": "application/json",
-       },
-     };
+    const options = {
+      method: "POST", // *GET, POST, PUT, DELETE, etc.
+      body: JSON.stringify({
+        email,
+        lastname,
+        firstname,
+        phoneNumber,
+        password,
+        role,
+      }), // body data type must match "Content-Type" header
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
 
     const response = await fetch("/api/users/register", options); // fetch return a promise => we wait for the response
 
     if (!response.ok) {
       throw new Error(
-          `fetch error : ${  response.status  } : ${  response.statusText}`
+          `fetch error : ${response.status} : ${response.statusText}`
       );
     }
   } catch (error) {
     errorMessage = document.getElementById("error-message");
-    errorMessage.style.display="block";
-    if (error instanceof Error && error.message.startsWith("fetch error : 400")) {
-      errorMessage.innerText="Tous les champs doivent être remplis";
+    errorMessage.style.display = "block";
+    if (error instanceof Error && error.message.startsWith(
+        "fetch error : 400")) {
+      errorMessage.innerText = "Tous les champs doivent être remplis";
     }
-    if (error instanceof Error && error.message.startsWith("fetch error : 409")) {
-      errorMessage.innerText="Email déjà utilisé";
+    if (error instanceof Error && error.message.startsWith(
+        "fetch error : 409")) {
+      errorMessage.innerText = "Email déjà utilisé";
     }
-    if (error instanceof Error && error.message.startsWith("fetch error : 500")) {
-      errorMessage.innerText="Une erreur interne s'est produite, veuillez réssayer";
+    if (error instanceof Error && error.message.startsWith(
+        "fetch error : 500")) {
+      errorMessage.innerText = "Une erreur interne s'est produite, veuillez réssayer";
     }
     return;
   }
@@ -156,6 +160,5 @@ function roleSelector() {
     roleInput.classList.add("disable")
   }
 }
-
 
 export default RegisterPage;

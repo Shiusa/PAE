@@ -28,6 +28,7 @@ i:nth-child(3) {
   animation: loading 0.9s infinite -0.6s linear;
 
 }
+
 }
 
 @keyframes loading {
@@ -77,6 +78,7 @@ p {
   padding: 10px 25px;
   border-radius: 10px;
 }
+
 }
 
 /* bootstrap settings */
@@ -144,10 +146,11 @@ p {
   text-align: center;
 
 p {
-  color : var(--ma-couleur);
+  color: var(--ma-couleur);
   font-size: 22px;
   margin-top: 11px;
 }
+
 }
 
 .nav-btn:hover {
@@ -170,6 +173,7 @@ p {
 p {
   margin-top: 15px;
 }
+
 }
 
 .nav-logout:hover {
@@ -188,6 +192,7 @@ p {
   font-size: 22px;
   padding: 0px 5px;
 }
+
 }
 
 /* dashboard */
@@ -215,6 +220,7 @@ p {
   color: white;
   font-size: 25px;
 }
+
 }
 
 .dash-info {
@@ -250,6 +256,7 @@ span:hover {
   color: white;
 
 }
+
 }
 }
 
@@ -279,6 +286,7 @@ p {
 i {
   margin-right: 10px;
 }
+
 }
 }
 
@@ -302,6 +310,7 @@ p {
 i {
   margin-right: 20px;
 }
+
 }
 
 span {
@@ -312,6 +321,7 @@ i {
   margin-right: 20px;
   font-size: 20px;
 }
+
 }
 }
 }
@@ -341,7 +351,6 @@ i {
   font-weight: bold;
 
 
-
 .title-col-1 {
   width: 40%;
 }
@@ -353,6 +362,7 @@ i {
 .title-col-3 {
   width: 40%;
 }
+
 }
 
 .table-line-box {
@@ -379,7 +389,7 @@ i {
   transform: scale(1.1);
 }
 
-.line-col-1{
+.line-col-1 {
   width: 50%;
 
 }
@@ -455,6 +465,7 @@ i {
   font-size: 25px;
   margin-right: 10px;
 }
+
 }
 
 .ent-radio {
@@ -470,14 +481,12 @@ textarea {
   resize: none;
   width: 70%;
 }
-}
-
 
 }
+
+
 }
-
-
-
+}
 
 
 /* page-login */
@@ -507,6 +516,7 @@ textarea {
 .btn-register:hover {
   transform: translateY(-3px);
 }
+
 }
 
 .box-login {
@@ -525,7 +535,7 @@ textarea {
   border-radius: 30px;
 
 
-h1{
+h1 {
   color: var(--ma-couleur);
   margin-bottom: 30px;
 }
@@ -564,6 +574,7 @@ p {
 p:hover {
   transform: scale(1.1);
 }
+
 }
 
 #box-register-left {
@@ -603,6 +614,7 @@ h4, h5 {
 
 .input-group {
   width: 60%;
+
 span {
   background: var(--ma-couleur);
   border: 2px solid var(--ma-couleur);
@@ -617,6 +629,7 @@ input {
 input::placeholder {
   color: var(--ma-couleur);
 }
+
 }
 }
 
@@ -666,6 +679,198 @@ input::placeholder {
   transform: translateX(-5px);
 }
 
+/*register company in contact page*/
+.company-btn {
+  background-color: white;
+  color: var(--ma-couleur);
+  border: 2px solid;
+}
+
+.company-btn:hover {
+  background-color: var(--ma-couleur-foncée);
+}
+
+.search-company {
+  border: 1px solid var(--ma-couleur);
+  color: var(--ma-couleur);
+  transition: 200ms ease-in-out;
+}
+
+.search-company::placeholder {
+  color: var(--ma-couleur);
+}
+
+.search-company:focus {
+  color: white;
+  transition: 300ms ease-in-out;
+  border: 1px solid var(--ma-couleur);
+  background-color: var(--ma-couleur);
+  caret-shape: underscore;
+}
+
+.search-company:focus::placeholder {
+  color: white;
+  transition: 200ms ease-in-out;
+}
+
+.add-company-btn {
+  background: var(--ma-couleur);
+  color: white;
+  border: none;
+}
+
+.add-company-btn:hover {
+  background: var(--ma-couleur-foncée);
+}
+
+.add-company-box {
+  position: absolute;
+  background: white;
+  visibility: hidden;
+}
+
+.add-company-container {
+  width: 80%;
+  height: 90%;
+  position: relative;
+  color: var(--ma-couleur);
+  transition: ease-in-out;
+}
+
+@keyframes slideInFromRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOutToRight {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(200%);
+    opacity: 0;
+  }
+}
+
+.slide-in {
+  animation: slideInFromRight 400ms forwards;
+}
+
+.slide-out {
+  animation: slideOutToRight 800ms forwards;
+}
+
+.prepend-add-company {
+  background: var(--ma-couleur);
+  border: 2px solid var(--ma-couleur);
+  color: white;
+}
+
+.input-add-company {
+  color: var(--ma-couleur);
+  border: 2px solid var(--ma-couleur);
+}
+
+.input-add-company::placeholder {
+  color: var(--ma-couleur);
+}
+
+#company-back-btn {
+  color: var(--ma-couleur);
+  top: 3.5%;
+  position: absolute;
+  font-size: 50px;
+  left: 18%;
+  transition: 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+#company-back-btn:hover {
+  transform: translateX(-3px);
+}
+
+.register-company-btn {
+  background: var(--ma-couleur);
+  color: white;
+  border: none;
+}
+
+.register-company-btn:hover {
+  background: var(--ma-couleur-foncée);
+}
+
+/* Admin dashboard */
+.dash-row {
+  height: 65vh;
+}
+
+#chart {
+  border-radius: 50%;
+  width: 160px;
+  height: 160px;
+  background: #119DB8;
+  border: 0.5rem solid white;
+}
+
+.year-list {
+  color: #119DB8;
+}
+
+.year-list:focus {
+  outline: none;
+}
+
+.chart-card {
+  background-color: #119DB8;
+  color: white;
+}
+
+.chart-container {
+  background-color: #119DB8;
+}
+
+.chartCT {
+  border: 2rem solid white;
+  border-radius: 50%;
+  width: 180px;
+  height: 180px;
+  background-color: white;
+}
+
+.stat-caption {
+  border: 0.2rem solid white;
+  background-color: #119DB8;
+}
+
+.cap-1 {
+  background-color: white;
+  color: #119DB8;
+  /*
+  border: 0.15rem solid white;
+  */
+}
+
+.cap-2 {
+  background-color: var(--ma-couleur-foncée);
+  /*
+  border: 0.2rem solid white;
+  */
+}
+
+.adminCompanyListTitle {
+  font-weight: bold;
+  background: var(--ma-couleur);
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  color: white;
+  font-size: 20px;
+  text-align: center;
+}
 #blacklistMotivation {
   border-color: var(--ma-couleur);
 }
@@ -674,3 +879,11 @@ input::placeholder {
 }
 
 
+.adminCompanyListTile {
+  background: var(--ma-couleur);
+  color: white;
+}
+
+.noInternship{
+  color: #119DB8;
+}

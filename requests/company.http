@@ -36,6 +36,56 @@ Authorization: {{carolineToken}}
 GET http://localhost:3000/companies/2
 Authorization: {{carolineToken}}
 
+### Login the default user & define a Request Variable
+# @name eleonore
+POST http://localhost:3000/companies/register
+Content-Type: application/json
+
+{
+  "name":"BNP Paribas",
+  "address":"avenue je sais pas quoi",
+  "phoneNumber": "0400000300",
+  "email": ""
+}
+
+> {%
+  client.global.set("carolineToken", response.body.token);
+%}
+
+### Login the default user & define a Request Variable
+# @name eleonore
+POST http://localhost:3000/companies/register
+Content-Type: application/json
+
+{
+  "name":"BNP Paribas",
+  "address":"avenue je sais pas quoi",
+  "phoneNumber": "0400000300",
+  "email": "",
+  "designation": "Bruxelles"
+}
+
+> {%
+  client.global.set("carolineToken", response.body.token);
+%}
+
+### Login the default user & define a Request Variable
+# @name eleonore
+POST http://localhost:3000/companies/register
+Content-Type: application/json
+
+{
+  "name":"BNP Paribas",
+  "address":"avenue je sais pas quoi",
+  "phoneNumber": "0400000300",
+  "email": "",
+  "designation": "Namur"
+}
+
+> {%
+  client.global.set("carolineToken", response.body.token);
+%}
+
 ### get one company by id
 POST http://localhost:3000/companies/blacklist
 Content-Type: application/json

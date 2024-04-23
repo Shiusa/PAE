@@ -88,6 +88,57 @@ public class CompanyUCCImpl implements CompanyUCC {
     }
   }
 
+  /**
+   * Register a company. If existing company with same name, it has to have a new designation.
+   *
+   * @param company company to add.
+   * @return CompanyDTO of added company, null otherwise.
+   */
+  @Override
+  public CompanyDTO registerCompany(CompanyDTO company) {
+
+    CompanyDTO registeredCompany;
+
+    try {
+      dalServices.startTransaction();
+      CompanyDTO existingCompany;
+      if (company.getDesignation() == null) {
+        List<CompanyDTO> existingCompaniesWithNullDesignation = companyDAO.getAllCompaniesByName(
+            company.getName());
+        if (existingCompaniesWithNullDesignation.size() > 0) {
+          throw new DuplicateException(
+              "Already exist company with same name and designation, add a different designation");
+        }
+      } else {
+        existingCompany = companyDAO.getOneCompanyByNameDesignation(company.getName(),
+            company.getDesignation());
+        if (existingCompany != null) {
+          throw new DuplicateException(
+              "Already exist company with same name and designation, add a different designation");
+        }
+      }
+
+      if (company.getEmail().isBlank()) {
+        company.setEmail(null);
+      }
+
+      if (company.getPhoneNumber().isBlank()) {
+        company.setPhoneNumber(null);
+      }
+
+      company.setIsBlacklisted(false);
+      company.setVersion(1);
+
+      registeredCompany = companyDAO.addOneCompany(company);
+      dalServices.commitTransaction();
+      return registeredCompany;
+    } catch (Exception e) {
+      dalServices.rollbackTransaction();
+      throw e;
+    }
+
+  }
+
   @Override
   public CompanyDTO blacklist(int companyId, String blacklistMotivation) {
     CompanyDTO companyDTO;

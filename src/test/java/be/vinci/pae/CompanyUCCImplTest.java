@@ -15,6 +15,7 @@ import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.utils.exceptions.DuplicateException;
 import be.vinci.pae.utils.exceptions.FatalException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
@@ -107,6 +108,99 @@ public class CompanyUCCImplTest {
   }
 
   @Test
+  @DisplayName("Test register non existing company with null designation "
+      + "and null email should return a company")
+  public void testRegisterCompanyNonDuplicateDesignationNullEmailNull() {
+    companyDTO.setDesignation(null);
+    companyDTO.setName("test");
+    companyDTO.setPhoneNumber("0400000000");
+    companyDTO.setEmail("");
+    List<CompanyDTO> emptyList = new ArrayList<>();
+
+    Mockito.when(companyDAOMock.getAllCompaniesByName(companyDTO.getName()))
+        .thenReturn(emptyList);
+    Mockito.when(companyDAOMock.addOneCompany(companyDTO))
+        .thenReturn(companyDTO);
+
+    CompanyDTO returnedCompany;
+    returnedCompany = companyUCC.registerCompany(companyDTO);
+    assertNotNull(returnedCompany);
+  }
+
+  @Test
+  @DisplayName("Test register non existing company with null designation "
+      + "and null phoneNumber should return a company")
+  public void testRegisterCompanyNonDuplicateDesignationNullPhoneNull() {
+    companyDTO.setDesignation(null);
+    companyDTO.setName("test");
+    companyDTO.setPhoneNumber("");
+    companyDTO.setEmail("test@test.be");
+    List<CompanyDTO> emptyList = new ArrayList<>();
+
+    Mockito.when(companyDAOMock.getAllCompaniesByName(companyDTO.getName()))
+        .thenReturn(emptyList);
+    Mockito.when(companyDAOMock.addOneCompany(companyDTO))
+        .thenReturn(companyDTO);
+
+    CompanyDTO returnedCompany;
+    returnedCompany = companyUCC.registerCompany(companyDTO);
+    assertNotNull(returnedCompany);
+  }
+
+  @Test
+  @DisplayName("Test register existing company with new designation "
+      + "and null phoneNumber should return a company")
+  public void testRegisterCompanyNonDuplicateDesignationNotNullPhoneNull() {
+    companyDTO.setDesignation("not null");
+    companyDTO.setName("test");
+    companyDTO.setPhoneNumber("");
+    companyDTO.setEmail("test@test.be");
+
+    Mockito.when(companyDAOMock.getOneCompanyByNameDesignation(companyDTO.getName(),
+            companyDTO.getDesignation()))
+        .thenReturn(null);
+    Mockito.when(companyDAOMock.addOneCompany(companyDTO))
+        .thenReturn(companyDTO);
+
+    CompanyDTO returnedCompany;
+    returnedCompany = companyUCC.registerCompany(companyDTO);
+    assertNotNull(returnedCompany);
+  }
+
+  @Test
+  @DisplayName("Test register existing company with null designation "
+      + "should throw InvalidRequestException")
+  public void testRegisterCompanyDuplicateDesignationNull() {
+    companyDTO.setDesignation(null);
+    companyDTO.setName("test");
+    companyDTO.setPhoneNumber("0400000000");
+    companyDTO.setEmail("");
+    List<CompanyDTO> notEmptyList = new ArrayList<>();
+    notEmptyList.add(companyDTO);
+
+    Mockito.when(companyDAOMock.getAllCompaniesByName(companyDTO.getName()))
+        .thenReturn(notEmptyList);
+
+    assertThrows(DuplicateException.class, () -> companyUCC.registerCompany(companyDTO));
+  }
+
+  @Test
+  @DisplayName("Test register existing company with same designation"
+      + " and null phoneNumber should throw DuplicateException")
+  public void testRegisterCompanyDuplicateDesignationNotNullPhoneNull() {
+    companyDTO.setDesignation("not null");
+    companyDTO.setName("test");
+    companyDTO.setPhoneNumber("");
+    companyDTO.setEmail("test@test.be");
+
+    Mockito.when(companyDAOMock.getOneCompanyByNameDesignation(companyDTO.getName(),
+            companyDTO.getDesignation()))
+        .thenReturn(companyDTO);
+
+    assertThrows(DuplicateException.class, () -> companyUCC.registerCompany(companyDTO));
+  }
+
+  @Test
   @DisplayName("Test get all companies crash transaction")
   public void testGetAllCompaniesCrashTransaction() {
     Mockito.doThrow(new FatalException(new RuntimeException()))
@@ -114,9 +208,9 @@ public class CompanyUCCImplTest {
     assertAll(
         () -> assertThrows(FatalException.class, () -> companyUCC.getAllCompanies()),
         () -> assertThrows(FatalException.class, () -> companyUCC.getAllCompaniesByUser(1)),
-        () -> assertThrows(FatalException.class,
-            () -> companyUCC.blacklist(1, "l'entreprise pratique la fraude"))
-
+        () -> assertThrows(FatalException.class, () -> companyUCC.blacklist(1, "l'entreprise pratique la fraude")),
+        () -> assertThrows(FatalException.class, () -> companyUCC.getAllCompaniesByUser(1)),
+        () -> assertThrows(FatalException.class, () -> companyUCC.registerCompany(companyDTO))
     );
   }
 

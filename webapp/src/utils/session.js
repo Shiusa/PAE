@@ -1,8 +1,13 @@
-
-
 const STORE_NAME = "user";
 let currentUser;
 let remember = false;
+let localUser;
+
+const setLocalUser = (authenticatedUser) => {
+  localUser = authenticatedUser;
+}
+
+const getLocalUser = () => localUser;
 
 const getRemember = () => remember;
 
@@ -31,10 +36,15 @@ const removeSessionData = () => {
 
 const getAuthenticatedUser = async () => {
   let token;
-  if(remember === true) token = localStorage.getItem(STORE_NAME)
-  else token = sessionStorage.getItem(STORE_NAME);
+  if (remember === true) {
+    token = localStorage.getItem(STORE_NAME)
+  } else {
+    token = sessionStorage.getItem(STORE_NAME);
+  }
 
-  if(!token) return undefined;
+  if (!token) {
+    return undefined;
+  }
 
   const options = {
     method: 'GET',
@@ -45,14 +55,18 @@ const getAuthenticatedUser = async () => {
   };
 
   const response = await fetch("/api/users/login", options);
-  if (!response.ok) currentUser = undefined;
-  else currentUser = await response.json();
+  if (!response.ok) {
+    currentUser = undefined;
+  } else {
+    currentUser = await response.json();
+  }
 
   return currentUser;
 }
 
-
 export {
+  setLocalUser,
+  getLocalUser,
   setRemember,
   getRemember,
   getAuthenticatedUser,
