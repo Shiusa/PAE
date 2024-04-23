@@ -10,7 +10,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.apache.logging.log4j.Level;
 
 /**
@@ -67,21 +69,65 @@ public class CompanyDAOImpl implements CompanyDAO {
   }
 
   @Override
-  public List<CompanyDTO> getAllCompanies() {
+  public Map<Integer, Map<CompanyDTO, Map<String, Integer>>> getAllCompanies() {
     Logs.log(Level.DEBUG, "CompanyDAO (getAllCompanies) : entrance");
 
     String requestSql = """
         SELECT cm.company_id, cm.name, cm.designation, cm.address,
         cm.phone_number AS cm_phone_number,
-        cm.email AS cm_email, cm.is_blacklisted, cm.blacklist_motivation, cm.version AS cm_version
+        cm.email AS cm_email, cm.is_blacklisted, cm.blacklist_motivation, cm.version AS cm_version,
+        ct.school_year,
+        count(i.internship_id) AS internship_count
         FROM prostage.companies cm
+        left outer join prostage.contacts ct on cm.company_id = ct.company
+        left outer join prostage.internships i on ct.contact_id = i.contact
+        GROUP BY cm.company_id, cm.name, cm.designation, cm.address,
+        cm_phone_number, cm_email, cm.is_blacklisted, cm.blacklist_motivation, cm_version,
+        ct.school_year
+        ORDER BY cm.company_id, ct.school_year
         """;
-    PreparedStatement ps = dalServices.getPreparedStatement(requestSql);
 
-    List<CompanyDTO> companyDTOList = buildCompanyList(ps);
+    try (PreparedStatement ps = dalServices.getPreparedStatement(requestSql)) {
+      try (ResultSet rs = ps.executeQuery()) {
+        Map<Integer, Map<CompanyDTO, Map<String, Integer>>> companiesMap = new HashMap<>();
+        while (rs.next()) {
 
-    Logs.log(Level.DEBUG, "CompanyDAO (getAllCompanies) : success!");
-    return companyDTOList;
+          CompanyDTO companyDTO = DTOSetServices.setCompanyDTO(companyFactory.getCompanyDTO(), rs);
+          String years = rs.getString("school_year");
+          int internshipCount = rs.getInt("internship_count");
+
+          if (years == null) {
+            Map<CompanyDTO, Map<String, Integer>> companyValue = new HashMap<>();
+            companyValue.put(companyDTO, new HashMap<>());
+            companiesMap.put(companyDTO.getId(), companyValue);
+          } else if (!companiesMap.containsKey(companyDTO.getId())) {
+            Map<String, Integer> newInternshipData = new HashMap<>();
+            newInternshipData.put(years, internshipCount);
+            Map<CompanyDTO, Map<String, Integer>> companyValue = new HashMap<>();
+            companyValue.put(companyDTO, newInternshipData);
+            companiesMap.put(companyDTO.getId(), companyValue);
+          } else {
+            /*Map<String, Integer> internshipData = companiesMap.get(companyDTO);
+            internshipData.put(years, internshipCount);*/
+            Map<CompanyDTO, Map<String, Integer>> companyValue = companiesMap.get(
+                companyDTO.getId());
+            for (Map.Entry<CompanyDTO, Map<String, Integer>> companyData : companyValue.entrySet()) {
+              CompanyDTO companyInValue = companyData.getKey();
+              Map<String, Integer> internshipData = companyData.getValue();
+              if (companyInValue.getId() == companyDTO.getId()) {
+                internshipData.put(years, internshipCount);
+                break;
+              }
+            }
+          }
+
+        }
+        Logs.log(Level.DEBUG, "CompanyDAO (getAllCompanies) : success!");
+        return companiesMap;
+      }
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
   }
 
   @Override

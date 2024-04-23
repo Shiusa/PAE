@@ -2,6 +2,7 @@ package be.vinci.pae.services.dao;
 
 import be.vinci.pae.domain.dto.CompanyDTO;
 import java.util.List;
+import java.util.Map;
 
 /**
  * CompanyDAO interface.
@@ -28,9 +29,9 @@ public interface CompanyDAO {
   /**
    * Get all users.
    *
-   * @return a list of all users.
+   * @return a list of all companies including their internship count by year.
    */
-  List<CompanyDTO> getAllCompanies();
+  Map<Integer, Map<CompanyDTO, Map<String, Integer>>> getAllCompanies();
 
   /**
    * Get all companies by company by user id.
