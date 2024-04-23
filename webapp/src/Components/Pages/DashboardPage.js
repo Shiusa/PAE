@@ -309,7 +309,6 @@ const DashboardPage = async () => {
                                     <option value="basic" selected>${contactInfoJSON.state}</option>
                                     <!--<option value="started">initié</option>-->
                                     <option value="admitted">pris</option>
-                                    <option value="accepted">accepté</option>
                                     <option value="turnedDown">refusé</option>
                                     <option value="unsupervised">ne plus suivre</option>
                                     <!--<option value="onHold">suspendu</option>-->
