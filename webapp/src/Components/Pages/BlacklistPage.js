@@ -86,7 +86,11 @@ const BlacklistPage = async() => {
                 }
     
             } catch (error) {
-                console.log(error)
+                const errorMessage = document.createElement("h2");
+                errorMessage.innerText = "Cette entreprise est déjà blacklistée";
+                errorMessage.id = "error-message";
+                errorMessage.style.display = 'block';
+                main.appendChild(errorMessage);
             }
         });
     }
