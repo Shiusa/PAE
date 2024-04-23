@@ -7,7 +7,7 @@ import Logout from '../Logout/Logout';
 import ContactPage from '../Pages/ContactPage';
 import InfoPage from '../Pages/InfoPage';
 import DashboardPage from '../Pages/DashboardPage';
-import UserListPage from "../Pages/UserListPage";
+import UserListPage from '../Pages/UserListPage';
 
 const routes = {
   "/": HomePage,

@@ -59,6 +59,7 @@ const UserListPage = async () => {
   const yearsInput = document.getElementById("year-input");
 
   const users = await readAllUsers();
+  console.log(users);
 
   // eslint-disable-next-line no-unused-vars
   const tomSelectInstance = new TomSelect(selectElement, {
@@ -160,6 +161,7 @@ const UserListPage = async () => {
   });
 
   function showUsers(selectedIds) {
+  
     let userLine = ``;
     if(selectedIds.length <= 0) {
       tomSelectInstance.clear();
@@ -194,19 +196,36 @@ const UserListPage = async () => {
   }
 
   function generateUserHTML(userTemp) {
-    return `
-        <div class="user-line d-flex align-items-center">
-            <i class="users-icon fa-solid fa-user"></i>
-            <h1>${userTemp.firstname}<br>${userTemp.lastname}</h1>
-            <div class="user-email-tel d-flex justify-content-center flex-column">
-                <p><i class="fa-solid fa-envelope"></i> ${userTemp.email}</p>
-                <p><i class="fa-solid fa-phone"></i> ${userTemp.phoneNumber}</p>
-            </div>
-            <h3>${userTemp.schoolYear}</h3>
-            <h4>N'a pas trouvé<br>de stage</h4>
-            <h2>${userTemp.role}</h2>
-        </div>
-    `;
+
+    if(userTemp.role === "Etudiant") {
+      return `
+          <div class="user-line d-flex align-items-center">
+              <i class="users-icon fa-solid fa-user"></i>
+              <h1>${userTemp.firstname}<br>${userTemp.lastname}</h1>
+              <div class="user-email-tel d-flex justify-content-center flex-column">
+                  <p><i class="fa-solid fa-envelope"></i> ${userTemp.email}</p>
+                  <p><i class="fa-solid fa-phone"></i> ${userTemp.phoneNumber}</p>
+              </div>
+              <h3>${userTemp.schoolYear}</h3>
+              <h4>N'a pas trouvé<br>de stage</h4>
+              <h2>${userTemp.role}</h2>
+          </div>
+      `;
+      // eslint-disable-next-line
+    } else {
+      return `
+          <div class="user-line d-flex align-items-center">
+              <i class="users-icon fa-solid fa-user"></i>
+              <h1>${userTemp.firstname}<br>${userTemp.lastname}</h1>
+              <div class="user-email-tel d-flex justify-content-center flex-column">
+                  <p><i class="fa-solid fa-envelope"></i> ${userTemp.email}</p>
+                  <p><i class="fa-solid fa-phone"></i> ${userTemp.phoneNumber}</p>
+              </div>
+              <h3>${userTemp.schoolYear}</h3>
+              <h2>${userTemp.role}</h2>
+          </div>
+      `;
+    }
   }
 
 
