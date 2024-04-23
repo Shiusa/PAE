@@ -1,7 +1,7 @@
 // eslint-disable-next-line import/no-cycle
 import {Redirect} from "../Router/Router";
 import {awaitFront, showNavStyle} from "../../utils/function";
-import {getAuthenticatedUser} from "../../utils/session";
+import {getAuthenticatedUser, getToken} from "../../utils/session";
 
 const closeForm = () => {
   const addCompanyContainer = document.querySelector(
@@ -137,7 +137,11 @@ const ContactPage = async () => {
 
   const main = document.querySelector('main');
 
-  const user = await getAuthenticatedUser();
+  const userToken = getToken();
+  if (!userToken) {
+    Redirect('/');
+    return;
+  }
 
   showNavStyle("contact");
   awaitFront();
@@ -147,7 +151,7 @@ const ContactPage = async () => {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': user.token
+        'Authorization': userToken
       }
     }
     const response = await fetch('api/companies/all/user', options);
@@ -292,6 +296,7 @@ const ContactPage = async () => {
   }
 
   async function createContact(idCompany) {
+    const user = await getAuthenticatedUser();
     const options = {
       method: 'POST',
       body: JSON.stringify({

@@ -1,20 +1,35 @@
-import {getAuthenticatedUser} from "../../utils/session";
+import {
+  getAuthenticatedUser,
+  getRemember,
+  setLocalUser,
+  setUserLocalStorage,
+  setUserSessionStorage
+} from "../../utils/session";
 
 const Navbar = async () => {
 
   const navbarWrapper = document.querySelector("#navbarWrapper");
 
-  const isConnected = await getAuthenticatedUser();
+  const userConnected = await getAuthenticatedUser();
+  if (userConnected) {
+    if (getRemember()) {
+      setUserLocalStorage(userConnected);
+      setLocalUser(userConnected.user);
+    } else {
+      setUserSessionStorage(userConnected);
+      setLocalUser(userConnected.user);
+    }
+  }
   /* if (isConnected) {
     setLocalUser(isConnected.user)
   } */
   // console.log(getLocalUser())
-  console.log(isConnected);
+  console.log(userConnected);
 
   let navbar = ``;
 
-  if (isConnected) {
-    const userRole = isConnected.user.role;
+  if (userConnected) {
+    const userRole = userConnected.user.role;
     if (userRole === "Etudiant") {
       navbar = `
         <nav class="d-flex justify-content-center align-items-center flex-wrap">

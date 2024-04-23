@@ -48,7 +48,7 @@ const InternshipPage = async () => {
   };
 
   const internship = await readInternship();
-  if(!internship) {
+  if (!internship) {
     main.innerHTML = `
       <div class="dash d-flex justify-content-center align-items-center mt-5 mb-5 mx-auto">
         <div class="dash-content d-flex justify-content-center align-items-center flex-column">
@@ -64,7 +64,7 @@ const InternshipPage = async () => {
       Redirect('/dashboard');
     });
   } else {
-    //TODO (Brian)
+    // TODO (Brian)
   }
 }
 

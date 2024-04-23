@@ -34,6 +34,21 @@ const removeSessionData = () => {
   remember = false;
 };
 
+const getToken = () => {
+  let token;
+  if (remember === true) {
+    token = localStorage.getItem(STORE_NAME)
+  } else {
+    token = sessionStorage.getItem(STORE_NAME);
+  }
+
+  if (!token) {
+    return undefined;
+  }
+
+  return token;
+}
+
 const getAuthenticatedUser = async () => {
   let token;
   if (remember === true) {
@@ -69,6 +84,7 @@ export {
   getLocalUser,
   setRemember,
   getRemember,
+  getToken,
   getAuthenticatedUser,
   setUserSessionStorage,
   setUserLocalStorage,
