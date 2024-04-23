@@ -57,6 +57,10 @@ const BlacklistPage = async() => {
         button.id = "submitButton";
         centralDiv.appendChild(document.createElement("br"));
         centralDiv.appendChild(button);
+        const errorMessage = document.createElement("h2");
+        errorMessage.id = "error-message";
+        errorMessage.style.display = 'block';
+        main.appendChild(errorMessage);
         
         const submitButton = document.querySelector("#submitButton");
         const blacklistMotivation = document.querySelector("#blacklistMotivation");
@@ -86,11 +90,7 @@ const BlacklistPage = async() => {
                 }
     
             } catch (error) {
-                const errorMessage = document.createElement("h2");
                 errorMessage.innerText = "Cette entreprise est déjà blacklistée";
-                errorMessage.id = "error-message";
-                errorMessage.style.display = 'block';
-                main.appendChild(errorMessage);
             }
         });
     }
