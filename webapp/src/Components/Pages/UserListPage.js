@@ -34,6 +34,27 @@ const UserListPage = async () => {
       return userInfo;
   };
 
+  const readAllInternships = async () => {
+      const options = {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': userAuth.token
+        }
+      }
+      const response = await fetch('api/internships/all', options);
+
+      if (!response.ok) {
+        throw new Error(
+            `fetch error : ${response.status} : ${response.statusText}`);
+      }
+
+      const userInfo = await response.json();
+      return userInfo;
+  };
+
+  
+
   main.innerHTML = `
     <div class="d-flex justify-content-center align-items-center flex-column mb-5">
       <div class="search-criteria d-flex justify-content-center align-items-center mt-5 mb-5">
@@ -59,7 +80,9 @@ const UserListPage = async () => {
   const yearsInput = document.getElementById("year-input");
 
   const users = await readAllUsers();
-  console.log(users);
+  const interships = await readAllInternships();
+
+  console.log(interships);
 
   // eslint-disable-next-line no-unused-vars
   const tomSelectInstance = new TomSelect(selectElement, {
@@ -198,6 +221,15 @@ const UserListPage = async () => {
   function generateUserHTML(userTemp) {
 
     if(userTemp.role === "Etudiant") {
+      let k = 0;
+      let findStageB = false;
+
+      while(k<interships.length) {
+        if(interships[k].contact.student.id === userTemp.id) findStageB = true;
+        k+=1;
+      }
+
+      const findStage = (findStageB === true) ? 'A trouvé<br>un stage' : 'N\'a pas trouvé<br>de stage';
       return `
           <div class="user-line d-flex align-items-center">
               <i class="users-icon fa-solid fa-user"></i>
@@ -207,7 +239,7 @@ const UserListPage = async () => {
                   <p><i class="fa-solid fa-phone"></i> ${userTemp.phoneNumber}</p>
               </div>
               <h3>${userTemp.schoolYear}</h3>
-              <h4>N'a pas trouvé<br>de stage</h4>
+              <h4>${findStage}</h4>
               <h2>${userTemp.role}</h2>
           </div>
       `;
