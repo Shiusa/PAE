@@ -1,8 +1,11 @@
+import TomSelect from "tom-select";
+
 import {awaitFront, showNavStyle} from "../../utils/function";
 /* eslint-disable prefer-template */
 // eslint-disable-next-line import/no-cycle
 import {Redirect} from "../Router/Router";
 import {getAuthenticatedUser,} from "../../utils/session";
+
 
 const InternshipPage = async () => {
   const main = document.querySelector('main');
@@ -135,37 +138,81 @@ const CreateInternshipPage = async () => {
     }
   };
 
-  console.log(await getSupervisors());
 
-  main.innerHTML = '';
-  const row = document.createElement("div");
-  row.className = "row justify-content-center my-4 display-flex";
+  const allSupervisors = await getSupervisors();
 
-  const divCreateSupervisor = document.createElement("div");
-  divCreateSupervisor.className = "box-createSupervisor text-center";
-  const titleLeft = document.createElement("h1");
-  titleLeft.innerText = "Responsable";
-  titleLeft.style.color = "#FFFFFF";
-  divCreateSupervisor.appendChild(titleLeft);
+  let desi = contact.company.designation;
+  if(desi === null) desi = "";
 
-  const divChooseSupervisorMother = document.createElement("div");
-  divChooseSupervisorMother.className = "box-chooseSupervisorMother justify-content-center ";
-  const divChooseSupervisorChild = document.createElement("div");
-  divChooseSupervisorChild.className = "box-chooseSupervisorChild text-center";
-  const titleRight = document.createElement("h1");
-  titleRight.innerHTML = `${contact.company.name}`;
-  titleRight.style.color = "#119DB8";
-  if(contact.designation){
-    titleRight.innerHTML += ` <br> ${contact.designation}`;
-  }
-  divChooseSupervisorChild.appendChild(titleRight);
-  divChooseSupervisorMother.appendChild(divChooseSupervisorChild)
+  main.innerHTML = `
+    <div class="container-create d-flex justify-content-center align-items-end mt-5 mb-5">
+      <div class="box-resp d-flex align-items-center flex-column">
+        <h1 class="mt-5 mb-5">Responsable</h1>
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-user"></i></span>
+            <input type="text" class="form-control" id="input-firstname" placeholder="Prénom" aria-label="prénom" aria-describedby="basic-addon1">
+        </div>
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-user"></i></span>
+            <input type="text" class="form-control" id="input-lastname" placeholder="Nom" aria-label="nom" aria-describedby="basic-addon1">
+        </div>
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-phone"></i></span>
+            <input type="text" class="form-control" id="input-phone" placeholder="Téléphone" aria-label="phone" aria-describedby="basic-addon1">
+        </div>
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-envelope"></i></span>
+            <input type="text" class="form-control" id="input-email" placeholder="Email (optionnel)" aria-label="email" aria-describedby="basic-addon1">
+        </div>
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-building"></i></span>
+            <input type="text" class="form-control" id="input-contact" readonly value="${contact.company.name}" aria-label="company" aria-describedby="basic-addon1">
+        </div>
+        <button type="button" id="resp-register" class="create-button mt-4 ">Ajouter le responsable</button>
+      </div>
+      <div class="box-company d-flex align-items-center flex-column justify-content-center">
+        <h1 class="mb-5">${contact.company.name}<br>${desi}</h1>
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-eye"></i></span>
+            <input type="text" class="form-control" id="input-supervisor" placeholder="Recherchez..." aria-label="nom" aria-describedby="basic-addon1">
+        </div>
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-signature"></i></span>
+            <input type="text" class="form-control" id="input-subject" placeholder="Sujet (Optionnel)" aria-label="nom" aria-describedby="basic-addon1">
+        </div>
+        <button type="button" id="stage-register" class="create-button mt-4">Enregistrer</button>
+      </div>
+    </div>
+  `;
 
-  row.appendChild(divCreateSupervisor);
-  row.appendChild(divChooseSupervisorMother);
+  const selectElement = document.getElementById('input-supervisor');
 
-  main.appendChild(row);
+  // eslint-disable-next-line no-unused-vars
+  const tomSelectInstance = new TomSelect(selectElement, {
+    valueField: 'idSupervisor',
+    labelField: 'fullName',
+    searchField: ['fullName'],
+    maxItems: 1,
+    render: {
+      no_results() {
+          return '<div class="no-results">Aucun superviseur trouvé</div>';
+      }
+    },
+  });
 
+  tomSelectInstance.addOption(allSupervisors.map(supervisor => ({
+    idSupervisor: supervisor.id,
+    fullName: `${supervisor.firstname} ${supervisor.lastname}`,
+  })));
+
+  const registerStageBtn = document.getElementById('stage-register');
+
+  registerStageBtn.addEventListener('click', () => {
+    console.log(tomSelectInstance.items);
+  });
+
+  
+  
 }
 
 export {InternshipPage, CreateInternshipPage};

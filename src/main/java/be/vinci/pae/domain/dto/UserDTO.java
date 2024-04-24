@@ -135,4 +135,5 @@ public interface UserDTO {
    * @param role role to set.
    */
   void setRole(String role);
+
 }
