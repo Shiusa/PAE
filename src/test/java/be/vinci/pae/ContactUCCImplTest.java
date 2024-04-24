@@ -203,6 +203,12 @@ public class ContactUCCImplTest {
         }),
         () -> assertThrows(FatalException.class, () -> {
           contactUCC.getOneById(1);
+        }),
+        () -> assertThrows(FatalException.class, () -> {
+          contactUCC.getAllContactsByStudent(1);
+        }),
+        () -> assertThrows(FatalException.class, () -> {
+          contactUCC.getAllContactsByCompany(1);
         })
     );
   }
@@ -380,4 +386,27 @@ public class ContactUCCImplTest {
     Mockito.when(contactDAOMock.accept(1, 1)).thenReturn(contactDTO);
     assertNotNull(contactUCC.accept(1, 1));
   }
+  @Test
+  @DisplayName("Test get all contact by company")
+  public void testGetAllContactByCompany() {
+    Mockito.when(contactDAOMock.getAllContactsByCompany(1)).thenReturn(List.of(contactDTO));
+    assertNotNull(contactUCC.getAllContactsByCompany(1));
+  }
+
+  @Test
+  @DisplayName("Test get all contact by company returning null")
+  public void testGetAllContactByCompanyReturningNull() {
+    Mockito.when(contactDAOMock.getAllContactsByCompany(1)).thenReturn(null);
+    assertThrows(ResourceNotFoundException.class,
+        () -> contactUCC.getAllContactsByCompany(1));
+  }
+
+  @Test
+  @DisplayName("Test get all contact by student returning null")
+  public void testGetAllContactByStudentReturningNull() {
+    Mockito.when(contactDAOMock.getAllContactsByStudent(1)).thenReturn(null);
+    assertThrows(ResourceNotFoundException.class,
+        () -> contactUCC.getAllContactsByStudent(1));
+  }
+
 }

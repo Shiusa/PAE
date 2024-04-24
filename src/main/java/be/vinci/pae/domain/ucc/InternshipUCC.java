@@ -42,4 +42,14 @@ public interface InternshipUCC {
    * @return map with number of internship and total student by year.
    */
   Map<String, Integer[]> getInternshipCountByYear();
+
+  /**
+   * update the internship's subject.
+   *
+   * @param project      the internship subject.
+   * @param version      the version of the internship
+   * @param internshipId the internship id.
+   * @return the internship edited.
+   */
+  InternshipDTO editProject(String project, int version, int internshipId);
 }

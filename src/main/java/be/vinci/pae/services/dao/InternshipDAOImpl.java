@@ -44,6 +44,7 @@ public class InternshipDAOImpl implements InternshipDAO {
   public InternshipDTO getOneInternshipByIdUser(int student) {
     String requestSql = """
         SELECT i.internship_id, i.contact, i.supervisor, i.signature_date, i.project, i.school_year,
+        i.version,
                 
         ct.contact_id, ct.company AS ct_company, ct.student, ct.meeting, ct.contact_state,
         ct.reason_for_refusal, ct.school_year AS ct_school_year, ct.version AS ct_version,
@@ -77,6 +78,7 @@ public class InternshipDAOImpl implements InternshipDAO {
   public InternshipDTO getOneInternshipById(int id) {
     String requestSql = """
         SELECT i.internship_id, i.contact, i.supervisor, i.signature_date, i.project, i.school_year,
+        i.version,
                 
         ct.contact_id, ct.company AS ct_company, ct.student, ct.meeting, ct.contact_state,
         ct.reason_for_refusal, ct.school_year AS ct_school_year, ct.version AS ct_version,
@@ -110,8 +112,7 @@ public class InternshipDAOImpl implements InternshipDAO {
   public InternshipDTO getOneByContact(int id) {
     Logs.log(Level.INFO, "InternshipDAO (getOneByContact) : entrance");
     String requestSql = """
-        SELECT i.internship_id, i.contact, i.supervisor, i.signature_date, i.project, i.school_year,
-        i.version,
+        SELECT i.internship_id, i.contact, i.supervisor, i.signature_date, i.project, i.school_year, i.version,
                 
         ct.contact_id, ct.company AS ct_company, ct.student, ct.meeting, ct.contact_state,
         ct.reason_for_refusal, ct.school_year AS ct_school_year, ct.version AS ct_version,
@@ -216,4 +217,21 @@ public class InternshipDAOImpl implements InternshipDAO {
     }
   }
 
+  public InternshipDTO editProject(String project, int version, int internshipId) {
+    String requestSql = """
+        UPDATE proStage.internships
+        SET project = ?
+        WHERE internship_id = ? AND version = ?
+        RETURNING *;
+        """;
+    try (PreparedStatement ps = dalServices.getPreparedStatement(requestSql)) {
+      ps.setString(1, project);
+      ps.setInt(2, internshipId);
+      ps.setInt(3, version);
+      ps.executeQuery();
+      return getOneInternshipById(internshipId);
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+  }
 }

@@ -16,7 +16,9 @@ import be.vinci.pae.utils.exceptions.DuplicateException;
 import be.vinci.pae.utils.exceptions.FatalException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.junit.jupiter.api.AfterEach;
@@ -82,8 +84,16 @@ public class CompanyUCCImplTest {
   @Test
   @DisplayName("Test get all companies should return not null")
   public void testGetAllCompanies() {
-    Mockito.when(companyDAOMock.getAllCompanies()).thenReturn(List.of(companyDTO));
-    List<CompanyDTO> companyDTOList = companyUCC.getAllCompanies();
+    Map<String, Integer> dataMap = new HashMap<>();
+    dataMap.put("2023-2024", 2);
+    Map<CompanyDTO, Map<String, Integer>> companyMap = new HashMap<>();
+    companyMap.put(companyDTO, dataMap);
+    Map<Integer, Map<CompanyDTO, Map<String, Integer>>> companiesMap = new HashMap<>();
+    companiesMap.put(1, companyMap);
+
+    Mockito.when(companyDAOMock.getAllCompanies()).thenReturn(companiesMap);
+
+    Map<Integer, Map<CompanyDTO, Map<String, Integer>>> companyDTOList = companyUCC.getAllCompanies();
     assertNotNull(companyDTOList);
   }
 

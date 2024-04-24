@@ -884,6 +884,101 @@ input::placeholder {
   color: white;
 }
 
-.noInternship{
+.adminCompanyListHover:hover {
+  background: var(--ma-couleur-foncée);
+  cursor: pointer;
+}
+
+.sort-header:hover {
+  cursor: pointer;
+}
+
+.contact-company-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  visibility: hidden;
+  background-color: white;
+}
+
+.contact-company-list {
+  position: relative;
+  transition: ease-in-out;
+}
+
+#contact-company-back-btn {
+  color: var(--ma-couleur);
+  font-size: 50px;
+  /*position: absolute;
+  top: 3.5%;
+  left: 18%;*/
+  transition: 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+#contact-company-back-btn:hover {
+  transform: translateX(-3px);
+}
+
+.blacklist-company-btn {
+  background: #B81139;
+  color: white;
+  border: none;
+}
+
+.blacklist-company-btn:hover {
+  background: #A10E31;
+}
+
+.noInternship {
   color: #119DB8;
 }
+.box-internshipMother {
+  width: 1000px;
+  height: 500px;
+  border: 4px solid var(--ma-couleur);
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+}
+.box-internshipChild {
+  width: 90%;
+  max-width: 800px;
+  height: 90%;
+  border: 2px solid var(--ma-couleur);
+  border-radius: 20px;
+  margin: auto;
+}
+
+.valueLabel {
+  border: 2px solid var(--ma-couleur);
+  border-radius: 7px;
+}
+
+.textCSS{
+  color: var(--ma-couleur);
+  padding-left: 2%;
+}
+
+.divValueLabelInternshipProject{
+  border: 2px solid var(--ma-couleur);
+  border-radius: 7px;
+}
+
+.newValueLabel {
+  border: 2px solid var(--ma-couleur);
+  width: 92%;
+  border-top-left-radius: 7px;
+  border-bottom-left-radius: 7px;
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+
+}
+.submitProjectButton {
+  background-color: var(--ma-couleur);
+  color: white;
+  padding: 2%;
+  border-top-right-radius: 7px;
+  border-bottom-right-radius: 7px;
+}
+

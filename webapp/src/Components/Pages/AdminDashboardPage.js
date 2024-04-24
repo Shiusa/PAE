@@ -1,153 +1,115 @@
 import {awaitFront, showNavStyle} from "../../utils/function";
-import {getAuthenticatedUser} from "../../utils/session";
+import {getToken} from "../../utils/session";
 // eslint-disable-next-line import/no-cycle
 import {Redirect} from "../Router/Router";
 
-const dataCompany = {
-  "1": {
-    "id": 1,
-    "name": "BNP Paribas",
-    "designation": "ZBruxelles",
-    "address": "Jsp qsdkj qsdlkjqsd",
-    "phoneNumber": "027001313",
-    "email": "",
-    "isBlacklisted": false,
-    "blacklistMotivation": "",
-    "version": 1,
-    "data": {
-      "2023-2024": 4,
-      "2022-2023": 1
+let dataCompany;
+
+const fetchInternshipStat = async () => {
+  try {
+    const user = getToken();
+    if (!user) {
+      throw new Error("fetch error : 403");
     }
-  },
-  "2": {
-    "id": 2,
-    "name": "BNP Paribas",
-    "designation": "Namur",
-    "address": "2 Jsp qsdkj qsdlkjqsd",
-    "phoneNumber": "2027001313",
-    "email": "",
-    "isBlacklisted": false,
-    "blacklistMotivation": "",
-    "version": 1,
-    "data": {
-      "2023-2024": 3,
-      "2022-2023": 3
+
+    const response = await fetch('api/internships/stats/year', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': user
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(
+          `fetch error : ${response.status} : ${response.statusText}`
+      );
     }
-  },
-  "3": {
-    "id": 2,
-    "name": "BNP Paribas",
-    "designation": "Namur",
-    "address": "2 Jsp qsdkj qsdlkjqsd",
-    "phoneNumber": "2027001313",
-    "email": "",
-    "isBlacklisted": false,
-    "blacklistMotivation": "",
-    "version": 1,
-    "data": {
-      "2023-2024": 3,
-      "2022-2023": 3
+
+    return response.json();
+  } catch (error) {
+    if (error instanceof Error && error.message.startsWith(
+        "fetch error : 403")) {
+      Redirect('/');
     }
-  },
-  "4": {
-    "id": 2,
-    "name": "BNP Paribas",
-    "designation": "Namur",
-    "address": "2 Jsp qsdkj qsdlkjqsd",
-    "phoneNumber": "2027001313",
-    "email": "",
-    "isBlacklisted": false,
-    "blacklistMotivation": "",
-    "version": 1,
-    "data": {
-      "2023-2024": 3,
-      "2022-2023": 3
-    }
-  },
-  "5": {
-    "id": 2,
-    "name": "BNP Paribas",
-    "designation": "Namur",
-    "address": "2 Jsp qsdkj qsdlkjqsd",
-    "phoneNumber": "2027001313",
-    "email": "",
-    "isBlacklisted": false,
-    "blacklistMotivation": "",
-    "version": 1,
-    "data": {
-      "2023-2024": 3,
-      "2022-2023": 3
-    }
-  },
-  "6": {
-    "id": 2,
-    "name": "BNP Paribas",
-    "designation": "Namur",
-    "address": "2 Jsp qsdkj qsdlkjqsd",
-    "phoneNumber": "2027001313",
-    "email": "",
-    "isBlacklisted": false,
-    "blacklistMotivation": "",
-    "version": 1,
-    "data": {
-      "2023-2024": 3,
-      "2022-2023": 3
-    }
-  },
-  "7": {
-    "id": 2,
-    "name": "BNP Paribas",
-    "designation": "Namur",
-    "address": "2 Jsp qsdkj qsdlkjqsd",
-    "phoneNumber": "2027001313",
-    "email": "",
-    "isBlacklisted": false,
-    "blacklistMotivation": "",
-    "version": 1,
-    "data": {
-      "2023-2024": 3,
-      "2022-2023": 3
-    }
-  },
-  "8": {
-    "id": 2,
-    "name": "BNP Paribas",
-    "designation": "Namur",
-    "address": "2 Jsp qsdkj qsdlkjqsd",
-    "phoneNumber": "2027001313",
-    "email": "",
-    "isBlacklisted": false,
-    "blacklistMotivation": "",
-    "version": 1,
-    "data": {
-      "2023-2024": 3,
-      "2022-2023": 3
-    }
-  },
-  "9": {
-    "id": 2,
-    "name": "BNP Paribas",
-    "designation": "Namur",
-    "address": "2 Jsp qsdkj qsdlkjqsd",
-    "phoneNumber": "2027001313",
-    "email": "",
-    "isBlacklisted": false,
-    "blacklistMotivation": "",
-    "version": 1,
-    "data": {
-      "2023-2024": 3,
-      "2022-2023": 3
-    }
+    return null;
   }
 }
 
+const fetchCompaniesData = async () => {
+  const user = getToken();
+  try {
+    const response = await fetch('api/companies/all', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': user
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(
+          `fetch error : ${response.status} : ${response.statusText}`
+      );
+    }
+
+    return response.json();
+  } catch (error) {
+    if (error instanceof Error && error.message.startsWith(
+        "fetch error : 403")) {
+      Redirect('/');
+    }
+    return null;
+  }
+}
+
+const fetchCompanyContactData = async (companyId) => {
+  const userToken = getToken();
+  try {
+    const response = await fetch(`api/contacts/all/company/${companyId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': userToken
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(
+          `fetch error : ${response.status} : ${response.statusText}`
+      );
+    }
+
+    return response.json();
+  } catch (error) {
+    if (error instanceof Error && error.message.startsWith(
+        "fetch error : 403")) {
+      Redirect('/');
+    }
+    return null;
+  }
+}
+
+const closeForm = () => {
+  const addCompanyContainer = document.querySelector(
+      '.contact-company-list');
+  addCompanyContainer.classList.remove('slide-in');
+  addCompanyContainer.classList.add('slide-out');
+  const entrepriseBox = document.querySelector(".contact-company-container");
+
+  setTimeout(() => {
+    entrepriseBox.style.visibility = "hidden";
+    entrepriseBox.innerHTML = ``;
+  }, 300);
+}
+
 const sortData = (data, sortingType) => Object.values(data).sort((a, b) => {
-  const valueA = a[sortingType].toLowerCase();
-  const valueB = b[sortingType].toLowerCase();
+  const valueA = a[sortingType] ? a[sortingType].toLowerCase() : '';
+  const valueB = b[sortingType] ? b[sortingType].toLowerCase() : '';
 
   if (sortingType === 'name' && valueA === valueB) {
-    const designationA = a.designation.toLowerCase();
-    const designationB = b.designation.toLowerCase();
+    const designationA = a.designation ? a.designation.toLowerCase() : '';
+    const designationB = b.designation ? b.designation.toLowerCase() : '';
     return designationA.localeCompare(designationB);
   }
   return valueA.localeCompare(valueB);
@@ -161,8 +123,6 @@ const drawPieChart = (canvas, dataSet, colors) => {
 
   // Check percentage & colors having same length
   if (dataSet.length !== colors.length) {
-    console.error(
-        "Les tableaux de pourcentages et de couleurs doivent avoir la même longueur.");
     return;
   }
 
@@ -271,7 +231,6 @@ const renderChart = (internshipStats) => {
   const chartContainer = document.querySelector('.chartCT');
   const percent = (internshipStats.internshipCount
       / internshipStats.totalStudents) * 100;
-  console.log(percent)
 
   chartContainer.innerHTML = `
     <canvas class="myChart" width="164" height="164"></canvas>
@@ -297,6 +256,102 @@ const renderCaption = (internshipStats) => {
 
 }
 
+const renderContactBox = async (company, contactDataList) => {
+  const contactBox = document.querySelector('.contact-company-container');
+  contactBox.innerHTML = `
+    <div class="contact-company-list w-100 d-flex flex-column align-items-center py-3">
+      <div class="row w-100 py-3">
+        <div class="col-md-4 d-flex flex-column justify-content-center align-items-start">
+          <i id="contact-company-back-btn" class="fa-solid fa-circle-arrow-left" title="Retour" style="margin-left: 10%;"></i>
+        </div>
+        <div class="col-md-4 d-flex flex-column justify-content-center align-items-center text-center px-2 py-3 rounded-3" style="color: white; background: #119DB8;">
+          <p class="mb-0 h3">${company.name}<br>${company.designation
+      ? company.designation : ''}</p>
+        </div>
+        <div class="col-md-4 d-flex flex-column justify-content-center align-items-end">
+          ${company.isBlacklisted === false
+      ? '<button class="blacklist-company-btn rounded-1 px-2 py-3 w-50" style="margin-right: 10%;">Blacklister</button>'
+      : ""}
+        </div>
+      </div>
+      
+      <div class="row w-100 py-3 d-flex ${company.isBlacklisted === true
+      ? 'd-block' : 'd-none'} rounded-3" style="background: #A10E31; color: white; border: 2px solid black;">
+        <div class="d-flex flex-column align-items-center">
+          <p class="p-0 m-0 text-center h5">Motivation du Blacklist: </p>
+          <p class="p-0 m-0 text-center">${company.blacklistMotivation}</p>
+        </div>
+      </div>
+      
+      <div class="contact-company-tile-list w-100 d-flex flex-column align-items-center overflow-y-auto" style="scrollbar-width:none;">
+        <div class="w-100 d-flex align-items-center justify-content-center rounded-3 border mt-3 py-3 adminCompanyListTile">
+          <div class="d-flex align-items-center justify-content-center" style="width: 25%; border-right: 2px solid white;">
+            <p class="p-0 m-0 text-center">Caroline Line</p>
+          </div>
+          <div class="d-flex align-items-center justify-content-center" style="width: 10%; border-right: 2px solid white;">
+            <p class="p-0 m-0 text-center">2023-2024</p>
+          </div>
+          <div class="d-flex align-items-center justify-content-center" style="width: 15%; border-right: 2px solid white;">
+            <p class="p-0 m-0 text-center">Dans l entreprise</p>
+          </div>
+          <div class="d-flex align-items-center justify-content-center" style="width: 40%; border-right: 2px solid white;">
+            <p class="p-0 m-0 text-center">Raison de refus, la y'en a pas jsp quoi mettre qsdlhqsd qskjhsdq qskjhsqd qsdkjhqsd</p>
+          </div>
+          <div class="d-flex align-items-center justify-content-center" style="width: 10%">
+            <p class="p-2 m-0 text-center rounded-3" style="color: #119DB8; background: white">non suivi</p>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  `;
+
+  const contactTileListBox = document.querySelector(
+      '.contact-company-tile-list');
+  contactTileListBox.innerHTML = Object.values(contactDataList).map((contact) =>
+      `
+        <div class="w-100 d-flex align-items-center justify-content-center rounded-3 border mt-3 py-2 adminCompanyListTile">
+          <div class="d-flex align-items-center justify-content-center" style="width: 25%; border-right: 2px solid white;">
+            <p class="p-0 m-0 text-center">${contact.student.firstname} ${contact.student.lastname}</p>
+          </div>
+          <div class="d-flex align-items-center justify-content-center" style="width: 10%; border-right: 2px solid white;">
+            <p class="p-0 m-0 text-center">${contact.schoolYear}</p>
+          </div>
+          <div class="d-flex align-items-center justify-content-center" style="width: 15%; border-right: 2px solid white;">
+            <p class="p-0 m-0 text-center">${contact.meeting ? contact.meeting
+          : '-'}</p>
+          </div>
+          <div class="d-flex align-items-center justify-content-center" style="width: 40%; border-right: 2px solid white;">
+            <p class="p-0 m-0 text-center">${contact.reasonRefusal
+          ? contact.reasonRefusal : '-'}</p>
+          </div>
+          <div class="d-flex align-items-center justify-content-center" style="width: 10%">
+            <p class="p-2 m-0 text-center rounded-3 w-75" style="color: #119DB8; background: white">${contact.state}</p>
+          </div>
+        </div>
+      `
+  ).join('');
+
+  contactBox.style.visibility = "visible";
+
+  const contactCompanyContainer = document.querySelector(
+      '.contact-company-list');
+  contactCompanyContainer.classList.add('slide-in');
+
+  const btnBack = document.getElementById('contact-company-back-btn');
+  btnBack.addEventListener('click', () => {
+    closeForm();
+  });
+
+  if (!company.isBlacklisted) {
+    const blacklistBtn = document.querySelector('.blacklist-company-btn');
+    blacklistBtn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      closeForm();
+    })
+  }
+}
+
 const renderCompanyList = (companyData) => {
   const listContainer = document.querySelector(
       '.adminCompanyListTileContainer');
@@ -310,18 +365,20 @@ const renderCompanyList = (companyData) => {
       dataValue = Object.values(data.data).reduce((acc, curr) => acc + curr, 0);
     }
     return `
-      <div class="w-100 d-flex align-items-center justify-content-center rounded-3 border mt-3 py-3 adminCompanyListTile">
+      <div data-id="${data.id}" class="w-100 d-flex align-items-center justify-content-center rounded-3 border mt-3 py-3 adminCompanyListTile adminCompanyListHover">
         <div class="d-flex align-items-center justify-content-center" style="width: 30%; border-right: 2px solid white;">
           <p class="p-0 m-0 text-center">${data.name}</p>
         </div>
         <div class="d-flex align-items-center justify-content-center" style="width: 30%; border-right: 2px solid white;">
-          <p class="p-0 m-0 text-center">${data.designation}</p>
+          <p class="p-0 m-0 text-center">${data.designation ? data.designation
+        : '-'}</p>
         </div>
         <div class="d-flex align-items-center justify-content-center" style="width: 20%; border-right: 2px solid white;">
           <p class="p-0 m-0 text-center">${data.phoneNumber}</p>
         </div>
         <div class="d-flex align-items-center justify-content-center" style="width: 10%; border-right: 2px solid white;">
-          <p class="p-0 m-0 text-center">${dataValue}</p>
+          <p class="p-0 m-0 text-center">${dataValue === undefined ? 0
+        : dataValue}</p>
         </div>
         <div class="d-flex align-items-center justify-content-center" style="width: 10%">
           <p class="p-0 m-0 text-center">${data.isBlacklisted ? "OUI" : "NON"}</p>
@@ -329,6 +386,14 @@ const renderCompanyList = (companyData) => {
       </div>
     `;
   }).join('');
+  const companyTiles = document.querySelectorAll('.adminCompanyListTile');
+  companyTiles.forEach(companyTile => {
+    companyTile.addEventListener('click', async () => {
+      const chooseCompany = dataCompany[companyTile.dataset.id];
+      const contactData = await fetchCompanyContactData(chooseCompany.id);
+      await renderContactBox(chooseCompany, contactData);
+    })
+  })
 }
 
 const renderYearOptions = (internshipStats) => {
@@ -367,7 +432,7 @@ const renderYearOptions = (internshipStats) => {
 }
 
 const addColumnHeaderListeners = () => {
-  const headers = document.querySelectorAll('.adminCompanyListTitle div');
+  const headers = document.querySelectorAll('[data-sort]');
   headers.forEach(header => {
     header.addEventListener('click', () => {
       const paragraph = header.querySelector('p');
@@ -391,34 +456,6 @@ const addColumnHeaderListeners = () => {
   });
 }
 
-const fetchInternshipStat = async () => {
-  const user = await getAuthenticatedUser();
-  try {
-    const response = await fetch('api/internships/stats/year', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': user.token
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error(
-          `fetch error : ${response.status} : ${response.statusText}`
-      );
-    }
-
-    return response.json();
-  } catch (error) {
-    if (error instanceof Error && error.message.startsWith(
-        "fetch error : 403")) {
-      Redirect('/');
-    }
-    return null;
-  }
-
-}
-
 const AdminDashboardPage = async () => {
 
   const main = document.querySelector('main');
@@ -427,7 +464,7 @@ const AdminDashboardPage = async () => {
   if (internshipStats === null) {
     return;
   }
-  console.log(internshipStats["2023-2024"]);
+  dataCompany = await fetchCompaniesData();
   showNavStyle("dashboard");
 
   const sortDataCompany = sortData(dataCompany, 'name');
@@ -443,9 +480,6 @@ const AdminDashboardPage = async () => {
                 <p class="mb-0 mb-2">Année académique</p>
                 <select class="year-list custom-select-options rounded-1 text-center mb-4 py-1 border-0 w-100">
                   <option selected>2023-2024</option>
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3">Three</option>
                 </select>
               </div>
               
@@ -472,18 +506,31 @@ const AdminDashboardPage = async () => {
         </div>
         <div class="col-md-9">
           <div class="dash-row">
-            <div class="rounded-4 dash-row p-4" style="border: 2px solid #119cb8c7; margin-left: 4rem;">
-              <div class="col-md-12 d-flex flex-column h-100">
+            <div class="rounded-4 dash-row p-4 overflow-hidden" style="border: 2px solid #119cb8c7; margin-left: 4rem; position: relative;">
+            
+              <div class="col-md-12 d-flex flex-column h-100 overflow-hidden">
               
                 <div class="w-100 d-flex justify-content-center align-items-center border adminCompanyListTitle">
-                  <div class="d-flex align-items-center justify-content-center" style="width: 30%">
+                  <div data-sort class="sort-header d-flex align-items-center justify-content-center position-relative" style="width: 30%">
                       <p class="p-2 m-0 text-center">Nom</p>
+                      <div class="d-flex flex-column position-absolute" style="right: 10%;">
+                        <span class="triangle-up h-25" style="font-size: 10px;">&#9650;</span>
+                        <span class="triangle-down h-25" style="font-size: 10px;">&#9660;</span>
+                      </div>
                   </div>
-                  <div class="d-flex align-items-center justify-content-center" style="width: 30%">
+                  <div data-sort class="sort-header d-flex align-items-center justify-content-center position-relative" style="width: 30%">
                       <p class="p-2 m-0 text-center">Appellation</p>
+                      <div class="d-flex flex-column position-absolute" style="right: 10%;">
+                        <span class="triangle-up h-25" style="font-size: 10px;">&#9650;</span>
+                        <span class="triangle-down h-25" style="font-size: 10px;">&#9660;</span>
+                      </div>
                   </div>
-                  <div class="d-flex align-items-center justify-content-center" style="width: 20%">
+                  <div data-sort class="sort-header d-flex align-items-center justify-content-center position-relative" style="width: 20%">
                       <p class="p-2 m-0 text-center">Numéro de téléphone</p>
+                      <div class="d-flex flex-column position-absolute" style="right: 10%;">
+                        <span class="triangle-up h-25" style="font-size: 10px;">&#9650;</span>
+                        <span class="triangle-down h-25" style="font-size: 10px;">&#9660;</span>
+                      </div>
                   </div>
                   <div class="d-flex align-items-center justify-content-center" style="width: 10%">
                       <p class="p-2 m-0 text-center">Pris en stage</p>
@@ -494,28 +541,15 @@ const AdminDashboardPage = async () => {
                 </div>
                 
                 <div class="w-100 d-flex flex-column overflow-y-auto adminCompanyListTileContainer" style="scrollbar-width:none;">
-                
-                  <div class="w-100 d-flex align-items-center justify-content-center rounded-3 border my-3 py-3 adminCompanyListTile">
-                    <div class="d-flex align-items-center justify-content-center" style="width: 30%; border-right: 2px solid white;">
-                      <p class="p-0 m-0 text-center">BNP Paribas</p>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-center" style="width: 30%; border-right: 2px solid white;">
-                      <p class="p-0 m-0 text-center">Bruxelles</p>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-center" style="width: 20%; border-right: 2px solid white;">
-                      <p class="p-0 m-0 text-center">02700500400</p>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-center" style="width: 10%; border-right: 2px solid white;">
-                      <p class="p-0 m-0 text-center">60</p>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-center" style="width: 10%">
-                      <p class="p-0 m-0 text-center">NON</p>
-                    </div>
-                  </div>
                   
                 </div>
-                <!--<p>test 3/4</p>-->
+                
               </div>
+              
+              <div class="contact-company-container w-100 h-100 d-flex justify-contain-center p-4 rounded-4" style="z-index: 1;">
+              
+              </div>
+              
             </div>
           </div>
         </div>

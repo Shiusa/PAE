@@ -3,26 +3,41 @@ import {awaitFront, showNavStyle} from "../../utils/function";
 // eslint-disable-next-line import/no-cycle
 import {Redirect} from "../Router/Router";
 
-import {getAuthenticatedUser,} from "../../utils/session";
+import {
+  getAuthenticatedUser,
+  getLocalUser,
+  getToken,
+  setAuthenticatedUser,
+} from "../../utils/session";
+import Navbar from "../Navbar/Navbar";
 
 const DashboardPage = async () => {
 
   const main = document.querySelector('main');
   awaitFront();
 
-  const user = await getAuthenticatedUser();
-
-  showNavStyle("dashboard");
+  // await getAuthenticatedUser();
+  let userToken = getToken();
+  let localUser = getLocalUser();
+  if (!localUser) {
+    await Navbar();
+    userToken = getToken();
+    localUser = getLocalUser();
+  }
+  if (!userToken) {
+    Redirect('/');
+    return;
+  }
 
   const readUserInfo = async () => {
     const options = {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': user.token
+        'Authorization': userToken
       }
     }
-    const response = await fetch('api/users/' + user.user.id, options);
+    const response = await fetch('api/users/' + localUser.id, options);
 
     if (!response.ok) {
       throw new Error(
@@ -39,10 +54,10 @@ const DashboardPage = async () => {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': user.token
+          'Authorization': userToken
         }
       }
-      const response = await fetch('api/internships/student/' + user.user.id,
+      const response = await fetch('api/internships/student/' + localUser.id,
           options);
 
       if (!response.ok) {
@@ -73,7 +88,7 @@ const DashboardPage = async () => {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': user.token
+        'Authorization': userToken
       }
     }
     const response = await fetch('api/contacts/' + idContact, options);
@@ -93,11 +108,11 @@ const DashboardPage = async () => {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': user.token
+          'Authorization': userToken
         }
       }
 
-      const response = await fetch('api/contacts/all/' + user.user.id, options);
+      const response = await fetch('api/contacts/all/' + localUser.id, options);
 
       if (!response.ok) {
         if (response.status === 401) {
@@ -118,6 +133,9 @@ const DashboardPage = async () => {
   };
 
   const userInfoID = await readUserInfo();
+
+  showNavStyle("dashboard");
+
   main.innerHTML = `        
         <div class="dash d-flex justify-content-center align-items-center mt-5 mb-5 mx-auto">
             <div class="dash-left d-flex justify-content-center align-items-center flex-column ms-3 me-3">
@@ -344,6 +362,10 @@ const DashboardPage = async () => {
     const updateState = document.getElementById("updateBtn");
     updateState.addEventListener('click', async (e) => {
       e.preventDefault();
+      const user = await getAuthenticatedUser();
+      if (user) {
+        setAuthenticatedUser(user);
+      }
       const options = {
         method: 'POST',
         headers: {
