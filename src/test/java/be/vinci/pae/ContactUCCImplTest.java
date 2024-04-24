@@ -196,7 +196,7 @@ public class ContactUCCImplTest {
           contactUCC.unsupervise(1, 1);
         }),
         () -> assertThrows(FatalException.class, () -> {
-          contactUCC.admit(1, "sur place", 1);
+          contactUCC.admit(1, "sur place", 1, 1);
         }),
         () -> assertThrows(FatalException.class, () -> {
           contactUCC.turnDown(1, "Student has not answered fast enough", 1);
@@ -217,7 +217,7 @@ public class ContactUCCImplTest {
   @DisplayName("Test admit contact is null")
   public void testAdmitContactNotFound() {
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(null);
-    assertThrows(ResourceNotFoundException.class, () -> contactUCC.admit(1, "sur place", 1));
+    assertThrows(ResourceNotFoundException.class, () -> contactUCC.admit(1, "sur place", 1, 1));
   }
 
   @Test
@@ -227,7 +227,7 @@ public class ContactUCCImplTest {
     contactDTO.setStudent(userDTO);
     contactDTO.setState("initié");
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
-    assertThrows(NotAllowedException.class, () -> contactUCC.admit(1, "à distance", 1));
+    assertThrows(NotAllowedException.class, () -> contactUCC.admit(1, "à distance", 1, 1));
   }
 
   @Test
@@ -237,7 +237,7 @@ public class ContactUCCImplTest {
     contactDTO.setStudent(userDTO);
     contactDTO.setState("accepté");
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
-    assertThrows(InvalidRequestException.class, () -> contactUCC.admit(1, "sur place", 1));
+    assertThrows(InvalidRequestException.class, () -> contactUCC.admit(1, "sur place", 1, 1));
   }
 
   @Test
@@ -247,7 +247,7 @@ public class ContactUCCImplTest {
     contactDTO.setStudent(userDTO);
     contactDTO.setState("initié");
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
-    assertThrows(InvalidRequestException.class, () -> contactUCC.admit(1, "test", 1));
+    assertThrows(InvalidRequestException.class, () -> contactUCC.admit(1, "test", 1, 1));
   }
 
   @Test
@@ -257,7 +257,20 @@ public class ContactUCCImplTest {
     contactDTO.setStudent(userDTO);
     contactDTO.setState("initié");
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
-    assertThrows(InvalidRequestException.class, () -> contactUCC.admit(1, "", 1));
+    assertThrows(InvalidRequestException.class, () -> contactUCC.admit(1, "", 1, 1));
+  }
+
+  @Test
+  @DisplayName("Test admit contact with wrong version")
+  public void testAdmitContactWithWrongVersion() {
+    userDTO.setId(1);
+    contactDTO.setStudent(userDTO);
+    contactDTO.setState("initié");
+    contactDTO.setVersion(3);
+    Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
+    Mockito.when(contactDAOMock.admitContact(1, "Dans l entreprise", 1)).thenReturn(contactDTO);
+    assertThrows(InvalidRequestException.class,
+        () -> contactUCC.admit(1, "Dans l entreprise", 1, 1));
   }
 
   @Test
@@ -266,10 +279,10 @@ public class ContactUCCImplTest {
     userDTO.setId(1);
     contactDTO.setStudent(userDTO);
     contactDTO.setState("initié");
-    contactDTO.setVersion(1);
+    contactDTO.setVersion(2);
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
     Mockito.when(contactDAOMock.admitContact(1, "Dans l entreprise", 1)).thenReturn(contactDTO);
-    assertNotNull(contactUCC.admit(1, "Dans l entreprise", 1));
+    assertNotNull(contactUCC.admit(1, "Dans l entreprise", 1, 1));
   }
 
   @Test
@@ -386,6 +399,7 @@ public class ContactUCCImplTest {
     Mockito.when(contactDAOMock.accept(1, 1)).thenReturn(contactDTO);
     assertNotNull(contactUCC.accept(1, 1));
   }
+
   @Test
   @DisplayName("Test get all contact by company")
   public void testGetAllContactByCompany() {

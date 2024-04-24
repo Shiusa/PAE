@@ -387,7 +387,7 @@ const DashboardPage = async () => {
       const errorMessage = document.getElementById("error-message");
       switch (newState) {
         case "admitted":
-          options.body = JSON.stringify({"contactId": id, "meeting": meeting});
+          options.body = JSON.stringify({"contactId": id, "meeting": meeting, "version": contactInfoJSON.version});
           try {
             const response = await fetch("/api/contacts/admit", options);
             if (!response.ok) {

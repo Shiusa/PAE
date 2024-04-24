@@ -28,8 +28,9 @@ Content-Type: application/json
 Authorization: {{AchToken}}
 
 {
-  "contactId": "3",
-  "meeting": "remote"
+  "contactId": "12",
+  "meeting": "remote",
+  "version": "1"
 }
 
 ### Unsupervise one contact
