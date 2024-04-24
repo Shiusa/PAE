@@ -173,7 +173,7 @@ const InternshipPage = async () => {
       submitButton.addEventListener("click", async() => {
         try {
           const options = {
-            method: "POST", 
+            method: "POST",
             body: JSON.stringify({
               project : newValueLabelInternshipProject.value,
               version : internship.version,
@@ -185,7 +185,7 @@ const InternshipPage = async () => {
             },
           };
 
-          const response = await fetch("/api/internships/editProject", options); 
+          const response = await fetch("/api/internships/editProject", options);
 
           if (!response.ok) {
             throw new Error(
@@ -194,7 +194,7 @@ const InternshipPage = async () => {
           }
 
           const editProject = await response.json();
-          Redirect("/internship") 
+          Redirect("/internship")
           return editProject;
 
         } catch (error) {

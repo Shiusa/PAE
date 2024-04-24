@@ -871,6 +871,13 @@ input::placeholder {
   font-size: 20px;
   text-align: center;
 }
+#blacklistMotivation {
+  border-color: var(--ma-couleur);
+}
+#title {
+  color: var(--ma-couleur);
+}
+
 
 .adminCompanyListTile {
   background: var(--ma-couleur);
