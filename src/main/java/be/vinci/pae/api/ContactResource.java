@@ -152,10 +152,11 @@ public class ContactResource {
     }
     int contactId = json.get("contactId").asInt();
     String meeting = json.get("meeting").asText();
+    int version = json.get("version").asInt();
     UserDTO userDTO = (UserDTO) request.getProperty("user");
     int studentId = userDTO.getId();
 
-    ContactDTO contactDTO = contactUCC.admit(contactId, meeting, studentId);
+    ContactDTO contactDTO = contactUCC.admit(contactId, meeting, studentId, version);
     Logs.log(Level.DEBUG, "ContactResource (admit) : success!");
 
     return jsonMapper.createObjectNode().putPOJO("contact", contactDTO);

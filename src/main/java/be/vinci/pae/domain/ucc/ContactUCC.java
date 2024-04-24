@@ -24,9 +24,10 @@ public interface ContactUCC {
    * @param contactId the id of the contact.
    * @param meeting   the type of the meeting either on site or remote.
    * @param studentId the id of the student.
+   * @param version   the versino of the contact.
    * @return the started contact.
    */
-  ContactDTO admit(int contactId, String meeting, int studentId);
+  ContactDTO admit(int contactId, String meeting, int studentId, int version);
 
 
   /**

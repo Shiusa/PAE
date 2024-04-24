@@ -140,7 +140,7 @@ public class ContactUCCImpl implements ContactUCC {
   }
 
   @Override
-  public ContactDTO admit(int contactId, String meeting, int studentId) {
+  public ContactDTO admit(int contactId, String meeting, int studentId, int version) {
     Logs.log(Level.DEBUG, "ContactUCC (admit) : entrance");
     Contact contact;
     ContactDTO contactDTO;
@@ -164,9 +164,12 @@ public class ContactUCCImpl implements ContactUCC {
         Logs.log(Level.ERROR, "ContactUCC (admit) : contact's state isn't started");
         throw new InvalidRequestException();
       }
-
-      int version = contact.getVersion();
       contactDTO = contactDAO.admitContact(contactId, meeting, version);
+
+      if (contactDTO.getVersion() != version + 1) {
+        Logs.log(Level.ERROR, "ContactUCC (admit) : the contact's version isn't matching");
+        throw new InvalidRequestException();
+      }
 
       dalServices.commitTransaction();
       Logs.log(Level.DEBUG, "ContactUCC (admit) : success!");
