@@ -46,4 +46,6 @@ public interface UserDAO {
    * @return
    */
   UserDTO editOneUser(UserDTO user, int version);
+
+  UserDTO editPassword(UserDTO user, int version);
 }

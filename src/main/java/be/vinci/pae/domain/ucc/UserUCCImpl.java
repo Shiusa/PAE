@@ -179,4 +179,31 @@ public class UserUCCImpl implements UserUCC {
       throw e;
     }
   }
+
+  @Override
+  public UserDTO editPassword(int id, String oldPassword, String newPassword) {
+
+    UserDTO passwordDTO = userDAO.getOneUserById(id);
+    if(!((User)passwordDTO).checkPassword(oldPassword)) {
+      throw new UnauthorizedAccessException("The password is incorrect");
+    }
+    passwordDTO.setPassword(newPassword);
+    ((User) passwordDTO).hashPassword();
+
+    User user;
+    UserDTO newPasswordDTO;
+    try {
+      dalServices.startTransaction();
+      user = (User) userDAO.getOneUserById(id);
+      int version = user.getVersion();
+      newPasswordDTO = userDAO.editPassword(passwordDTO,version);
+      dalServices.commitTransaction();
+      Logs.log(Level.DEBUG, "UserUCC (editPassword) : success!");
+      return newPasswordDTO;
+    }catch (Exception e) {
+      dalServices.rollbackTransaction();
+      throw e;
+    }
+  }
+
 }

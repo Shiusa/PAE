@@ -48,4 +48,6 @@ public interface UserUCC {
    * @return the edited user.
    */
   UserDTO editOneUser(UserDTO user);
+
+  UserDTO editPassword(int id, String oldPassword, String newPassword);
 }

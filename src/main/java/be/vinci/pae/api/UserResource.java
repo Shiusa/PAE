@@ -185,10 +185,10 @@ public class UserResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize
-  public UserDTO editUser(@Context ContainerRequest request,UserDTO userDTOEdit){
+  public UserDTO editUser(@Context ContainerRequest request, UserDTO userDTOEdit) {
     Logs.log(Level.INFO, "UserResource (editUser) : entrance");
     UserDTO userDTO = (UserDTO) request.getProperty("user");
-    if(userDTOEdit.getId() != userDTO.getId()){
+    if (userDTOEdit.getId() != userDTO.getId()) {
       Logs.log(Level.ERROR, "UserResource (editUser) : unauthorized");
       throw new WebApplicationException("you can't see this user", Response.Status.UNAUTHORIZED);
     }
@@ -196,6 +196,25 @@ public class UserResource {
     editedUser = userUCC.editOneUser(userDTOEdit);
     Logs.log(Level.INFO, "UserResource (editUser) : success!");
     return editedUser;
+  }
+
+  @POST
+  @Path("editPassword")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize
+  public UserDTO editPassword(@Context ContainerRequest request, JsonNode json) {
+    Logs.log(Level.INFO, "UserResource (editPassword) : entrance");
+    if (!json.hasNonNull("oldPassword") && !json.hasNonNull("newPassword") && !json.hasNonNull(
+        "confirmPassword")) {
+      throw new WebApplicationException("old password and new password required",
+          Response.Status.BAD_REQUEST);
+    }
+    String oldPassword = json.get("oldPassword").asText();
+    String newPassword = json.get("newPassword").asText();
+    UserDTO user = (UserDTO) request.getProperty("user");
+    user = userUCC.editPassword(user.getId(), oldPassword, newPassword);
+    return user;
   }
 }
 

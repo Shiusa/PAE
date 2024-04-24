@@ -151,6 +151,27 @@ public class UserDAOImpl implements UserDAO {
     }
   }
 
+  @Override
+  public UserDTO editPassword(UserDTO user, int version) {
+    Logs.log(Level.DEBUG, "UserDAO (changePassword) : entrance");
+    String requestSql = """
+        UPDATE prostage.users SET password = ?, version = ? WHERE user_id = ?
+        RETURNING *""";
+    try (PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql)) {
+      ps.setString(1, user.getPassword());
+      ps.setInt(2, version + 1);
+      try(ResultSet rs = ps.executeQuery()){
+        if(rs.next()){
+          return getOneUserById(user.getId());
+        }
+      }
+      return null;
+    }catch (SQLException e) {
+      Logs.log(Level.FATAL, "UserDAO (changePassword) : internal error!");
+      throw new FatalException(e);
+    }
+  }
+
   /**
    * Add one user.
    *
