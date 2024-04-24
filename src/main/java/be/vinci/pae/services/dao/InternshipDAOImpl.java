@@ -43,7 +43,7 @@ public class InternshipDAOImpl implements InternshipDAO {
   @Override
   public InternshipDTO getOneInternshipByIdUser(int student) {
     String requestSql = """
-        SELECT i.internship_id, i.contact, i.supervisor, i.signature_date, i.project, i.school_year,
+        SELECT i.internship_id, i.contact, i.supervisor, i.signature_date, i.project, i.school_year, i.version,
                 
         ct.contact_id, ct.company AS ct_company, ct.student, ct.meeting, ct.contact_state,
         ct.reason_for_refusal, ct.school_year AS ct_school_year, ct.version AS ct_version,
@@ -110,8 +110,7 @@ public class InternshipDAOImpl implements InternshipDAO {
   public InternshipDTO getOneByContact(int id) {
     Logs.log(Level.INFO, "InternshipDAO (getOneByContact) : entrance");
     String requestSql = """
-        SELECT i.internship_id, i.contact, i.supervisor, i.signature_date, i.project, i.school_year,
-        i.version,
+        SELECT i.internship_id, i.contact, i.supervisor, i.signature_date, i.project, i.school_year, i.version,
                 
         ct.contact_id, ct.company AS ct_company, ct.student, ct.meeting, ct.contact_state,
         ct.reason_for_refusal, ct.school_year AS ct_school_year, ct.version AS ct_version,

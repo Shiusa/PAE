@@ -20,7 +20,7 @@ Authorization: {{caroleToken}}
 
 ### Get an internship with their id
 GET {{baseUrl}}/internships/1
-Authorization: {{caroleToken}}
+Authorization: {{caroleToken}}’
 
 ### Create a internship
 POST {{baseUrl}}/internships/create

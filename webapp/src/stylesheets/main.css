@@ -880,3 +880,20 @@ input::placeholder {
 .noInternship{
   color: #119DB8;
 }
+.box-internshipMother {
+  width: 50%;
+  max-width: 650px;
+  height: 500px;
+  border: 4px solid var(--ma-couleur);
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+}
+.box-internshipChild {
+  width: 90%;
+  max-width: 650px;
+  height: 90%;
+  border: 2px solid var(--ma-couleur);
+  border-radius: 20px;
+  margin: auto;
+}

@@ -1,4 +1,4 @@
-import {awaitFront, showNavStyle} from "../../utils/function";
+import {showNavStyle} from "../../utils/function";
 /* eslint-disable prefer-template */
 // eslint-disable-next-line import/no-cycle
 import {Redirect} from "../Router/Router";
@@ -6,7 +6,6 @@ import {getAuthenticatedUser,} from "../../utils/session";
 
 const InternshipPage = async () => {
   const main = document.querySelector('main');
-  awaitFront();
 
   const user = await getAuthenticatedUser();
 
@@ -48,7 +47,7 @@ const InternshipPage = async () => {
   };
 
   const internship = await readInternship();
-  if(!internship) {
+  if(internship === undefined) {
     main.innerHTML = `
       <div class="dash d-flex justify-content-center align-items-center mt-5 mb-5 mx-auto">
         <div class="dash-content d-flex justify-content-center align-items-center flex-column">
@@ -64,7 +63,24 @@ const InternshipPage = async () => {
       Redirect('/dashboard');
     });
   } else {
-    //TODO (Brian)
+    const row = document.createElement("div");
+    row.className = "row justify-content-center my-4 display-flex";
+
+    const divInternshipMother = document.createElement("div");
+    divInternshipMother.className = "box-internshipMother justify-content-center ";
+    const divInternshipChild = document.createElement("div");
+    divInternshipChild.className = "box-internshipChild text-center";
+    const title = document.createElement("h1");
+    title.innerHTML = `${internship.contact.company.name}`;
+    if(internship.contact.designation){
+      title.innerHTML +=  `<br> ${internship.contact.designation}`;
+    }
+    divInternshipChild.appendChild(titleRight);
+    divInternshipMother.appendChild(divInternshipChild)
+
+    row.appendChild(divInternshipMother);
+
+    main.appendChild(row);
   }
 }
 
