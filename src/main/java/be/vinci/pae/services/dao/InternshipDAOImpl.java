@@ -268,6 +268,8 @@ public class InternshipDAOImpl implements InternshipDAO {
       }
       return internshipDTOList;
     } catch (SQLException e) {
+      System.out.println(e.getMessage());
+      Logs.log(Level.FATAL, e.getMessage() + " " + e);
       throw new FatalException(e);
     }
   }

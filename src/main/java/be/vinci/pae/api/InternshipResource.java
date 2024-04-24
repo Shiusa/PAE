@@ -44,7 +44,7 @@ public class InternshipResource {
    */
   @GET
   @Path("/all")
-  @Produces
+  @Produces(MediaType.APPLICATION_JSON)
   @TeacherAndAdministrative
   public List<InternshipDTO> getAllInternships() {
     Logs.log(Level.INFO, "InternshipResource (getAllInternships) : entrance");
