@@ -1,23 +1,23 @@
 @baseUrl = http://localhost:3000
 
 ### Login the default user & define a Request Variable
-# @name eleonore
+# @name Ach
 POST {{baseUrl}}/users/login
 Content-Type: application/json
 
 {
-  "email":"eleonore.martin@vinci.be",
-  "password":"123"
+  "email":"Ach.ile@student.vinci.be",
+  "password":"mdpuser.1"
 }
 
 > {%
-  client.global.set("eleonoreToken", response.body.token);
+  client.global.set("AchToken", response.body.token);
 %}
 
 ### Create one contact
 POST {{baseUrl}}/contacts/start
 Content-Type: application/json
-Authorization: {{eleonoreToken}}
+Authorization: {{AchToken}}
 
 {
   "company": "2"
@@ -25,7 +25,7 @@ Authorization: {{eleonoreToken}}
 ### Admit one contact
 POST {{baseUrl}}/contacts/admit
 Content-Type: application/json
-Authorization: {{eleonoreToken}}
+Authorization: {{AchToken}}
 
 {
   "contactId": "3",
@@ -35,24 +35,29 @@ Authorization: {{eleonoreToken}}
 ### Unsupervise one contact
 POST {{baseUrl}}/contacts/unsupervise
 Content-Type: application/json
-Authorization: {{eleonoreToken}}
+Authorization: {{AchToken}}
 
 {
   "contactId":"3"
 }
 
-### Create one contact
+### turndown one contact
 POST {{baseUrl}}/contacts/turnDown
 Content-Type: application/json
-Authorization: {{eleonoreToken}}
+Authorization: {{AchToken}}
 
 {
   "contactId": "3",
   "reasonForRefusal": "your profil isn't corresponding to our demand"
 }
 
-### Create one contact
-GET {{baseUrl}}/contacts/all/3
+### get all contacts by student
+GET {{baseUrl}}/contacts/all/6
 Content-Type: application/json
-Authorization: {{eleonoreToken}}
+Authorization: {{AchToken}}
+
+### get all contacts by company
+GET {{baseUrl}}/contacts/all/company/3
+Content-Type: application/json
+Authorization: {{AchToken}}
 
