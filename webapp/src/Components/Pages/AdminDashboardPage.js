@@ -5,6 +5,19 @@ import {Redirect} from "../Router/Router";
 
 let dataCompany;
 
+const closeForm = () => {
+  const addCompanyContainer = document.querySelector(
+      '.contact-company-list');
+  addCompanyContainer.classList.remove('slide-in');
+  addCompanyContainer.classList.add('slide-out');
+  const entrepriseBox = document.querySelector(".contact-company-container");
+
+  setTimeout(() => {
+    entrepriseBox.style.visibility = "hidden";
+    entrepriseBox.innerHTML = ``;
+  }, 300);
+}
+
 const sortData = (data, sortingType) => Object.values(data).sort((a, b) => {
   const valueA = a[sortingType] ? a[sortingType].toLowerCase() : '';
   const valueB = b[sortingType] ? b[sortingType].toLowerCase() : '';
@@ -158,27 +171,74 @@ const renderCaption = (internshipStats) => {
 
 }
 
-const renderContactBox = async () => {
+const renderContactBox = async (company) => {
   const contactBox = document.querySelector('.contact-company-container');
   contactBox.innerHTML = `
-    <div class="w-100 d-flex flex-column align-items-center py-3 contact-company-list">
-      <div class="row w-100">
-          <i id="company-back-btn" class="fa-solid fa-circle-arrow-left" title="Retour"></i>
-        <div class="col-md-4 d-flex flex-column justify-content-center align-items-center">
+    <div class="contact-company-list w-100 d-flex flex-column align-items-center py-3">
+      <div class="row w-100 py-3">
+        <div class="col-md-4 d-flex flex-column justify-content-center align-items-start">
+          <i id="contact-company-back-btn" class="fa-solid fa-circle-arrow-left" title="Retour" style="margin-left: 10%;"></i>
         </div>
-        <div class="col-md-4 d-flex flex-column justify-content-center align-items-center">
-          <p class="mb-0">Contact liste</p>
+        <div class="col-md-4 d-flex flex-column justify-content-center align-items-center text-center px-2 py-3 rounded-3" style="color: white; background: #119DB8;">
+          <p class="mb-0 h3">${company.name}<br>${company.designation
+      ? company.designation : ''}</p>
         </div>
-        <div class="col-md-4 d-flex flex-column justify-content-center align-items-center">
-          <p class="mb-0">Contact liste</p>
+        <div class="col-md-4 d-flex flex-column justify-content-center align-items-end">
+          ${company.isBlacklisted === false
+      ? '<button class="blacklist-company-btn rounded-1 px-2 py-3 w-50" style="margin-right: 10%;">Blacklister</button>'
+      : ""}
         </div>
       </div>
-      <div class="w-100 mt-3 py-3 rounded-3 border" style="background: blue">
-        <p>test</p>
+      
+      <div class="row w-100 py-3 d-flex ${company.isBlacklisted === true
+      ? 'd-block' : 'd-none'} rounded-3" style="background: #A10E31; color: white; border: 2px solid black;">
+        <div class="d-flex flex-column align-items-center">
+          <p class="p-0 m-0 text-center h5">Motivation du Blacklist: </p>
+          <p class="p-0 m-0 text-center">${company.blacklistMotivation}</p>
+        </div>
       </div>
-      <div class="w-100 mt-3 py-3 rounded-3 border" style="background: red;">
-        <p>test</p>
+      
+      <div class="w-100 d-flex flex-column align-items-center overflow-y-auto" style="scrollbar-width:none;">
+        <div class="w-100 d-flex align-items-center justify-content-center rounded-3 border mt-3 py-3 adminCompanyListTile">
+          <div class="d-flex align-items-center justify-content-center" style="width: 25%; border-right: 2px solid white;">
+            <p class="p-0 m-0 text-center">Caroline Line</p>
+          </div>
+          <div class="d-flex align-items-center justify-content-center" style="width: 10%; border-right: 2px solid white;">
+            <p class="p-0 m-0 text-center">2023-2024</p>
+          </div>
+          <div class="d-flex align-items-center justify-content-center" style="width: 15%; border-right: 2px solid white;">
+            <p class="p-0 m-0 text-center">Dans l entreprise</p>
+          </div>
+          <div class="d-flex align-items-center justify-content-center" style="width: 40%; border-right: 2px solid white;">
+            <p class="p-0 m-0 text-center">Raison de refus, la y'en a pas jsp quoi mettre qsdlhqsd qskjhsdq qskjhsqd qsdkjhqsd</p>
+          </div>
+          <div class="d-flex align-items-center justify-content-center" style="width: 10%">
+            <p class="p-2 m-0 text-center rounded-3" style="color: #119DB8; background: white">non suivi</p>
+          </div>
+        </div>
+        <div class="w-100 d-flex align-items-center justify-content-center rounded-3 border mt-3 py-3 adminCompanyListTile" style="background: red;">
+          <p class="p-0 m-0 text-center">test</p>
+        </div>
+        <div class="w-100 d-flex align-items-center justify-content-center rounded-3 border mt-3 py-3 adminCompanyListTile" style="background: red;">
+          <p class="p-0 m-0 text-center">test</p>
+        </div>
+        <div class="w-100 d-flex align-items-center justify-content-center rounded-3 border mt-3 py-3 adminCompanyListTile" style="background: red;">
+          <p class="p-0 m-0 text-center">test</p>
+        </div>
+        <div class="w-100 d-flex align-items-center justify-content-center rounded-3 border mt-3 py-3 adminCompanyListTile" style="background: red;">
+          <p class="p-0 m-0 text-center">test</p>
+        </div>
+        <div class="w-100 d-flex align-items-center justify-content-center rounded-3 border mt-3 py-3 adminCompanyListTile" style="background: red;">
+          <p class="p-0 m-0 text-center">test</p>
+        </div>
+        <div class="w-100 d-flex align-items-center justify-content-center rounded-3 border mt-3 py-3 adminCompanyListTile" style="background: red;">
+          <p class="p-0 m-0 text-center">test</p>
+        </div>
+        <div class="w-100 d-flex align-items-center justify-content-center rounded-3 border mt-3 py-3 adminCompanyListTile" style="background: red;">
+          <p class="p-0 m-0 text-center">test</p>
+        </div>
       </div>
+      
     </div>
   `;
   contactBox.style.visibility = "visible";
@@ -186,6 +246,19 @@ const renderContactBox = async () => {
   const contactCompanyContainer = document.querySelector(
       '.contact-company-list');
   contactCompanyContainer.classList.add('slide-in');
+
+  const btnBack = document.getElementById('contact-company-back-btn');
+  btnBack.addEventListener('click', () => {
+    closeForm();
+  });
+
+  if (!company.isBlacklisted) {
+    const blacklistBtn = document.querySelector('.blacklist-company-btn');
+    blacklistBtn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      closeForm();
+    })
+  }
 }
 
 const renderCompanyList = (companyData) => {
@@ -201,7 +274,7 @@ const renderCompanyList = (companyData) => {
       dataValue = Object.values(data.data).reduce((acc, curr) => acc + curr, 0);
     }
     return `
-      <div class="w-100 d-flex align-items-center justify-content-center rounded-3 border mt-3 py-3 adminCompanyListTile">
+      <div data-id="${data.id}" class="w-100 d-flex align-items-center justify-content-center rounded-3 border mt-3 py-3 adminCompanyListTile">
         <div class="d-flex align-items-center justify-content-center" style="width: 30%; border-right: 2px solid white;">
           <p class="p-0 m-0 text-center">${data.name}</p>
         </div>
@@ -225,7 +298,9 @@ const renderCompanyList = (companyData) => {
   const companyTiles = document.querySelectorAll('.adminCompanyListTile');
   companyTiles.forEach(companyTile => {
     companyTile.addEventListener('click', () => {
-      renderContactBox();
+      const chooseCompany = dataCompany[companyTile.dataset.id];
+      console.log(chooseCompany);
+      renderContactBox(chooseCompany);
     })
   })
 }
