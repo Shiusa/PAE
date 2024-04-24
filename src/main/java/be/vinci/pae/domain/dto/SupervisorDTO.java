@@ -1,8 +1,12 @@
 package be.vinci.pae.domain.dto;
 
+import be.vinci.pae.domain.SupervisorImpl;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 /**
  * SupervisorDTO interface.
  */
+@JsonDeserialize(as = SupervisorImpl.class)
 public interface SupervisorDTO {
 
   /**

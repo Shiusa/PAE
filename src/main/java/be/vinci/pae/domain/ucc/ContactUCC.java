@@ -65,6 +65,23 @@ public interface ContactUCC {
    */
   ContactDTO turnDown(int contactId, String reasonForRefusal, int studentId);
 
+  /**
+   * Put all the contacts of the students that are not accepted, turned down or unsupervised on
+   * hold.
+   *
+   * @param studentId the id of the student to put contacts on hold.
+   */
+  void putStudentContactsOnHold(int studentId);
+
+  /**
+   * Accepted the contact.
+   *
+   * @param contactId the id of the contact.
+   * @param studentId the id of the student.
+   * @return the accepted contact.
+   */
+  ContactDTO accept(int contactId, int studentId);
+
 
   /**
    * Get all contacts by a company id.
@@ -74,4 +91,3 @@ public interface ContactUCC {
    */
   List<ContactDTO> getAllContactsByCompany(int company);
 }
-

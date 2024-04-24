@@ -6,9 +6,9 @@ import Navbar from "../Navbar/Navbar";
 
 // eslint-disable-next-line import/no-cycle
 import {
-  setUserSessionStorage,
-  setUserLocalStorage,
-  setRemember, getAuthenticatedUser,
+  getAuthenticatedUser,
+  setAuthenticatedUser,
+  setRemember,
 } from "../../utils/session";
 
 import {showNavStyle} from "../../utils/function";
@@ -16,19 +16,18 @@ import {showNavStyle} from "../../utils/function";
 const onUserLogin = async (userData) => {
   if (document.getElementById("stayconnected").checked) {
     setRemember(true);
-    setUserLocalStorage(userData);
-  }
-  else {
-    setUserSessionStorage(userData);
+    setAuthenticatedUser(userData);
+  } else {
+    setAuthenticatedUser(userData);
   }
   // re-render the navbar for the authenticated user
-  Navbar();
+  await Navbar();
   Redirect("/");
 };
 
-async function login(e){
+async function login(e) {
   e.preventDefault();
-  let errorMessage= null;
+  let errorMessage = null;
 
   const email = document.querySelector("#input-email").value;
   const password = document.querySelector("#input-pwd").value;
@@ -56,7 +55,7 @@ async function login(e){
 
       if (!response.ok) {
         throw new Error(
-            `fetch error : ${  response.status  } : ${  response.statusText}`
+            `fetch error : ${response.status} : ${response.statusText}`
         );
       }
 
@@ -66,11 +65,17 @@ async function login(e){
       await onUserLogin(user);
 
     } catch (error) {
-        errorMessage = document.getElementById("error-message");
-        errorMessage.style.display="block";
+      errorMessage = document.getElementById("error-message");
+      errorMessage.style.display = "block";
     }
   }
-};
+}
+
+const keypressSubmit = async (e) => {
+  if (e.key === 'Enter') {
+    await login(e);
+  }
+}
 
 const LoginPage = () => {
   const main = document.querySelector('main');
@@ -103,19 +108,22 @@ const LoginPage = () => {
         </div>
     `;
 
-    const registerBtn = document.querySelector(".btn-register");
-    registerBtn.addEventListener('click', () => {
-      Redirect("/register");
-    });
+  const registerBtn = document.querySelector(".btn-register");
+  registerBtn.addEventListener('click', () => {
+    Redirect("/register");
+  });
 
-    showNavStyle("login");
+  showNavStyle("login");
 
-    const loginBtn = document.getElementById("login-btn");
+  const loginBtn = document.getElementById("login-btn");
 
-    loginBtn.addEventListener("click", login);
+  loginBtn.addEventListener("click", login);
+
+  const inputEmail = document.getElementById("input-email");
+  const inputPwd = document.getElementById("input-pwd");
+
+  inputEmail.addEventListener("keypress", keypressSubmit);
+  inputPwd.addEventListener("keypress", keypressSubmit);
 };
-
-
-
 
 export default LoginPage;
