@@ -1,6 +1,7 @@
 package be.vinci.pae.api;
 
 import be.vinci.pae.api.filters.Authorize;
+import be.vinci.pae.api.filters.TeacherAndAdministrative;
 import be.vinci.pae.domain.dto.InternshipDTO;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.domain.ucc.InternshipUCC;
@@ -15,6 +16,7 @@ import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response.Status;
+import java.util.List;
 import org.apache.logging.log4j.Level;
 import org.glassfish.jersey.server.ContainerRequest;
 
@@ -27,6 +29,20 @@ public class InternshipResource {
 
   @Inject
   private InternshipUCC internshipUCC;
+
+  /**
+   * returns all the internships.
+   *
+   * @return a list containing all internships.
+   */
+  @GET
+  @Path("/all")
+  @Produces
+  @TeacherAndAdministrative
+  public List<InternshipDTO> getAllInternships() {
+    Logs.log(Level.INFO, "InternshipResource (getAllInternships) : entrance");
+    return internshipUCC.getAllInternships();
+  }
 
   /**
    * returns an internship by a student id.
