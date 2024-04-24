@@ -54,7 +54,7 @@ public class SupervisorResource {
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize
   public List<SupervisorDTO> getAllByCompany(@PathParam("id") int companyId) {
-    Logs.log(Level.INFO, "SupervisorResource (getAllCompany) : entrance");
+    Logs.log(Level.INFO, "SupervisorResource (getAllByCompany) : entrance");
     return supervisorUCC.getAllByCompany(companyId);
   }
 
