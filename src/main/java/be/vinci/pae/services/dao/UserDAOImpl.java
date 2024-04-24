@@ -160,6 +160,7 @@ public class UserDAOImpl implements UserDAO {
     try (PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql)) {
       ps.setString(1, user.getPassword());
       ps.setInt(2, version + 1);
+      ps.setInt(3, user.getId());
       try(ResultSet rs = ps.executeQuery()){
         if(rs.next()){
           return getOneUserById(user.getId());

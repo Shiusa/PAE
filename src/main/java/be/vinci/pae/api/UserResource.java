@@ -180,6 +180,13 @@ public class UserResource {
 
   }
 
+  /**
+   * Edit a user.
+   *
+   * @param request     the token from the front.
+   * @param userDTOEdit UserDTO object.
+   * @return An edited user.
+   */
   @POST
   @Path("editUser")
   @Consumes(MediaType.APPLICATION_JSON)
@@ -198,6 +205,13 @@ public class UserResource {
     return editedUser;
   }
 
+  /**
+   * Edit a password.
+   *
+   * @param request the token from the front.
+   * @param json    object containing oldPassword, newPassword, repeatedPassword.
+   * @return An edited password.
+   */
   @POST
   @Path("editPassword")
   @Consumes(MediaType.APPLICATION_JSON)
@@ -206,14 +220,17 @@ public class UserResource {
   public UserDTO editPassword(@Context ContainerRequest request, JsonNode json) {
     Logs.log(Level.INFO, "UserResource (editPassword) : entrance");
     if (!json.hasNonNull("oldPassword") && !json.hasNonNull("newPassword") && !json.hasNonNull(
-        "confirmPassword")) {
-      throw new WebApplicationException("old password and new password required",
+        "repeatedPassword")) {
+      throw new WebApplicationException("old ,new and repeated password required",
           Response.Status.BAD_REQUEST);
     }
+    UserDTO user = (UserDTO) request.getProperty("user");
+
     String oldPassword = json.get("oldPassword").asText();
     String newPassword = json.get("newPassword").asText();
-    UserDTO user = (UserDTO) request.getProperty("user");
-    user = userUCC.editPassword(user.getId(), oldPassword, newPassword);
+    String repeatedPassword = json.get("repeatedPassword").asText();
+
+    user = userUCC.editPassword(user.getId(), oldPassword, newPassword, repeatedPassword);
     return user;
   }
 }
