@@ -54,7 +54,7 @@ public class InternshipDAOImpl implements InternshipDAO {
                 
         us.user_id, us.email AS us_email, us.lastname AS us_lastname, us.firstname AS us_firstname,
         us.phone_number AS us_phone_number, us.password, us.registration_date,
-        us.school_year AS us_school_year, us.role,
+        us.school_year AS us_school_year, us.role, us.version AS us_version
                 
         su.supervisor_id, su.company AS su_company, su.lastname AS su_lastname,
         su.firstname AS su_firstname, su.phone_number AS su_phone_number, su.email AS su_email
