@@ -5,6 +5,91 @@ import {Redirect} from "../Router/Router";
 
 let dataCompany;
 
+const fetchInternshipStat = async () => {
+  try {
+    const user = getToken();
+    if (!user) {
+      throw new Error("fetch error : 403");
+    }
+
+    const response = await fetch('api/internships/stats/year', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': user
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(
+          `fetch error : ${response.status} : ${response.statusText}`
+      );
+    }
+
+    return response.json();
+  } catch (error) {
+    if (error instanceof Error && error.message.startsWith(
+        "fetch error : 403")) {
+      Redirect('/');
+    }
+    return null;
+  }
+}
+
+const fetchCompaniesData = async () => {
+  const user = getToken();
+  try {
+    const response = await fetch('api/companies/all', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': user
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(
+          `fetch error : ${response.status} : ${response.statusText}`
+      );
+    }
+
+    return response.json();
+  } catch (error) {
+    if (error instanceof Error && error.message.startsWith(
+        "fetch error : 403")) {
+      Redirect('/');
+    }
+    return null;
+  }
+}
+
+const fetchCompanyContactData = async (companyId) => {
+  const userToken = getToken();
+  try {
+    const response = await fetch(`api/contacts/all/company/${companyId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': userToken
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(
+          `fetch error : ${response.status} : ${response.statusText}`
+      );
+    }
+
+    return response.json();
+  } catch (error) {
+    if (error instanceof Error && error.message.startsWith(
+        "fetch error : 403")) {
+      Redirect('/');
+    }
+    return null;
+  }
+}
+
 const closeForm = () => {
   const addCompanyContainer = document.querySelector(
       '.contact-company-list');
@@ -171,7 +256,7 @@ const renderCaption = (internshipStats) => {
 
 }
 
-const renderContactBox = async (company) => {
+const renderContactBox = async (company, contactDataList) => {
   const contactBox = document.querySelector('.contact-company-container');
   contactBox.innerHTML = `
     <div class="contact-company-list w-100 d-flex flex-column align-items-center py-3">
@@ -198,7 +283,7 @@ const renderContactBox = async (company) => {
         </div>
       </div>
       
-      <div class="w-100 d-flex flex-column align-items-center overflow-y-auto" style="scrollbar-width:none;">
+      <div class="contact-company-tile-list w-100 d-flex flex-column align-items-center overflow-y-auto" style="scrollbar-width:none;">
         <div class="w-100 d-flex align-items-center justify-content-center rounded-3 border mt-3 py-3 adminCompanyListTile">
           <div class="d-flex align-items-center justify-content-center" style="width: 25%; border-right: 2px solid white;">
             <p class="p-0 m-0 text-center">Caroline Line</p>
@@ -216,31 +301,37 @@ const renderContactBox = async (company) => {
             <p class="p-2 m-0 text-center rounded-3" style="color: #119DB8; background: white">non suivi</p>
           </div>
         </div>
-        <div class="w-100 d-flex align-items-center justify-content-center rounded-3 border mt-3 py-3 adminCompanyListTile" style="background: red;">
-          <p class="p-0 m-0 text-center">test</p>
-        </div>
-        <div class="w-100 d-flex align-items-center justify-content-center rounded-3 border mt-3 py-3 adminCompanyListTile" style="background: red;">
-          <p class="p-0 m-0 text-center">test</p>
-        </div>
-        <div class="w-100 d-flex align-items-center justify-content-center rounded-3 border mt-3 py-3 adminCompanyListTile" style="background: red;">
-          <p class="p-0 m-0 text-center">test</p>
-        </div>
-        <div class="w-100 d-flex align-items-center justify-content-center rounded-3 border mt-3 py-3 adminCompanyListTile" style="background: red;">
-          <p class="p-0 m-0 text-center">test</p>
-        </div>
-        <div class="w-100 d-flex align-items-center justify-content-center rounded-3 border mt-3 py-3 adminCompanyListTile" style="background: red;">
-          <p class="p-0 m-0 text-center">test</p>
-        </div>
-        <div class="w-100 d-flex align-items-center justify-content-center rounded-3 border mt-3 py-3 adminCompanyListTile" style="background: red;">
-          <p class="p-0 m-0 text-center">test</p>
-        </div>
-        <div class="w-100 d-flex align-items-center justify-content-center rounded-3 border mt-3 py-3 adminCompanyListTile" style="background: red;">
-          <p class="p-0 m-0 text-center">test</p>
-        </div>
       </div>
       
     </div>
   `;
+
+  const contactTileListBox = document.querySelector(
+      '.contact-company-tile-list');
+  contactTileListBox.innerHTML = Object.values(contactDataList).map((contact) =>
+      `
+        <div class="w-100 d-flex align-items-center justify-content-center rounded-3 border mt-3 py-3 adminCompanyListTile">
+          <div class="d-flex align-items-center justify-content-center" style="width: 25%; border-right: 2px solid white;">
+            <p class="p-0 m-0 text-center">${contact.student.firstname} ${contact.student.lastname}</p>
+          </div>
+          <div class="d-flex align-items-center justify-content-center" style="width: 10%; border-right: 2px solid white;">
+            <p class="p-0 m-0 text-center">${contact.schoolYear}</p>
+          </div>
+          <div class="d-flex align-items-center justify-content-center" style="width: 15%; border-right: 2px solid white;">
+            <p class="p-0 m-0 text-center">${contact.meeting ? contact.meeting
+          : '-'}</p>
+          </div>
+          <div class="d-flex align-items-center justify-content-center" style="width: 40%; border-right: 2px solid white;">
+            <p class="p-0 m-0 text-center">${contact.reasonRefusal
+          ? contact.reasonRefusal : '-'}</p>
+          </div>
+          <div class="d-flex align-items-center justify-content-center" style="width: 10%">
+            <p class="p-2 m-0 text-center rounded-3 w-75" style="color: #119DB8; background: white">${contact.state}</p>
+          </div>
+        </div>
+      `
+  ).join('');
+
   contactBox.style.visibility = "visible";
 
   const contactCompanyContainer = document.querySelector(
@@ -297,10 +388,10 @@ const renderCompanyList = (companyData) => {
   }).join('');
   const companyTiles = document.querySelectorAll('.adminCompanyListTile');
   companyTiles.forEach(companyTile => {
-    companyTile.addEventListener('click', () => {
+    companyTile.addEventListener('click', async () => {
       const chooseCompany = dataCompany[companyTile.dataset.id];
-      console.log(chooseCompany);
-      renderContactBox(chooseCompany);
+      const contactData = await fetchCompanyContactData(chooseCompany.id);
+      await renderContactBox(chooseCompany, contactData);
     })
   })
 }
@@ -365,64 +456,6 @@ const addColumnHeaderListeners = () => {
   });
 }
 
-const fetchInternshipStat = async () => {
-  try {
-    const user = getToken();
-    if (!user) {
-      throw new Error("fetch error : 403");
-    }
-
-    const response = await fetch('api/internships/stats/year', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': user
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error(
-          `fetch error : ${response.status} : ${response.statusText}`
-      );
-    }
-
-    return response.json();
-  } catch (error) {
-    if (error instanceof Error && error.message.startsWith(
-        "fetch error : 403")) {
-      Redirect('/');
-    }
-    return null;
-  }
-}
-
-const fetchCompaniesData = async () => {
-  const user = getToken();
-  try {
-    const response = await fetch('api/companies/all', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': user
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error(
-          `fetch error : ${response.status} : ${response.statusText}`
-      );
-    }
-
-    return response.json();
-  } catch (error) {
-    if (error instanceof Error && error.message.startsWith(
-        "fetch error : 403")) {
-      Redirect('/');
-    }
-    return null;
-  }
-}
-
 const AdminDashboardPage = async () => {
 
   const main = document.querySelector('main');
@@ -473,9 +506,9 @@ const AdminDashboardPage = async () => {
         </div>
         <div class="col-md-9">
           <div class="dash-row">
-            <div class="rounded-4 dash-row p-4" style="border: 2px solid #119cb8c7; margin-left: 4rem; position: relative;">
+            <div class="rounded-4 dash-row p-4 overflow-hidden" style="border: 2px solid #119cb8c7; margin-left: 4rem; position: relative;">
             
-              <div class="col-md-12 d-flex flex-column h-100">
+              <div class="col-md-12 d-flex flex-column h-100 overflow-hidden">
               
                 <div class="w-100 d-flex justify-content-center align-items-center border adminCompanyListTitle">
                   <div class="d-flex align-items-center justify-content-center" style="width: 30%">
