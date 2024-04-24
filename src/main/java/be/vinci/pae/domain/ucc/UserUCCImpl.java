@@ -181,10 +181,9 @@ public class UserUCCImpl implements UserUCC {
   }
 
   @Override
-  public UserDTO editPassword(int id, String oldPassword, String newPassword, String repeatedPassword) {
+  public UserDTO editPassword(UserDTO userDTO,String oldPassword, String newPassword, String repeatedPassword) {
     UserDTO newPasswordDTO;
 
-    UserDTO userDTO = userDAO.getOneUserById(id);
     User user = (User) userDTO;
     if (!user.checkPassword(oldPassword)) {
       throw new UnauthorizedAccessException("The password is incorrect");
@@ -198,6 +197,10 @@ public class UserUCCImpl implements UserUCC {
       dalServices.startTransaction();
       int version = user.getVersion();
       newPasswordDTO = userDAO.editPassword(userDTO, version);
+
+      /*if(newPasswordDTO.getVersion() != version +1) {
+        throw new DuplicateException();
+      }*/
 
       dalServices.commitTransaction();
       Logs.log(Level.DEBUG, "UserUCC (editPassword) : success!");

@@ -36,7 +36,7 @@ public class UserDAOImpl implements UserDAO {
         SELECT us.user_id, us.email AS us_email, us.lastname AS us_lastname,
         us.firstname AS us_firstname,
         us.phone_number AS us_phone_number, us.password, us.registration_date,
-        us.school_year AS us_school_year, us.role
+        us.school_year AS us_school_year, us.role, us.version AS us_version
         FROM prostage.users us
         WHERE us.email = ?
         """;
@@ -58,7 +58,7 @@ public class UserDAOImpl implements UserDAO {
         SELECT us.user_id, us.email AS us_email, us.lastname AS us_lastname,
         us.firstname AS us_firstname,
         us.phone_number AS us_phone_number, us.password, us.registration_date,
-        us.school_year AS us_school_year, us.role
+        us.school_year AS us_school_year, us.role, us.version AS us_version
         FROM prostage.users us
         WHERE us.user_id = ?
         """;
@@ -100,7 +100,7 @@ public class UserDAOImpl implements UserDAO {
         SELECT us.user_id, us.email AS us_email, us.lastname AS us_lastname,
         us.firstname AS us_firstname,
         us.phone_number AS us_phone_number, us.password, us.registration_date,
-        us.school_year AS us_school_year, us.role
+        us.school_year AS us_school_year, us.role, us.version AS us_version
         FROM prostage.users us
         """;
 

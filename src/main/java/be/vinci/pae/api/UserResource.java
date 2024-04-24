@@ -230,7 +230,7 @@ public class UserResource {
     String newPassword = json.get("newPassword").asText();
     String repeatedPassword = json.get("repeatedPassword").asText();
 
-    user = userUCC.editPassword(user.getId(), oldPassword, newPassword, repeatedPassword);
+    user = userUCC.editPassword(user, oldPassword, newPassword, repeatedPassword);
     return user;
   }
 }

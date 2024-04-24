@@ -57,5 +57,5 @@ public interface UserUCC {
    * @param repeatedPassword a repeated password of the user.
    * @return a UserDTO of an edited password.
    */
-  UserDTO editPassword(int id, String oldPassword, String newPassword, String repeatedPassword);
+  UserDTO editPassword(UserDTO userDTO, String oldPassword, String newPassword, String repeatedPassword);
 }
