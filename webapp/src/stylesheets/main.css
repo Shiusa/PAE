@@ -877,6 +877,15 @@ input::placeholder {
   color: white;
 }
 
+.adminCompanyListHover:hover {
+  background: var(--ma-couleur-foncée);
+  cursor: pointer;
+}
+
+.sort-header:hover {
+  cursor: pointer;
+}
+
 .contact-company-container {
   position: absolute;
   top: 0;

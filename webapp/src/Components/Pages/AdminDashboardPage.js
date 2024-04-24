@@ -365,7 +365,7 @@ const renderCompanyList = (companyData) => {
       dataValue = Object.values(data.data).reduce((acc, curr) => acc + curr, 0);
     }
     return `
-      <div data-id="${data.id}" class="w-100 d-flex align-items-center justify-content-center rounded-3 border mt-3 py-3 adminCompanyListTile">
+      <div data-id="${data.id}" class="w-100 d-flex align-items-center justify-content-center rounded-3 border mt-3 py-3 adminCompanyListTile adminCompanyListHover">
         <div class="d-flex align-items-center justify-content-center" style="width: 30%; border-right: 2px solid white;">
           <p class="p-0 m-0 text-center">${data.name}</p>
         </div>
@@ -432,7 +432,7 @@ const renderYearOptions = (internshipStats) => {
 }
 
 const addColumnHeaderListeners = () => {
-  const headers = document.querySelectorAll('.adminCompanyListTitle div');
+  const headers = document.querySelectorAll('[data-sort]');
   headers.forEach(header => {
     header.addEventListener('click', () => {
       const paragraph = header.querySelector('p');
@@ -511,14 +511,26 @@ const AdminDashboardPage = async () => {
               <div class="col-md-12 d-flex flex-column h-100 overflow-hidden">
               
                 <div class="w-100 d-flex justify-content-center align-items-center border adminCompanyListTitle">
-                  <div class="d-flex align-items-center justify-content-center" style="width: 30%">
+                  <div data-sort class="sort-header d-flex align-items-center justify-content-center position-relative" style="width: 30%">
                       <p class="p-2 m-0 text-center">Nom</p>
+                      <div class="d-flex flex-column position-absolute" style="right: 10%;">
+                        <span class="triangle-up h-25" style="font-size: 10px;">&#9650;</span>
+                        <span class="triangle-down h-25" style="font-size: 10px;">&#9660;</span>
+                      </div>
                   </div>
-                  <div class="d-flex align-items-center justify-content-center" style="width: 30%">
+                  <div data-sort class="sort-header d-flex align-items-center justify-content-center position-relative" style="width: 30%">
                       <p class="p-2 m-0 text-center">Appellation</p>
+                      <div class="d-flex flex-column position-absolute" style="right: 10%;">
+                        <span class="triangle-up h-25" style="font-size: 10px;">&#9650;</span>
+                        <span class="triangle-down h-25" style="font-size: 10px;">&#9660;</span>
+                      </div>
                   </div>
-                  <div class="d-flex align-items-center justify-content-center" style="width: 20%">
+                  <div data-sort class="sort-header d-flex align-items-center justify-content-center position-relative" style="width: 20%">
                       <p class="p-2 m-0 text-center">Numéro de téléphone</p>
+                      <div class="d-flex flex-column position-absolute" style="right: 10%;">
+                        <span class="triangle-up h-25" style="font-size: 10px;">&#9650;</span>
+                        <span class="triangle-down h-25" style="font-size: 10px;">&#9660;</span>
+                      </div>
                   </div>
                   <div class="d-flex align-items-center justify-content-center" style="width: 10%">
                       <p class="p-2 m-0 text-center">Pris en stage</p>
