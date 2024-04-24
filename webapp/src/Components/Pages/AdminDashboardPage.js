@@ -310,7 +310,7 @@ const renderContactBox = async (company, contactDataList) => {
       '.contact-company-tile-list');
   contactTileListBox.innerHTML = Object.values(contactDataList).map((contact) =>
       `
-        <div class="w-100 d-flex align-items-center justify-content-center rounded-3 border mt-3 py-3 adminCompanyListTile">
+        <div class="w-100 d-flex align-items-center justify-content-center rounded-3 border mt-3 py-2 adminCompanyListTile">
           <div class="d-flex align-items-center justify-content-center" style="width: 25%; border-right: 2px solid white;">
             <p class="p-0 m-0 text-center">${contact.student.firstname} ${contact.student.lastname}</p>
           </div>
