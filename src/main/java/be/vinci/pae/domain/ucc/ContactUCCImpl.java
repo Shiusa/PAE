@@ -75,10 +75,19 @@ public class ContactUCCImpl implements ContactUCC {
 
   @Override
   public List<ContactDTO> getAllContactsByStudent(int student) {
-    dalServices.startTransaction();
-    List<ContactDTO> listContactDTO = contactDAO.getAllContactsByStudent(student);
-    dalServices.commitTransaction();
-    return listContactDTO;
+    List<ContactDTO> listContactDTO;
+    try {
+      dalServices.startTransaction();
+      listContactDTO = contactDAO.getAllContactsByStudent(student);
+      if (listContactDTO == null) {
+        throw new ResourceNotFoundException();
+      }
+      dalServices.commitTransaction();
+      return listContactDTO;
+    } catch (Exception e) {
+      dalServices.rollbackTransaction();
+      throw e;
+    }
   }
 
   @Override
@@ -99,7 +108,7 @@ public class ContactUCCImpl implements ContactUCC {
   }
 
   @Override
-  public ContactDTO unsupervise(int contactId, int studentId) {
+  public ContactDTO unsupervise(int contactId, int student) {
     Contact contact;
     ContactDTO contactDTO;
     try {
@@ -115,7 +124,7 @@ public class ContactUCCImpl implements ContactUCC {
 
       if (!contact.isStarted() && !contact.isAdmitted()) {
         throw new NotAllowedException();
-      } else if (contact.getStudent().getId() != studentId) {
+      } else if (contact.getStudent().getId() != student) {
         throw new NotAllowedException();
       }
 
@@ -206,6 +215,23 @@ public class ContactUCCImpl implements ContactUCC {
   }
 
   @Override
+  public void putStudentContactsOnHold(int studentId) {
+    Logs.log(Level.DEBUG, "ContactUCC (putStudentContactsOnHold) : entrance");
+    try {
+      dalServices.startTransaction();
+      List<ContactDTO> contactDTOList =
+          contactDAO.getAllContactsByStudentStartedOrAdmitted(studentId);
+      for (ContactDTO c : contactDTOList) {
+        contactDAO.putContactOnHold(c);
+      }
+      dalServices.commitTransaction();
+    } catch (Exception e) {
+      dalServices.rollbackTransaction();
+      throw e;
+    }
+  }
+
+  @Override
   public ContactDTO accept(int contactId, int studentId) {
     Logs.log(Level.DEBUG, "ContactUCC (accept) : entrance");
     Contact contact;
@@ -230,6 +256,23 @@ public class ContactUCCImpl implements ContactUCC {
       contactDTO = contactDAO.accept(contactId, version);
       dalServices.commitTransaction();
       return contactDTO;
+    } catch (Exception e) {
+      dalServices.rollbackTransaction();
+      throw e;
+    }
+  }
+
+  @Override
+  public List<ContactDTO> getAllContactsByCompany(int company) {
+    List<ContactDTO> listContactDTO;
+    try {
+      dalServices.startTransaction();
+      listContactDTO = contactDAO.getAllContactsByCompany(company);
+      if (listContactDTO == null) {
+        throw new ResourceNotFoundException();
+      }
+      dalServices.commitTransaction();
+      return listContactDTO;
     } catch (Exception e) {
       dalServices.rollbackTransaction();
       throw e;

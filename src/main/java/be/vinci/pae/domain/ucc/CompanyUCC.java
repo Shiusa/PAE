@@ -2,6 +2,7 @@ package be.vinci.pae.domain.ucc;
 
 import be.vinci.pae.domain.dto.CompanyDTO;
 import java.util.List;
+import java.util.Map;
 
 /**
  * CompanyUCC interface.
@@ -19,9 +20,9 @@ public interface CompanyUCC {
   /**
    * Get all companies.
    *
-   * @return a list containing all companies.
+   * @return a list containing all companies including their internship count by year.
    */
-  List<CompanyDTO> getAllCompanies();
+  Map<Integer, Map<CompanyDTO, Map<String, Integer>>> getAllCompanies();
 
   /**
    * Get all companies available for one user.
@@ -30,5 +31,13 @@ public interface CompanyUCC {
    * @return a list containing all companies.
    */
   List<CompanyDTO> getAllCompaniesByUser(int userId);
+
+  /**
+   * Register a company. If existing company with same name, it has to have a new designation.
+   *
+   * @param company company to add.
+   * @return CompanyDTO of added company, null otherwise.
+   */
+  CompanyDTO registerCompany(CompanyDTO company);
 
 }

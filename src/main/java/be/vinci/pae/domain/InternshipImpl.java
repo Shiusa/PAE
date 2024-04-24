@@ -2,12 +2,12 @@ package be.vinci.pae.domain;
 
 import be.vinci.pae.domain.dto.ContactDTO;
 import be.vinci.pae.domain.dto.SupervisorDTO;
-import java.util.Date;
+import java.sql.Date;
 
 /**
  * Implementation of Internship.
  */
-class InternshipImpl implements Internship {
+public class InternshipImpl implements Internship {
 
   private int id;
   private ContactDTO contact;
@@ -81,7 +81,7 @@ class InternshipImpl implements Internship {
   public int getVersion() {
     return this.version;
   }
-  
+
   @Override
   public void setVersion(int version) {
     this.version = version;

@@ -38,4 +38,11 @@ public interface Contact extends ContactDTO {
    * @return true if the state is correct, false otherwise.
    */
   boolean isAdmitted();
+
+  /**
+   * Check if the state is accepted.
+   *
+   * @return true if the state is correct, false otherwise.
+   */
+  boolean isAccepted();
 }

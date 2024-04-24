@@ -1,11 +1,13 @@
 package be.vinci.pae.domain.dto;
 
-import java.util.Date;
+import be.vinci.pae.domain.InternshipImpl;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import java.sql.Date;
 
 /**
  * InternshipDTO interface.
  */
-
+@JsonDeserialize(as = InternshipImpl.class)
 public interface InternshipDTO {
 
   /**
@@ -93,14 +95,14 @@ public interface InternshipDTO {
   void setSchoolYear(String schoolYear);
 
   /**
-   * Get the internship's version.
+   * Get the internship's database version.
    *
-   * @return the internship's version.
+   * @return the internship's database version.
    */
   int getVersion();
 
   /**
-   * Set the internship's version.
+   * Set the internship's database version.
    *
    * @param version version to set.
    */

@@ -1,6 +1,7 @@
 package be.vinci.pae;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -202,6 +203,12 @@ public class ContactUCCImplTest {
         }),
         () -> assertThrows(FatalException.class, () -> {
           contactUCC.getOneById(1);
+        }),
+        () -> assertThrows(FatalException.class, () -> {
+          contactUCC.getAllContactsByStudent(1);
+        }),
+        () -> assertThrows(FatalException.class, () -> {
+          contactUCC.getAllContactsByCompany(1);
         })
     );
   }
@@ -331,6 +338,17 @@ public class ContactUCCImplTest {
   }
 
   @Test
+  @DisplayName("Test put contact on hold")
+  public void testPutContactOnHold() {
+    Mockito.when(contactDAOMock.getAllContactsByStudentStartedOrAdmitted(1))
+        .thenReturn(List.of(contactDTO));
+    contactDTO.setState("suspendu");
+    Mockito.when(contactDAOMock.putContactOnHold(contactDTO)).thenReturn(contactDTO);
+    contactUCC.putStudentContactsOnHold(1);
+    assertEquals("suspendu", contactDTO.getState());
+  }
+
+  @Test
   @DisplayName("Test accept contact is null")
   public void testAcceptContactNull() {
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(null);
@@ -365,7 +383,30 @@ public class ContactUCCImplTest {
     contactDTO.setState("pris");
     contactDTO.setVersion(1);
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
-    Mockito.when(contactDAOMock.accept(1,1)).thenReturn(contactDTO);
+    Mockito.when(contactDAOMock.accept(1, 1)).thenReturn(contactDTO);
     assertNotNull(contactUCC.accept(1, 1));
   }
+  @Test
+  @DisplayName("Test get all contact by company")
+  public void testGetAllContactByCompany() {
+    Mockito.when(contactDAOMock.getAllContactsByCompany(1)).thenReturn(List.of(contactDTO));
+    assertNotNull(contactUCC.getAllContactsByCompany(1));
+  }
+
+  @Test
+  @DisplayName("Test get all contact by company returning null")
+  public void testGetAllContactByCompanyReturningNull() {
+    Mockito.when(contactDAOMock.getAllContactsByCompany(1)).thenReturn(null);
+    assertThrows(ResourceNotFoundException.class,
+        () -> contactUCC.getAllContactsByCompany(1));
+  }
+
+  @Test
+  @DisplayName("Test get all contact by student returning null")
+  public void testGetAllContactByStudentReturningNull() {
+    Mockito.when(contactDAOMock.getAllContactsByStudent(1)).thenReturn(null);
+    assertThrows(ResourceNotFoundException.class,
+        () -> contactUCC.getAllContactsByStudent(1));
+  }
+
 }

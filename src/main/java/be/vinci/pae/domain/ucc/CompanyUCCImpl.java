@@ -6,10 +6,12 @@ import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.CompanyDAO;
 import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.utils.Logs;
+import be.vinci.pae.utils.exceptions.DuplicateException;
 import be.vinci.pae.utils.exceptions.FatalException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
 import jakarta.inject.Inject;
 import java.util.List;
+import java.util.Map;
 import org.apache.logging.log4j.Level;
 
 /**
@@ -46,8 +48,8 @@ public class CompanyUCCImpl implements CompanyUCC {
    * @return a list containing all the companies.
    */
   @Override
-  public List<CompanyDTO> getAllCompanies() {
-    List<CompanyDTO> companyList;
+  public Map<Integer, Map<CompanyDTO, Map<String, Integer>>> getAllCompanies() {
+    Map<Integer, Map<CompanyDTO, Map<String, Integer>>> companyList;
     try {
       Logs.log(Level.DEBUG, "CompanyUCC (getAllCompanies) : entrance");
       dalServices.startTransaction();
@@ -85,5 +87,56 @@ public class CompanyUCCImpl implements CompanyUCC {
       dalServices.rollbackTransaction();
       throw e;
     }
+  }
+
+  /**
+   * Register a company. If existing company with same name, it has to have a new designation.
+   *
+   * @param company company to add.
+   * @return CompanyDTO of added company, null otherwise.
+   */
+  @Override
+  public CompanyDTO registerCompany(CompanyDTO company) {
+
+    CompanyDTO registeredCompany;
+
+    try {
+      dalServices.startTransaction();
+      CompanyDTO existingCompany;
+      if (company.getDesignation() == null) {
+        List<CompanyDTO> existingCompaniesWithNullDesignation = companyDAO.getAllCompaniesByName(
+            company.getName());
+        if (existingCompaniesWithNullDesignation.size() > 0) {
+          throw new DuplicateException(
+              "Already exist company with same name and designation, add a different designation");
+        }
+      } else {
+        existingCompany = companyDAO.getOneCompanyByNameDesignation(company.getName(),
+            company.getDesignation());
+        if (existingCompany != null) {
+          throw new DuplicateException(
+              "Already exist company with same name and designation, add a different designation");
+        }
+      }
+
+      if (company.getEmail().isBlank()) {
+        company.setEmail(null);
+      }
+
+      if (company.getPhoneNumber().isBlank()) {
+        company.setPhoneNumber(null);
+      }
+
+      company.setIsBlacklisted(false);
+      company.setVersion(1);
+
+      registeredCompany = companyDAO.addOneCompany(company);
+      dalServices.commitTransaction();
+      return registeredCompany;
+    } catch (Exception e) {
+      dalServices.rollbackTransaction();
+      throw e;
+    }
+
   }
 }

@@ -75,10 +75,35 @@ public interface ContactDAO {
   ContactDTO turnDown(int contactId, String reasonForRefusal, int version);
 
   /**
+   * Get all the student's contact that are in started or admitted state.
+   *
+   * @param student the student to get contacts from.
+   * @return a list containing all the contacts in the right state.
+   */
+  List<ContactDTO> getAllContactsByStudentStartedOrAdmitted(int student);
+
+  /**
+   * Put a contact on hold.
+   *
+   * @param contactDTO the contact to put on hold.
+   * @return the updated contactDTO.
+   */
+  ContactDTO putContactOnHold(ContactDTO contactDTO);
+
+  /**
+   * Accept a contact.
    *
    * @param contactId the contact id.
-   * @param version the version of the contact.
+   * @param version   the version of the contact.
    * @return the accepted contact.
    */
-  ContactDTO accept(int contactId,int version);
+  ContactDTO accept(int contactId, int version);
+
+  /**
+   * Get all contacts by a company id.
+   *
+   * @param company company's id.
+   * @return a list of all contacts.
+   */
+  List<ContactDTO> getAllContactsByCompany(int company);
 }
