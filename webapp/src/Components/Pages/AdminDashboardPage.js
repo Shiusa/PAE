@@ -158,6 +158,36 @@ const renderCaption = (internshipStats) => {
 
 }
 
+const renderContactBox = async () => {
+  const contactBox = document.querySelector('.contact-company-container');
+  contactBox.innerHTML = `
+    <div class="w-100 d-flex flex-column align-items-center py-3 contact-company-list">
+      <div class="row w-100">
+          <i id="company-back-btn" class="fa-solid fa-circle-arrow-left" title="Retour"></i>
+        <div class="col-md-4 d-flex flex-column justify-content-center align-items-center">
+        </div>
+        <div class="col-md-4 d-flex flex-column justify-content-center align-items-center">
+          <p class="mb-0">Contact liste</p>
+        </div>
+        <div class="col-md-4 d-flex flex-column justify-content-center align-items-center">
+          <p class="mb-0">Contact liste</p>
+        </div>
+      </div>
+      <div class="w-100 mt-3 py-3 rounded-3 border" style="background: blue">
+        <p>test</p>
+      </div>
+      <div class="w-100 mt-3 py-3 rounded-3 border" style="background: red;">
+        <p>test</p>
+      </div>
+    </div>
+  `;
+  contactBox.style.visibility = "visible";
+
+  const contactCompanyContainer = document.querySelector(
+      '.contact-company-list');
+  contactCompanyContainer.classList.add('slide-in');
+}
+
 const renderCompanyList = (companyData) => {
   const listContainer = document.querySelector(
       '.adminCompanyListTileContainer');
@@ -192,6 +222,12 @@ const renderCompanyList = (companyData) => {
       </div>
     `;
   }).join('');
+  const companyTiles = document.querySelectorAll('.adminCompanyListTile');
+  companyTiles.forEach(companyTile => {
+    companyTile.addEventListener('click', () => {
+      renderContactBox();
+    })
+  })
 }
 
 const renderYearOptions = (internshipStats) => {
@@ -362,7 +398,8 @@ const AdminDashboardPage = async () => {
         </div>
         <div class="col-md-9">
           <div class="dash-row">
-            <div class="rounded-4 dash-row p-4" style="border: 2px solid #119cb8c7; margin-left: 4rem;">
+            <div class="rounded-4 dash-row p-4" style="border: 2px solid #119cb8c7; margin-left: 4rem; position: relative;">
+            
               <div class="col-md-12 d-flex flex-column h-100">
               
                 <div class="w-100 d-flex justify-content-center align-items-center border adminCompanyListTitle">
@@ -388,6 +425,11 @@ const AdminDashboardPage = async () => {
                 </div>
                 
               </div>
+              
+              <div class="contact-company-container w-100 h-100 d-flex justify-contain-center p-4 rounded-4" style="z-index: 1;">
+              
+              </div>
+              
             </div>
           </div>
         </div>
