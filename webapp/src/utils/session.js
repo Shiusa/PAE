@@ -32,7 +32,33 @@ const removeSessionData = () => {
   sessionStorage.removeItem(STORE_NAME);
   currentUser = null;
   remember = false;
+  setLocalUser(null);
 };
+
+const getToken = () => {
+  let token;
+  if (remember === true) {
+    token = localStorage.getItem(STORE_NAME)
+  } else {
+    token = sessionStorage.getItem(STORE_NAME);
+  }
+
+  if (!token) {
+    return undefined;
+  }
+
+  return token;
+}
+
+const setAuthenticatedUser = (authenticatedUser) => {
+  if (getRemember()) {
+    setUserLocalStorage(authenticatedUser);
+    setLocalUser(authenticatedUser.user);
+  } else {
+    setUserSessionStorage(authenticatedUser);
+    setLocalUser(authenticatedUser.user);
+  }
+}
 
 const getAuthenticatedUser = async () => {
   let token;
@@ -69,6 +95,8 @@ export {
   getLocalUser,
   setRemember,
   getRemember,
+  getToken,
+  setAuthenticatedUser,
   getAuthenticatedUser,
   setUserSessionStorage,
   setUserLocalStorage,

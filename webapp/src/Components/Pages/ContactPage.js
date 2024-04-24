@@ -1,7 +1,13 @@
 // eslint-disable-next-line import/no-cycle
 import {Redirect} from "../Router/Router";
 import {awaitFront, showNavStyle} from "../../utils/function";
-import {getAuthenticatedUser} from "../../utils/session";
+import {
+  getAuthenticatedUser,
+  getToken,
+  setAuthenticatedUser
+} from "../../utils/session";
+
+let userToken;
 
 const closeForm = () => {
   const addCompanyContainer = document.querySelector(
@@ -20,6 +26,11 @@ const submitRegistration = async (e) => {
   e.preventDefault();
 
   const user = await getAuthenticatedUser();
+  if (user) {
+    setAuthenticatedUser(user);
+  } else {
+    return;
+  }
 
   const name = document.querySelector("#input-name").value;
   const designation = document.querySelector("#input-designation").value;
@@ -137,17 +148,18 @@ const ContactPage = async () => {
 
   const main = document.querySelector('main');
 
-  const user = await getAuthenticatedUser();
-
-  showNavStyle("contact");
-  awaitFront();
+  userToken = getToken();
+  if (!userToken) {
+    Redirect('/');
+    return;
+  }
 
   const readAllCompanies = async () => {
     const options = {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': user.token
+        'Authorization': userToken
       }
     }
     const response = await fetch('api/companies/all/user', options);
@@ -162,6 +174,9 @@ const ContactPage = async () => {
   };
 
   const companiesTable = await readAllCompanies();
+
+  showNavStyle("contact");
+  awaitFront();
 
   main.innerHTML = `
     <div class="container-fluid mt-5 d-flex flex-column rounded-3 overflow-hidden" style="width: 100%; height: 74vh; border: none; border-radius: 0; background: white; position: relative">
@@ -292,6 +307,7 @@ const ContactPage = async () => {
   }
 
   async function createContact(idCompany) {
+    const user = await getAuthenticatedUser();
     const options = {
       method: 'POST',
       body: JSON.stringify({
