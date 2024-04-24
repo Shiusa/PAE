@@ -1,48 +1,51 @@
-import {showNavStyle, awaitFront} from "../../utils/function";
+import {awaitFront} from "../../utils/function";
 
 /* eslint-disable prefer-template */
 // eslint-disable-next-line import/no-cycle
-
-import {
-    getAuthenticatedUser,
-} from "../../utils/session";
-
+import {Redirect} from "../Router/Router";
+import {getLocalUser, getToken,} from "../../utils/session";
+import Navbar from "../Navbar/Navbar";
 
 const InfoPage = async () => {
 
-    
+  const main = document.querySelector('main');
 
-    const main = document.querySelector('main');
-    
-    awaitFront();
+  awaitFront();
 
-    const user = await getAuthenticatedUser();
+  let userToken = getToken();
+  let localUser = getLocalUser();
+  if (!localUser) {
+    await Navbar();
+    userToken = getToken();
+    localUser = getLocalUser();
+  }
+  if (!userToken) {
+    Redirect('/');
+    return;
+  }
 
-    showNavStyle("info");
+  const readUserInfo = async () => {
+    const options = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': userToken
+      }
+    }
+    const response = await fetch('api/users/' + localUser.id, options);
 
-    const readUserInfo = async () => {
-        const options = {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': user.token
-            }
-        }
-        const response = await fetch('api/users/' + user.user.id, options);
+    if (!response.ok) {
+      throw new Error(
+          `fetch error : ${response.status} : ${response.statusText}`);
+    }
 
-        if (!response.ok) {
-            throw new Error(
-                `fetch error : ${response.status} : ${response.statusText}`);
-        }
-            
-        const userInfo = await response.json();
-        return userInfo;
-    };
+    const userInfo = await response.json();
+    return userInfo;
+  };
 
-    const userInfoID = await readUserInfo();
+  const userInfoID = await readUserInfo();
 
-    
-    const info = ` 
+  const info = ` 
         <h1 class="">Vos informations</h1>
         <div class="mt-1 mb-1 info-line"></div>
         <h4 class="mt-3">Année académique : ${userInfoID.schoolYear}</h2>
@@ -63,7 +66,7 @@ const InfoPage = async () => {
         <p class="btn btn-outline-primary mt-2" id="btn-change-pwd">Modifier mon mot de passe</p>    
     `;
 
-    main.innerHTML = `        
+  main.innerHTML = `        
         <div class="d-flex justify-content-center align-items-center mt-5 mb-5">
           <div class="info-square2"></div>
           <div class="info-square1"></div>
@@ -72,19 +75,15 @@ const InfoPage = async () => {
         </div>
     `;
 
-    const infoContainer = document.querySelector(".info-container");
+  const infoContainer = document.querySelector(".info-container");
 
-    refresh();
+  refresh();
 
-    showNavStyle("info");
-
-    
-
-    function refresh() {
-        infoContainer.innerHTML = info;
-        const btnChangePwd = document.getElementById("btn-change-pwd");
-        btnChangePwd.addEventListener('click', () => {
-            infoContainer.innerHTML = `
+  function refresh() {
+    infoContainer.innerHTML = info;
+    const btnChangePwd = document.getElementById("btn-change-pwd");
+    btnChangePwd.addEventListener('click', () => {
+      infoContainer.innerHTML = `
                 <i id="btn-back" class="fa-solid fa-circle-arrow-left" title="Retour"></i>
                 <h1>Modifier mon mot de passe</h1>
                 <div class="mt-3 mb-2 info-line"></div>
@@ -102,13 +101,13 @@ const InfoPage = async () => {
                 </div>
                 <p class="btn btn-primary mt-2" id="btn-save">Enregistrer le mot de passe</p>
             `;
-    
-            const btnBack = document.getElementById("btn-back");
-            btnBack.addEventListener('click', () => {
-                refresh();
-            });
-        });
-    }
+
+      const btnBack = document.getElementById("btn-back");
+      btnBack.addEventListener('click', () => {
+        refresh();
+      });
+    });
+  }
 };
 
 export default InfoPage;

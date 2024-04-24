@@ -81,4 +81,13 @@ public interface ContactUCC {
    * @return the accepted contact.
    */
   ContactDTO accept(int contactId, int studentId);
+
+
+  /**
+   * Get all contacts by a company id.
+   *
+   * @param company the company.
+   * @return a list containing all the contacts.
+   */
+  List<ContactDTO> getAllContactsByCompany(int company);
 }

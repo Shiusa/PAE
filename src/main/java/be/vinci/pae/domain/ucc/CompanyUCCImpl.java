@@ -11,6 +11,7 @@ import be.vinci.pae.utils.exceptions.FatalException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
 import jakarta.inject.Inject;
 import java.util.List;
+import java.util.Map;
 import org.apache.logging.log4j.Level;
 
 /**
@@ -47,8 +48,8 @@ public class CompanyUCCImpl implements CompanyUCC {
    * @return a list containing all the companies.
    */
   @Override
-  public List<CompanyDTO> getAllCompanies() {
-    List<CompanyDTO> companyList;
+  public Map<Integer, Map<CompanyDTO, Map<String, Integer>>> getAllCompanies() {
+    Map<Integer, Map<CompanyDTO, Map<String, Integer>>> companyList;
     try {
       Logs.log(Level.DEBUG, "CompanyUCC (getAllCompanies) : entrance");
       dalServices.startTransaction();

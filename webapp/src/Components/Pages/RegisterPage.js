@@ -63,6 +63,15 @@ const RegisterPage = () => {
   const emailInput = document.getElementById("input-email");
   emailInput.addEventListener("input", roleSelector);
 
+  const inputs = document.querySelectorAll('.form-control');
+  inputs.forEach(input => {
+    input.addEventListener('keypress', async (event) => {
+      if (event.key === "Enter") {
+        await register(event);
+      }
+    })
+  })
+
 };
 
 async function register(e) {
@@ -145,7 +154,7 @@ async function register(e) {
     }
     return;
   }
-  Navbar();
+  await Navbar();
   Redirect("/");
 }
 
