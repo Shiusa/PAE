@@ -1,8 +1,10 @@
 import { getAuthenticatedUser } from "../../utils/session";
 // eslint-disable-next-line import/no-cycle
 import { Redirect } from "../Router/Router";
+import {awaitFront} from "../../utils/function";
 
-const BlacklistPage = async() => {
+const BlacklistPage = async(companyId) => {
+    awaitFront();
     const user = await getAuthenticatedUser();
 
     const getCompanyInfo = async (id) => {
@@ -32,6 +34,7 @@ const BlacklistPage = async() => {
     };
     const renderPage = (company) => {
         const main = document.querySelector('main');
+        main.innerHTML = "";
         const centralDiv = document.createElement("div");
         centralDiv.className = "text-center";
         main.appendChild(centralDiv);
@@ -86,7 +89,7 @@ const BlacklistPage = async() => {
                         `fetch error : ${response.status} : ${response.statusText}`
                     );
                 }else{
-                    Redirect("/");
+                    Redirect("/adminBoard");
                 }
     
             } catch (error) {
@@ -94,8 +97,6 @@ const BlacklistPage = async() => {
             }
         });
     }
-    const urlParams = new URLSearchParams(window.location.search);
-    const companyId = urlParams.get('id');
     const company = await getCompanyInfo(companyId);
     renderPage(company.company);
 };

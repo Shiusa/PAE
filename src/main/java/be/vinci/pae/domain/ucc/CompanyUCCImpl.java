@@ -161,5 +161,4 @@ public class CompanyUCCImpl implements CompanyUCC {
     dalServices.commitTransaction();
     return companyDTO;
   }
-
 }

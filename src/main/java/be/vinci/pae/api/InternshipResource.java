@@ -22,6 +22,7 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
+import java.util.List;
 import java.util.Map;
 import org.apache.logging.log4j.Level;
 import org.glassfish.jersey.server.ContainerRequest;
@@ -36,6 +37,20 @@ public class InternshipResource {
   private final ObjectMapper jsonMapper = new ObjectMapper();
   @Inject
   private InternshipUCC internshipUCC;
+
+  /**
+   * returns all the internships.
+   *
+   * @return a list containing all internships.
+   */
+  @GET
+  @Path("/all")
+  @Produces(MediaType.APPLICATION_JSON)
+  @TeacherAndAdministrative
+  public List<InternshipDTO> getAllInternships() {
+    Logs.log(Level.INFO, "InternshipResource (getAllInternships) : entrance");
+    return internshipUCC.getAllInternships();
+  }
 
   /**
    * returns an internship by a student id.

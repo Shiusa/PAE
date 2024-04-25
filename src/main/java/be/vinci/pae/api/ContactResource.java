@@ -52,11 +52,9 @@ public class ContactResource {
   public ObjectNode start(@Context ContainerRequest request, JsonNode json) {
     Logs.log(Level.INFO, "ContactResource (start) : entrance");
     if (!json.hasNonNull("company")) {
-      Logs.log(Level.WARN, "ContactResource (start) : Company is null");
       throw new WebApplicationException("company", Response.Status.BAD_REQUEST);
     }
     if (json.get("company").asText().isBlank()) {
-      Logs.log(Level.WARN, "ContactResource (start) : Company is blank");
       throw new WebApplicationException("company required", Response.Status.BAD_REQUEST);
     }
 
