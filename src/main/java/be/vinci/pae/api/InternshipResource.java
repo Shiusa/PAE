@@ -1,7 +1,6 @@
 package be.vinci.pae.api;
 
 import be.vinci.pae.api.filters.Authorize;
-import be.vinci.pae.api.filters.Student;
 import be.vinci.pae.api.filters.TeacherAndAdministrative;
 import be.vinci.pae.domain.dto.InternshipDTO;
 import be.vinci.pae.domain.dto.UserDTO;
@@ -105,7 +104,7 @@ public class InternshipResource {
   @Path("create")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  @Student
+  @Authorize
   public InternshipDTO create(@Context ContainerRequest request, InternshipDTO internship) {
     Logs.log(Level.INFO, "InternshipResource (create) : entrance");
     if (internship.getContact() == null || internship.getSupervisor() == null

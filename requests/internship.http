@@ -59,7 +59,7 @@ Content-Type: application/json
     "id": 1
   },
   "signatureDate": "2023-10-10",
-  "project": "Un ERP : Odoo",
+  "project": null,
   "schoolYear": "2023-2024",
   "version": 1
 }

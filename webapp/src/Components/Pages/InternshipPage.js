@@ -6,7 +6,6 @@ import {awaitFront, showNavStyle} from "../../utils/function";
 import {Redirect} from "../Router/Router";
 import {getAuthenticatedUser,} from "../../utils/session";
 
-
 const InternshipPage = async () => {
   const main = document.querySelector('main');
   awaitFront();
@@ -262,7 +261,17 @@ const InternshipPage = async () => {
 }
 
 const CreateInternshipPage = async () => {
-  const contact = {id: 1, company: {id: 2, name: 'LetsBuild', designation: null}, student: 9, meeting: 'A distance', state: 'accepté', schoolYear: '2023-2024'};
+  const contact = {
+    id: 8,
+    company: {id: 3, name: 'Niboo', designation: null, address: 'Boulevard du Souverain, 24 1170 Watermael-Boisfort', phoneNumber: '0487 02 79 13', email: null, isBlacklisted: false, blacklistMotivation: null, version: 1},
+    student: {id: 5, email: 'Caroline.line@student.vinci.be', lastname: 'Line', firstname: 'Caroline', phoneNumber: '0486 00 00 01', registrationDate: '2023-09-18', schoolYear: '2023-2024', role: 'Etudiant', version: 1},
+    meeting: 'A distance',
+    state: 'accepté',
+    reasonRefusal: null,
+    schoolYear: '2023-2024',
+    version: 1
+  };
+
   const main = document.querySelector('main');
   awaitFront();
 
@@ -270,31 +279,98 @@ const CreateInternshipPage = async () => {
 
   showNavStyle("dashboard");
 
-  /* const createInternship = async (supervisor, project, signatureDate) => {
-    const schoolYear = contact.schoolYear;
-    const options = {
-      method: 'POST', // *GET, POST, PUT, DELETE, etc.
-      body: JSON.stringify({
-        contact,
-        supervisor,
-        signatureDate,
-        project,
-        schoolYear,
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': user.token
+  const createInternship = async (supervisor, signatureDate, project) => {
+
+    try {
+      const {schoolYear} = contact;
+      const options = {
+        method: 'POST',
+        body: JSON.stringify({
+          contact,
+          supervisor,
+          signatureDate,
+          project,
+          schoolYear,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': user.token
+        }
+      }
+
+      const response = await fetch('/api/internships/create', options);
+
+      if (!response.ok) {
+        throw new Error(
+            `fetch error : ${response.status} : ${response.statusText}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      const errorMessage = document.getElementById('error-message-right');
+      errorMessage.style.display = "block";
+      if (error instanceof Error && error.message.startsWith(
+          "fetch error : 400")) {
+        errorMessage.innerText = "Mauvaise requête.";
+      }
+      if (error instanceof Error && error.message.startsWith(
+          "fetch error : 409")) {
+        errorMessage.innerText = "Numéro de téléphone déjà utilisé";
+      }
+      if (error instanceof Error && error.message.startsWith(
+          "fetch error : 500")) {
+        errorMessage.innerText = "Une erreur interne s'est produite, veuillez réssayer";
       }
     }
-    const response = await fetch('api/internships/create', options);
+    return undefined;
+  };
 
-    if (!response.ok) {
-      throw new Error(
-          `fetch error : ${response.status} : ${response.statusText}`);
+  const createSupervisor = async (lastname, firstname, phoneNumber, emailToCheck) => {
+    try {
+      const {company} = contact;
+      const email = emailToCheck === "" ? null : emailToCheck;
+      const options = {
+        method: 'POST',
+        body: JSON.stringify({
+          company,
+          lastname,
+          firstname,
+          phoneNumber,
+          email
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': user.token
+        }
+      };
+
+      const response = await fetch('/api/supervisors/add', options);
+
+      if (!response.ok) {
+        throw new Error(
+            `fetch error : ${response.status} : ${response.statusText}`
+        );
+      }
+
+      return await response.json();
+    } catch (error) {
+      const errorMessage = document.getElementById('error-message-left');
+      errorMessage.style.display = "block";
+      if (error instanceof Error && error.message.startsWith(
+          "fetch error : 400")) {
+        errorMessage.innerText = "Tous les champs doivent être remplis";
+      }
+      if (error instanceof Error && error.message.startsWith(
+          "fetch error : 409")) {
+        errorMessage.innerText = "Numéro de téléphone déjà utilisé";
+      }
+      if (error instanceof Error && error.message.startsWith(
+          "fetch error : 500")) {
+        errorMessage.innerText = "Une erreur interne s'est produite, veuillez réssayer";
+      }
     }
-
-    Redirect("/internship");
-  }; */
+    return undefined;
+  }
 
   const getSupervisors = async () => {
     try {
@@ -306,7 +382,7 @@ const CreateInternshipPage = async () => {
         }
       };
 
-      const response = await fetch('/api/supervisors/allByCompany/2', options);
+      const response = await fetch('/api/supervisors/allByCompany/' + contact.company.id, options);
 
       if(!response.ok) {
         throw new Error(
@@ -328,7 +404,6 @@ const CreateInternshipPage = async () => {
     }
   };
 
-
   const allSupervisors = await getSupervisors();
 
   let desi = contact.company.designation;
@@ -340,15 +415,15 @@ const CreateInternshipPage = async () => {
         <h1 class="mt-5 mb-5">Responsable</h1>
         <div class="input-group mb-3">
             <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-user"></i></span>
-            <input type="text" class="form-control" id="input-firstname" placeholder="Prénom" aria-label="prénom" aria-describedby="basic-addon1">
+            <input type="text" class="form-control" id="input-firstname" placeholder="Prénom" aria-label="prénom" aria-describedby="basic-addon1" required>
         </div>
         <div class="input-group mb-3">
             <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-user"></i></span>
-            <input type="text" class="form-control" id="input-lastname" placeholder="Nom" aria-label="nom" aria-describedby="basic-addon1">
+            <input type="text" class="form-control" id="input-lastname" placeholder="Nom" aria-label="nom" aria-describedby="basic-addon1" required>
         </div>
         <div class="input-group mb-3">
             <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-phone"></i></span>
-            <input type="text" class="form-control" id="input-phone" placeholder="Téléphone" aria-label="phone" aria-describedby="basic-addon1">
+            <input type="text" class="form-control" id="input-phone" placeholder="Téléphone" aria-label="phone" aria-describedby="basic-addon1" required>
         </div>
         <div class="input-group mb-3">
             <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-envelope"></i></span>
@@ -359,18 +434,24 @@ const CreateInternshipPage = async () => {
             <input type="text" class="form-control" id="input-contact" readonly value="${contact.company.name}" aria-label="company" aria-describedby="basic-addon1">
         </div>
         <button type="button" id="resp-register" class="create-button mt-4 ">Ajouter le responsable</button>
+        <h2 id="error-message-left"></h2>
       </div>
       <div class="box-company d-flex align-items-center flex-column justify-content-center">
         <h1 class="mb-5">${contact.company.name}<br>${desi}</h1>
         <div class="input-group mb-3">
             <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-eye"></i></span>
-            <input type="text" class="form-control" id="input-supervisor" placeholder="Recherchez..." aria-label="nom" aria-describedby="basic-addon1">
+            <input type="text" class="form-control" id="input-supervisor" placeholder="Recherchez..." aria-label="nom" aria-describedby="basic-addon1" required>
+        </div>
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-eye"></i></span>
+            <input type="date" class="form-control" id="input-date" placeholder="Date" aria-label="date" aria-describedby="basic-addon1" required>
         </div>
         <div class="input-group mb-3">
             <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-signature"></i></span>
             <input type="text" class="form-control" id="input-subject" placeholder="Sujet (Optionnel)" aria-label="nom" aria-describedby="basic-addon1">
         </div>
         <button type="button" id="stage-register" class="create-button mt-4">Enregistrer</button>
+        <h2 id="error-message-right"></h2>
       </div>
     </div>
   `;
@@ -395,13 +476,39 @@ const CreateInternshipPage = async () => {
     fullName: `${supervisor.firstname} ${supervisor.lastname}`,
   })));
 
-  const registerStageBtn = document.getElementById('stage-register');
-
-  registerStageBtn.addEventListener('click', () => {
-    console.log(tomSelectInstance.items);
+  const registerSupervisorBtn = document.getElementById('resp-register');
+  registerSupervisorBtn.addEventListener('click', async () => {
+    const lastname = document.getElementById('input-lastname').value;
+    const firstname = document.getElementById('input-firstname').value;
+    const phoneNumber = document.getElementById('input-phone').value;
+    const email = document.getElementById('input-email').value;
+    const supervisor = await createSupervisor(lastname, firstname, phoneNumber, email);
+    if(supervisor) {
+      await CreateInternshipPage(contact);
+    }
   });
 
-  
+  const registerStageBtn = document.getElementById('stage-register');
+  registerStageBtn.addEventListener('click', async () => {
+    const supervisorId = document.getElementById('input-supervisor').value;
+    let supervisor;
+    for(let i = 0 ; i < allSupervisors.length ; i+=1) {
+      // eslint-disable-next-line
+      if(allSupervisors[i].id === parseInt(supervisorId)) {
+        supervisor = allSupervisors[i];
+        break;
+      }
+    }
+    const signatureDate = document.getElementById('input-date').value;
+    let project = document.getElementById('input-subject').value;
+    if(project === "") {
+      project = null;
+    }
+    const internship = await createInternship(supervisor, signatureDate, project);
+    if(internship) {
+      Redirect("/internship");
+    }
+  });
   
 }
 
