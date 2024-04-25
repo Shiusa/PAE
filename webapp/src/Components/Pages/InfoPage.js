@@ -3,7 +3,11 @@ import {awaitFront} from "../../utils/function";
 /* eslint-disable prefer-template */
 // eslint-disable-next-line import/no-cycle
 import {Redirect} from "../Router/Router";
-import {getLocalUser, getToken,} from "../../utils/session";
+import {
+  getAuthenticatedUser,
+  getLocalUser,
+  getToken,
+} from "../../utils/session";
 import Navbar from "../Navbar/Navbar";
 
 const InfoPage = async () => {
@@ -52,20 +56,99 @@ const InfoPage = async () => {
         <h5 class="mt-1 mb-4">${userInfoID.email}</h3>
         <div class="input-group mb-3">
             <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-user"></i></span>
-            <input type="text" class="form-control" id="input-firstname" value="${userInfoID.firstname}" placeholder="Prénom" aria-label="Prénom" aria-describedby="basic-addon1">
+            <input readonly type="text" class="form-control" id="input-firstname" value="${userInfoID.firstname}" placeholder="Prénom" aria-label="Prénom" aria-describedby="basic-addon1">
         </div>
         <div class="input-group mb-3">
             <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-user"></i></span>
-            <input type="text" class="form-control" id="input-lastname" value="${userInfoID.lastname}" placeholder="Nom" aria-label="Nom" aria-describedby="basic-addon1">
+            <input readonly type="text" class="form-control" id="input-lastname" value="${userInfoID.lastname}" placeholder="Nom" aria-label="Nom" aria-describedby="basic-addon1">
         </div>
         <div class="input-group mb-3">
             <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-phone"></i></span>
             <input type="text" class="form-control" id="input-phone" value="${userInfoID.phoneNumber}" placeholder="Téléphone" aria-label="Téléphone" aria-describedby="basic-addon1">
         </div>
-        <p class="btn btn-primary mt-1" id="btn-save">Enregistrer les modifications</p>
+        <h2 id="good-message"></h2>
+        <p class="btn btn-primary mt-1" id="btn-save-phone-number">Enregistrer les modifications</p>
         <p class="btn btn-outline-primary mt-2" id="btn-change-pwd">Modifier mon mot de passe</p>    
     `;
 
+  const saveUserInfo = async (e) => {
+    e.preventDefault();
+    const user = await getAuthenticatedUser();
+    const phoneNumber = document.querySelector("#input-phone").value;
+    const options = {
+      method: "POST",
+      body: JSON.stringify({
+        "id": userInfoID.id,
+        "email": userInfoID.email,
+        "lastname": userInfoID.lastname,
+        "firstname": userInfoID.firstname,
+        "phoneNumber": phoneNumber,
+        "registrationDate": userInfoID.registrationDate,
+        "schoolYear": userInfoID.schoolYear,
+        "role": userInfoID.role,
+        "version": userInfoID.version
+      }),
+      headers: {
+        "Content-Type": "application/json",
+        'Authorization': user.token
+      },
+    };
+
+    const response = await fetch('/api/users/editUser', options);
+
+    if (!response.ok) {
+      throw new Error(
+          `fetch error : ${response.status} : ${response.statusText}`);
+    }
+
+    const savedUserInfo = await response.json();
+    if (savedUserInfo) {
+      const error = document.querySelector("#good-message");
+      error.innerHTML = "Cela a fonctionné";
+      error.style.display = "block";
+    }
+
+    return savedUserInfo;
+  }
+
+  const saveUserPwd = async (e) => {
+    e.preventDefault();
+    const user = await getAuthenticatedUser();
+    const oldPassword = document.querySelector('#input-old-pwd').value;
+    const newPassword = document.querySelector('#input-new-pwd').value;
+    const repeatedPassword = document.querySelector(
+        '#input-new-pwd-verif').value;
+    const options = {
+      method: "POST",
+      body: JSON.stringify({
+        "id": userInfoID.id,
+        "oldPassword": oldPassword,
+        "newPassword": newPassword,
+        "repeatedPassword": repeatedPassword
+      }),
+      headers: {
+        "Content-Type": "application/json",
+        'Authorization': user.token
+      },
+    };
+
+    const response = await fetch('/api/users/editPassword', options);
+
+    if (!response.ok) {
+      throw new Error(
+          `fetch error : ${response.status} : ${response.statusText}`);
+    }
+
+    const savedUserPassword = await response.json();
+    if (savedUserPassword) {
+      const error = document.querySelector("#good-message");
+      error.innerHTML = "Vous avez modifier votre mot de passe";
+      error.style.display = "block";
+      Redirect("/dashboard");
+    }
+
+    return savedUserPassword;
+  }
   main.innerHTML = `        
         <div class="d-flex justify-content-center align-items-center mt-5 mb-5">
           <div class="info-square2"></div>
@@ -99,15 +182,26 @@ const InfoPage = async () => {
                     <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-repeat"></i></span>
                     <input type="password" class="form-control" id="input-new-pwd-verif" placeholder="Répéter le mot de passe" aria-label="Prénom" aria-describedby="basic-addon1">
                 </div>
-                <p class="btn btn-primary mt-2" id="btn-save">Enregistrer le mot de passe</p>
+                <h2 id="good-message"></h2>
+                <p class="btn btn-primary mt-2" id="btn-save-pwd">Enregistrer le mot de passe</p>
             `;
 
       const btnBack = document.getElementById("btn-back");
       btnBack.addEventListener('click', () => {
         refresh();
       });
+      const saveButtonPwd = document.getElementById("btn-save-pwd");
+      saveButtonPwd.addEventListener('click', async (e) => {
+        await saveUserPwd(e);
+      });
     });
   }
+
+  const saveButton = document.getElementById("btn-save-phone-number");
+  console.log(saveButton);
+  saveButton.addEventListener('click', async (e) => {
+    await saveUserInfo(e);
+  });
 };
 
 export default InfoPage;

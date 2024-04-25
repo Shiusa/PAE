@@ -337,7 +337,7 @@ const DashboardPage = async () => {
                                 <textarea id="refusalReason" name="raison" placeholder="Raison du refus">${refusal}</textarea>
                             </div>
                             <button id="updateBtn" class="btn btn-primary mb-2 ms-3" type="submit">Mettre à jour</button>
-                            <h2 id="error-message"></h2>
+                            <h2 id="good-message"></h2>
                         </div>
                     </div>
         `
@@ -384,7 +384,7 @@ const DashboardPage = async () => {
         }
       });
 
-      const errorMessage = document.getElementById("error-message");
+      const errorMessage = document.getElementById("good-message");
       switch (newState) {
         case "admitted":
           options.body = JSON.stringify({"contactId": id, "meeting": meeting});
