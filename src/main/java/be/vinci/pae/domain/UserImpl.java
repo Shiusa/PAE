@@ -120,4 +120,8 @@ public class UserImpl implements User {
     this.password = BCrypt.hashpw(this.password, BCrypt.gensalt());
   }
 
+  @Override
+  public boolean isTeacher() {
+    return this.role.equals("Professeur");
+  }
 }

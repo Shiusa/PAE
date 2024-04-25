@@ -8,6 +8,7 @@ import ContactPage from '../Pages/ContactPage';
 import InfoPage from '../Pages/InfoPage';
 import DashboardPage from '../Pages/DashboardPage';
 import UserListPage from '../Pages/UserListPage';
+import BlacklistPage from "../Pages/BlacklistPage";
 import AdminDashboardPage from "../Pages/AdminDashboardPage";
 import InternshipPage from "../Pages/InternshipPage";
 
@@ -22,6 +23,7 @@ const routes = {
   "/dashboard": DashboardPage,
   "/adminBoard": AdminDashboardPage,
   "/internship": InternshipPage,
+  "/blacklist": BlacklistPage,
 };
 
 /**

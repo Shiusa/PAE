@@ -125,4 +125,17 @@ public class InternshipUCCImpl implements InternshipUCC {
     }
   }
 
+  @Override
+  public InternshipDTO editProject(String project, int version, int internshipId) {
+    InternshipDTO internship;
+    try {
+      dalServices.startTransaction();
+      internship = internshipDAO.editProject(project, version, internshipId);
+      dalServices.commitTransaction();
+      return internship;
+    } catch (Exception e) {
+      dalServices.rollbackTransaction();
+      throw e;
+    }
+  }
 }

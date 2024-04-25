@@ -135,4 +135,11 @@ public interface UserDTO {
    * @param role role to set.
    */
   void setRole(String role);
+
+  /**
+   * check if the user is a teacher.
+   *
+   * @return true if the user is a teacher, otherwise return false.
+   */
+  boolean isTeacher();
 }
