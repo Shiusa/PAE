@@ -20,6 +20,7 @@ public class UserImpl implements User {
   private Date registrationDate;
   private String schoolYear;
   private String role;
+  private int version;
 
   @Override
   public int getId() {
@@ -108,6 +109,16 @@ public class UserImpl implements User {
   @Override
   public void setRole(String role) {
     this.role = role;
+  }
+
+  @Override
+  public int getVersion() {
+    return version;
+  }
+
+  @Override
+  public void setVersion(int version) {
+    this.version = version;
   }
 
   @Override

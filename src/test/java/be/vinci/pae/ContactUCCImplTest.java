@@ -386,6 +386,7 @@ public class ContactUCCImplTest {
     Mockito.when(contactDAOMock.accept(1, 1)).thenReturn(contactDTO);
     assertNotNull(contactUCC.accept(1, 1));
   }
+  
   @Test
   @DisplayName("Test get all contact by company")
   public void testGetAllContactByCompany() {

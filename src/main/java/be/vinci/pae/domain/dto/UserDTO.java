@@ -142,4 +142,18 @@ public interface UserDTO {
    * @return true if the user is a teacher, otherwise return false.
    */
   boolean isTeacher();
+
+  /**
+   * Get the contact's version.
+   *
+   * @return the contact's version.
+   */
+  int getVersion();
+
+  /**
+   * Set the contact's version.
+   *
+   * @param version school version.
+   */
+  void setVersion(int version);
 }
