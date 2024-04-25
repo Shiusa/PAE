@@ -1,6 +1,7 @@
 package be.vinci.pae;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -14,12 +15,14 @@ import be.vinci.pae.domain.ucc.InternshipUCC;
 import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.ContactDAO;
 import be.vinci.pae.services.dao.InternshipDAO;
+import be.vinci.pae.utils.exceptions.DuplicateException;
 import be.vinci.pae.utils.exceptions.FatalException;
 import be.vinci.pae.utils.exceptions.InvalidRequestException;
 import be.vinci.pae.utils.exceptions.NotAllowedException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
 import be.vinci.pae.utils.exceptions.UnauthorizedAccessException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
@@ -166,6 +169,38 @@ public class InternshipUCCImplTest {
   }
 
   @Test
+  @DisplayName("Test get all internships")
+  public void testGetAllInternships() {
+    Mockito.when(internshipDAOMock.getAllInternships()).thenReturn(List.of(internshipDTO));
+    assertEquals(List.of(internshipDTO), internshipUCC.getAllInternships());
+  }
+
+  @Test
+  @DisplayName("Test create duplicated internship")
+  public void testCreateDuplicatedInternship() {
+    userDTO.setId(1);
+    contactDTO.setStudent(userDTO);
+    contactDTO.setSchoolYear("ee");
+    contactDTO.setState("pris");
+    internshipDTO.setContact(contactDTO);
+    Mockito.when(internshipDAOMock.getOneInternshipByIdUser(1)).thenReturn(internshipDTO);
+    assertThrows(DuplicateException.class, () -> internshipUCC.createInternship(internshipDTO, 1));
+  }
+
+  @Test
+  @DisplayName("Test create internship correctly")
+  public void testCreateInternshipCorrectly() {
+    userDTO.setId(1);
+    contactDTO.setStudent(userDTO);
+    contactDTO.setSchoolYear("ee");
+    contactDTO.setState("pris");
+    internshipDTO.setContact(contactDTO);
+    Mockito.when(internshipDAOMock.getOneInternshipByIdUser(1)).thenReturn(null);
+    Mockito.when(internshipDAOMock.createInternship(internshipDTO)).thenReturn(internshipDTO);
+    assertEquals(internshipDTO, internshipUCC.createInternship(internshipDTO, 1));
+  }
+
+  @Test
   @DisplayName("Test crash transaction")
   public void testCrashTransaction() {
     userDTO.setId(1);
@@ -186,6 +221,9 @@ public class InternshipUCCImplTest {
         }),
         () -> assertThrows(FatalException.class, () -> {
           internshipUCC.getInternshipCountByYear();
+        }),
+        () -> assertThrows(FatalException.class, () -> {
+          internshipUCC.getAllInternships();
         })
     );
   }
