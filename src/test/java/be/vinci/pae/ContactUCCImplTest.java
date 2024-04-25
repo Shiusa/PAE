@@ -14,6 +14,7 @@ import be.vinci.pae.domain.dto.ContactDTO;
 import be.vinci.pae.domain.dto.InternshipDTO;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.domain.ucc.ContactUCC;
+import be.vinci.pae.domain.ucc.InternshipUCC;
 import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.CompanyDAO;
 import be.vinci.pae.services.dao.ContactDAO;
@@ -45,6 +46,7 @@ public class ContactUCCImplTest {
   private static CompanyDAO companyDAOMock;
   private static InternshipDAO internshipDAOMock;
   private static DalServices dalServicesMock;
+  private static InternshipUCC internshipUCCMock;
   private ContactUCC contactUCC;
   private ContactDTO contactDTO;
   private UserDTO userDTO;
@@ -129,13 +131,6 @@ public class ContactUCCImplTest {
     Mockito.when(contactDAOMock.findContactByCompanyStudentSchoolYear(1, 1, "2023-2024"))
         .thenReturn(contactDTO);
     assertThrows(DuplicateException.class, () -> contactUCC.start(1, 1));
-  }
-
-  @Test
-  @DisplayName("Test start crash transaction")
-  public void testStartCrashTransaction() {
-    Mockito.doThrow(new FatalException(new RuntimeException()))
-        .when(dalServicesMock).startTransaction();
   }
 
   @Test
@@ -348,6 +343,19 @@ public class ContactUCCImplTest {
   }
 
   @Test
+  @DisplayName("Test admit contact is not started")
+  public void testAdmitContactNotStarted() {
+    userDTO.setId(1);
+    contactDTO.setStudent(userDTO);
+    contactDTO.setState("accepté");
+    contactDTO.setVersion(2);
+    Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
+    Mockito.when(contactDAOMock.admitContact(1, "Dans l entreprise", 1)).thenReturn(contactDTO);
+    assertThrows(InvalidRequestException.class,
+        () -> contactUCC.admit(1, "Dans l entreprise", 1, 1));
+  }
+
+  @Test
   @DisplayName("Test admit contact correctly started")
   public void testAdmitContactCorrectlyStarted() {
     userDTO.setId(1);
@@ -469,6 +477,42 @@ public class ContactUCCImplTest {
     Mockito.when(contactDAOMock.getAllContactsByStudent(1)).thenReturn(null);
     assertThrows(ResourceNotFoundException.class,
         () -> contactUCC.getAllContactsByStudent(1));
+  }
+
+  @Test
+  @DisplayName("Test accept contact null")
+  public void testAcceptContactNull() {
+    Mockito.when(contactDAOMock.findContactById(1)).thenReturn(null);
+    assertThrows(ResourceNotFoundException.class, () -> contactUCC.accept(1, 1, internshipDTO, 1));
+  }
+
+  @Test
+  @DisplayName("Test accept contact is not admitted")
+  public void testAcceptContactNotAdmitted() {
+    contactDTO.setState("refusé");
+    Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
+    assertThrows(NotAllowedException.class, () -> contactUCC.accept(1, 1, internshipDTO, 1));
+  }
+
+  @Test
+  @DisplayName("Test accept wrong student")
+  public void testAcceptWrongStudent() {
+    userDTO.setId(1);
+    contactDTO.setState("pris");
+    contactDTO.setStudent(userDTO);
+    Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
+    assertThrows(NotAllowedException.class, () -> contactUCC.accept(1, 2, internshipDTO, 1));
+  }
+
+  @Test
+  @DisplayName("Test accept wrong version")
+  public void testAcceptWrongVersion() {
+    userDTO.setId(1);
+    contactDTO.setState("pris");
+    contactDTO.setStudent(userDTO);
+    Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
+    Mockito.when(contactDAOMock.accept(1, 1)).thenReturn(contactDTO);
+    assertThrows(InvalidRequestException.class, () -> contactUCC.accept(1, 1, internshipDTO, 1));
   }
 
 }

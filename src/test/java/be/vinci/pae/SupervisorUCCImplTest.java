@@ -1,5 +1,7 @@
 package be.vinci.pae;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -8,7 +10,10 @@ import be.vinci.pae.domain.dto.SupervisorDTO;
 import be.vinci.pae.domain.ucc.SupervisorUCC;
 import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.SupervisorDAO;
+import be.vinci.pae.utils.exceptions.DuplicateException;
+import be.vinci.pae.utils.exceptions.FatalException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
+import java.util.List;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.junit.jupiter.api.AfterEach;
@@ -64,6 +69,42 @@ public class SupervisorUCCImplTest {
   public void testGetOneByIdCorrect() {
     Mockito.when(supervisorDAOMock.getOneById(1)).thenReturn(supervisorDTO);
     assertNotNull(supervisorUCC.getOneById(1));
+  }
+
+  @Test
+  @DisplayName("Test get all by company")
+  public void testGetAllByCompany() {
+    Mockito.when(supervisorDAOMock.getAllByCompany(1)).thenReturn(List.of(supervisorDTO));
+    assertEquals(List.of(supervisorDTO), supervisorUCC.getAllByCompany(1));
+  }
+
+  @Test
+  @DisplayName("Test add duplicated supervisor")
+  public void testAddDuplicatedSupervisor() {
+    supervisorDTO.setPhoneNumber("1");
+    Mockito.when(supervisorDAOMock.getOneByPhoneNumber("1")).thenReturn(supervisorDTO);
+    assertThrows(DuplicateException.class, () -> supervisorUCC.addSupervisor(supervisorDTO));
+  }
+
+  @Test
+  @DisplayName("Test add supervisor")
+  public void testAddSupervisor() {
+    supervisorDTO.setPhoneNumber("1");
+    Mockito.when(supervisorDAOMock.getOneByPhoneNumber("1")).thenReturn(null);
+    Mockito.when(supervisorDAOMock.addSupervisor(supervisorDTO)).thenReturn(supervisorDTO);
+    assertNotNull(supervisorUCC.addSupervisor(supervisorDTO));
+  }
+
+  @Test
+  @DisplayName("Test crash transaction")
+  public void testCrashTransaction() {
+    Mockito.doThrow(new FatalException(new RuntimeException()))
+        .when(dalServicesMock).startTransaction();
+    assertAll(
+        () -> assertThrows(FatalException.class, () -> {
+          supervisorUCC.addSupervisor(supervisorDTO);
+        })
+    );
   }
 
 }
