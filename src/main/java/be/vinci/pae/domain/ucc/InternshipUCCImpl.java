@@ -11,6 +11,7 @@ import be.vinci.pae.utils.exceptions.NotAllowedException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
 import be.vinci.pae.utils.exceptions.UnauthorizedAccessException;
 import jakarta.inject.Inject;
+import java.util.List;
 import java.util.Map;
 import org.apache.logging.log4j.Level;
 
@@ -59,6 +60,19 @@ public class InternshipUCCImpl implements InternshipUCC {
       }
       dalServices.commitTransaction();
       return internship;
+    } catch (Exception e) {
+      dalServices.rollbackTransaction();
+      throw e;
+    }
+  }
+
+  @Override
+  public List<InternshipDTO> getAllInternships() {
+    try {
+      dalServices.startTransaction();
+      List<InternshipDTO> internshipDTOList = internshipDAO.getAllInternships();
+      dalServices.commitTransaction();
+      return internshipDTOList;
     } catch (Exception e) {
       dalServices.rollbackTransaction();
       throw e;

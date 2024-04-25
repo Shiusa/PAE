@@ -7,6 +7,7 @@ import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.CompanyDAO;
 import be.vinci.pae.services.dao.ContactDAO;
+import be.vinci.pae.services.dao.InternshipDAO;
 import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.utils.Logs;
 import be.vinci.pae.utils.exceptions.DuplicateException;
@@ -30,6 +31,8 @@ public class ContactUCCImpl implements ContactUCC {
   private UserDAO userDAO;
   @Inject
   private CompanyDAO companyDAO;
+  @Inject
+  private InternshipDAO internshipDAO;
 
   @Override
   public ContactDTO start(int company, int studentId) {
@@ -51,6 +54,11 @@ public class ContactUCCImpl implements ContactUCC {
       } else if (!company2.studentCanContact()) {
         Logs.log(Level.ERROR,
             "ContactUCC (start) : company is blacklisted");
+        throw new InvalidRequestException();
+      }
+
+      if (internshipDAO.getOneInternshipByIdUser(studentId) != null) {
+        Logs.log(Level.INFO, "ContactUCC (start) : student already has an internship");
         throw new InvalidRequestException();
       }
 

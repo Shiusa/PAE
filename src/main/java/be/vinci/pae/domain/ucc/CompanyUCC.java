@@ -40,4 +40,13 @@ public interface CompanyUCC {
    */
   CompanyDTO registerCompany(CompanyDTO company);
 
+  /**
+   * To blacklist a company.
+   *
+   * @param companyId           the company id
+   * @param blacklistMotivation the motivation of the blacklist.
+   * @return a list containing all companies.
+   */
+  CompanyDTO blacklist(int companyId, String blacklistMotivation);
+
 }

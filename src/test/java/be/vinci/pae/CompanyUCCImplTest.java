@@ -88,12 +88,14 @@ public class CompanyUCCImplTest {
     dataMap.put("2023-2024", 2);
     Map<CompanyDTO, Map<String, Integer>> companyMap = new HashMap<>();
     companyMap.put(companyDTO, dataMap);
-    Map<Integer, Map<CompanyDTO, Map<String, Integer>>> companiesMap = new HashMap<>();
+    Map<Integer, Map<CompanyDTO, Map<String, Integer>>>
+        companiesMap = new HashMap<>();
     companiesMap.put(1, companyMap);
 
     Mockito.when(companyDAOMock.getAllCompanies()).thenReturn(companiesMap);
 
-    Map<Integer, Map<CompanyDTO, Map<String, Integer>>> companyDTOList = companyUCC.getAllCompanies();
+    Map<Integer, Map<CompanyDTO, Map<String, Integer>>>
+        companyDTOList = companyUCC.getAllCompanies();
     assertNotNull(companyDTOList);
   }
 
@@ -218,8 +220,31 @@ public class CompanyUCCImplTest {
     assertAll(
         () -> assertThrows(FatalException.class, () -> companyUCC.getAllCompanies()),
         () -> assertThrows(FatalException.class, () -> companyUCC.getAllCompaniesByUser(1)),
+        () -> assertThrows(FatalException.class, () ->
+            companyUCC.blacklist(1, "l'entreprise pratique la fraude")),
+        () -> assertThrows(FatalException.class, () -> companyUCC.getAllCompaniesByUser(1)),
         () -> assertThrows(FatalException.class, () -> companyUCC.registerCompany(companyDTO))
     );
   }
 
+  @Test
+  @DisplayName("Test blacklist if a company is already blacklisted")
+  public void testBlacklistCompanyAlreadyBlacklisted() {
+    companyDTO.setIsBlacklisted(true);
+    Mockito.when(companyDAOMock.getOneCompanyById(1)).thenReturn(companyDTO);
+    assertThrows(DuplicateException.class,
+        () -> companyUCC.blacklist(1, "l'entreprise pratique la fraude"));
+  }
+
+  @Test
+  @DisplayName("Test blacklist correctly")
+  public void testBlacklistCorrectly() {
+    companyDTO.setIsBlacklisted(false);
+    companyDTO.setId(1);
+    companyDTO.setVersion(1);
+    Mockito.when(companyDAOMock.getOneCompanyById(1)).thenReturn(companyDTO);
+    Mockito.when(companyDAOMock.blacklist(1, "l'entreprise pratique la fraude", 1))
+        .thenReturn(companyDTO);
+    assertNotNull(companyUCC.blacklist(1, "l'entreprise pratique la fraude"));
+  }
 }

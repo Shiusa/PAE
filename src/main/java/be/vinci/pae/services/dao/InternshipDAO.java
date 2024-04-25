@@ -1,6 +1,7 @@
 package be.vinci.pae.services.dao;
 
 import be.vinci.pae.domain.dto.InternshipDTO;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -25,6 +26,13 @@ public interface InternshipDAO {
    * @return internshipDTO with setter corresponding to the id, null otherwise.
    */
   InternshipDTO getOneInternshipById(int id);
+
+  /**
+   * Get all internships.
+   *
+   * @return all internships.
+   */
+  List<InternshipDTO> getAllInternships();
 
   /**
    * Get one internship by a contact id.

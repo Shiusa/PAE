@@ -111,7 +111,8 @@ public class CompanyDAOImpl implements CompanyDAO {
             internshipData.put(years, internshipCount);*/
             Map<CompanyDTO, Map<String, Integer>> companyValue = companiesMap.get(
                 companyDTO.getId());
-            for (Map.Entry<CompanyDTO, Map<String, Integer>> companyData : companyValue.entrySet()) {
+            for (Map.Entry<CompanyDTO, Map<String, Integer>>
+                companyData : companyValue.entrySet()) {
               CompanyDTO companyInValue = companyData.getKey();
               Map<String, Integer> internshipData = companyData.getValue();
               if (companyInValue.getId() == companyDTO.getId()) {
@@ -270,5 +271,35 @@ public class CompanyDAOImpl implements CompanyDAO {
       throw new FatalException(e);
     }
   }
+
+  @Override
+  public CompanyDTO blacklist(int companyId, String blackistMotivation, int version) {
+    Logs.log(Level.DEBUG, "CompanyDAO (blacklist) : entrance");
+
+    String requestSql = """
+        UPDATE prostage.companies
+        SET is_blacklisted = true, blacklist_motivation = ?, version = ?
+        WHERE company_id = ? AND version = ?
+        RETURNING company_id, name, designation, address,
+        phone_number AS cm_phone_number,
+        email AS cm_email, is_blacklisted, blacklist_motivation, version AS cm_version
+        """;
+    PreparedStatement ps = dalServices.getPreparedStatement(requestSql);
+    try {
+      ps.setString(1, blackistMotivation);
+      ps.setInt(2, version + 1);
+      ps.setInt(3, companyId);
+      ps.setInt(4, version);
+
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+
+    CompanyDTO companyDTOList = buildCompanyDTO(ps);
+
+    Logs.log(Level.DEBUG, "CompanyDAO (getAllCompaniesByUserId) : success!");
+    return companyDTOList;
+  }
+
 
 }

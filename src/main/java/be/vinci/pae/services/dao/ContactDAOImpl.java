@@ -45,7 +45,7 @@ public class ContactDAOImpl implements ContactDAO {
         cm.email AS cm_email, cm.is_blacklisted, cm.blacklist_motivation, cm.version AS cm_version,
         us.user_id, us.email AS us_email, us.lastname AS us_lastname, us.firstname AS us_firstname,
         us.phone_number AS us_phone_number, us.password, us.registration_date,
-        us.school_year AS us_school_year, us.role
+        us.school_year AS us_school_year, us.role, us.version AS us_version
         FROM prostage.contacts ct, prostage.companies cm, prostage.users us
         WHERE ct.company = ? AND ct.student = ? AND ct.school_year = ?
         AND ct.company = cm.company_id AND ct.student = us.user_id
@@ -106,7 +106,7 @@ public class ContactDAOImpl implements ContactDAO {
         cm.email AS cm_email, cm.is_blacklisted, cm.blacklist_motivation, cm.version AS cm_version,
         us.user_id, us.email AS us_email, us.lastname AS us_lastname, us.firstname AS us_firstname,
         us.phone_number AS us_phone_number, us.password, us.registration_date,
-        us.school_year AS us_school_year, us.role
+        us.school_year AS us_school_year, us.role, us.version AS us_version
         FROM prostage.contacts ct, prostage.companies cm, prostage.users us
         WHERE ct.contact_id = ? AND ct.company = cm.company_id AND ct.student = us.user_id
         """;
@@ -165,7 +165,7 @@ public class ContactDAOImpl implements ContactDAO {
         cm.email AS cm_email, cm.is_blacklisted, cm.blacklist_motivation, cm.version AS cm_version,
         us.user_id, us.email AS us_email, us.lastname AS us_lastname, us.firstname AS us_firstname,
         us.phone_number AS us_phone_number, us.password, us.registration_date,
-        us.school_year AS us_school_year, us.role
+        us.school_year AS us_school_year, us.role, us.version AS us_version
         FROM prostage.contacts ct, prostage.companies cm, prostage.users us
         WHERE ct.student = ? AND cm.company_id = ct.company AND ct.student = us.user_id
         """;
@@ -352,7 +352,7 @@ public class ContactDAOImpl implements ContactDAO {
         cm.email AS cm_email, cm.is_blacklisted, cm.blacklist_motivation, cm.version AS cm_version,
         us.user_id, us.email AS us_email, us.lastname AS us_lastname, us.firstname AS us_firstname,
         us.phone_number AS us_phone_number, us.password, us.registration_date,
-        us.school_year AS us_school_year, us.role
+        us.school_year AS us_school_year, us.role, us.version AS us_version
         FROM prostage.contacts ct, prostage.companies cm, prostage.users us
         WHERE ct.company = ? AND cm.company_id = ct.company AND ct.student = us.user_id
         """;

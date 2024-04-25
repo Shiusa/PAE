@@ -2,6 +2,7 @@ import {awaitFront, showNavStyle} from "../../utils/function";
 import {getToken} from "../../utils/session";
 // eslint-disable-next-line import/no-cycle
 import {Redirect} from "../Router/Router";
+import BlacklistPage from "./BlacklistPage";
 
 let dataCompany;
 
@@ -347,7 +348,7 @@ const renderContactBox = async (company, contactDataList) => {
     const blacklistBtn = document.querySelector('.blacklist-company-btn');
     blacklistBtn.addEventListener('click', async (e) => {
       e.preventDefault();
-      closeForm();
+      await BlacklistPage(company.id);
     })
   }
 }
