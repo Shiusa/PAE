@@ -47,9 +47,9 @@ const AcceptContact = async (contactData) => {
         `fetch error : ${response.status} : ${response.statusText}`);
   }
 
-  const userInfo = await response.json();
+  const contactInfo = await response.json();
   await Navbar();
-  CreateInternshipPage(contact);
+  CreateInternshipPage(contactInfo);
 }
 
 const DashboardPage = async () => {
@@ -304,7 +304,7 @@ const DashboardPage = async () => {
       info += `
                 <div class="table-line d-flex align-items-center mt-2 mb-2">
                     <div class="d-flex justify-content-center align-items-center position-relative" style="width: 60%;">
-                      <i class="line-info fa-solid fa-circle-info position-absolute" style="left: 0%;" id="${contactsTable[u].id}"></i>
+                      <i class="line-info fa-solid fa-circle-info position-absolute" style="left: 0;" id="${contactsTable[u].id}"></i>
                       <div class="line-col-1" >
                           <p class="mx-auto mt-3">${contactsTable[u].company.name}<br>${designation}</p>
                       </div>

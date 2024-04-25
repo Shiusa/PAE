@@ -3,7 +3,8 @@ import {getToken} from "../../utils/session";
 // eslint-disable-next-line import/no-cycle
 import {Redirect} from "../Router/Router";
 
-let dataCompany;
+let dataCompany = [];
+let filteredData = [];
 
 const fetchInternshipStat = async () => {
   try {
@@ -52,8 +53,9 @@ const fetchCompaniesData = async () => {
           `fetch error : ${response.status} : ${response.statusText}`
       );
     }
-
-    return response.json();
+    const companiesData = await response.json();
+    dataCompany = companiesData;
+    return companiesData;
   } catch (error) {
     if (error instanceof Error && error.message.startsWith(
         "fetch error : 403")) {
@@ -396,7 +398,32 @@ const renderCompanyList = (companyData) => {
   })
 }
 
-const renderYearOptions = (internshipStats) => {
+const addColumnHeaderListeners = () => {
+  const headers = document.querySelectorAll('[data-sort]');
+  headers.forEach(header => {
+    header.addEventListener('click', () => {
+      const paragraph = header.querySelector('p');
+      let sortingType;
+      switch (paragraph.textContent.trim()) {
+        case 'Nom':
+          sortingType = 'name';
+          break;
+        case 'Appellation':
+          sortingType = 'designation';
+          break;
+        case 'Numéro de téléphone':
+          sortingType = 'phoneNumber';
+          break;
+        default:
+          sortingType = 'name'; // Par défaut, tri par nom
+      }
+      const sortedData = sortData(filteredData, sortingType);
+      renderCompanyList(sortedData);
+    });
+  });
+}
+
+const renderYearOptions = (internshipStats, companiesData) => {
   const selectYear = document.querySelector('.year-list');
   const years = Object.keys(internshipStats);
 
@@ -419,41 +446,21 @@ const renderYearOptions = (internshipStats) => {
           }, {internshipCount: 0, totalStudents: 0});
       selectedStats = allYearsStats; */
       selectedStats = internshipStats[years[1]];
+      filteredData = dataCompany;
     } else {
       selectedStats = internshipStats[selectedYear];
+
+      filteredData = Object.values(companiesData).filter(
+          company => company.data[selectedYear] !== undefined)
     }
 
     renderChart(selectedStats);
     renderCaption(selectedStats);
     hideTooltip();
 
-    renderCompanyList(dataCompany);
+    renderCompanyList(filteredData);
+    addColumnHeaderListeners();
   })
-}
-
-const addColumnHeaderListeners = () => {
-  const headers = document.querySelectorAll('[data-sort]');
-  headers.forEach(header => {
-    header.addEventListener('click', () => {
-      const paragraph = header.querySelector('p');
-      let sortingType;
-      switch (paragraph.textContent.trim()) {
-        case 'Nom':
-          sortingType = 'name';
-          break;
-        case 'Appellation':
-          sortingType = 'designation';
-          break;
-        case 'Numéro de téléphone':
-          sortingType = 'phoneNumber';
-          break;
-        default:
-          sortingType = 'name'; // Par défaut, tri par nom
-      }
-      const sortedData = sortData(dataCompany, sortingType);
-      renderCompanyList(sortedData);
-    });
-  });
 }
 
 const AdminDashboardPage = async () => {
@@ -568,7 +575,7 @@ const AdminDashboardPage = async () => {
   tooltip.style.borderRadius = '5px';
   document.body.appendChild(tooltip);
 
-  renderYearOptions(internshipStats);
+  renderYearOptions(internshipStats, dataCompany);
   renderChart(internshipStats[Object.keys(internshipStats)[0]]);
   renderCaption(internshipStats[Object.keys(internshipStats)[0]]);
 
