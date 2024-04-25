@@ -312,8 +312,6 @@ public class UserUCCImplTest {
   @DisplayName("Edit user password should work")
   public void testEditPassword() {
 
-    User userMock = Mockito.mock(User.class);
-
     UserDTO currentUser = userFactory.getUserDTO();
     currentUser.setId(1);
     currentUser.setEmail(email);
@@ -326,10 +324,6 @@ public class UserUCCImplTest {
     currentUser.setPassword(hashPassword);
     currentUser.setVersion(1);
 
-    String oldPwd = "123";
-    String newPwd = "test";
-    String newPwdRepeat = "test";
-
     UserDTO updatedUserDTO = userFactory.getUserDTO();
     updatedUserDTO.setId(1);
     updatedUserDTO.setEmail(email);
@@ -339,13 +333,17 @@ public class UserUCCImplTest {
     updatedUserDTO.setRole(role);
     updatedUserDTO.setRegistrationDate(registrationDate);
     updatedUserDTO.setSchoolYear(schoolYear);
+    String newPwd = "test";
     updatedUserDTO.setPassword(newPwd);
     updatedUserDTO.setVersion(2);
 
+    User userMock = Mockito.mock(User.class);
     Mockito.doNothing().when(userMock).hashPassword();
     Mockito.when(userDAOMock.editOneUser(currentUser, 1))
         .thenReturn(updatedUserDTO);
 
+    String oldPwd = "123";
+    String newPwdRepeat = "test";
     UserDTO returnedUser = userUCC.editPassword(currentUser, oldPwd, newPwd, newPwdRepeat);
 
     assertNotNull(returnedUser);

@@ -88,7 +88,8 @@ public class CompanyUCCImplTest {
     dataMap.put("2023-2024", 2);
     Map<CompanyDTO, Map<String, Integer>> companyMap = new HashMap<>();
     companyMap.put(companyDTO, dataMap);
-    Map<Integer, Map<CompanyDTO, Map<String, Integer>>> companiesMap = new HashMap<>();
+    Map<Integer, Map<CompanyDTO, Map<String, Integer>>>
+        companiesMap = new HashMap<>();
     companiesMap.put(1, companyMap);
 
     Mockito.when(companyDAOMock.getAllCompanies()).thenReturn(companiesMap);
