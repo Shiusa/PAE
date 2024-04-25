@@ -64,8 +64,15 @@ const InfoPage = async () => {
         </div>
         <div class="input-group mb-3">
             <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-phone"></i></span>
-            <input type="text" class="form-control" id="input-phone" value="${userInfoID.phoneNumber}" placeholder="Téléphone" aria-label="Téléphone" aria-describedby="basic-addon1">
+            <input type="text" class="form-control" id="input-phone" value="${userInfoID.phoneNumber}" placeholder="Téléphone" aria-label="Téléphone" aria-describedby="basic-addon1"> 
+            <i class="fa-solid fa-pencil"></i>
         </div>
+       
+
+        <div id="labelInternshipProject">
+              <input type="text" class="newValueLabel textCSS">
+              <i class="submitProjectButton fa-solid fa-check"></i>
+            </div>
         <h2 id="good-message"></h2>
         <p class="btn btn-primary mt-1" id="btn-save-phone-number">Enregistrer les modifications</p>
         <p class="btn btn-outline-primary mt-2" id="btn-change-pwd">Modifier mon mot de passe</p>    
@@ -104,7 +111,7 @@ const InfoPage = async () => {
     const savedUserInfo = await response.json();
     if (savedUserInfo) {
       const error = document.querySelector("#good-message");
-      error.innerHTML = "Cela a fonctionné";
+      error.innerHTML = "Changement effectué.";
       error.style.display = "block";
     }
 
