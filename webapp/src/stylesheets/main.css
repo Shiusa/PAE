@@ -120,7 +120,7 @@ p {
   background: var(--ma-couleur-foncée);
   border: 2px solid var(--ma-couleur);
 }
-
+in
 .btn-outline-primary {
   border: 2px solid var(--ma-couleur);
   color: var(--ma-couleur);
@@ -1222,6 +1222,13 @@ input::placeholder {
   border-bottom-right-radius: 7px;
 }
 
+#good-message{
+  color: var(--ma-couleur);
+  font-size: 15px;
+  display: none;
+  text-align: center;
+}
+
 .box-chooseSupervisorMother {
   width: 50%;
   max-width: 650px;
@@ -1253,18 +1260,18 @@ input::placeholder {
 /* Create internship */
 
 .container-create {
-  
+
 
   .box-resp {
     width: 35%;
     max-width: 600px;
     background: var(--ma-couleur);
-    
+
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
     color: white;
     height: 550px;
-    
+
 
     .input-group {
       width: 80%;
@@ -1331,4 +1338,8 @@ input::placeholder {
       transform: scale(1.05);
     }
   }
+}
+#btn-change-pwd{
+  color: var(--ma-couleur);
+  border-color: var(--ma-couleur);
 }
