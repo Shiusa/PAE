@@ -292,6 +292,7 @@ const ContactPage = async () => {
       info += `</div>`;
       u += 1;
     }
+    info += `<h2 id="error-message"></h2>`
     companiesContainer.innerHTML = info;
   }
 
@@ -300,33 +301,45 @@ const ContactPage = async () => {
   if (companiesBtn) {
     companiesBtn.forEach(element => {
       element.addEventListener('click', async () => {
-        await createContact(element.id);
-        Redirect('/dashboard');
+        if (await createContact(element.id)) {
+          Redirect('/dashboard');
+        }
       });
     });
   }
 
   async function createContact(idCompany) {
-    const user = await getAuthenticatedUser();
-    const options = {
-      method: 'POST',
-      body: JSON.stringify({
-        company: idCompany,
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': user.token
+    try {
+      const user = await getAuthenticatedUser();
+      const options = {
+        method: 'POST',
+        body: JSON.stringify({
+          company: idCompany,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': user.token
+        }
       }
-    }
-    const response = await fetch('api/contacts/start', options);
+      const response = await fetch('api/contacts/start', options);
 
-    if (!response.ok) {
-      throw new Error(
-          `fetch error : ${response.status} : ${response.statusText}`);
-    }
+      if (!response.ok) {
+        throw new Error(
+            `fetch error : ${response.status} : ${response.statusText}`);
+      }
 
-    const companyInfo = await response.json();
-    return companyInfo;
+      const companyInfo = await response.json();
+      return companyInfo;
+    } catch (error) {
+      const errorMessage = document.getElementById("error-message");
+      errorMessage.style.display = "block";
+
+      if (error instanceof Error && error.message.startsWith(
+          "fetch error : 400")) {
+        errorMessage.innerText = "Vous avez déjà un contact accepté.";
+      }
+      return undefined;
+    }
   }
 
 };
