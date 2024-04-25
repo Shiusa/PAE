@@ -260,17 +260,7 @@ const InternshipPage = async () => {
   }
 }
 
-const CreateInternshipPage = async () => {
-  const contact = {
-    id: 8,
-    company: {id: 3, name: 'Niboo', designation: null, address: 'Boulevard du Souverain, 24 1170 Watermael-Boisfort', phoneNumber: '0487 02 79 13', email: null, isBlacklisted: false, blacklistMotivation: null, version: 1},
-    student: {id: 5, email: 'Caroline.line@student.vinci.be', lastname: 'Line', firstname: 'Caroline', phoneNumber: '0486 00 00 01', registrationDate: '2023-09-18', schoolYear: '2023-2024', role: 'Etudiant', version: 1},
-    meeting: 'A distance',
-    state: 'accepté',
-    reasonRefusal: null,
-    schoolYear: '2023-2024',
-    version: 1
-  };
+const CreateInternshipPage = async (contact) => {
 
   const main = document.querySelector('main');
   awaitFront();
@@ -493,8 +483,7 @@ const CreateInternshipPage = async () => {
     const supervisorId = document.getElementById('input-supervisor').value;
     let supervisor;
     for(let i = 0 ; i < allSupervisors.length ; i+=1) {
-      // eslint-disable-next-line
-      if(allSupervisors[i].id === parseInt(supervisorId)) {
+      if(allSupervisors[i].id === parseInt(supervisorId, 10)) {
         supervisor = allSupervisors[i];
         break;
       }

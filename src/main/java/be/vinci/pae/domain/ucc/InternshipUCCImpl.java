@@ -24,8 +24,6 @@ public class InternshipUCCImpl implements InternshipUCC {
   private InternshipDAO internshipDAO;
   @Inject
   private DalServices dalServices;
-  @Inject
-  private ContactUCC contactUCC;
 
 
   @Override
@@ -87,29 +85,20 @@ public class InternshipUCCImpl implements InternshipUCC {
       throw new UnauthorizedAccessException("This user can't create this internship");
     }
     internshipDTO.setSchoolYear(internshipDTO.getContact().getSchoolYear());
-    try {
-      if (!((Contact) internshipDTO.getContact()).isAccepted()) {
-        Logs.log(Level.ERROR, "InternshipUCC (createInternship) : contact is not accepted");
-        throw new InvalidRequestException("Contact is not accepted");
-      }
-
-      dalServices.startTransaction();
-      InternshipDTO existingInternship = internshipDAO.getOneInternshipByIdUser(
-          internshipDTO.getContact().getStudent().getId());
-      if (existingInternship != null) {
-        Logs.log(Level.ERROR, "InternshipUCC (createInternship) : internship already created");
-        throw new DuplicateException("Cannot add existing internship");
-      }
-
-      InternshipDTO internship = internshipDAO.createInternship(internshipDTO);
-      dalServices.commitTransaction();
-      contactUCC.putStudentContactsOnHold(internshipDTO.getContact().getStudent().getId());
-      return internship;
-    } catch (Exception e) {
-      Logs.log(Level.ERROR, "InternshipUCC (createInternship) : creation failed " + e);
-      dalServices.rollbackTransaction();
-      throw e;
+    if (!((Contact) internshipDTO.getContact()).isAdmitted()) {
+      Logs.log(Level.ERROR, "InternshipUCC (createInternship) : contact is not admitted");
+      throw new InvalidRequestException("Contact is not admitted");
     }
+
+    dalServices.startTransaction();
+    InternshipDTO existingInternship = internshipDAO.getOneInternshipByIdUser(
+        internshipDTO.getContact().getStudent().getId());
+    if (existingInternship != null) {
+      Logs.log(Level.ERROR, "InternshipUCC (createInternship) : internship already created");
+      throw new DuplicateException("Cannot add existing internship");
+    }
+
+    return internshipDAO.createInternship(internshipDTO);
   }
 
   @Override

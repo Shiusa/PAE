@@ -10,47 +10,7 @@ import {
   setAuthenticatedUser,
 } from "../../utils/session";
 import Navbar from "../Navbar/Navbar";
-
-const AcceptContact = async (contactData) => {
-  /* body: JSON.stringify({
-    "id": contactData.id,
-    "company": contactData.company,
-    "student": contactData.student,
-    "meeting": contactData.meeting,
-    "state": contactData.state,
-    "reasonRefusal": contactData.reasonRefusal,
-    "schoolYear": contactData.schoolYear,
-    "version": contactData.version
-  }) */
-  const user = await getAuthenticatedUser();
-  const options = {
-    method: 'POST',
-    body: JSON.stringify({
-      "id": contactData.id,
-      "company": contactData.company,
-      "student": contactData.student,
-      "meeting": contactData.meeting,
-      "state": contactData.state,
-      "reasonRefusal": contactData.reasonRefusal,
-      "schoolYear": contactData.schoolYear,
-      "version": contactData.version
-    }),
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': user.token
-    }
-  }
-  const response = await fetch('api/contacts/accept', options);
-
-  if (!response.ok) {
-    throw new Error(
-        `fetch error : ${response.status} : ${response.statusText}`);
-  }
-
-  const contactInfo = await response.json();
-  await Navbar();
-  CreateInternshipPage(contactInfo);
-}
+import {CreateInternshipPage} from "./InternshipPage";
 
 const DashboardPage = async () => {
 
@@ -329,7 +289,7 @@ const DashboardPage = async () => {
         const contactId = e.currentTarget.getAttribute('data-id');
         const contactInfo = contacts.find(
             contact => contact.id === parseInt(contactId, 10));
-        AcceptContact(contactInfo)
+        CreateInternshipPage(contactInfo)
       });
     })
     clickContactInfo();

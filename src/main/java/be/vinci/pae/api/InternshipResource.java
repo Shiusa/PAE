@@ -4,6 +4,7 @@ import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.api.filters.TeacherAndAdministrative;
 import be.vinci.pae.domain.dto.InternshipDTO;
 import be.vinci.pae.domain.dto.UserDTO;
+import be.vinci.pae.domain.ucc.ContactUCC;
 import be.vinci.pae.domain.ucc.InternshipUCC;
 import be.vinci.pae.utils.Logs;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -37,6 +38,8 @@ public class InternshipResource {
   private final ObjectMapper jsonMapper = new ObjectMapper();
   @Inject
   private InternshipUCC internshipUCC;
+  @Inject
+  private ContactUCC contactUCC;
 
   /**
    * returns all the internships.
@@ -113,8 +116,8 @@ public class InternshipResource {
       throw new WebApplicationException("Inputs cannot be blank", Response.Status.BAD_REQUEST);
     }
 
-    InternshipDTO internshipDTO = internshipUCC.createInternship(internship,
-        ((UserDTO) request.getProperty("user")).getId());
+    InternshipDTO internshipDTO = contactUCC.accept(internship.getContact().getId(),
+        ((UserDTO) request.getProperty("user")).getId(), internship);
     Logs.log(Level.DEBUG, "InternshipResource (create) : success!");
     return internshipDTO;
   }
