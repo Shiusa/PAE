@@ -124,8 +124,8 @@ public class UserDAOImpl implements UserDAO {
     String requestSql = """
         UPDATE prostage.users
         SET email = ?, lastname = ?, firstname = ?,
-            phone_number = ?, registration_date = ?, school_year = ?, role = ?,
-            version = ?
+            phone_number = ?, password = ?, registration_date = ?,
+            school_year = ?, role = ?, version = ?
         WHERE user_id = ? AND version = ?
         RETURNING *
         """;
@@ -135,12 +135,13 @@ public class UserDAOImpl implements UserDAO {
       ps.setString(2, user.getLastname());
       ps.setString(3, user.getFirstname());
       ps.setString(4, user.getPhoneNumber());
-      ps.setDate(5, user.getRegistrationDate());
-      ps.setString(6, user.getSchoolYear());
-      ps.setString(7, user.getRole());
-      ps.setInt(8, user.getVersion());
-      ps.setInt(9, user.getId());
-      ps.setInt(10, version);
+      ps.setString(5, user.getPassword());
+      ps.setDate(6, user.getRegistrationDate());
+      ps.setString(7, user.getSchoolYear());
+      ps.setString(8, user.getRole());
+      ps.setInt(9, user.getVersion());
+      ps.setInt(10, user.getId());
+      ps.setInt(11, version);
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
           return getOneUserById(user.getId());
@@ -149,28 +150,6 @@ public class UserDAOImpl implements UserDAO {
       return null;
     } catch (SQLException e) {
       Logs.log(Level.FATAL, "UserDAO (editOneUser) : internal error!");
-      throw new FatalException(e);
-    }
-  }
-
-  @Override
-  public UserDTO editPassword(UserDTO user, int version) {
-    Logs.log(Level.DEBUG, "UserDAO (changePassword) : entrance");
-    String requestSql = """
-        UPDATE prostage.users SET password = ?, version = ? WHERE user_id = ?
-        RETURNING *""";
-    try (PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql)) {
-      ps.setString(1, user.getPassword());
-      ps.setInt(2, version + 1);
-      ps.setInt(3, user.getId());
-      try (ResultSet rs = ps.executeQuery()) {
-        if (rs.next()) {
-          return getOneUserById(user.getId());
-        }
-      }
-      return null;
-    } catch (SQLException e) {
-      Logs.log(Level.FATAL, "UserDAO (changePassword) : internal error!");
       throw new FatalException(e);
     }
   }
