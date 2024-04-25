@@ -86,7 +86,7 @@ const submitRegistration = async (e) => {
     return;
   }
   closeForm();
-  Redirect('/contact')
+  Redirect('/contact');
 }
 
 const renderRegisterCompanyForm = async () => {
@@ -301,7 +301,7 @@ const ContactPage = async () => {
     companiesBtn.forEach(element => {
       element.addEventListener('click', async () => {
         await createContact(element.id);
-        await ContactPage();
+        Redirect('/dashboard');
       });
     });
   }
