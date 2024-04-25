@@ -200,7 +200,7 @@ public class UserResource {
       throw new WebApplicationException("you can't see this user", Response.Status.UNAUTHORIZED);
     }
     UserDTO editedUser;
-    editedUser = userUCC.editOneUser(userDTOEdit);
+    editedUser = userUCC.editOneUser(userDTO, userDTOEdit);
     Logs.log(Level.INFO, "UserResource (editUser) : success!");
     return editedUser;
   }

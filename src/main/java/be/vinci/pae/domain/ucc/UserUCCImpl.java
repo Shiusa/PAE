@@ -145,6 +145,7 @@ public class UserUCCImpl implements UserUCC {
 
       User userHashPwd = (User) user;
       userHashPwd.hashPassword();
+      userHashPwd.setVersion(1);
 
       registeredUser = userDAO.addOneUser(userHashPwd);
 
@@ -160,17 +161,24 @@ public class UserUCCImpl implements UserUCC {
   }
 
   @Override
-  public UserDTO editOneUser(UserDTO user) {
+  public UserDTO editOneUser(UserDTO currentUser, UserDTO newUser) {
     UserDTO editedUser;
     try {
       dalServices.startTransaction();
-      UserDTO userDTOFound = userDAO.getOneUserById(user.getId());
-      if (userDTOFound == null) {
-        Logs.log(Level.ERROR, "UserUCC (editOneUser) : user not found");
-        throw new ResourceNotFoundException("User not found.");
+      if (currentUser.getVersion() != newUser.getVersion()) {
+        Logs.log(Level.ERROR, "UserResource (editUser) : conflict version");
+        throw new DuplicateException("Different version from front and back");
       }
-      int version = user.getVersion();
-      editedUser = userDAO.editOneUser(user,version);
+
+      int currentVersion = currentUser.getVersion();
+      newUser.setPassword(currentUser.getPassword());
+      newUser.setVersion(currentVersion + 1);
+
+      editedUser = userDAO.editOneUser(newUser, currentVersion);
+      if (editedUser == null) {
+        throw new DuplicateException("Someone updated before us");
+      }
+
       dalServices.commitTransaction();
       Logs.log(Level.DEBUG, "UserUCC (editOneUser) : success!");
       return editedUser;
@@ -181,15 +189,17 @@ public class UserUCCImpl implements UserUCC {
   }
 
   @Override
-  public UserDTO editPassword(UserDTO userDTO,String oldPassword, String newPassword, String repeatedPassword) {
+  public UserDTO editPassword(UserDTO userDTO, String oldPassword, String newPassword,
+      String repeatedPassword) {
     UserDTO newPasswordDTO;
 
     User user = (User) userDTO;
     if (!user.checkPassword(oldPassword)) {
       throw new UnauthorizedAccessException("The password is incorrect");
     }
-    if(!newPassword.equals(repeatedPassword)) {
-      throw new UnauthorizedAccessException("The repeated password does not match with the new password.");
+    if (!newPassword.equals(repeatedPassword)) {
+      throw new UnauthorizedAccessException(
+          "The repeated password does not match with the new password.");
     }
     user.setPassword(newPassword);
     user.hashPassword();

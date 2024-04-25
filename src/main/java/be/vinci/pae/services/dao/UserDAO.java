@@ -41,15 +41,17 @@ public interface UserDAO {
 
   /**
    * Edit one user.
-   * @param user the user to edit.
-   * @param version the version of the user.
+   *
+   * @param user    the user to edit.
+   * @param version the current version of the user.
    * @return a UserDTO of the edited user.
    */
   UserDTO editOneUser(UserDTO user, int version);
 
   /**
    * Edit a password.
-   * @param user the user to edit.
+   *
+   * @param user    the user to edit.
    * @param version the version of the user.
    * @return a UserDTO of an edited password.
    */

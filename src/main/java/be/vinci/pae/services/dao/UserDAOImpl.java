@@ -122,12 +122,13 @@ public class UserDAOImpl implements UserDAO {
   public UserDTO editOneUser(UserDTO user, int version) {
     Logs.log(Level.DEBUG, "UserDAO (editOneUser) : entrance");
     String requestSql = """
-        UPDATE prostage.users 
-        SET email = ?, lastname = ?, firstname = ?, 
-            phone_number = ?, registration_date = ?, school_year = ?, role = ?, 
+        UPDATE prostage.users
+        SET email = ?, lastname = ?, firstname = ?,
+            phone_number = ?, registration_date = ?, school_year = ?, role = ?,
             version = ?
-        WHERE user_id = ?
-        RETURNING *""";
+        WHERE user_id = ? AND version = ?
+        RETURNING *
+        """;
 
     try (PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql)) {
       ps.setString(1, user.getEmail());
@@ -137,8 +138,9 @@ public class UserDAOImpl implements UserDAO {
       ps.setDate(5, user.getRegistrationDate());
       ps.setString(6, user.getSchoolYear());
       ps.setString(7, user.getRole());
-      ps.setInt(8, user.getId());
-      ps.setInt(9, version + 1);
+      ps.setInt(8, user.getVersion());
+      ps.setInt(9, user.getId());
+      ps.setInt(10, version);
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
           return getOneUserById(user.getId());
@@ -161,13 +163,13 @@ public class UserDAOImpl implements UserDAO {
       ps.setString(1, user.getPassword());
       ps.setInt(2, version + 1);
       ps.setInt(3, user.getId());
-      try(ResultSet rs = ps.executeQuery()){
-        if(rs.next()){
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
           return getOneUserById(user.getId());
         }
       }
       return null;
-    }catch (SQLException e) {
+    } catch (SQLException e) {
       Logs.log(Level.FATAL, "UserDAO (changePassword) : internal error!");
       throw new FatalException(e);
     }
@@ -185,7 +187,7 @@ public class UserDAOImpl implements UserDAO {
     Logs.log(Level.DEBUG, "UserDAO (addOneUser) : entrance");
     String requestSql = """
         INSERT INTO prostage.users(email, lastname, firstname, phone_number,
-        password, registration_date, school_year, role) VALUES (?,?,?,?,?,?,?,?)
+        password, registration_date, school_year, role, version) VALUES (?,?,?,?,?,?,?,?,?)
         RETURNING email AS inserted_email
         """;
 
@@ -198,6 +200,7 @@ public class UserDAOImpl implements UserDAO {
       ps.setDate(6, user.getRegistrationDate());
       ps.setString(7, user.getSchoolYear());
       ps.setString(8, user.getRole());
+      ps.setInt(9, user.getVersion());
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
           Logs.log(Level.DEBUG, "UserDAO (addOneUser) : success!");

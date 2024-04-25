@@ -44,18 +44,21 @@ public interface UserUCC {
   /**
    * Edit one user.
    *
-   * @param user the user to edit.
+   * @param currentUser user containing current info.
+   * @param newUser     user containing new info.
    * @return a UserDTO of the edited user.
    */
-  UserDTO editOneUser(UserDTO user);
+  UserDTO editOneUser(UserDTO currentUser, UserDTO newUser);
 
   /**
    * Edit a password.
-   * @param id the id of the user.
-   * @param oldPassword the old password of the user
-   * @param newPassword a new password of the user.
+   *
+   * @param userDTO          the user to edit.
+   * @param oldPassword      the old password of the user
+   * @param newPassword      a new password of the user.
    * @param repeatedPassword a repeated password of the user.
    * @return a UserDTO of an edited password.
    */
-  UserDTO editPassword(UserDTO userDTO, String oldPassword, String newPassword, String repeatedPassword);
+  UserDTO editPassword(UserDTO userDTO, String oldPassword, String newPassword,
+      String repeatedPassword);
 }
