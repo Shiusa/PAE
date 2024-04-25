@@ -10,11 +10,12 @@ CREATE TABLE proStage.users (
                                 password TEXT NOT NULL,
                                 registration_date DATE NOT NULL,
                                 school_year TEXT NOT NULL,
-                                role TEXT NOT NULL
+                                role TEXT NOT NULL,
+                                version INTEGER NOT NULL
 );
 
 CREATE TABLE proStage.companies (
-    company_id SERIAL PRIMARY KEY,
+                                    company_id SERIAL PRIMARY KEY,
                                     name TEXT NOT NULL,
                                     designation TEXT,
                                     address TEXT NOT NULL,
@@ -52,7 +53,7 @@ CREATE TABLE proStage.internships (
                                       signature_date DATE NOT NULL,
                                       project TEXT,
                                       school_year TEXT NOT NULL,
-    version INTEGER NOT NULL
+                                      version INTEGER NOT NULL
 );
 
 --companies
@@ -66,15 +67,15 @@ INSERT INTO prostage.companies VALUES (DEFAULT, 'Sopra Steria', NULL, 'Avenue Ar
 -- PROFESSEUR : Prof24,z
 -- ADMIN : Admin;10.
 -- ETUDIANT : mdpuser.1
-INSERT INTO prostage.users VALUES (DEFAULT, 'raphael.baroni@vinci.be', 'Baroni', 'Raphaël', '0481 01 01 01', '$2a$10$C6Wcdn4Vvpd1GyZE/bUrM.GNegKhb1srvXW6AD8ekak3IjkRnQqv2', '2020-09-21', '2020-2021', 'Professeur');
-INSERT INTO prostage.users VALUES (DEFAULT, 'brigitte.lehmann@vinci.be', 'Lehmann', 'Brigitte', '0482 02 02 02', '$2a$10$C6Wcdn4Vvpd1GyZE/bUrM.GNegKhb1srvXW6AD8ekak3IjkRnQqv2', '2020-09-21', '2020-2021', 'Professeur');
-INSERT INTO prostage.users VALUES (DEFAULT, 'laurent.leleux@vinci.be', 'Leleux', 'Laurent', '0483 03 03 03', '$2a$10$C6Wcdn4Vvpd1GyZE/bUrM.GNegKhb1srvXW6AD8ekak3IjkRnQqv2', '2020-09-21', '2020-2021', 'Professeur');
-INSERT INTO prostage.users VALUES (DEFAULT, 'annouck.lancaster@vinci.be', 'Lancaster', 'Annouck', '0484 04 04 04', '$2a$10$NlBpR4SXcDm60PMehDcTlO5RuZrjc1CV5RspIRMa8B9z4wv3n/SBW', '2020-09-21', '2020-2021', 'Administratif');
-INSERT INTO prostage.users VALUES (DEFAULT, 'Caroline.line@student.vinci.be', 'Line', 'Caroline', '0486 00 00 01', '$2a$10$NNrcZjmFqEaiigCLgQ9HRuUACG8ePBrKrJko0bVdAcTcIi/SFcGdS', '2023-09-18', '2023-2024', 'Etudiant');
-INSERT INTO prostage.users VALUES (DEFAULT, 'Ach.ile@student.vinci.be', 'Ile', 'Achille', '0487 00 00 01', '$2a$10$NNrcZjmFqEaiigCLgQ9HRuUACG8ePBrKrJko0bVdAcTcIi/SFcGdS', '2023-09-18', '2023-2024', 'Etudiant');
-INSERT INTO prostage.users VALUES (DEFAULT, 'Basile.Ile@student.vinci.be', 'Ile', 'Basile', '0488 00 00 01', '$2a$10$NNrcZjmFqEaiigCLgQ9HRuUACG8ePBrKrJko0bVdAcTcIi/SFcGdS', '2023-09-18', '2023-2024', 'Etudiant');
-INSERT INTO prostage.users VALUES (DEFAULT, 'Achille.skile@student.vinci.be', 'skile', 'Achille', '0490 00 00 01', '$2a$10$NNrcZjmFqEaiigCLgQ9HRuUACG8ePBrKrJko0bVdAcTcIi/SFcGdS', '2023-09-18', '2023-2024', 'Etudiant');
-INSERT INTO prostage.users VALUES (DEFAULT, 'Carole.skile@student.vinci.be', 'skile', 'Carole', '0489 00 00 01', '$2a$10$NNrcZjmFqEaiigCLgQ9HRuUACG8ePBrKrJko0bVdAcTcIi/SFcGdS', '2023-09-18', '2023-2024', 'Etudiant');
+INSERT INTO prostage.users VALUES (DEFAULT, 'raphael.baroni@vinci.be', 'Baroni', 'Raphaël', '0481 01 01 01', '$2a$10$C6Wcdn4Vvpd1GyZE/bUrM.GNegKhb1srvXW6AD8ekak3IjkRnQqv2', '2020-09-21', '2020-2021', 'Professeur',1);
+INSERT INTO prostage.users VALUES (DEFAULT, 'brigitte.lehmann@vinci.be', 'Lehmann', 'Brigitte', '0482 02 02 02', '$2a$10$C6Wcdn4Vvpd1GyZE/bUrM.GNegKhb1srvXW6AD8ekak3IjkRnQqv2', '2020-09-21', '2020-2021', 'Professeur',1);
+INSERT INTO prostage.users VALUES (DEFAULT, 'laurent.leleux@vinci.be', 'Leleux', 'Laurent', '0483 03 03 03', '$2a$10$C6Wcdn4Vvpd1GyZE/bUrM.GNegKhb1srvXW6AD8ekak3IjkRnQqv2', '2020-09-21', '2020-2021', 'Professeur',1);
+INSERT INTO prostage.users VALUES (DEFAULT, 'annouck.lancaster@vinci.be', 'Lancaster', 'Annouck', '0484 04 04 04', '$2a$10$NlBpR4SXcDm60PMehDcTlO5RuZrjc1CV5RspIRMa8B9z4wv3n/SBW', '2020-09-21', '2020-2021', 'Administratif',1);
+INSERT INTO prostage.users VALUES (DEFAULT, 'Caroline.line@student.vinci.be', 'Line', 'Caroline', '0486 00 00 01', '$2a$10$NNrcZjmFqEaiigCLgQ9HRuUACG8ePBrKrJko0bVdAcTcIi/SFcGdS', '2023-09-18', '2023-2024', 'Etudiant',1);
+INSERT INTO prostage.users VALUES (DEFAULT, 'Ach.ile@student.vinci.be', 'Ile', 'Achille', '0487 00 00 01', '$2a$10$NNrcZjmFqEaiigCLgQ9HRuUACG8ePBrKrJko0bVdAcTcIi/SFcGdS', '2023-09-18', '2023-2024', 'Etudiant',1);
+INSERT INTO prostage.users VALUES (DEFAULT, 'Basile.Ile@student.vinci.be', 'Ile', 'Basile', '0488 00 00 01', '$2a$10$NNrcZjmFqEaiigCLgQ9HRuUACG8ePBrKrJko0bVdAcTcIi/SFcGdS', '2023-09-18', '2023-2024', 'Etudiant',1);
+INSERT INTO prostage.users VALUES (DEFAULT, 'Achille.skile@student.vinci.be', 'skile', 'Achille', '0490 00 00 01', '$2a$10$NNrcZjmFqEaiigCLgQ9HRuUACG8ePBrKrJko0bVdAcTcIi/SFcGdS', '2023-09-18', '2023-2024', 'Etudiant',1);
+INSERT INTO prostage.users VALUES (DEFAULT, 'Carole.skile@student.vinci.be', 'skile', 'Carole', '0489 00 00 01', '$2a$10$NNrcZjmFqEaiigCLgQ9HRuUACG8ePBrKrJko0bVdAcTcIi/SFcGdS', '2023-09-18', '2023-2024', 'Etudiant',1);
 
 --supervisors
 INSERT INTO proStage.supervisors VALUES (DEFAULT,2,'Dossche','Stéphanie','014.54.67.54','stephanie.dossche@letsbuild.com');
