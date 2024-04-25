@@ -93,5 +93,6 @@ Authorization: {{leleuxToken}}
 
 {
   "company":1,
-  "blacklistMotivation":"l'entreprise pratique la fraude"
+  "blacklistMotivation":"l'entreprise pratique la fraude",
+  "version": 1
 }
