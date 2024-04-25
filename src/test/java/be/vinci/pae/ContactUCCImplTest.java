@@ -67,14 +67,19 @@ public class ContactUCCImplTest {
   @BeforeEach
   void setup() {
     contactUCC = serviceLocator.getService(ContactUCC.class);
+
     ContactFactory contactFactory = serviceLocator.getService(ContactFactory.class);
-    UserFactory userFactory = serviceLocator.getService(UserFactory.class);
-    CompanyFactory companyFactory = serviceLocator.getService(CompanyFactory.class);
-    InternshipFactory internshipFactory = serviceLocator.getService(InternshipFactory.class);
     contactDTO = contactFactory.getContactDTO();
+
+    UserFactory userFactory = serviceLocator.getService(UserFactory.class);
     userDTO = userFactory.getUserDTO();
+
+    CompanyFactory companyFactory = serviceLocator.getService(CompanyFactory.class);
     companyDTO = companyFactory.getCompanyDTO();
+
+    InternshipFactory internshipFactory = serviceLocator.getService(InternshipFactory.class);
     internshipDTO = internshipFactory.getInternshipDTO();
+
     Mockito.doNothing().when(dalServicesMock).startTransaction();
     Mockito.doNothing().when(dalServicesMock).commitTransaction();
     Mockito.doNothing().when(dalServicesMock).rollbackTransaction();
@@ -210,7 +215,8 @@ public class ContactUCCImplTest {
   }
 
   @Test
-  @DisplayName("Test start, unsupervise, admit, turn down, getOneById, getAllContactsByStudent, getAllContactsByCompany contact crash transaction")
+  @DisplayName("Test start, unsupervise, admit, turn down, getOneById, getAllContactsByStudent,"
+      + " getAllContactsByCompany contact crash transaction")
   public void testCrashTransaction() {
     Mockito.doThrow(new FatalException(new RuntimeException()))
         .when(dalServicesMock).startTransaction();

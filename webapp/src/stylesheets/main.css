@@ -1248,6 +1248,13 @@ h2 {
   border-bottom-right-radius: 7px;
 }
 
+#good-message{
+  color: var(--ma-couleur);
+  font-size: 15px;
+  display: none;
+  text-align: center;
+}
+
 .box-chooseSupervisorMother {
   width: 50%;
   max-width: 650px;
@@ -1360,4 +1367,8 @@ input {
 }
 
 }
+}
+#btn-change-pwd{
+  color: var(--ma-couleur);
+  border-color: var(--ma-couleur);
 }

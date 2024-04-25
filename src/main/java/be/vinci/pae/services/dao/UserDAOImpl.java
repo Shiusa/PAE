@@ -127,7 +127,7 @@ public class UserDAOImpl implements UserDAO {
         SET email = ?, lastname = ?, firstname = ?,
             phone_number = ?, password = ?, registration_date = ?,
             school_year = ?, role = ?, version = ?
-        WHERE user_id = ? AND version = ?
+        WHERE user_id = ? AND version = ? RETURNING *;
         """;
 
     try (PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql)) {
