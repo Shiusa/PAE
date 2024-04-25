@@ -20,6 +20,7 @@ public class UserImpl implements User {
   private Date registrationDate;
   private String schoolYear;
   private String role;
+  private int version;
 
   @Override
   public int getId() {
@@ -111,6 +112,16 @@ public class UserImpl implements User {
   }
 
   @Override
+  public int getVersion() {
+    return version;
+  }
+
+  @Override
+  public void setVersion(int version) {
+    this.version = version;
+  }
+
+  @Override
   public boolean checkPassword(String password) {
     return BCrypt.checkpw(password, this.password);
   }
@@ -120,4 +131,8 @@ public class UserImpl implements User {
     this.password = BCrypt.hashpw(this.password, BCrypt.gensalt());
   }
 
+  @Override
+  public boolean isTeacher() {
+    return this.role.equals("Professeur");
+  }
 }

@@ -174,6 +174,13 @@ public class InternshipUCCImplTest {
   }
 
   @Test
+  @DisplayName("Test editProject correctly")
+  public void testEditProjectCorrectly() {
+    Mockito.when(internshipDAOMock.editProject("test", 1, 1)).thenReturn(internshipDTO);
+    assertNotNull(internshipUCC.editProject("test", 1, 1));
+  }
+
+  @Test
   @DisplayName("Test crash transaction")
   public void testCrashTransaction() {
     userDTO.setId(1);
@@ -188,6 +195,9 @@ public class InternshipUCCImplTest {
         }),
         () -> assertThrows(FatalException.class, () -> {
           internshipUCC.getOneById(1, 1);
+        }),
+        () -> assertThrows(FatalException.class, () -> {
+          internshipUCC.editProject("test", 1, 1);
         }),
         () -> assertThrows(FatalException.class, () -> {
           internshipUCC.createInternship(internshipDTO, 1);

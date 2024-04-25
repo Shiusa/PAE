@@ -11,6 +11,7 @@ import be.vinci.pae.utils.exceptions.NotAllowedException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
 import be.vinci.pae.utils.exceptions.UnauthorizedAccessException;
 import jakarta.inject.Inject;
+import java.util.List;
 import java.util.Map;
 import org.apache.logging.log4j.Level;
 
@@ -66,6 +67,19 @@ public class InternshipUCCImpl implements InternshipUCC {
   }
 
   @Override
+  public List<InternshipDTO> getAllInternships() {
+    try {
+      dalServices.startTransaction();
+      List<InternshipDTO> internshipDTOList = internshipDAO.getAllInternships();
+      dalServices.commitTransaction();
+      return internshipDTOList;
+    } catch (Exception e) {
+      dalServices.rollbackTransaction();
+      throw e;
+    }
+  }
+
+  @Override
   public InternshipDTO createInternship(InternshipDTO internshipDTO, int studentId) {
     Logs.log(Level.INFO, "InternshipUCC (createInternship) : entrance");
     if (studentId != internshipDTO.getContact().getStudent().getId()) {
@@ -111,4 +125,17 @@ public class InternshipUCCImpl implements InternshipUCC {
     }
   }
 
+  @Override
+  public InternshipDTO editProject(String project, int version, int internshipId) {
+    InternshipDTO internship;
+    try {
+      dalServices.startTransaction();
+      internship = internshipDAO.editProject(project, version, internshipId);
+      dalServices.commitTransaction();
+      return internship;
+    } catch (Exception e) {
+      dalServices.rollbackTransaction();
+      throw e;
+    }
+  }
 }

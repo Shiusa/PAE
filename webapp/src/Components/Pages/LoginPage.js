@@ -7,10 +7,8 @@ import Navbar from "../Navbar/Navbar";
 // eslint-disable-next-line import/no-cycle
 import {
   getAuthenticatedUser,
-  setLocalUser,
+  setAuthenticatedUser,
   setRemember,
-  setUserLocalStorage,
-  setUserSessionStorage,
 } from "../../utils/session";
 
 import {showNavStyle} from "../../utils/function";
@@ -18,14 +16,12 @@ import {showNavStyle} from "../../utils/function";
 const onUserLogin = async (userData) => {
   if (document.getElementById("stayconnected").checked) {
     setRemember(true);
-    setUserLocalStorage(userData);
-    setLocalUser(userData.user);
+    setAuthenticatedUser(userData);
   } else {
-    setUserSessionStorage(userData);
-    setLocalUser(userData.user);
+    setAuthenticatedUser(userData);
   }
   // re-render the navbar for the authenticated user
-  Navbar();
+  await Navbar();
   Redirect("/");
 };
 

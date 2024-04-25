@@ -2,6 +2,7 @@ package be.vinci.pae.domain.ucc;
 
 import be.vinci.pae.domain.dto.CompanyDTO;
 import java.util.List;
+import java.util.Map;
 
 /**
  * CompanyUCC interface.
@@ -19,9 +20,9 @@ public interface CompanyUCC {
   /**
    * Get all companies.
    *
-   * @return a list containing all companies.
+   * @return a list containing all companies including their internship count by year.
    */
-  List<CompanyDTO> getAllCompanies();
+  Map<Integer, Map<CompanyDTO, Map<String, Integer>>> getAllCompanies();
 
   /**
    * Get all companies available for one user.
@@ -38,5 +39,14 @@ public interface CompanyUCC {
    * @return CompanyDTO of added company, null otherwise.
    */
   CompanyDTO registerCompany(CompanyDTO company);
+
+  /**
+   * To blacklist a company.
+   *
+   * @param companyId           the company id
+   * @param blacklistMotivation the motivation of the blacklist.
+   * @return a list containing all companies.
+   */
+  CompanyDTO blacklist(int companyId, String blacklistMotivation);
 
 }

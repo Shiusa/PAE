@@ -52,11 +52,9 @@ public class ContactResource {
   public ObjectNode start(@Context ContainerRequest request, JsonNode json) {
     Logs.log(Level.INFO, "ContactResource (start) : entrance");
     if (!json.hasNonNull("company")) {
-      Logs.log(Level.WARN, "ContactResource (start) : Company is null");
       throw new WebApplicationException("company", Response.Status.BAD_REQUEST);
     }
     if (json.get("company").asText().isBlank()) {
-      Logs.log(Level.WARN, "ContactResource (start) : Company is blank");
       throw new WebApplicationException("company required", Response.Status.BAD_REQUEST);
     }
 
@@ -256,5 +254,26 @@ public class ContactResource {
 
     Logs.log(Level.DEBUG, "ContactResource (accept) : success!");
     return contactUCC.accept(contactId, studentId);
+  }
+
+  /**
+   * Get all contacts by a student id.
+   *
+   * @param company the student.
+   * @return a list containing all the contacts by a student id.
+   */
+  @GET
+  @Path("/all/company/{companyId}")
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize
+  public List<ContactDTO> getAllByCompany(@PathParam("companyId") int company) {
+    if (company == 0) {
+      Logs.log(Level.INFO, "ContactResource (getAllByCompany) : entrance");
+    }
+    List<ContactDTO> contactDTOList = contactUCC.getAllContactsByCompany(company);
+
+    Logs.log(Level.DEBUG, "ContactResource (getAllByCompany) : success!");
+    return contactDTOList;
+
   }
 }

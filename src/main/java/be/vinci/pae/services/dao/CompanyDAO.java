@@ -2,6 +2,7 @@ package be.vinci.pae.services.dao;
 
 import be.vinci.pae.domain.dto.CompanyDTO;
 import java.util.List;
+import java.util.Map;
 
 /**
  * CompanyDAO interface.
@@ -26,17 +27,17 @@ public interface CompanyDAO {
   CompanyDTO getOneCompanyByNameDesignation(String name, String designation);
 
   /**
-   * Get all users.
+   * Get all companies.
    *
-   * @return a list of all users.
+   * @return a list of all companies including their internship count by year.
    */
-  List<CompanyDTO> getAllCompanies();
+  Map<Integer, Map<CompanyDTO, Map<String, Integer>>> getAllCompanies();
 
   /**
-   * Get all companies by company by user id.
+   * Get all companies that the user has not a contact with.
    *
    * @param userId the user id.
-   * @return a list of all companies.
+   * @return a list of all companies that the user has not a contact with.
    */
   List<CompanyDTO> getAllCompaniesByUserId(int userId);
 
@@ -56,4 +57,13 @@ public interface CompanyDAO {
    */
   CompanyDTO addOneCompany(CompanyDTO company);
 
+  /**
+   * To blacklist a company.
+   *
+   * @param companyId           the company id.
+   * @param version             the last version of the company.
+   * @param blacklistMotivation the motivation of the blackist
+   * @return the company that has been blacklisted.
+   */
+  CompanyDTO blacklist(int companyId, String blacklistMotivation, int version);
 }

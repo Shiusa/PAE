@@ -1,7 +1,13 @@
 // eslint-disable-next-line import/no-cycle
 import {Redirect} from "../Router/Router";
 import {awaitFront, showNavStyle} from "../../utils/function";
-import {getAuthenticatedUser} from "../../utils/session";
+import {
+  getAuthenticatedUser,
+  getToken,
+  setAuthenticatedUser
+} from "../../utils/session";
+
+let userToken;
 
 const closeForm = () => {
   const addCompanyContainer = document.querySelector(
@@ -20,6 +26,11 @@ const submitRegistration = async (e) => {
   e.preventDefault();
 
   const user = await getAuthenticatedUser();
+  if (user) {
+    setAuthenticatedUser(user);
+  } else {
+    return;
+  }
 
   const name = document.querySelector("#input-name").value;
   const designation = document.querySelector("#input-designation").value;
@@ -75,7 +86,7 @@ const submitRegistration = async (e) => {
     return;
   }
   closeForm();
-  Redirect('/contact')
+  Redirect('/contact');
 }
 
 const renderRegisterCompanyForm = async () => {
@@ -137,17 +148,18 @@ const ContactPage = async () => {
 
   const main = document.querySelector('main');
 
-  const user = await getAuthenticatedUser();
-
-  showNavStyle("contact");
-  awaitFront();
+  userToken = getToken();
+  if (!userToken) {
+    Redirect('/');
+    return;
+  }
 
   const readAllCompanies = async () => {
     const options = {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': user.token
+        'Authorization': userToken
       }
     }
     const response = await fetch('api/companies/all/user', options);
@@ -162,6 +174,9 @@ const ContactPage = async () => {
   };
 
   const companiesTable = await readAllCompanies();
+
+  showNavStyle("contact");
+  awaitFront();
 
   main.innerHTML = `
     <div class="container-fluid mt-5 d-flex flex-column rounded-3 overflow-hidden" style="width: 100%; height: 74vh; border: none; border-radius: 0; background: white; position: relative">
@@ -277,6 +292,7 @@ const ContactPage = async () => {
       info += `</div>`;
       u += 1;
     }
+    info += `<h2 id="error-message"></h2>`
     companiesContainer.innerHTML = info;
   }
 
@@ -285,32 +301,45 @@ const ContactPage = async () => {
   if (companiesBtn) {
     companiesBtn.forEach(element => {
       element.addEventListener('click', async () => {
-        await createContact(element.id);
-        await ContactPage();
+        if (await createContact(element.id)) {
+          Redirect('/dashboard');
+        }
       });
     });
   }
 
   async function createContact(idCompany) {
-    const options = {
-      method: 'POST',
-      body: JSON.stringify({
-        company: idCompany,
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': user.token
+    try {
+      const user = await getAuthenticatedUser();
+      const options = {
+        method: 'POST',
+        body: JSON.stringify({
+          company: idCompany,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': user.token
+        }
       }
-    }
-    const response = await fetch('api/contacts/start', options);
+      const response = await fetch('api/contacts/start', options);
 
-    if (!response.ok) {
-      throw new Error(
-          `fetch error : ${response.status} : ${response.statusText}`);
-    }
+      if (!response.ok) {
+        throw new Error(
+            `fetch error : ${response.status} : ${response.statusText}`);
+      }
 
-    const companyInfo = await response.json();
-    return companyInfo;
+      const companyInfo = await response.json();
+      return companyInfo;
+    } catch (error) {
+      const errorMessage = document.getElementById("error-message");
+      errorMessage.style.display = "block";
+
+      if (error instanceof Error && error.message.startsWith(
+          "fetch error : 400")) {
+        errorMessage.innerText = "Vous avez déjà un contact accepté.";
+      }
+      return undefined;
+    }
   }
 
 };

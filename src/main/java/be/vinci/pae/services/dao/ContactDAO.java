@@ -98,5 +98,12 @@ public interface ContactDAO {
    * @return the accepted contact.
    */
   ContactDTO accept(int contactId, int version);
-}
 
+  /**
+   * Get all contacts by a company id.
+   *
+   * @param company company's id.
+   * @return a list of all contacts.
+   */
+  List<ContactDTO> getAllContactsByCompany(int company);
+}

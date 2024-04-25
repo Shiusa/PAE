@@ -4,6 +4,34 @@
   --ma-couleur-foncée: #1489a0;
 }
 
+/* Scroll bar */
+
+/* Largeur de la barre de défilement */
+::-webkit-scrollbar {
+  width: 15px;
+}
+
+/* Couleur de fond de la barre de défilement */
+::-webkit-scrollbar-track {
+  background: #ffffff;
+  border: 2px solid var(--ma-couleur);
+  border-radius: 10px;
+}
+
+/* Couleur de la poignée de défilement */
+::-webkit-scrollbar-thumb {
+  background: var(--ma-couleur);
+  border-radius: 10px;
+  width: 5px !important;
+  transition: 0.2s ease-in-out;
+}
+
+/* Ombre sur la poignée de défilement au survol */
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ma-couleur-foncée);
+}
+
+
 /* await */
 
 .await {
@@ -871,6 +899,12 @@ input::placeholder {
   font-size: 20px;
   text-align: center;
 }
+#blacklistMotivation {
+  border-color: var(--ma-couleur);
+}
+#title {
+  color: var(--ma-couleur);
+}
 
 .adminCompanyListTile {
   background: var(--ma-couleur);
@@ -879,6 +913,303 @@ input::placeholder {
 
 .noInternship{
   color: #119DB8;
+}
+
+.adminCompanyListHover:hover {
+  background: var(--ma-couleur-foncée);
+  cursor: pointer;
+}
+
+.sort-header:hover {
+  cursor: pointer;
+}
+
+.contact-company-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  visibility: hidden;
+  background-color: white;
+}
+
+.contact-company-list {
+  position: relative;
+  transition: ease-in-out;
+}
+
+#contact-company-back-btn {
+  color: var(--ma-couleur);
+  font-size: 50px;
+  /*position: absolute;
+  top: 3.5%;
+  left: 18%;*/
+  transition: 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+#contact-company-back-btn:hover {
+  transform: translateX(-3px);
+}
+
+.blacklist-company-btn {
+  background: #B81139;
+  color: white;
+  border: none;
+}
+
+.blacklist-company-btn:hover {
+  background: #A10E31;
+}
+
+.search-criteria {
+  width: 85%;
+  max-width: 1000px;
+}
+
+#year-input {
+  width: 15%;
+}
+
+.search-css {
+  width: 55%;
+}
+
+#year-input {
+  background: var(--ma-couleur);
+  height: 40px;
+  padding: 0px 15px;
+  border-radius: 5px;
+  border: none;
+  color: white;
+  outline: none;
+
+  option {
+    background: #ffffff;
+    color: var(--ma-couleur) !important;
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.178) !important;
+  }
+
+  >option:hover
+  {
+    color: #1B517E;
+    cursor: pointer;
+  }
+}
+
+.ts-control {
+  display: block;
+  border-radius: 10px;
+  border: 3px solid var(--ma-couleur);
+  min-height: 55px;
+
+  > input {
+    color: var(--ma-couleur) !important;
+    font-size: 20px;
+    margin-top: 2px !important;
+  }
+
+  .item {
+    color:white !important;
+    background: var(--ma-couleur) !important;
+    border-radius: 5px !important;
+    padding: 10px 15px !important;
+    font-size: 15px !important;
+  }
+
+
+}
+
+.ts-wrapper {
+  .option {
+    color: var(--ma-couleur) !important;
+    font-size: 17px !important;
+  }
+}
+.student-input {
+  width: 15%;
+  position: relative;
+
+
+  input {
+    opacity: 1;
+    cursor: pointer !important;
+  }
+
+  input[type="checkbox"]:checked + label {
+    color: white !important;
+    background: var(--ma-couleur) !important;
+  }
+
+  label {
+    color: var(--ma-couleur) !important;
+    cursor: pointer !important;
+    margin-left: -17% !important;
+    background: white;
+    border: 3px solid var(--ma-couleur);
+    border-radius: 5px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100% !important;
+    position: absolute;
+    letter-spacing: 1px;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+}
+
+.users-table {
+  width: 95%;
+  max-width: 1300px;
+  border: 3px solid var(--ma-couleur);
+  border-radius: 15px;
+  min-height: 100px;
+  max-height: 510px;
+  overflow-y: auto;
+}
+
+.user-line {
+  width: 95%;
+  height: 80px;
+  min-height: 80px;
+  background: var(--ma-couleur);
+  color: white;
+  border-radius: 10px;
+  position: relative;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.088);
+  border: 4px solid var(--ma-couleur);
+  overflow: hidden;
+  margin-bottom: 10px;
+  margin-top: 10px;
+
+  .users-icon {
+    font-size: 30px;
+    background: white;
+    color: var(--ma-couleur);
+    height: 100%;
+    width: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  h1 {
+    font-size: 20px;
+    background: white;
+    color: var(--ma-couleur);
+    height: 200px;
+    margin-left: -20px;
+    width: 140px;
+    padding: 5px 0px 5px 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 9px;
+    text-align: center;
+  }
+
+  h4 {
+    margin-left: 2%;
+    font-size: 18px;
+    margin-top: 9px;
+  }
+
+  .user-email-tel {
+    width: 330px;
+    margin-left: 3%;
+    height: 100%;
+    margin-top: 30px;
+
+    p {
+      font-size: 17px;
+      margin-top: -10px;
+
+      i {
+        font-size: 20px;
+        margin-right: 5px;
+      }
+    }
+  }
+
+  h3 {
+    font-size: 18px;
+    background: white;
+    border-radius: 5px;
+    color: var(--ma-couleur);
+    width: 120px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+    margin-left: 1%;
+    margin-top: 8px;
+  }
+
+  h2 {
+    margin-top: 8px;
+    position: absolute;
+    right: 2%;
+    padding: 10px 10px;
+    color: var(--ma-couleur);
+    background: white;
+    border-radius: 5px;
+    font-size: 17px;
+    font-weight: bold;
+  }
+}
+.box-internshipMother {
+  width: 1000px;
+  height: 500px;
+  border: 4px solid var(--ma-couleur);
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+}
+.box-internshipChild {
+  width: 90%;
+  max-width: 800px;
+  height: 90%;
+  border: 2px solid var(--ma-couleur);
+  border-radius: 20px;
+  margin: auto;
+}
+
+.valueLabel {
+  border: 2px solid var(--ma-couleur);
+  border-radius: 7px;
+}
+
+.textCSS{
+  color: var(--ma-couleur);
+  padding-left: 2%;
+}
+
+.divValueLabelInternshipProject{
+  border: 2px solid var(--ma-couleur);
+  border-radius: 7px;
+}
+
+.newValueLabel {
+  border: 2px solid var(--ma-couleur);
+  width: 92%;
+  border-top-left-radius: 7px;
+  border-bottom-left-radius: 7px;
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+
+}
+.submitProjectButton {
+  background-color: var(--ma-couleur);
+  color: white;
+  padding: 2%;
+  border-top-right-radius: 7px;
+  border-bottom-right-radius: 7px;
 }
 
 .box-chooseSupervisorMother {

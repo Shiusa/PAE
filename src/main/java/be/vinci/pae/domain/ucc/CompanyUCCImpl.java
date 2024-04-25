@@ -11,6 +11,7 @@ import be.vinci.pae.utils.exceptions.FatalException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
 import jakarta.inject.Inject;
 import java.util.List;
+import java.util.Map;
 import org.apache.logging.log4j.Level;
 
 /**
@@ -47,8 +48,8 @@ public class CompanyUCCImpl implements CompanyUCC {
    * @return a list containing all the companies.
    */
   @Override
-  public List<CompanyDTO> getAllCompanies() {
-    List<CompanyDTO> companyList;
+  public Map<Integer, Map<CompanyDTO, Map<String, Integer>>> getAllCompanies() {
+    Map<Integer, Map<CompanyDTO, Map<String, Integer>>> companyList;
     try {
       Logs.log(Level.DEBUG, "CompanyUCC (getAllCompanies) : entrance");
       dalServices.startTransaction();
@@ -75,7 +76,6 @@ public class CompanyUCCImpl implements CompanyUCC {
       dalServices.startTransaction();
       UserDTO user = userDAO.getOneUserById(userId);
       if (user == null) {
-        dalServices.rollbackTransaction();
         Logs.log(Level.ERROR, "CompanyUCC (getAllCompaniesByUser) : user not found");
         throw new ResourceNotFoundException();
       }
@@ -138,5 +138,27 @@ public class CompanyUCCImpl implements CompanyUCC {
       throw e;
     }
 
+  }
+
+  @Override
+  public CompanyDTO blacklist(int companyId, String blacklistMotivation) {
+    CompanyDTO companyDTO;
+    Logs.log(Level.DEBUG, "CompanyUCC (blacklist) : entrance");
+    try {
+      dalServices.startTransaction();
+      companyDTO = companyDAO.getOneCompanyById(companyId);
+      if (companyDTO.isBlacklisted()) {
+        Logs.log(Level.ERROR, "CompanyUCC (blacklist) : the company is already blacklisted");
+        dalServices.rollbackTransaction();
+        throw new DuplicateException();
+      }
+      int version = companyDTO.getVersion();
+      companyDTO = companyDAO.blacklist(companyId, blacklistMotivation, version);
+    } catch (FatalException e) {
+      dalServices.rollbackTransaction();
+      throw e;
+    }
+    dalServices.commitTransaction();
+    return companyDTO;
   }
 }

@@ -7,6 +7,7 @@ import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.CompanyDAO;
 import be.vinci.pae.services.dao.ContactDAO;
+import be.vinci.pae.services.dao.InternshipDAO;
 import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.utils.Logs;
 import be.vinci.pae.utils.exceptions.DuplicateException;
@@ -30,6 +31,8 @@ public class ContactUCCImpl implements ContactUCC {
   private UserDAO userDAO;
   @Inject
   private CompanyDAO companyDAO;
+  @Inject
+  private InternshipDAO internshipDAO;
 
   @Override
   public ContactDTO start(int company, int studentId) {
@@ -54,6 +57,11 @@ public class ContactUCCImpl implements ContactUCC {
         throw new InvalidRequestException();
       }
 
+      if (internshipDAO.getOneInternshipByIdUser(studentId) != null) {
+        Logs.log(Level.INFO, "ContactUCC (start) : student already has an internship");
+        throw new InvalidRequestException();
+      }
+
       String schoolYear = studentDTO.getSchoolYear();
       ContactDTO contactFound = contactDAO
           .findContactByCompanyStudentSchoolYear(company, studentId, schoolYear);
@@ -75,10 +83,19 @@ public class ContactUCCImpl implements ContactUCC {
 
   @Override
   public List<ContactDTO> getAllContactsByStudent(int student) {
-    dalServices.startTransaction();
-    List<ContactDTO> listContactDTO = contactDAO.getAllContactsByStudent(student);
-    dalServices.commitTransaction();
-    return listContactDTO;
+    List<ContactDTO> listContactDTO;
+    try {
+      dalServices.startTransaction();
+      listContactDTO = contactDAO.getAllContactsByStudent(student);
+      if (listContactDTO == null) {
+        throw new ResourceNotFoundException();
+      }
+      dalServices.commitTransaction();
+      return listContactDTO;
+    } catch (Exception e) {
+      dalServices.rollbackTransaction();
+      throw e;
+    }
   }
 
   @Override
@@ -247,6 +264,23 @@ public class ContactUCCImpl implements ContactUCC {
       contactDTO = contactDAO.accept(contactId, version);
       dalServices.commitTransaction();
       return contactDTO;
+    } catch (Exception e) {
+      dalServices.rollbackTransaction();
+      throw e;
+    }
+  }
+
+  @Override
+  public List<ContactDTO> getAllContactsByCompany(int company) {
+    List<ContactDTO> listContactDTO;
+    try {
+      dalServices.startTransaction();
+      listContactDTO = contactDAO.getAllContactsByCompany(company);
+      if (listContactDTO == null) {
+        throw new ResourceNotFoundException();
+      }
+      dalServices.commitTransaction();
+      return listContactDTO;
     } catch (Exception e) {
       dalServices.rollbackTransaction();
       throw e;
