@@ -72,8 +72,7 @@ public class ContactResource {
   /**
    * returns a contact by its id.
    *
-   * @param request the token from the front.
-   * @param id      of the internship
+   * @param id of the internship
    * @return internshipDTO
    */
   @GET
