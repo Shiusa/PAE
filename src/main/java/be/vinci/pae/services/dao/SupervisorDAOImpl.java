@@ -51,6 +51,26 @@ public class SupervisorDAOImpl implements SupervisorDAO {
   }
 
   @Override
+  public SupervisorDTO getOneByPhoneNumber(String phoneNumber) {
+    String request = """
+        SELECT su.supervisor_id, su.company AS su_company, su.lastname AS su_lastname,
+        su.firstname AS su_firstname, su.phone_number AS su_phone_number, su.email AS su_email,
+        cm.company_id, cm.name, cm.designation, cm.address, cm.phone_number AS cm_phone_number,
+        cm.email AS cm_email, cm.is_blacklisted, cm.blacklist_motivation, cm.version AS cm_version
+        FROM prostage.supervisors su, prostage.companies cm
+        WHERE su.phone_number = ?
+        """;
+
+    try (PreparedStatement ps = dalServices.getPreparedStatement(request)) {
+      ps.setString(1, phoneNumber);
+      return buildSupervisorDTO(ps);
+    } catch (SQLException e) {
+      Logs.log(Level.FATAL, "SupervisorDAO (getOneByPhoneNumber) : internal error");
+      throw new FatalException(e);
+    }
+  }
+
+  @Override
   public List<SupervisorDTO> getAllByCompany(int companyId) {
     String requestSql = """
         SELECT s.supervisor_id, s.lastname AS su_lastname, s.firstname AS su_firstname,
@@ -69,6 +89,26 @@ public class SupervisorDAOImpl implements SupervisorDAO {
       return buildSupervisorDTOList(ps);
     } catch (SQLException e) {
       Logs.log(Level.FATAL, "SupervisorDAO (getAllByCompany) : internal error");
+      throw new FatalException(e);
+    }
+  }
+
+  @Override
+  public SupervisorDTO addSupervisor(SupervisorDTO supervisorDTO) {
+    String requestSql = """
+        INSERT INTO prostage.supervisors VALUES (DEFAULT,?,?,?,?,?)
+        """;
+
+    try (PreparedStatement ps = dalServices.getPreparedStatement(requestSql)) {
+      ps.setInt(1, supervisorDTO.getCompany().getId());
+      ps.setString(2, supervisorDTO.getLastname());
+      ps.setString(3, supervisorDTO.getFirstname());
+      ps.setString(4, supervisorDTO.getPhoneNumber());
+      ps.setString(5, supervisorDTO.getEmail());
+      ps.execute();
+      return getOneByPhoneNumber(supervisorDTO.getPhoneNumber());
+    } catch (SQLException e) {
+      Logs.log(Level.FATAL, "SupervisorDAO (addSupervisor) : internal error");
       throw new FatalException(e);
     }
   }

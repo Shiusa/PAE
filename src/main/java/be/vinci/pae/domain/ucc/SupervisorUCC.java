@@ -24,4 +24,12 @@ public interface SupervisorUCC {
    */
   List<SupervisorDTO> getAllByCompany(int companyId);
 
+  /**
+   * Add a new supervisor.
+   *
+   * @param supervisorDTO the supervisor to add.
+   * @return the added supervisor.
+   */
+  SupervisorDTO addSupervisor(SupervisorDTO supervisorDTO);
+
 }
