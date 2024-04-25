@@ -151,18 +151,19 @@ const InternshipPage = async () => {
     labelInternshipProject.innerText = "Sujet du stage :";
     labelInternshipProject.className = "textCSS";
     const valueLabelInternshipProject = document.createElement("p");
+    const newValueLabelInternshipProject = document.createElement('input');
     if (internship.project) {
       valueLabelInternshipProject.innerHTML = `${internship.project}`;
+      newValueLabelInternshipProject.value = `${internship.project}`;
     } else {
       valueLabelInternshipProject.innerHTML = `Pas encore de sujet de stage`;
+      newValueLabelInternshipProject.value = ``;
     }
     const iconEditProject = document.createElement('i');
     iconEditProject.className = "fa-solid fa-pencil";
     iconEditProject.addEventListener("click", () => {
       labelInternshipProject.innerHTML = "";
       labelInternshipProject.innerText = "Sujet du stage :";
-      const newValueLabelInternshipProject = document.createElement('input');
-      newValueLabelInternshipProject.value = `${internship.project}`;
       newValueLabelInternshipProject.className = "newValueLabel textCSS";
       const submitButton = document.createElement("i");
       submitButton.className = "submitProjectButton fa-solid fa-check";
@@ -244,7 +245,11 @@ const InternshipPage = async () => {
     labelSupervisorEmail.innerText = "Email :";
     labelSupervisorEmail.className = "textCSS";
     const valueLabelSupervisorEmail = document.createElement("p");
-    valueLabelSupervisorEmail.innerText = `${internship.supervisor.email}`;
+    if(internship.supervisor.email === null) {
+      valueLabelSupervisorEmail.innerText = `Aucun email`;
+    } else {
+      valueLabelSupervisorEmail.innerText = `${internship.supervisor.email}`;
+    }
     valueLabelSupervisorEmail.className = "valueLabel textCSS";
     labelSupervisorEmail.appendChild(valueLabelSupervisorEmail);
     divRight.appendChild(labelSupervisorEmail);
