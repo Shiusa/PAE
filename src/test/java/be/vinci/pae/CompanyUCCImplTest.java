@@ -14,6 +14,7 @@ import be.vinci.pae.services.dao.CompanyDAO;
 import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.utils.exceptions.DuplicateException;
 import be.vinci.pae.utils.exceptions.FatalException;
+import be.vinci.pae.utils.exceptions.InvalidRequestException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -221,7 +222,7 @@ public class CompanyUCCImplTest {
         () -> assertThrows(FatalException.class, () -> companyUCC.getAllCompanies()),
         () -> assertThrows(FatalException.class, () -> companyUCC.getAllCompaniesByUser(1)),
         () -> assertThrows(FatalException.class, () ->
-            companyUCC.blacklist(1, "l'entreprise pratique la fraude")),
+            companyUCC.blacklist(1, "l'entreprise pratique la fraude", 1)),
         () -> assertThrows(FatalException.class, () -> companyUCC.getAllCompaniesByUser(1)),
         () -> assertThrows(FatalException.class, () -> companyUCC.registerCompany(companyDTO))
     );
@@ -233,7 +234,20 @@ public class CompanyUCCImplTest {
     companyDTO.setIsBlacklisted(true);
     Mockito.when(companyDAOMock.getOneCompanyById(1)).thenReturn(companyDTO);
     assertThrows(DuplicateException.class,
-        () -> companyUCC.blacklist(1, "l'entreprise pratique la fraude"));
+        () -> companyUCC.blacklist(1, "l'entreprise pratique la fraude", 1));
+  }
+
+  @Test
+  @DisplayName("Test blacklist with wrong version")
+  public void testBlacklistWithWrongVersion() {
+    companyDTO.setIsBlacklisted(false);
+    companyDTO.setId(1);
+    companyDTO.setVersion(3);
+    Mockito.when(companyDAOMock.getOneCompanyById(1)).thenReturn(companyDTO);
+    Mockito.when(companyDAOMock.blacklist(1, "l'entreprise pratique la fraude", 1))
+        .thenReturn(companyDTO);
+    assertThrows(InvalidRequestException.class,
+        () -> companyUCC.blacklist(1, "l'entreprise pratique la fraude", 1));
   }
 
   @Test
@@ -241,10 +255,10 @@ public class CompanyUCCImplTest {
   public void testBlacklistCorrectly() {
     companyDTO.setIsBlacklisted(false);
     companyDTO.setId(1);
-    companyDTO.setVersion(1);
+    companyDTO.setVersion(2);
     Mockito.when(companyDAOMock.getOneCompanyById(1)).thenReturn(companyDTO);
     Mockito.when(companyDAOMock.blacklist(1, "l'entreprise pratique la fraude", 1))
         .thenReturn(companyDTO);
-    assertNotNull(companyUCC.blacklist(1, "l'entreprise pratique la fraude"));
+    assertNotNull(companyUCC.blacklist(1, "l'entreprise pratique la fraude", 1));
   }
 }
