@@ -1,6 +1,7 @@
 package be.vinci.pae.domain.ucc;
 
 import be.vinci.pae.domain.dto.ContactDTO;
+import be.vinci.pae.domain.dto.InternshipDTO;
 import java.util.List;
 
 /**
@@ -77,14 +78,14 @@ public interface ContactUCC {
   void putStudentContactsOnHold(int studentId);
 
   /**
-   * Accepted the contact.
+   * Accept the contact and call the method to create the internshipDTO in params..
    *
-   * @param contactId the id of the contact.
-   * @param studentId the id of the student.
-   * @param version   the version of the contact.
+   * @param contactId     the id of the contact.
+   * @param studentId     the id of the student.
+   * @param internshipDTO the internship to create.
    * @return the accepted contact.
    */
-  ContactDTO accept(int contactId, int studentId, int version);
+  InternshipDTO accept(int contactId, int studentId, InternshipDTO internshipDTO);
 
 
   /**

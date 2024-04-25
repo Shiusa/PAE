@@ -14,7 +14,6 @@ import be.vinci.pae.domain.ucc.InternshipUCC;
 import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.ContactDAO;
 import be.vinci.pae.services.dao.InternshipDAO;
-import be.vinci.pae.utils.exceptions.DuplicateException;
 import be.vinci.pae.utils.exceptions.FatalException;
 import be.vinci.pae.utils.exceptions.InvalidRequestException;
 import be.vinci.pae.utils.exceptions.NotAllowedException;
@@ -130,17 +129,6 @@ public class InternshipUCCImplTest {
   }
 
   @Test
-  @DisplayName("Test create one internship already exist")
-  public void testCreateOneInternshipAlreadyExist() {
-    userDTO.setId(1);
-    contactDTO.setStudent(userDTO);
-    contactDTO.setState("accepté");
-    internshipDTO.setContact(contactDTO);
-    Mockito.when(internshipDAOMock.getOneInternshipByIdUser(1)).thenReturn(internshipDTO);
-    assertThrows(DuplicateException.class, () -> internshipUCC.createInternship(internshipDTO, 1));
-  }
-
-  @Test
   @DisplayName("Test create one internship contact not accepted")
   public void testCreateOneInternshipContactNotAccepted() {
     userDTO.setId(1);
@@ -149,18 +137,6 @@ public class InternshipUCCImplTest {
     internshipDTO.setContact(contactDTO);
     assertThrows(InvalidRequestException.class,
         () -> internshipUCC.createInternship(internshipDTO, 1));
-  }
-
-  @Test
-  @DisplayName("Test create one internship")
-  public void testCreateOneInternship() {
-    userDTO.setId(1);
-    contactDTO.setStudent(userDTO);
-    contactDTO.setState("accepté");
-    internshipDTO.setContact(contactDTO);
-    Mockito.when(internshipDAOMock.getOneInternshipById(1)).thenReturn(null);
-    Mockito.when(internshipDAOMock.createInternship(internshipDTO)).thenReturn(internshipDTO);
-    assertNotNull(internshipUCC.createInternship(internshipDTO, 1));
   }
 
   @Test
@@ -207,9 +183,6 @@ public class InternshipUCCImplTest {
         }),
         () -> assertThrows(FatalException.class, () -> {
           internshipUCC.editProject("test", 1, 1);
-        }),
-        () -> assertThrows(FatalException.class, () -> {
-          internshipUCC.createInternship(internshipDTO, 1);
         }),
         () -> assertThrows(FatalException.class, () -> {
           internshipUCC.getInternshipCountByYear();

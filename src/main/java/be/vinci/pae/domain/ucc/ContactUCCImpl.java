@@ -3,6 +3,7 @@ package be.vinci.pae.domain.ucc;
 import be.vinci.pae.domain.Company;
 import be.vinci.pae.domain.Contact;
 import be.vinci.pae.domain.dto.ContactDTO;
+import be.vinci.pae.domain.dto.InternshipDTO;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.CompanyDAO;
@@ -32,7 +33,10 @@ public class ContactUCCImpl implements ContactUCC {
   @Inject
   private CompanyDAO companyDAO;
   @Inject
+  private InternshipUCC internshipUCC;
+  @Inject
   private InternshipDAO internshipDAO;
+
 
   @Override
   public ContactDTO start(int company, int studentId) {
@@ -234,25 +238,17 @@ public class ContactUCCImpl implements ContactUCC {
   @Override
   public void putStudentContactsOnHold(int studentId) {
     Logs.log(Level.DEBUG, "ContactUCC (putStudentContactsOnHold) : entrance");
-    try {
-      dalServices.startTransaction();
-      List<ContactDTO> contactDTOList =
-          contactDAO.getAllContactsByStudentStartedOrAdmitted(studentId);
-      for (ContactDTO c : contactDTOList) {
-        contactDAO.putContactOnHold(c);
-      }
-      dalServices.commitTransaction();
-    } catch (Exception e) {
-      dalServices.rollbackTransaction();
-      throw e;
+    List<ContactDTO> contactDTOList =
+        contactDAO.getAllContactsByStudentStartedOrAdmitted(studentId);
+    for (ContactDTO c : contactDTOList) {
+      contactDAO.putContactOnHold(c);
     }
   }
 
   @Override
-  public ContactDTO accept(int contactId, int studentId, int version) {
+  public InternshipDTO accept(int contactId, int studentId, InternshipDTO internshipDTO) {
     Logs.log(Level.DEBUG, "ContactUCC (accept) : entrance");
     Contact contact;
-    ContactDTO contactDTO;
     try {
       dalServices.startTransaction();
       contact = (Contact) contactDAO.findContactById(contactId);
@@ -262,6 +258,7 @@ public class ContactUCCImpl implements ContactUCC {
             "ContactUCC (accept) : contact not found");
         throw new ResourceNotFoundException();
       }
+      int version = contact.getVersion();
 
       if (!contact.isAdmitted()) {
         Logs.log(Level.ERROR, "ContactUCC (accept) : contact's state not admitted");
@@ -269,13 +266,12 @@ public class ContactUCCImpl implements ContactUCC {
       } else if (contact.getStudent().getId() != studentId) {
         throw new NotAllowedException();
       }
-      contactDTO = contactDAO.accept(contactId, version);
-      if (contactDTO.getVersion() != version + 1) {
-        Logs.log(Level.ERROR, "ContactUCC (accept) : the contact's version isn't matching");
-        throw new InvalidRequestException();
-      }
+      contactDAO.accept(contactId, version);
+      InternshipDTO internshipDTO1 = internshipUCC.createInternship(internshipDTO, studentId);
+      putStudentContactsOnHold(studentId);
+
       dalServices.commitTransaction();
-      return contactDTO;
+      return internshipDTO1;
     } catch (Exception e) {
       dalServices.rollbackTransaction();
       throw e;

@@ -73,4 +73,3 @@ Authorization: {{AchToken}}
 GET {{baseUrl}}/contacts/all/company/3
 Content-Type: application/json
 Authorization: {{AchToken}}
-
