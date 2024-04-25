@@ -40,7 +40,7 @@ public class UserUCCImpl implements UserUCC {
     try {
       Logs.log(Level.INFO, "UserUCC (login) : entrance");
       dalServices.startTransaction();
-      userDTOFound = userDAO.getOneUserByEmail(email);
+      userDTOFound = userDAO.getOneUserByEmail(email.toLowerCase());
       user = (User) userDTOFound;
     } catch (FatalException e) {
       dalServices.rollbackTransaction();
@@ -121,6 +121,9 @@ public class UserUCCImpl implements UserUCC {
   public UserDTO register(UserDTO user) {
 
     Logs.log(Level.DEBUG, "UserUCC (register) : entrance");
+    
+    String lowerCaseEmail = user.getEmail().toLowerCase();
+    user.setEmail(lowerCaseEmail);
 
     LocalDate localDate = LocalDate.now();
     Date registrationDate = Date.valueOf(localDate);
