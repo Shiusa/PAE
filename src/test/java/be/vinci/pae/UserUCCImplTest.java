@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import be.vinci.pae.domain.User;
 import be.vinci.pae.domain.UserFactory;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.domain.ucc.UserUCC;
@@ -12,6 +13,7 @@ import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.utils.exceptions.DuplicateException;
 import be.vinci.pae.utils.exceptions.FatalException;
+import be.vinci.pae.utils.exceptions.InvalidRequestException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
 import be.vinci.pae.utils.exceptions.UnauthorizedAccessException;
 import java.sql.Date;
@@ -274,7 +276,7 @@ public class UserUCCImplTest {
   }
 
   @Test
-  @DisplayName("Edit user with someone update at same time should not work")
+  @DisplayName("Edit user with someone updating at same time should not work")
   public void testEditUserConcurrentUpdate() {
 
     userDTO.setEmail(email);
@@ -303,6 +305,128 @@ public class UserUCCImplTest {
         .thenReturn(null);
 
     assertThrows(DuplicateException.class, () -> userUCC.editOneUser(userDTO, newUserDTO));
+
+  }
+
+  @Test
+  @DisplayName("Edit user password should work")
+  public void testEditPassword() {
+
+    User userMock = Mockito.mock(User.class);
+
+    UserDTO currentUser = userFactory.getUserDTO();
+    currentUser.setId(1);
+    currentUser.setEmail(email);
+    currentUser.setLastname(lastname);
+    currentUser.setFirstname(firstname);
+    currentUser.setPhoneNumber(phoneNumber);
+    currentUser.setRole(role);
+    currentUser.setRegistrationDate(registrationDate);
+    currentUser.setSchoolYear(schoolYear);
+    currentUser.setPassword(hashPassword);
+    currentUser.setVersion(1);
+
+    String oldPwd = "123";
+    String newPwd = "test";
+    String newPwdRepeat = "test";
+
+    UserDTO updatedUserDTO = userFactory.getUserDTO();
+    updatedUserDTO.setId(1);
+    updatedUserDTO.setEmail(email);
+    updatedUserDTO.setLastname(lastname);
+    updatedUserDTO.setFirstname(firstname);
+    updatedUserDTO.setPhoneNumber(phoneNumber);
+    updatedUserDTO.setRole(role);
+    updatedUserDTO.setRegistrationDate(registrationDate);
+    updatedUserDTO.setSchoolYear(schoolYear);
+    updatedUserDTO.setPassword(newPwd);
+    updatedUserDTO.setVersion(2);
+
+    Mockito.doNothing().when(userMock).hashPassword();
+    Mockito.when(userDAOMock.editOneUser(currentUser, 1))
+        .thenReturn(updatedUserDTO);
+
+    UserDTO returnedUser = userUCC.editPassword(currentUser, oldPwd, newPwd, newPwdRepeat);
+
+    assertNotNull(returnedUser);
+
+  }
+
+  @Test
+  @DisplayName("Edit user password with wrong password should not work")
+  public void testEditPasswordWrongPwd() {
+
+    UserDTO currentUser = userFactory.getUserDTO();
+    currentUser.setId(1);
+    currentUser.setEmail(email);
+    currentUser.setLastname(lastname);
+    currentUser.setFirstname(firstname);
+    currentUser.setPhoneNumber(phoneNumber);
+    currentUser.setRole(role);
+    currentUser.setRegistrationDate(registrationDate);
+    currentUser.setSchoolYear(schoolYear);
+    currentUser.setPassword(hashPassword);
+    currentUser.setVersion(1);
+
+    String oldPwd = "12";
+    String newPwd = "test";
+    String newPwdRepeat = "test";
+
+    assertThrows(UnauthorizedAccessException.class,
+        () -> userUCC.editPassword(currentUser, oldPwd, newPwd, newPwdRepeat));
+
+  }
+
+  @Test
+  @DisplayName("Edit user password with different new password should not work")
+  public void testEditPasswordDifferentPwd() {
+
+    UserDTO currentUser = userFactory.getUserDTO();
+    currentUser.setId(1);
+    currentUser.setEmail(email);
+    currentUser.setLastname(lastname);
+    currentUser.setFirstname(firstname);
+    currentUser.setPhoneNumber(phoneNumber);
+    currentUser.setRole(role);
+    currentUser.setRegistrationDate(registrationDate);
+    currentUser.setSchoolYear(schoolYear);
+    currentUser.setPassword(hashPassword);
+    currentUser.setVersion(1);
+
+    String oldPwd = "123";
+    String newPwd = "test";
+    String newPwdRepeat = "tes";
+
+    assertThrows(InvalidRequestException.class,
+        () -> userUCC.editPassword(currentUser, oldPwd, newPwd, newPwdRepeat));
+
+  }
+
+  @Test
+  @DisplayName("Edit user password with someone updating at same time should work")
+  public void testEditPasswordConcurrentUpdate() {
+
+    UserDTO currentUser = userFactory.getUserDTO();
+    currentUser.setId(1);
+    currentUser.setEmail(email);
+    currentUser.setLastname(lastname);
+    currentUser.setFirstname(firstname);
+    currentUser.setPhoneNumber(phoneNumber);
+    currentUser.setRole(role);
+    currentUser.setRegistrationDate(registrationDate);
+    currentUser.setSchoolYear(schoolYear);
+    currentUser.setPassword(hashPassword);
+    currentUser.setVersion(1);
+
+    String oldPwd = "123";
+    String newPwd = "test";
+    String newPwdRepeat = "test";
+
+    Mockito.when(userDAOMock.editOneUser(currentUser, 1))
+        .thenReturn(null);
+
+    assertThrows(DuplicateException.class,
+        () -> userUCC.editPassword(currentUser, oldPwd, newPwd, newPwdRepeat));
 
   }
 
