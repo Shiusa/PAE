@@ -3,6 +3,7 @@ package be.vinci.pae.domain.ucc;
 import be.vinci.pae.domain.Company;
 import be.vinci.pae.domain.Contact;
 import be.vinci.pae.domain.dto.ContactDTO;
+import be.vinci.pae.domain.dto.InternshipDTO;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.CompanyDAO;
@@ -32,7 +33,10 @@ public class ContactUCCImpl implements ContactUCC {
   @Inject
   private CompanyDAO companyDAO;
   @Inject
+  private InternshipUCC internshipUCC;
+  @Inject
   private InternshipDAO internshipDAO;
+
 
   @Override
   public ContactDTO start(int company, int studentId) {
@@ -116,7 +120,7 @@ public class ContactUCCImpl implements ContactUCC {
   }
 
   @Override
-  public ContactDTO unsupervise(int contactId, int student) {
+  public ContactDTO unsupervise(int contactId, int student, int version) {
     Contact contact;
     ContactDTO contactDTO;
     try {
@@ -128,8 +132,6 @@ public class ContactUCCImpl implements ContactUCC {
         throw new ResourceNotFoundException();
       }
 
-      int version = contact.getVersion();
-
       if (!contact.isStarted() && !contact.isAdmitted()) {
         throw new NotAllowedException();
       } else if (contact.getStudent().getId() != student) {
@@ -137,6 +139,11 @@ public class ContactUCCImpl implements ContactUCC {
       }
 
       contactDTO = contactDAO.unsupervise(contactId, version);
+
+      if (contactDTO.getVersion() != version + 1) {
+        Logs.log(Level.ERROR, "ContactUCC (unsupervise) : the contact's version isn't matching");
+        throw new InvalidRequestException();
+      }
 
       dalServices.commitTransaction();
       Logs.log(Level.DEBUG, "ContactUCC (unsupervise) : success!");
@@ -148,7 +155,7 @@ public class ContactUCCImpl implements ContactUCC {
   }
 
   @Override
-  public ContactDTO admit(int contactId, String meeting, int studentId) {
+  public ContactDTO admit(int contactId, String meeting, int studentId, int version) {
     Logs.log(Level.DEBUG, "ContactUCC (admit) : entrance");
     Contact contact;
     ContactDTO contactDTO;
@@ -172,9 +179,12 @@ public class ContactUCCImpl implements ContactUCC {
         Logs.log(Level.ERROR, "ContactUCC (admit) : contact's state isn't started");
         throw new InvalidRequestException();
       }
-
-      int version = contact.getVersion();
       contactDTO = contactDAO.admitContact(contactId, meeting, version);
+
+      if (contactDTO.getVersion() != version + 1) {
+        Logs.log(Level.ERROR, "ContactUCC (admit) : the contact's version isn't matching");
+        throw new InvalidRequestException();
+      }
 
       dalServices.commitTransaction();
       Logs.log(Level.DEBUG, "ContactUCC (admit) : success!");
@@ -186,7 +196,7 @@ public class ContactUCCImpl implements ContactUCC {
   }
 
   @Override
-  public ContactDTO turnDown(int contactId, String reasonForRefusal, int studentId) {
+  public ContactDTO turnDown(int contactId, String reasonForRefusal, int studentId, int version) {
     Logs.log(Level.DEBUG, "ContactUCC (turnDown) : entrance");
     Contact contact;
     ContactDTO contactDTO;
@@ -198,8 +208,6 @@ public class ContactUCCImpl implements ContactUCC {
         Logs.log(Level.ERROR, "ContactUCC (turnDown) : contact not found");
         throw new ResourceNotFoundException();
       }
-
-      int version = contact.getVersion();
 
       if (contact.getStudent().getId() != studentId) {
         Logs.log(Level.ERROR,
@@ -213,6 +221,11 @@ public class ContactUCCImpl implements ContactUCC {
 
       contactDTO = contactDAO.turnDown(contactId, reasonForRefusal, version);
 
+      if (contactDTO.getVersion() != version + 1) {
+        Logs.log(Level.ERROR, "ContactUCC (turndown) : the contact's version isn't matching");
+        throw new InvalidRequestException();
+      }
+
       dalServices.commitTransaction();
       Logs.log(Level.DEBUG, "ContactUCC (turnDown) : success!");
       return contactDTO;
@@ -225,25 +238,18 @@ public class ContactUCCImpl implements ContactUCC {
   @Override
   public void putStudentContactsOnHold(int studentId) {
     Logs.log(Level.DEBUG, "ContactUCC (putStudentContactsOnHold) : entrance");
-    try {
-      dalServices.startTransaction();
-      List<ContactDTO> contactDTOList =
-          contactDAO.getAllContactsByStudentStartedOrAdmitted(studentId);
-      for (ContactDTO c : contactDTOList) {
-        contactDAO.putContactOnHold(c);
-      }
-      dalServices.commitTransaction();
-    } catch (Exception e) {
-      dalServices.rollbackTransaction();
-      throw e;
+    List<ContactDTO> contactDTOList =
+        contactDAO.getAllContactsByStudentStartedOrAdmitted(studentId);
+    for (ContactDTO c : contactDTOList) {
+      contactDAO.putContactOnHold(c);
     }
   }
 
   @Override
-  public ContactDTO accept(int contactId, int studentId) {
+  public InternshipDTO accept(int contactId, int studentId, InternshipDTO internshipDTO,
+      int version) {
     Logs.log(Level.DEBUG, "ContactUCC (accept) : entrance");
     Contact contact;
-    ContactDTO contactDTO;
     try {
       dalServices.startTransaction();
       contact = (Contact) contactDAO.findContactById(contactId);
@@ -253,7 +259,6 @@ public class ContactUCCImpl implements ContactUCC {
             "ContactUCC (accept) : contact not found");
         throw new ResourceNotFoundException();
       }
-      int version = contact.getVersion();
 
       if (!contact.isAdmitted()) {
         Logs.log(Level.ERROR, "ContactUCC (accept) : contact's state not admitted");
@@ -261,9 +266,16 @@ public class ContactUCCImpl implements ContactUCC {
       } else if (contact.getStudent().getId() != studentId) {
         throw new NotAllowedException();
       }
-      contactDTO = contactDAO.accept(contactId, version);
+      ContactDTO contactDTO = contactDAO.accept(contactId, version);
+      if (contactDTO.getVersion() != version + 1) {
+        Logs.log(Level.ERROR, "ContactUCC (accept) : the contact's version isn't matching");
+        throw new InvalidRequestException();
+      }
+      InternshipDTO internshipDTO1 = internshipUCC.createInternship(internshipDTO, studentId);
+      putStudentContactsOnHold(studentId);
+
       dalServices.commitTransaction();
-      return contactDTO;
+      return internshipDTO1;
     } catch (Exception e) {
       dalServices.rollbackTransaction();
       throw e;

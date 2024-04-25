@@ -1,6 +1,7 @@
 package be.vinci.pae.domain.ucc;
 
 import be.vinci.pae.domain.dto.ContactDTO;
+import be.vinci.pae.domain.dto.InternshipDTO;
 import java.util.List;
 
 /**
@@ -24,9 +25,10 @@ public interface ContactUCC {
    * @param contactId the id of the contact.
    * @param meeting   the type of the meeting either on site or remote.
    * @param studentId the id of the student.
+   * @param version   the versino of the contact.
    * @return the started contact.
    */
-  ContactDTO admit(int contactId, String meeting, int studentId);
+  ContactDTO admit(int contactId, String meeting, int studentId, int version);
 
 
   /**
@@ -51,9 +53,10 @@ public interface ContactUCC {
    *
    * @param contactId the id of the contact.
    * @param studentId the id of the student.
+   * @param vesrion   the version of the contact.
    * @return the unsupervised state of a contact.
    */
-  ContactDTO unsupervise(int contactId, int studentId);
+  ContactDTO unsupervise(int contactId, int studentId, int vesrion);
 
   /**
    * turn down the contact.
@@ -61,9 +64,10 @@ public interface ContactUCC {
    * @param contactId        the id of the contact.
    * @param reasonForRefusal the reason for the refusal.
    * @param studentId        the id of the student.
+   * @param version          the version of the contact
    * @return the started contact.
    */
-  ContactDTO turnDown(int contactId, String reasonForRefusal, int studentId);
+  ContactDTO turnDown(int contactId, String reasonForRefusal, int studentId, int version);
 
   /**
    * Put all the contacts of the students that are not accepted, turned down or unsupervised on
@@ -74,13 +78,15 @@ public interface ContactUCC {
   void putStudentContactsOnHold(int studentId);
 
   /**
-   * Accepted the contact.
+   * Accept the contact and call the method to create the internshipDTO in params..
    *
-   * @param contactId the id of the contact.
-   * @param studentId the id of the student.
+   * @param contactId     the id of the contact.
+   * @param studentId     the id of the student.
+   * @param internshipDTO the internship to create.
+   * @param version       the version of the contact.
    * @return the accepted contact.
    */
-  ContactDTO accept(int contactId, int studentId);
+  InternshipDTO accept(int contactId, int studentId, InternshipDTO internshipDTO, int version);
 
 
   /**

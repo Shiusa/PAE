@@ -150,10 +150,11 @@ public class ContactResource {
     }
     int contactId = json.get("contactId").asInt();
     String meeting = json.get("meeting").asText();
+    int version = json.get("version").asInt();
     UserDTO userDTO = (UserDTO) request.getProperty("user");
     int studentId = userDTO.getId();
 
-    ContactDTO contactDTO = contactUCC.admit(contactId, meeting, studentId);
+    ContactDTO contactDTO = contactUCC.admit(contactId, meeting, studentId, version);
     Logs.log(Level.DEBUG, "ContactResource (admit) : success!");
 
     return jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
@@ -183,10 +184,11 @@ public class ContactResource {
       throw new WebApplicationException("Contact id cannot be blank", Response.Status.BAD_REQUEST);
     }
     int contactId = json.get("contactId").asInt();
+    int version = json.get("version").asInt();
     int studentId = userDTO.getId();
 
     Logs.log(Level.DEBUG, "ContactResource (unsupervise) : success!");
-    ContactDTO contactDTO = contactUCC.unsupervise(contactId, studentId);
+    ContactDTO contactDTO = contactUCC.unsupervise(contactId, studentId, version);
     return jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
   }
 
@@ -215,10 +217,11 @@ public class ContactResource {
 
     int contactId = json.get("contactId").asInt();
     String reasonForRefusal = json.get("reasonForRefusal").asText();
+    int version = json.get("version").asInt();
     UserDTO userDTO = (UserDTO) request.getProperty("user");
     int studentId = userDTO.getId();
 
-    ContactDTO contactDTO = contactUCC.turnDown(contactId, reasonForRefusal, studentId);
+    ContactDTO contactDTO = contactUCC.turnDown(contactId, reasonForRefusal, studentId, version);
     ObjectNode contact = jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
 
     Logs.log(Level.DEBUG, "ContactResource (turnDown) : success!");
@@ -226,35 +229,6 @@ public class ContactResource {
     return contact;
   }
 
-  /**
-   * Accepted contact route.
-   *
-   * @param request the token.
-   * @param json    jsonNode containing contact id to unsupervised the contact.
-   * @return the accepted state of a contact.
-   */
-  @POST
-  @Path("accept")
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Produces(MediaType.APPLICATION_JSON)
-  @Authorize
-  public ContactDTO accept(@Context ContainerRequest request, JsonNode json) {
-    Logs.log(Level.INFO, "ContactResource (accept) : entrance");
-    UserDTO userDTO = (UserDTO) request.getProperty("user");
-    if (!json.hasNonNull("contactId")) {
-      Logs.log(Level.ERROR, "ContactResource (accept) : contact null");
-      throw new WebApplicationException("Contact id required", Response.Status.BAD_REQUEST);
-    }
-    if (json.get("contactId").asText().isBlank()) {
-      Logs.log(Level.ERROR, "ContactResource (accept) : contact blank");
-      throw new WebApplicationException("Contact id cannot be blank", Response.Status.BAD_REQUEST);
-    }
-    int contactId = json.get("contactId").asInt();
-    int studentId = userDTO.getId();
-
-    Logs.log(Level.DEBUG, "ContactResource (accept) : success!");
-    return contactUCC.accept(contactId, studentId);
-  }
 
   /**
    * Get all contacts by a student id.

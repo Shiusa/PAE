@@ -229,24 +229,6 @@ public class InternshipDAOImpl implements InternshipDAO {
     }
   }
 
-  public InternshipDTO editProject(String project, int version, int internshipId) {
-    String requestSql = """
-        UPDATE proStage.internships
-        SET project = ?
-        WHERE internship_id = ? AND version = ?
-        RETURNING *;
-        """;
-    try (PreparedStatement ps = dalServices.getPreparedStatement(requestSql)) {
-      ps.setString(1, project);
-      ps.setInt(2, internshipId);
-      ps.setInt(3, version);
-      ps.executeQuery();
-      return getOneInternshipById(internshipId);
-    } catch (SQLException e) {
-      throw new FatalException(e);
-    }
-  }
-
   /**
    * Build the InternshipDTO based on the prepared statement.
    *
@@ -271,6 +253,24 @@ public class InternshipDAOImpl implements InternshipDAO {
     }
   }
 
+  public InternshipDTO editProject(String project, int version, int internshipId) {
+    String requestSql = """
+        UPDATE proStage.internships
+        SET project = ?, version = ?
+        WHERE internship_id = ? AND version = ?
+        RETURNING *;
+        """;
+    try (PreparedStatement ps = dalServices.getPreparedStatement(requestSql)) {
+      ps.setString(1, project);
+      ps.setInt(2, version + 1);
+      ps.setInt(3, internshipId);
+      ps.setInt(4, version);
+      ps.executeQuery();
+      return getOneInternshipById(internshipId);
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+  }
   private List<InternshipDTO> buildListInternshipDTO(PreparedStatement ps) {
     try (ResultSet rs = ps.executeQuery()) {
       List<InternshipDTO> internshipDTOList = new ArrayList<>();
@@ -292,5 +292,4 @@ public class InternshipDAOImpl implements InternshipDAO {
       throw new FatalException(e);
     }
   }
-
 }

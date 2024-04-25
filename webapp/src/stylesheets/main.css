@@ -151,7 +151,7 @@ p {
   color: var(--ma-couleur);
 }
 
-#good-message {
+#error-message {
   color: red;
   font-size: 15px;
   display: none;
@@ -380,7 +380,7 @@ i {
 
 
 .title-col-1 {
-  width: 40%;
+  width: 60%;
 }
 
 .title-col-2 {
@@ -388,7 +388,7 @@ i {
 }
 
 .title-col-3 {
-  width: 40%;
+  width: 20%;
 }
 
 }
@@ -707,6 +707,11 @@ input::placeholder {
   transform: translateX(-5px);
 }
 
+.accept-contact-btn {
+  border: none;
+  color: white;
+}
+
 /*register company in contact page*/
 .company-btn {
   background-color: white;
@@ -899,9 +904,11 @@ input::placeholder {
   font-size: 20px;
   text-align: center;
 }
+
 #blacklistMotivation {
   border-color: var(--ma-couleur);
 }
+
 #title {
   color: var(--ma-couleur);
 }
@@ -1163,6 +1170,7 @@ input::placeholder {
     font-weight: bold;
   }
 }
+
 .box-internshipMother {
   width: 1000px;
   height: 500px;
@@ -1171,6 +1179,7 @@ input::placeholder {
   display: flex;
   justify-content: center;
 }
+
 .box-internshipChild {
   width: 90%;
   max-width: 800px;
@@ -1185,12 +1194,12 @@ input::placeholder {
   border-radius: 7px;
 }
 
-.textCSS{
+.textCSS {
   color: var(--ma-couleur);
   padding-left: 2%;
 }
 
-.divValueLabelInternshipProject{
+.divValueLabelInternshipProject {
   border: 2px solid var(--ma-couleur);
   border-radius: 7px;
 }
@@ -1204,6 +1213,7 @@ input::placeholder {
   border-bottom-right-radius: 0px;
 
 }
+
 .submitProjectButton {
   background-color: var(--ma-couleur);
   color: white;
@@ -1214,4 +1224,118 @@ input::placeholder {
 
 #good-message{
   color: var(--ma-couleur);
+  font-size: 15px;
+  display: none;
+  text-align: center;
+}
+
+.box-chooseSupervisorMother {
+  width: 50%;
+  max-width: 650px;
+  height: 500px;
+  border: 4px solid var(--ma-couleur);
+  border-bottom-right-radius: 30px;
+  border-top-right-radius: 30px;
+  display: flex;
+  justify-content: center;
+}
+.box-chooseSupervisorChild {
+  width: 90%;
+  max-width: 650px;
+  height: 90%;
+  border: 2px solid var(--ma-couleur);
+  border-radius: 30px;
+  margin: auto;
+}
+
+.box-createSupervisor {
+  width: 35%;
+  max-width: 450px;
+  height: 500px;
+  background: var(--ma-couleur);
+  border-bottom-left-radius: 30px;
+  border-top-left-radius: 30px;
+}
+
+/* Create internship */
+
+.container-create {
+
+
+  .box-resp {
+    width: 35%;
+    max-width: 600px;
+    background: var(--ma-couleur);
+
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    color: white;
+    height: 550px;
+
+
+    .input-group {
+      width: 80%;
+    }
+
+    .create-button {
+      padding: 10px 15px;
+      border-radius: 5px;
+      border: none;
+      background: white;
+      color: var(--ma-couleur);
+      transition: 0.2s ease-in-out;
+    }
+
+    .create-button:hover {
+      transform: scale(1.05);
+    }
+
+    i {
+      color: var(--ma-couleur);
+    }
+  }
+
+  .box-company {
+    width: 45%;
+    max-width: 700px;
+    border: 3px solid var(--ma-couleur);
+    border-radius: 10px;
+    color: var(--ma-couleur);
+    height: 600px;
+    border-bottom-left-radius: 0px;
+
+    .input-group {
+      width: 80%;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    .create-button {
+      padding: 10px 15px;
+      border-radius: 5px;
+      border: none;
+      background: var(--ma-couleur);
+      color: white;
+      transition: 0.2s ease-in-out;
+    }
+
+    i {
+      color: white;
+
+    }
+
+    span {
+      background: var(--ma-couleur);
+    }
+
+    input {
+      border: 2px solid var(--ma-couleur);
+    }
+
+    .create-button:hover {
+      transform: scale(1.05);
+    }
+  }
 }

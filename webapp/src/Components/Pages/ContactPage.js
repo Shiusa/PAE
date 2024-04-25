@@ -63,7 +63,7 @@ const submitRegistration = async (e) => {
     }
 
   } catch (error) {
-    const errorMessage = document.getElementById("good-message");
+    const errorMessage = document.getElementById("error-message");
     errorMessage.style.display = "block";
 
     if (error instanceof Error && error.message.startsWith(
@@ -120,7 +120,7 @@ const renderRegisterCompanyForm = async () => {
             </div>
             <!--<p class="btn-login" id="register-btn">Ajouter l'entreprise</p>-->
             <button class="register-company-btn rounded-1 px-2 py-3 w-50 mt-5">Ajouter l'entreprise</button>
-            <h2 id="good-message"></h2>
+            <h2 id="error-message"></h2>
           </div>
         </div>
       </div>
@@ -147,6 +147,7 @@ const renderRegisterCompanyForm = async () => {
 const ContactPage = async () => {
 
   const main = document.querySelector('main');
+  awaitFront();
 
   userToken = getToken();
   if (!userToken) {
@@ -176,7 +177,6 @@ const ContactPage = async () => {
   const companiesTable = await readAllCompanies();
 
   showNavStyle("contact");
-  awaitFront();
 
   main.innerHTML = `
     <div class="container-fluid mt-5 d-flex flex-column rounded-3 overflow-hidden" style="width: 100%; height: 74vh; border: none; border-radius: 0; background: white; position: relative">
@@ -292,7 +292,7 @@ const ContactPage = async () => {
       info += `</div>`;
       u += 1;
     }
-    info += `<h2 id="good-message"></h2>`
+    info += `<h2 id="error-message"></h2>`
     companiesContainer.innerHTML = info;
   }
 
@@ -331,7 +331,7 @@ const ContactPage = async () => {
       const companyInfo = await response.json();
       return companyInfo;
     } catch (error) {
-      const errorMessage = document.getElementById("good-message");
+      const errorMessage = document.getElementById("error-message");
       errorMessage.style.display = "block";
 
       if (error instanceof Error && error.message.startsWith(

@@ -1,5 +1,7 @@
 package be.vinci.pae.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * Implementation of company.
  */
@@ -12,7 +14,7 @@ public class CompanyImpl implements Company {
   private String address;
   private String phoneNumber;
   private String email;
-  private boolean isBlacklisted;
+  private boolean blacklisted;
   private String blacklistMotivation;
   private int version;
 
@@ -78,12 +80,12 @@ public class CompanyImpl implements Company {
 
   @Override
   public boolean isBlacklisted() {
-    return this.isBlacklisted;
+    return this.blacklisted;
   }
 
   @Override
-  public void setIsBlacklisted(boolean isBlacklisted) {
-    this.isBlacklisted = isBlacklisted;
+  public void setIsBlacklisted(boolean blacklisted) {
+    this.blacklisted = blacklisted;
   }
 
   @Override
@@ -107,7 +109,8 @@ public class CompanyImpl implements Company {
   }
 
   @Override
+  @JsonIgnore
   public boolean studentCanContact() {
-    return !this.isBlacklisted;
+    return !this.blacklisted;
   }
 }

@@ -8,6 +8,7 @@ import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.utils.Logs;
 import be.vinci.pae.utils.exceptions.DuplicateException;
 import be.vinci.pae.utils.exceptions.FatalException;
+import be.vinci.pae.utils.exceptions.InvalidRequestException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
 import jakarta.inject.Inject;
 import java.util.List;
@@ -141,7 +142,7 @@ public class CompanyUCCImpl implements CompanyUCC {
   }
 
   @Override
-  public CompanyDTO blacklist(int companyId, String blacklistMotivation) {
+  public CompanyDTO blacklist(int companyId, String blacklistMotivation, int version) {
     CompanyDTO companyDTO;
     Logs.log(Level.DEBUG, "CompanyUCC (blacklist) : entrance");
     try {
@@ -152,8 +153,11 @@ public class CompanyUCCImpl implements CompanyUCC {
         dalServices.rollbackTransaction();
         throw new DuplicateException();
       }
-      int version = companyDTO.getVersion();
       companyDTO = companyDAO.blacklist(companyId, blacklistMotivation, version);
+      if (companyDTO.getVersion() != version + 1) {
+        Logs.log(Level.ERROR, "CompanyUCC (blacklist) : the company's version isn't matching");
+        throw new InvalidRequestException();
+      }
     } catch (FatalException e) {
       dalServices.rollbackTransaction();
       throw e;

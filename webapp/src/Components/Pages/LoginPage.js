@@ -65,7 +65,7 @@ async function login(e) {
       await onUserLogin(user);
 
     } catch (error) {
-      errorMessage = document.getElementById("good-message");
+      errorMessage = document.getElementById("error-message");
       errorMessage.style.display = "block";
     }
   }
@@ -101,7 +101,7 @@ const LoginPage = () => {
                   Se souvenir de moi
                 </label>
               </div>
-              <h2 id="good-message">L'adresse email ou<br>le mot de passe est incorrect !</h2>
+              <h2 id="error-message">L'adresse email ou<br>le mot de passe est incorrect !</h2>
               <p class="btn-login" id="login-btn">Se connecter</p>
             </div>
           </div>
