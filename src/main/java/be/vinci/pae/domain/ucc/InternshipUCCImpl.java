@@ -113,10 +113,14 @@ public class InternshipUCCImpl implements InternshipUCC {
 
   @Override
   public InternshipDTO editProject(String project, int version, int internshipId) {
-    InternshipDTO internship;
     try {
       dalServices.startTransaction();
-      internship = internshipDAO.editProject(project, version, internshipId);
+      InternshipDTO internship = internshipDAO.editProject(project, version, internshipId);
+      if (internship.getVersion() != version + 1) {
+        Logs.log(Level.ERROR,
+            "InternshipUCC (editProject) : the internship's version isn't matching");
+        throw new InvalidRequestException();
+      }
       dalServices.commitTransaction();
       return internship;
     } catch (Exception e) {

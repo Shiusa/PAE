@@ -174,8 +174,17 @@ public class InternshipUCCImplTest {
   }
 
   @Test
+  @DisplayName("Test editProject with wrong version")
+  public void testEditProjectWithWrongVersion() {
+    internshipDTO.setVersion(3);
+    Mockito.when(internshipDAOMock.editProject("test", 1, 1)).thenReturn(internshipDTO);
+    assertThrows(InvalidRequestException.class, () -> internshipUCC.editProject("test", 1, 1));
+  }
+
+  @Test
   @DisplayName("Test editProject correctly")
   public void testEditProjectCorrectly() {
+    internshipDTO.setVersion(2);
     Mockito.when(internshipDAOMock.editProject("test", 1, 1)).thenReturn(internshipDTO);
     assertNotNull(internshipUCC.editProject("test", 1, 1));
   }

@@ -220,14 +220,15 @@ public class InternshipDAOImpl implements InternshipDAO {
   public InternshipDTO editProject(String project, int version, int internshipId) {
     String requestSql = """
         UPDATE proStage.internships
-        SET project = ?
+        SET project = ?, version = ?
         WHERE internship_id = ? AND version = ?
         RETURNING *;
         """;
     try (PreparedStatement ps = dalServices.getPreparedStatement(requestSql)) {
       ps.setString(1, project);
-      ps.setInt(2, internshipId);
-      ps.setInt(3, version);
+      ps.setInt(2, version + 1);
+      ps.setInt(3, internshipId);
+      ps.setInt(4, version);
       ps.executeQuery();
       return getOneInternshipById(internshipId);
     } catch (SQLException e) {
