@@ -20,7 +20,6 @@ public class SupervisorUCCImpl implements SupervisorUCC {
     Logs.log(Level.INFO, "SupervisorUCCImpl (getOneById) : entrance");
     SupervisorDTO supervisorDTO = supervisorDAO.getOneById(id);
     if (supervisorDTO == null) {
-      Logs.log(Level.ERROR, "SupervisorUCCImpl (getOneById) : supervisor not found.");
       throw new ResourceNotFoundException();
     }
     Logs.log(Level.DEBUG, "SupervisorUCCImpl (getOneById) : success!");

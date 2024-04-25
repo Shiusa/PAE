@@ -81,6 +81,7 @@ public class CompanyResource {
       for (Map.Entry<CompanyDTO, Map<String, Integer>> companyData : companyValue.entrySet()) {
 
         CompanyDTO company = companyData.getKey();
+
         ObjectNode companyNode = jsonMapper.createObjectNode();
         companyNode.put("id", company.getId());
         companyNode.put("name", company.getName());

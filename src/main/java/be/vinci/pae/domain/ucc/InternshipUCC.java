@@ -1,6 +1,7 @@
 package be.vinci.pae.domain.ucc;
 
 import be.vinci.pae.domain.dto.InternshipDTO;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,6 +27,13 @@ public interface InternshipUCC {
    * @return the internship found.
    */
   InternshipDTO getOneById(int id, int actualStudent);
+
+  /**
+   * Get all internships.
+   *
+   * @return all the internships.
+   */
+  List<InternshipDTO> getAllInternships();
 
   /**
    * Create an internship.

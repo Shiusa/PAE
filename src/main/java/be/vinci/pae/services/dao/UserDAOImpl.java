@@ -102,6 +102,7 @@ public class UserDAOImpl implements UserDAO {
         us.phone_number AS us_phone_number, us.password, us.registration_date,
         us.school_year AS us_school_year, us.role, us.version AS us_version
         FROM prostage.users us
+        ORDER BY us.user_id
         """;
 
     try (PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql)) {
@@ -127,7 +128,6 @@ public class UserDAOImpl implements UserDAO {
             phone_number = ?, password = ?, registration_date = ?,
             school_year = ?, role = ?, version = ?
         WHERE user_id = ? AND version = ?
-        RETURNING *
         """;
 
     try (PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql)) {
@@ -162,11 +162,10 @@ public class UserDAOImpl implements UserDAO {
    */
   @Override
   public UserDTO addOneUser(UserDTO user) {
-
     Logs.log(Level.DEBUG, "UserDAO (addOneUser) : entrance");
     String requestSql = """
         INSERT INTO prostage.users(email, lastname, firstname, phone_number,
-        password, registration_date, school_year, role, version) VALUES (?,?,?,?,?,?,?,?,?)
+        password, registration_date, school_year, role, version) VALUES (?,?,?,?,?,?,?,?,1)
         RETURNING email AS inserted_email
         """;
 
@@ -179,7 +178,6 @@ public class UserDAOImpl implements UserDAO {
       ps.setDate(6, user.getRegistrationDate());
       ps.setString(7, user.getSchoolYear());
       ps.setString(8, user.getRole());
-      ps.setInt(9, user.getVersion());
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
           Logs.log(Level.DEBUG, "UserDAO (addOneUser) : success!");
