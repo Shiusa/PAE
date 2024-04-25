@@ -354,7 +354,7 @@ const DashboardPage = async () => {
                                 </select>
                             </div>
                             
-                            <div class="radioButton d-flex mt-3 align-items-center admit-extra" style="visibility: hidden; height: 0">
+                            <div class="radioButton d-flex mt-4 align-items-center admit-extra" style="visibility: hidden; height: 0">
                                 <p class="fw-bold me-4" style="width: 30%;">Type de rencontre</p>
                                 <div class="ent-radio form-check form-check-inline">
                                     <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="Dans l entreprise" ${checkedSurPlace}>
@@ -366,16 +366,17 @@ const DashboardPage = async () => {
                                 </div>
                             </div>
                             
-                            <div class="d-flex mt-4 mb-2 refused-extra" style="visibility: hidden; height: 0;"> 
+                            <div class="d-flex mt-2 mb-2 refused-extra" style="visibility: hidden; height: 0;"> 
                                 <p class="fw-bold me-4" style="width: 30%;">Raison</p>
-                                <textarea id="refusalReason" class="p-3" style="width: 60%; border: none" name="raison" placeholder="Raison du refus">${refusal}</textarea>
+                                <textarea id="refusalReason" class="px-3 pt-3" style="" name="raison" placeholder="Raison du refus">${refusal}</textarea>
                             </div>
                             
                             <div class="d-flex justify-content-center">
-                              <button id="updateBtn" class="btn btn-primary mb-2 ms-3" type="submit">Mettre à jour</button>
+                              <button id="updateBtn" class="btn btn-primary mt-1 mb-2 ms-3  ${contactInfoJSON.state
+    === 'accepté' ? 'invisible' : 'visible'}" type="submit">Mettre à jour</button>
                             </div>
                             
-                            <h2 id="error-message"></h2>
+                            <h2 id="error-message" class="mt-2"></h2>
                         </div>
                     </div>
         `
