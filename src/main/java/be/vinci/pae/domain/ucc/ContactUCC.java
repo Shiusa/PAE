@@ -83,9 +83,10 @@ public interface ContactUCC {
    * @param contactId     the id of the contact.
    * @param studentId     the id of the student.
    * @param internshipDTO the internship to create.
+   * @param version       the version of the contact.
    * @return the accepted contact.
    */
-  InternshipDTO accept(int contactId, int studentId, InternshipDTO internshipDTO);
+  InternshipDTO accept(int contactId, int studentId, InternshipDTO internshipDTO, int version);
 
 
   /**

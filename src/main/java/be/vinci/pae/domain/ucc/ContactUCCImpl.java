@@ -246,7 +246,8 @@ public class ContactUCCImpl implements ContactUCC {
   }
 
   @Override
-  public InternshipDTO accept(int contactId, int studentId, InternshipDTO internshipDTO) {
+  public InternshipDTO accept(int contactId, int studentId, InternshipDTO internshipDTO,
+      int version) {
     Logs.log(Level.DEBUG, "ContactUCC (accept) : entrance");
     Contact contact;
     try {
@@ -258,7 +259,6 @@ public class ContactUCCImpl implements ContactUCC {
             "ContactUCC (accept) : contact not found");
         throw new ResourceNotFoundException();
       }
-      int version = contact.getVersion();
 
       if (!contact.isAdmitted()) {
         Logs.log(Level.ERROR, "ContactUCC (accept) : contact's state not admitted");
@@ -266,7 +266,11 @@ public class ContactUCCImpl implements ContactUCC {
       } else if (contact.getStudent().getId() != studentId) {
         throw new NotAllowedException();
       }
-      contactDAO.accept(contactId, version);
+      ContactDTO contactDTO = contactDAO.accept(contactId, version);
+      if (contactDTO.getVersion() != version + 1) {
+        Logs.log(Level.ERROR, "ContactUCC (accept) : the contact's version isn't matching");
+        throw new InvalidRequestException();
+      }
       InternshipDTO internshipDTO1 = internshipUCC.createInternship(internshipDTO, studentId);
       putStudentContactsOnHold(studentId);
 

@@ -75,6 +75,7 @@ const BlacklistPage = async(companyId) => {
                     body: JSON.stringify({
                         company : company.id,
                         blacklistMotivation : blacklistMotivation.value,
+                        version : company.version
                     }),
                     headers: {
                     "Content-Type": "application/json",
