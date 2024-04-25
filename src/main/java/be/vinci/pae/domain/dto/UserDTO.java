@@ -137,6 +137,13 @@ public interface UserDTO {
   void setRole(String role);
 
   /**
+   * check if the user is a teacher.
+   *
+   * @return true if the user is a teacher, otherwise return false.
+   */
+  boolean isTeacher();
+
+  /**
    * Get the contact's version.
    *
    * @return the contact's version.
