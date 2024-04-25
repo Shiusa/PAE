@@ -7,14 +7,17 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import be.vinci.pae.domain.CompanyFactory;
 import be.vinci.pae.domain.ContactFactory;
+import be.vinci.pae.domain.InternshipFactory;
 import be.vinci.pae.domain.UserFactory;
 import be.vinci.pae.domain.dto.CompanyDTO;
 import be.vinci.pae.domain.dto.ContactDTO;
+import be.vinci.pae.domain.dto.InternshipDTO;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.domain.ucc.ContactUCC;
 import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.CompanyDAO;
 import be.vinci.pae.services.dao.ContactDAO;
+import be.vinci.pae.services.dao.InternshipDAO;
 import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.utils.exceptions.DuplicateException;
 import be.vinci.pae.utils.exceptions.FatalException;
@@ -40,11 +43,14 @@ public class ContactUCCImplTest {
   private static ContactDAO contactDAOMock;
   private static UserDAO userDAOMock;
   private static CompanyDAO companyDAOMock;
+  private static InternshipDAO internshipDAOMock;
   private static DalServices dalServicesMock;
   private ContactUCC contactUCC;
   private ContactDTO contactDTO;
   private UserDTO userDTO;
   private CompanyDTO companyDTO;
+  private InternshipDTO internshipDTO;
+
 
   @BeforeAll
   static void init() {
@@ -52,6 +58,7 @@ public class ContactUCCImplTest {
     contactDAOMock = serviceLocator.getService(ContactDAO.class);
     userDAOMock = serviceLocator.getService(UserDAO.class);
     companyDAOMock = serviceLocator.getService(CompanyDAO.class);
+    internshipDAOMock = serviceLocator.getService(InternshipDAO.class);
     dalServicesMock = serviceLocator.getService(DalServices.class);
   }
 
@@ -61,9 +68,11 @@ public class ContactUCCImplTest {
     ContactFactory contactFactory = serviceLocator.getService(ContactFactory.class);
     UserFactory userFactory = serviceLocator.getService(UserFactory.class);
     CompanyFactory companyFactory = serviceLocator.getService(CompanyFactory.class);
+    InternshipFactory internshipFactory = serviceLocator.getService(InternshipFactory.class);
     contactDTO = contactFactory.getContactDTO();
     userDTO = userFactory.getUserDTO();
     companyDTO = companyFactory.getCompanyDTO();
+    internshipDTO = internshipFactory.getInternshipDTO();
     Mockito.doNothing().when(dalServicesMock).startTransaction();
     Mockito.doNothing().when(dalServicesMock).commitTransaction();
     Mockito.doNothing().when(dalServicesMock).rollbackTransaction();
@@ -74,6 +83,7 @@ public class ContactUCCImplTest {
     Mockito.reset(contactDAOMock);
     Mockito.reset(userDAOMock);
     Mockito.reset(companyDAOMock);
+    Mockito.reset(internshipDAOMock);
   }
 
   @Test
@@ -98,6 +108,15 @@ public class ContactUCCImplTest {
     companyDTO.setIsBlacklisted(true);
     Mockito.when(userDAOMock.getOneUserById(1)).thenReturn(userDTO);
     Mockito.when(companyDAOMock.getOneCompanyById(1)).thenReturn(companyDTO);
+    assertThrows(InvalidRequestException.class, () -> contactUCC.start(1, 1));
+  }
+
+  @Test
+  @DisplayName("Test start with user with internship")
+  public void testStartWithUserWithInternship() {
+    Mockito.when(userDAOMock.getOneUserById(1)).thenReturn(userDTO);
+    Mockito.when(companyDAOMock.getOneCompanyById(1)).thenReturn(companyDTO);
+    Mockito.when(internshipDAOMock.getOneInternshipByIdUser(1)).thenReturn(internshipDTO);
     assertThrows(InvalidRequestException.class, () -> contactUCC.start(1, 1));
   }
 
@@ -205,6 +224,9 @@ public class ContactUCCImplTest {
           contactUCC.start(1, 1);
         }),
         () -> assertThrows(FatalException.class, () -> {
+          contactUCC.accept(1, 1, internshipDTO, 1);
+        }),
+        () -> assertThrows(FatalException.class, () -> {
           contactUCC.unsupervise(1, 1, 1);
         }),
         () -> assertThrows(FatalException.class, () -> {
@@ -240,6 +262,46 @@ public class ContactUCCImplTest {
     contactDTO.setState("initié");
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
     assertThrows(NotAllowedException.class, () -> contactUCC.admit(1, "à distance", 1, 1));
+  }
+
+  @Test
+  @DisplayName("Test admit contact with state admitted")
+  public void testAdmitContactStateAdmitted() {
+    userDTO.setId(1);
+    contactDTO.setStudent(userDTO);
+    contactDTO.setState("pris");
+    Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
+    assertThrows(InvalidRequestException.class, () -> contactUCC.admit(1, "sur place", 1, 1));
+  }
+
+  @Test
+  @DisplayName("Test admit contact with state turn down")
+  public void testAdmitContactStateTurnDown() {
+    userDTO.setId(1);
+    contactDTO.setStudent(userDTO);
+    contactDTO.setState("refusé");
+    Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
+    assertThrows(InvalidRequestException.class, () -> contactUCC.admit(1, "sur place", 1, 1));
+  }
+
+  @Test
+  @DisplayName("Test admit contact with state unsupervise")
+  public void testAdmitContactUnsupervise() {
+    userDTO.setId(1);
+    contactDTO.setStudent(userDTO);
+    contactDTO.setState("non suivi");
+    Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
+    assertThrows(InvalidRequestException.class, () -> contactUCC.admit(1, "sur place", 1, 1));
+  }
+
+  @Test
+  @DisplayName("Test admit contact with state on hold")
+  public void testAdmitContactOnHold() {
+    userDTO.setId(1);
+    contactDTO.setStudent(userDTO);
+    contactDTO.setState("suspendu");
+    Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
+    assertThrows(InvalidRequestException.class, () -> contactUCC.admit(1, "sur place", 1, 1));
   }
 
   @Test
