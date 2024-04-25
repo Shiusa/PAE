@@ -120,7 +120,7 @@ p {
   background: var(--ma-couleur-foncée);
   border: 2px solid var(--ma-couleur);
 }
-
+in
 .btn-outline-primary {
   border: 2px solid var(--ma-couleur);
   color: var(--ma-couleur);
@@ -1339,6 +1339,7 @@ input::placeholder {
     }
   }
 }
-.fa-solid fa-pencil{
-
+#btn-change-pwd{
+  color: var(--ma-couleur);
+  border-color: var(--ma-couleur);
 }
