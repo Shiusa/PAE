@@ -82,8 +82,6 @@ const UserListPage = async () => {
   const users = await readAllUsers();
   const interships = await readAllInternships();
 
-  console.log(interships);
-
   // eslint-disable-next-line no-unused-vars
   const tomSelectInstance = new TomSelect(selectElement, {
     plugins: ['remove_button'],
