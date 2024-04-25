@@ -29,7 +29,7 @@ Authorization: {{AchToken}}
 
 {
   "contactId": "12",
-  "meeting": "remote",
+  "meeting": "A distance",
   "version": "1"
 }
 
@@ -40,7 +40,7 @@ Authorization: {{AchToken}}
 
 {
   "contactId":"12",
-  "version":"2"
+  "version":"1"
 }
 
 ### turndown one contact
@@ -49,8 +49,9 @@ Content-Type: application/json
 Authorization: {{AchToken}}
 
 {
-  "contactId": "3",
-  "reasonForRefusal": "your profil isn't corresponding to our demand"
+  "contactId": "12",
+  "reasonForRefusal": "your profil isn't corresponding to our demand",
+  "version":"2"
 }
 
 ### get all contacts by student

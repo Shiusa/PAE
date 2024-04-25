@@ -129,7 +129,7 @@ public class ContactUCCImpl implements ContactUCC {
       contactDTO = contactDAO.unsupervise(contactId, version);
 
       if (contactDTO.getVersion() != version + 1) {
-        Logs.log(Level.ERROR, "ContactUCC (admit) : the contact's version isn't matching");
+        Logs.log(Level.ERROR, "ContactUCC (unsupervise) : the contact's version isn't matching");
         throw new InvalidRequestException();
       }
 
@@ -184,7 +184,7 @@ public class ContactUCCImpl implements ContactUCC {
   }
 
   @Override
-  public ContactDTO turnDown(int contactId, String reasonForRefusal, int studentId) {
+  public ContactDTO turnDown(int contactId, String reasonForRefusal, int studentId, int version) {
     Logs.log(Level.DEBUG, "ContactUCC (turnDown) : entrance");
     Contact contact;
     ContactDTO contactDTO;
@@ -197,8 +197,6 @@ public class ContactUCCImpl implements ContactUCC {
         throw new ResourceNotFoundException();
       }
 
-      int version = contact.getVersion();
-
       if (contact.getStudent().getId() != studentId) {
         Logs.log(Level.ERROR,
             "ContactUCC (turnDown) : the student of the contact isn't the student from the token");
@@ -210,6 +208,11 @@ public class ContactUCCImpl implements ContactUCC {
       }
 
       contactDTO = contactDAO.turnDown(contactId, reasonForRefusal, version);
+
+      if (contactDTO.getVersion() != version + 1) {
+        Logs.log(Level.ERROR, "ContactUCC (turndown) : the contact's version isn't matching");
+        throw new InvalidRequestException();
+      }
 
       dalServices.commitTransaction();
       Logs.log(Level.DEBUG, "ContactUCC (turnDown) : success!");

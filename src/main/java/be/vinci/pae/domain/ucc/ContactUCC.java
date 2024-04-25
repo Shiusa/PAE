@@ -63,9 +63,10 @@ public interface ContactUCC {
    * @param contactId        the id of the contact.
    * @param reasonForRefusal the reason for the refusal.
    * @param studentId        the id of the student.
+   * @param version          the version of the contact
    * @return the started contact.
    */
-  ContactDTO turnDown(int contactId, String reasonForRefusal, int studentId);
+  ContactDTO turnDown(int contactId, String reasonForRefusal, int studentId, int version);
 
   /**
    * Put all the contacts of the students that are not accepted, turned down or unsupervised on

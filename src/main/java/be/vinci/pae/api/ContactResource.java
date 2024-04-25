@@ -219,10 +219,11 @@ public class ContactResource {
 
     int contactId = json.get("contactId").asInt();
     String reasonForRefusal = json.get("reasonForRefusal").asText();
+    int version = json.get("version").asInt();
     UserDTO userDTO = (UserDTO) request.getProperty("user");
     int studentId = userDTO.getId();
 
-    ContactDTO contactDTO = contactUCC.turnDown(contactId, reasonForRefusal, studentId);
+    ContactDTO contactDTO = contactUCC.turnDown(contactId, reasonForRefusal, studentId, version);
     ObjectNode contact = jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
 
     Logs.log(Level.DEBUG, "ContactResource (turnDown) : success!");
