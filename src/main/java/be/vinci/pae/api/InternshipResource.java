@@ -117,7 +117,8 @@ public class InternshipResource {
     }
 
     InternshipDTO internshipDTO = contactUCC.accept(internship.getContact().getId(),
-        ((UserDTO) request.getProperty("user")).getId(), internship);
+        ((UserDTO) request.getProperty("user")).getId(), internship,
+        internship.getContact().getVersion());
     Logs.log(Level.DEBUG, "InternshipResource (create) : success!");
     return internshipDTO;
   }

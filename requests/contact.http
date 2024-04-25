@@ -28,8 +28,9 @@ Content-Type: application/json
 Authorization: {{AchToken}}
 
 {
-  "contactId": "3",
-  "meeting": "remote"
+  "contactId": "12",
+  "meeting": "A distance",
+  "version": "1"
 }
 
 ### Unsupervise one contact
@@ -38,7 +39,18 @@ Content-Type: application/json
 Authorization: {{AchToken}}
 
 {
-  "contactId":"3"
+  "contactId":"12",
+  "version":"1"
+}
+
+### accept one contact
+POST {{baseUrl}}/contacts/accept
+Content-Type: application/json
+Authorization: {{AchToken}}
+
+{
+  "contactId":"12",
+  "version":"2"
 }
 
 ### turndown one contact
@@ -47,8 +59,9 @@ Content-Type: application/json
 Authorization: {{AchToken}}
 
 {
-  "contactId": "3",
-  "reasonForRefusal": "your profil isn't corresponding to our demand"
+  "contactId": "12",
+  "reasonForRefusal": "your profil isn't corresponding to our demand",
+  "version":"2"
 }
 
 ### get all contacts by student

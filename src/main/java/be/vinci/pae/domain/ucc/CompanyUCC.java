@@ -45,8 +45,9 @@ public interface CompanyUCC {
    *
    * @param companyId           the company id
    * @param blacklistMotivation the motivation of the blacklist.
+   * @param version             the version of the company
    * @return a list containing all companies.
    */
-  CompanyDTO blacklist(int companyId, String blacklistMotivation);
+  CompanyDTO blacklist(int companyId, String blacklistMotivation, int version);
 
 }

@@ -150,10 +150,11 @@ public class ContactResource {
     }
     int contactId = json.get("contactId").asInt();
     String meeting = json.get("meeting").asText();
+    int version = json.get("version").asInt();
     UserDTO userDTO = (UserDTO) request.getProperty("user");
     int studentId = userDTO.getId();
 
-    ContactDTO contactDTO = contactUCC.admit(contactId, meeting, studentId);
+    ContactDTO contactDTO = contactUCC.admit(contactId, meeting, studentId, version);
     Logs.log(Level.DEBUG, "ContactResource (admit) : success!");
 
     return jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
@@ -183,10 +184,11 @@ public class ContactResource {
       throw new WebApplicationException("Contact id cannot be blank", Response.Status.BAD_REQUEST);
     }
     int contactId = json.get("contactId").asInt();
+    int version = json.get("version").asInt();
     int studentId = userDTO.getId();
 
     Logs.log(Level.DEBUG, "ContactResource (unsupervise) : success!");
-    ContactDTO contactDTO = contactUCC.unsupervise(contactId, studentId);
+    ContactDTO contactDTO = contactUCC.unsupervise(contactId, studentId, version);
     return jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
   }
 
@@ -215,16 +217,18 @@ public class ContactResource {
 
     int contactId = json.get("contactId").asInt();
     String reasonForRefusal = json.get("reasonForRefusal").asText();
+    int version = json.get("version").asInt();
     UserDTO userDTO = (UserDTO) request.getProperty("user");
     int studentId = userDTO.getId();
 
-    ContactDTO contactDTO = contactUCC.turnDown(contactId, reasonForRefusal, studentId);
+    ContactDTO contactDTO = contactUCC.turnDown(contactId, reasonForRefusal, studentId, version);
     ObjectNode contact = jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
 
     Logs.log(Level.DEBUG, "ContactResource (turnDown) : success!");
 
     return contact;
   }
+
 
   /**
    * Get all contacts by a student id.
