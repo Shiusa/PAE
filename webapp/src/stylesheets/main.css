@@ -380,7 +380,7 @@ i {
 
 
 .title-col-1 {
-  width: 40%;
+  width: 60%;
 }
 
 .title-col-2 {
@@ -388,7 +388,7 @@ i {
 }
 
 .title-col-3 {
-  width: 40%;
+  width: 20%;
 }
 
 }
@@ -707,6 +707,11 @@ input::placeholder {
   transform: translateX(-5px);
 }
 
+.accept-contact-btn {
+  border: none;
+  color: white;
+}
+
 /*register company in contact page*/
 .company-btn {
   background-color: white;
@@ -899,9 +904,11 @@ input::placeholder {
   font-size: 20px;
   text-align: center;
 }
+
 #blacklistMotivation {
   border-color: var(--ma-couleur);
 }
+
 #title {
   color: var(--ma-couleur);
 }
@@ -1163,6 +1170,7 @@ input::placeholder {
     font-weight: bold;
   }
 }
+
 .box-internshipMother {
   width: 1000px;
   height: 500px;
@@ -1171,6 +1179,7 @@ input::placeholder {
   display: flex;
   justify-content: center;
 }
+
 .box-internshipChild {
   width: 90%;
   max-width: 800px;
@@ -1185,12 +1194,12 @@ input::placeholder {
   border-radius: 7px;
 }
 
-.textCSS{
+.textCSS {
   color: var(--ma-couleur);
   padding-left: 2%;
 }
 
-.divValueLabelInternshipProject{
+.divValueLabelInternshipProject {
   border: 2px solid var(--ma-couleur);
   border-radius: 7px;
 }
@@ -1204,6 +1213,7 @@ input::placeholder {
   border-bottom-right-radius: 0px;
 
 }
+
 .submitProjectButton {
   background-color: var(--ma-couleur);
   color: white;

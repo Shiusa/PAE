@@ -147,6 +147,7 @@ const renderRegisterCompanyForm = async () => {
 const ContactPage = async () => {
 
   const main = document.querySelector('main');
+  awaitFront();
 
   userToken = getToken();
   if (!userToken) {
@@ -176,7 +177,6 @@ const ContactPage = async () => {
   const companiesTable = await readAllCompanies();
 
   showNavStyle("contact");
-  awaitFront();
 
   main.innerHTML = `
     <div class="container-fluid mt-5 d-flex flex-column rounded-3 overflow-hidden" style="width: 100%; height: 74vh; border: none; border-radius: 0; background: white; position: relative">
