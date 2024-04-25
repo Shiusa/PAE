@@ -111,7 +111,8 @@ public class CompanyDAOImpl implements CompanyDAO {
             Map<CompanyDTO, Map<String, Integer>> companyValue = companiesMap.get(
                 companyDTO.getId());
             for (Map.Entry<CompanyDTO,
-                Map<String, Integer>> companyData : companyValue.entrySet()) {
+                Map<String, Integer>> companyData : companyValue
+                .entrySet()) {
               CompanyDTO companyInValue = companyData.getKey();
               Map<String, Integer> internshipData = companyData.getValue();
               if (companyInValue.getId() == companyDTO.getId()) {

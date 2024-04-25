@@ -69,8 +69,8 @@ public class CompanyResource {
     companyList = companyUCC.getAllCompanies();
 
     ObjectNode statObject = jsonMapper.createObjectNode();
-    for (Map.Entry<Integer, Map<CompanyDTO,
-        Map<String, Integer>>> companies : companyList.entrySet()) {
+    for (Map.Entry<Integer, Map<CompanyDTO, Map<String, Integer>>> companies : companyList
+        .entrySet()) {
 
       int id = companies.getKey();
       Map<CompanyDTO, Map<String, Integer>> companyValue = companies.getValue();
