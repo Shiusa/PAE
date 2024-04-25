@@ -107,8 +107,6 @@ public class CompanyDAOImpl implements CompanyDAO {
             companyValue.put(companyDTO, newInternshipData);
             companiesMap.put(companyDTO.getId(), companyValue);
           } else {
-            /*Map<String, Integer> internshipData = companiesMap.get(companyDTO);
-            internshipData.put(years, internshipCount);*/
             Map<CompanyDTO, Map<String, Integer>> companyValue = companiesMap.get(
                 companyDTO.getId());
             for (Map.Entry<CompanyDTO, Map<String, Integer>>
@@ -206,22 +204,7 @@ public class CompanyDAOImpl implements CompanyDAO {
       ps.setInt(8, company.getVersion());
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
-          /*CompanyDTO insertedCompany;
-          insertedCompany = getOneCompanyByNameDesignation(rs.getString("inserted_name"),
-              rs.getString("inserted_designation"));
-          if (insertedCompany == null) {
-            insertedCompany = getOneCompanyById(rs.getInt("company_id"));
-            if (insertedCompany != null) {
-              return insertedCompany;
-            }
-            return null;
-          }*/
           Logs.log(Level.DEBUG, "UserDAO (addOneUser) : success!");
-          /*if (company.getDesignation()==null) {
-            return getOneCompanyById(rs.getInt("company_id"));
-          }
-          return getOneCompanyByNameDesignation(rs.getString("inserted_name"),
-              rs.getString("inserted_designation"));*/
           return getOneCompanyById(rs.getInt("company_id"));
         }
         return null;
@@ -243,7 +226,6 @@ public class CompanyDAOImpl implements CompanyDAO {
     List<CompanyDTO> companyDTOList = new ArrayList<>();
     try (ResultSet rs = ps.executeQuery()) {
       while (rs.next()) {
-        /*CompanyDTO companyDTO = buildCompanyDTO(rs);*/
         CompanyDTO companyDTO = DTOSetServices.setCompanyDTO(companyFactory.getCompanyDTO(), rs);
         companyDTOList.add(companyDTO);
       }
