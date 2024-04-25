@@ -127,6 +127,7 @@ class DTOSetServices {
       studentDTO.setRegistrationDate(rs.getDate("registration_date"));
       studentDTO.setSchoolYear(rs.getString("us_school_year"));
       studentDTO.setRole(rs.getString("role"));
+      studentDTO.setVersion(rs.getInt("us_version"));
       return studentDTO;
     } catch (SQLException e) {
       throw new FatalException(e);

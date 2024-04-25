@@ -7,6 +7,7 @@ import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.utils.Logs;
 import be.vinci.pae.utils.exceptions.DuplicateException;
 import be.vinci.pae.utils.exceptions.FatalException;
+import be.vinci.pae.utils.exceptions.InvalidRequestException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
 import be.vinci.pae.utils.exceptions.UnauthorizedAccessException;
 import jakarta.inject.Inject;
@@ -144,6 +145,7 @@ public class UserUCCImpl implements UserUCC {
 
       User userHashPwd = (User) user;
       userHashPwd.hashPassword();
+      userHashPwd.setVersion(1);
 
       registeredUser = userDAO.addOneUser(userHashPwd);
 
@@ -155,5 +157,70 @@ public class UserUCCImpl implements UserUCC {
       throw e;
     }
 
+  }
+
+  @Override
+  public UserDTO editOneUser(UserDTO currentUser, UserDTO newUser) {
+    UserDTO editedUser;
+    if (currentUser.getVersion() != newUser.getVersion()) {
+      Logs.log(Level.ERROR, "UserResource (editUser) : conflict version");
+      throw new DuplicateException("Different version from front and back");
+    }
+
+    int currentVersion = currentUser.getVersion();
+    newUser.setPassword(currentUser.getPassword());
+    newUser.setVersion(currentVersion + 1);
+
+    try {
+      dalServices.startTransaction();
+
+      editedUser = userDAO.editOneUser(newUser, currentVersion);
+      if (editedUser == null) {
+        throw new DuplicateException("Someone updated before us");
+      }
+
+      dalServices.commitTransaction();
+      Logs.log(Level.DEBUG, "UserUCC (editOneUser) : success!");
+      return editedUser;
+    } catch (Exception e) {
+      dalServices.rollbackTransaction();
+      throw e;
+    }
+  }
+
+  @Override
+  public UserDTO editPassword(UserDTO userDTO, String oldPassword, String newPassword,
+      String repeatedPassword) {
+    UserDTO newPasswordUserDTO;
+
+    User user = (User) userDTO;
+    if (!user.checkPassword(oldPassword)) {
+      throw new UnauthorizedAccessException("The password is incorrect");
+    }
+    if (!newPassword.equals(repeatedPassword)) {
+      throw new InvalidRequestException(
+          "The repeated password does not match with the new password.");
+    }
+
+    int currentVersion = userDTO.getVersion();
+    user.setPassword(newPassword);
+    user.hashPassword();
+    user.setVersion(currentVersion + 1);
+
+    try {
+      dalServices.startTransaction();
+
+      newPasswordUserDTO = userDAO.editOneUser(userDTO, currentVersion);
+      if (newPasswordUserDTO == null) {
+        throw new DuplicateException("Someone updated before us");
+      }
+
+      dalServices.commitTransaction();
+      Logs.log(Level.DEBUG, "UserUCC (editPassword) : success!");
+      return newPasswordUserDTO;
+    } catch (Exception e) {
+      dalServices.rollbackTransaction();
+      throw e;
+    }
   }
 }

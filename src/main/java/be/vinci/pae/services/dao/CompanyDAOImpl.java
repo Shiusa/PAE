@@ -41,6 +41,7 @@ public class CompanyDAOImpl implements CompanyDAO {
       Logs.log(Level.DEBUG, "CompanyDAO (getOneCompanyById) : success!");
       return buildCompanyDTO(ps);
     } catch (SQLException e) {
+      Logs.log(Level.FATAL, "CompanyDAO (getOneCompanyById) : internal error");
       throw new FatalException(e);
     }
   }
@@ -110,9 +111,8 @@ public class CompanyDAOImpl implements CompanyDAO {
             internshipData.put(years, internshipCount);*/
             Map<CompanyDTO, Map<String, Integer>> companyValue = companiesMap.get(
                 companyDTO.getId());
-            for (Map.Entry<CompanyDTO,
-                Map<String, Integer>> companyData : companyValue
-                .entrySet()) {
+            for (Map.Entry<CompanyDTO, Map<String, Integer>>
+                companyData : companyValue.entrySet()) {
               CompanyDTO companyInValue = companyData.getKey();
               Map<String, Integer> internshipData = companyData.getValue();
               if (companyInValue.getId() == companyDTO.getId()) {
@@ -249,6 +249,7 @@ public class CompanyDAOImpl implements CompanyDAO {
       }
       return companyDTOList;
     } catch (SQLException e) {
+      Logs.log(Level.FATAL, "CompanyDAO (getAllCompaniesByUserId) : internal error!");
       throw new FatalException(e);
     }
   }

@@ -177,5 +177,59 @@ public class UserResource {
     return registeredUser;
 
   }
+
+  /**
+   * Edit a user.
+   *
+   * @param request     the token from the front.
+   * @param userDTOEdit UserDTO object.
+   * @return An edited user.
+   */
+  @POST
+  @Path("editUser")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize
+  public UserDTO editUser(@Context ContainerRequest request, UserDTO userDTOEdit) {
+    Logs.log(Level.INFO, "UserResource (editUser) : entrance");
+    UserDTO userDTO = (UserDTO) request.getProperty("user");
+    if (userDTOEdit.getId() != userDTO.getId()) {
+      Logs.log(Level.ERROR, "UserResource (editUser) : unauthorized");
+      throw new WebApplicationException("you can't see this user", Response.Status.UNAUTHORIZED);
+    }
+    UserDTO editedUser;
+    editedUser = userUCC.editOneUser(userDTO, userDTOEdit);
+    Logs.log(Level.INFO, "UserResource (editUser) : success!");
+    return editedUser;
+  }
+
+  /**
+   * Edit a password.
+   *
+   * @param request the token from the front.
+   * @param json    object containing oldPassword, newPassword, repeatedPassword.
+   * @return An edited password.
+   */
+  @POST
+  @Path("editPassword")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize
+  public UserDTO editPassword(@Context ContainerRequest request, JsonNode json) {
+    Logs.log(Level.INFO, "UserResource (editPassword) : entrance");
+    if (!json.hasNonNull("oldPassword") && !json.hasNonNull("newPassword") && !json.hasNonNull(
+        "repeatedPassword")) {
+      throw new WebApplicationException("old ,new and repeated password required",
+          Response.Status.BAD_REQUEST);
+    }
+    UserDTO user = (UserDTO) request.getProperty("user");
+
+    String oldPassword = json.get("oldPassword").asText();
+    String newPassword = json.get("newPassword").asText();
+    String repeatedPassword = json.get("repeatedPassword").asText();
+
+    user = userUCC.editPassword(user, oldPassword, newPassword, repeatedPassword);
+    return user;
+  }
 }
 
