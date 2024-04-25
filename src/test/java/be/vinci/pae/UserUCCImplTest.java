@@ -205,6 +205,107 @@ public class UserUCCImplTest {
 
   }
 
+  @Test
+  @DisplayName("Edit user should work")
+  public void testEditUser() {
+
+    userDTO.setEmail(email);
+    userDTO.setLastname(lastname);
+    userDTO.setFirstname(firstname);
+    userDTO.setPhoneNumber(phoneNumber);
+    userDTO.setRole(role);
+    userDTO.setRegistrationDate(registrationDate);
+    userDTO.setSchoolYear(schoolYear);
+    userDTO.setPassword(hashPassword);
+    userDTO.setVersion(1);
+
+    UserDTO newUserDTO = userFactory.getUserDTO();
+
+    newUserDTO.setEmail(email);
+    newUserDTO.setLastname(lastname);
+    newUserDTO.setFirstname(firstname);
+    newUserDTO.setPhoneNumber("0400300200");
+    newUserDTO.setRole(role);
+    newUserDTO.setRegistrationDate(registrationDate);
+    newUserDTO.setSchoolYear(schoolYear);
+    newUserDTO.setPassword(hashPassword);
+    newUserDTO.setVersion(1);
+
+    Mockito.when(userDAOMock.editOneUser(newUserDTO, 1))
+        .thenReturn(newUserDTO);
+
+    UserDTO returnedUser = userUCC.editOneUser(userDTO, newUserDTO);
+
+    assertNotNull(returnedUser);
+
+  }
+
+  @Test
+  @DisplayName("Edit user wrong version should not work")
+  public void testEditUserWrongVersion() {
+
+    userDTO.setEmail(email);
+    userDTO.setLastname(lastname);
+    userDTO.setFirstname(firstname);
+    userDTO.setPhoneNumber(phoneNumber);
+    userDTO.setRole(role);
+    userDTO.setRegistrationDate(registrationDate);
+    userDTO.setSchoolYear(schoolYear);
+    userDTO.setPassword(hashPassword);
+    userDTO.setVersion(1);
+
+    UserDTO newUserDTO = userFactory.getUserDTO();
+
+    newUserDTO.setEmail(email);
+    newUserDTO.setLastname(lastname);
+    newUserDTO.setFirstname(firstname);
+    newUserDTO.setPhoneNumber("0400300200");
+    newUserDTO.setRole(role);
+    newUserDTO.setRegistrationDate(registrationDate);
+    newUserDTO.setSchoolYear(schoolYear);
+    newUserDTO.setPassword(hashPassword);
+    newUserDTO.setVersion(2);
+
+    Mockito.when(userDAOMock.editOneUser(newUserDTO, 1))
+        .thenReturn(newUserDTO);
+
+    assertThrows(DuplicateException.class, () -> userUCC.editOneUser(userDTO, newUserDTO));
+
+  }
+
+  @Test
+  @DisplayName("Edit user with someone update at same time should not work")
+  public void testEditUserConcurrentUpdate() {
+
+    userDTO.setEmail(email);
+    userDTO.setLastname(lastname);
+    userDTO.setFirstname(firstname);
+    userDTO.setPhoneNumber(phoneNumber);
+    userDTO.setRole(role);
+    userDTO.setRegistrationDate(registrationDate);
+    userDTO.setSchoolYear(schoolYear);
+    userDTO.setPassword(hashPassword);
+    userDTO.setVersion(1);
+
+    UserDTO newUserDTO = userFactory.getUserDTO();
+
+    newUserDTO.setEmail(email);
+    newUserDTO.setLastname(lastname);
+    newUserDTO.setFirstname(firstname);
+    newUserDTO.setPhoneNumber("0400300200");
+    newUserDTO.setRole(role);
+    newUserDTO.setRegistrationDate(registrationDate);
+    newUserDTO.setSchoolYear(schoolYear);
+    newUserDTO.setPassword(hashPassword);
+    newUserDTO.setVersion(1);
+
+    Mockito.when(userDAOMock.editOneUser(newUserDTO, 1))
+        .thenReturn(null);
+
+    assertThrows(DuplicateException.class, () -> userUCC.editOneUser(userDTO, newUserDTO));
+
+  }
+
 }
 
 
