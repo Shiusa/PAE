@@ -11,6 +11,47 @@ import {
 } from "../../utils/session";
 import Navbar from "../Navbar/Navbar";
 
+const AcceptContact = async (contactData) => {
+  /* body: JSON.stringify({
+    "id": contactData.id,
+    "company": contactData.company,
+    "student": contactData.student,
+    "meeting": contactData.meeting,
+    "state": contactData.state,
+    "reasonRefusal": contactData.reasonRefusal,
+    "schoolYear": contactData.schoolYear,
+    "version": contactData.version
+  }) */
+  const user = await getAuthenticatedUser();
+  const options = {
+    method: 'POST',
+    body: JSON.stringify({
+      "id": contactData.id,
+      "company": contactData.company,
+      "student": contactData.student,
+      "meeting": contactData.meeting,
+      "state": contactData.state,
+      "reasonRefusal": contactData.reasonRefusal,
+      "schoolYear": contactData.schoolYear,
+      "version": contactData.version
+    }),
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': user.token
+    }
+  }
+  const response = await fetch('api/contacts/accept', options);
+
+  if (!response.ok) {
+    throw new Error(
+        `fetch error : ${response.status} : ${response.statusText}`);
+  }
+
+  const userInfo = await response.json();
+  await Navbar();
+  CreateInternshipPage(contact);
+}
+
 const DashboardPage = async () => {
 
   const main = document.querySelector('main');
@@ -133,6 +174,12 @@ const DashboardPage = async () => {
   };
 
   const userInfoID = await readUserInfo();
+  const stageInfo = await readInternship();
+  const contacts = await readAllContactsByStudent();
+
+  console.log("contactdata")
+  console.log(contacts)
+  console.log(contacts.find(obj => obj.id === 15))
 
   showNavStyle("dashboard");
 
@@ -163,8 +210,11 @@ const DashboardPage = async () => {
                                 <div class="title-col-1 mt-3">
                                     <p>Nom</p>
                                 </div>
-                                <div class="title-col-3 mt-3">
+                                <div class="title-col-2 mt-3">
                                     <p>Etat</p>
+                                </div>
+                                <div class="title-col-3 mt-3">
+                                    <p>Action</p>
                                 </div>
                         </div>
                         <div class="table-line-box overflow-auto">
@@ -181,8 +231,6 @@ const DashboardPage = async () => {
     `;
 
   const stageBox = document.querySelector('.dash-stage');
-
-  const stageInfo = await readInternship();
 
   if (stageInfo) {
     let {designation} = stageInfo.contact.company;
@@ -225,12 +273,8 @@ const DashboardPage = async () => {
       `;
   }
 
-  showNavStyle("dashboard");
-
   const tableContacts = document.querySelector(".table-line-box");
   const boxInfo = document.querySelector('.entreprise-box');
-
-  const contacts = await readAllContactsByStudent();
 
   showContacts(contacts);
 
@@ -259,18 +303,35 @@ const DashboardPage = async () => {
       }
       info += `
                 <div class="table-line d-flex align-items-center mt-2 mb-2">
-                    <i class="line-info fa-solid fa-circle-info" id="${contactsTable[u].id}"></i>
-                    <div class="line-col-1" >
-                        <p class="mx-auto mt-3">${contactsTable[u].company.name}<br>${designation}</p>
+                    <div class="d-flex justify-content-center align-items-center position-relative" style="width: 60%;">
+                      <i class="line-info fa-solid fa-circle-info position-absolute" style="left: 0%;" id="${contactsTable[u].id}"></i>
+                      <div class="line-col-1" >
+                          <p class="mx-auto mt-3">${contactsTable[u].company.name}<br>${designation}</p>
+                      </div>
                     </div>
-                    <div class="line-col-2 d-flex align-items-center justify-content-center">
-                      <p><option  value="1">${contactsTable[u].state}</option></p>
+                    
+                    <div class="line-col-2 d-flex flex-column align-items-center justify-content-center" style="width: 20%;">
+                      <p class="m-0">${contactsTable[u].state}</p>
+                    </div>
+                    
+                    <div class="${contactsTable[u].state === 'pris' ? 'd-block'
+          : 'd-none'}" style="width: 20%;">
+                      <button data-id="${contactsTable[u].id}" class="accept-contact-btn rounded-1 px-0 py-2 w-50 bg-danger">Accepter</button>
                     </div>
                 </div>
             `;
       u += 1;
     }
     tableContacts.innerHTML = info;
+    const acceptBtns = document.querySelectorAll('.accept-contact-btn');
+    acceptBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const contactId = e.currentTarget.getAttribute('data-id');
+        const contactInfo = contacts.find(
+            contact => contact.id === parseInt(contactId, 10));
+        AcceptContact(contactInfo)
+      });
+    })
     clickContactInfo();
   }
 

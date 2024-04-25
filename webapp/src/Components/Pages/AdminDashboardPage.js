@@ -470,7 +470,7 @@ const AdminDashboardPage = async () => {
   const sortDataCompany = sortData(dataCompany, 'name');
 
   main.innerHTML = `
-    <div class="container-fluid justify-content-center align-items-center mt-5 mb-5 mx-auto" style="border: none">
+    <div class="container-fluid justify-content-center align-items-center mt-5 mb-5 mx-auto" style="border: none; height: 69vh;">
       <div class="row mx-2">
         <div class="col-md-3">
           <div class="card chart-card dash-row rounded-4">
