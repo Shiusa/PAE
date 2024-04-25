@@ -255,10 +255,11 @@ public class ContactResource {
       throw new WebApplicationException("Contact id cannot be blank", Response.Status.BAD_REQUEST);
     }
     int contactId = json.get("contactId").asInt();
+    int version = json.get("version").asInt();
     int studentId = userDTO.getId();
 
     Logs.log(Level.DEBUG, "ContactResource (accept) : success!");
-    return contactUCC.accept(contactId, studentId);
+    return contactUCC.accept(contactId, studentId, version);
   }
 
   /**

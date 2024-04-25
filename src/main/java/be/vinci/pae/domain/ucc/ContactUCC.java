@@ -81,9 +81,10 @@ public interface ContactUCC {
    *
    * @param contactId the id of the contact.
    * @param studentId the id of the student.
+   * @param version   the version of the contact.
    * @return the accepted contact.
    */
-  ContactDTO accept(int contactId, int studentId);
+  ContactDTO accept(int contactId, int studentId, int version);
 
 
   /**

@@ -390,7 +390,7 @@ public class ContactUCCImplTest {
   @DisplayName("Test accept contact is null")
   public void testAcceptContactNull() {
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(null);
-    assertThrows(ResourceNotFoundException.class, () -> contactUCC.accept(1, 1));
+    assertThrows(ResourceNotFoundException.class, () -> contactUCC.accept(1, 1, 1));
   }
 
   @Test
@@ -400,7 +400,7 @@ public class ContactUCCImplTest {
     contactDTO.setStudent(userDTO);
     contactDTO.setState("initié");
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
-    assertThrows(NotAllowedException.class, () -> contactUCC.accept(1, 1));
+    assertThrows(NotAllowedException.class, () -> contactUCC.accept(1, 1, 1));
   }
 
   @Test
@@ -410,7 +410,19 @@ public class ContactUCCImplTest {
     contactDTO.setStudent(userDTO);
     contactDTO.setState("pris");
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
-    assertThrows(NotAllowedException.class, () -> contactUCC.accept(1, 1));
+    assertThrows(NotAllowedException.class, () -> contactUCC.accept(1, 1, 1));
+  }
+
+  @Test
+  @DisplayName("Test accept contact with wrong version")
+  public void testAcceptContactWithWrongVersion() {
+    userDTO.setId(1);
+    contactDTO.setStudent(userDTO);
+    contactDTO.setState("pris");
+    contactDTO.setVersion(3);
+    Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
+    Mockito.when(contactDAOMock.accept(1, 1)).thenReturn(contactDTO);
+    assertThrows(InvalidRequestException.class, () -> contactUCC.accept(1, 1, 1));
   }
 
   @Test
@@ -419,10 +431,10 @@ public class ContactUCCImplTest {
     userDTO.setId(1);
     contactDTO.setStudent(userDTO);
     contactDTO.setState("pris");
-    contactDTO.setVersion(1);
+    contactDTO.setVersion(2);
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
     Mockito.when(contactDAOMock.accept(1, 1)).thenReturn(contactDTO);
-    assertNotNull(contactUCC.accept(1, 1));
+    assertNotNull(contactUCC.accept(1, 1, 1));
   }
 
   @Test

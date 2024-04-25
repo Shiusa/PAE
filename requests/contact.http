@@ -43,6 +43,16 @@ Authorization: {{AchToken}}
   "version":"1"
 }
 
+### accept one contact
+POST {{baseUrl}}/contacts/accept
+Content-Type: application/json
+Authorization: {{AchToken}}
+
+{
+  "contactId":"12",
+  "version":"2"
+}
+
 ### turndown one contact
 POST {{baseUrl}}/contacts/turnDown
 Content-Type: application/json

@@ -241,7 +241,7 @@ public class ContactUCCImpl implements ContactUCC {
   }
 
   @Override
-  public ContactDTO accept(int contactId, int studentId) {
+  public ContactDTO accept(int contactId, int studentId, int version) {
     Logs.log(Level.DEBUG, "ContactUCC (accept) : entrance");
     Contact contact;
     ContactDTO contactDTO;
@@ -254,7 +254,6 @@ public class ContactUCCImpl implements ContactUCC {
             "ContactUCC (accept) : contact not found");
         throw new ResourceNotFoundException();
       }
-      int version = contact.getVersion();
 
       if (!contact.isAdmitted()) {
         Logs.log(Level.ERROR, "ContactUCC (accept) : contact's state not admitted");
@@ -263,6 +262,10 @@ public class ContactUCCImpl implements ContactUCC {
         throw new NotAllowedException();
       }
       contactDTO = contactDAO.accept(contactId, version);
+      if (contactDTO.getVersion() != version + 1) {
+        Logs.log(Level.ERROR, "ContactUCC (accept) : the contact's version isn't matching");
+        throw new InvalidRequestException();
+      }
       dalServices.commitTransaction();
       return contactDTO;
     } catch (Exception e) {
