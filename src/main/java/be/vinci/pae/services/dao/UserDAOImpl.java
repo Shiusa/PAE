@@ -131,10 +131,10 @@ public class UserDAOImpl implements UserDAO {
         """;
 
     try (PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql)) {
-      ps.setString(1, user.getEmail());
       ps.setString(2, user.getLastname());
-      ps.setString(3, user.getFirstname());
+      ps.setString(1, user.getEmail());
       ps.setString(4, user.getPhoneNumber());
+      ps.setString(3, user.getFirstname());
       ps.setString(5, user.getPassword());
       ps.setDate(6, user.getRegistrationDate());
       ps.setString(7, user.getSchoolYear());

@@ -94,7 +94,8 @@ public class CompanyUCCImplTest {
 
     Mockito.when(companyDAOMock.getAllCompanies()).thenReturn(companiesMap);
 
-    Map<Integer, Map<CompanyDTO, Map<String, Integer>>> companyDTOList = companyUCC.getAllCompanies();
+    Map<Integer, Map<CompanyDTO, Map<String, Integer>>>
+        companyDTOList = companyUCC.getAllCompanies();
     assertNotNull(companyDTOList);
   }
 
