@@ -142,6 +142,18 @@ const renderRegisterCompanyForm = async () => {
     e.preventDefault();
     await submitRegistration(e);
   })
+
+  const registerForm = document.querySelectorAll(
+      '.add-company-container input');
+  registerForm.forEach(input => {
+    input.addEventListener('keypress', async (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        await submitRegistration(event);
+      }
+    });
+  })
+
 }
 
 const ContactPage = async () => {

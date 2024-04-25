@@ -22,7 +22,14 @@ const onUserLogin = async (userData) => {
   }
   // re-render the navbar for the authenticated user
   await Navbar();
-  Redirect("/");
+  if (userData.user.role === 'Professeur' || userData.user.role
+      === 'Administratif') {
+    Redirect('/adminBoard');
+  } else if (userData.user.role === 'Etudiant') {
+    Redirect('/dashboard');
+  } else {
+    Redirect('/');
+  }
 };
 
 async function login(e) {
