@@ -323,16 +323,39 @@ const DashboardPage = async () => {
 
     boxInfo.style.visibility = "visible";
 
+    const init = `
+      <option value="admitted">pris</option>
+      <option value="unsupervised">ne plus suivre</option>
+    `;
+    const admit = `
+    <option value="turnedDown">refusé</option>
+    <option value="unsupervised">ne plus suivre</option>
+    `;
+
     entrepriseBox.innerHTML = `
                     <div class="entreprise-container d-flex justify-contain-center align-items-center flex-column mx-auto">
                         <i id="btn-back2" class="fa-solid fa-circle-arrow-left" title="Retour"></i>
-                        <h1 class="mt-4">${contactInfoJSON.id}</h1>
-                        <div class="entreprise-info">
-                            <p class="mt-3"><i id="phoneNumber" class="fa-solid fa-phone"></i></p>
-                            <p class="mt-1"><i id="address" class="fa-solid fa-map-location-dot"></i></p>
+                        <h1 class="mt-4">${contactInfoJSON.company.name}</h1>
+                        <div class="entreprise-info overflow-y-scroll" style="scrollbar-width:none">
+                            <p class="mt-3"><i class="fa-solid fa-phone"></i><i id="phoneNumber"></i></p>
+                            <p class="mt-1"><i class="fa-solid fa-map-location-dot"></i><i id="address"></i></p>
                         
-                            <div class="radioButton d-flex mt-3 align-items-center">
-                                <p class="fw-bold me-4">Type de rencontre</p>
+                            <div class="d-flex mt-2">
+                                <p class="fw-bold me-4" style="width: 30%;">Etat</p>
+                                <select id="selectedState" class="form-select" aria-label="Default select example" ${contactInfoJSON.state
+    === 'initié' || contactInfoJSON.state === 'pris' ? '' : 'disabled'}>
+                                    <option value="basic" selected>${contactInfoJSON.state}</option>
+                                    <!--<option value="started">initié</option>-->
+                                    ${contactInfoJSON.state === 'initié' ? init
+        : ''}
+                                    ${contactInfoJSON.state === 'pris' ? admit
+        : ''}
+                                    <!--<option value="onHold">suspendu</option>-->
+                                </select>
+                            </div>
+                            
+                            <div class="radioButton d-flex mt-3 align-items-center admit-extra" style="visibility: hidden; height: 0">
+                                <p class="fw-bold me-4" style="width: 30%;">Type de rencontre</p>
                                 <div class="ent-radio form-check form-check-inline">
                                     <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="Dans l entreprise" ${checkedSurPlace}>
                                     <label class="form-check-label" for="inlineRadio1">Dans l'entreprise</label>
@@ -342,26 +365,38 @@ const DashboardPage = async () => {
                                     <label class="form-check-label" for="inlineRadio2">A Distance</label>
                                 </div>
                             </div>
-                            <div class="d-flex mt-2">
-                                <p class="fw-bold me-4">Etat</p>
-                                <select id="selectedState" class="form-select" aria-label="Default select example">
-                                    <option value="basic" selected>${contactInfoJSON.state}</option>
-                                    <!--<option value="started">initié</option>-->
-                                    <option value="admitted">pris</option>
-                                    <option value="turnedDown">refusé</option>
-                                    <option value="unsupervised">ne plus suivre</option>
-                                    <!--<option value="onHold">suspendu</option>-->
-                                </select>
+                            
+                            <div class="d-flex mt-4 mb-2 refused-extra" style="visibility: hidden; height: 0;"> 
+                                <p class="fw-bold me-4" style="width: 30%;">Raison</p>
+                                <textarea id="refusalReason" class="p-3" style="width: 60%; border: none" name="raison" placeholder="Raison du refus">${refusal}</textarea>
                             </div>
-                            <div class="d-flex mt-4 mb-2"> 
-                                <p class="fw-bold me-4">Raison</p>
-                                <textarea id="refusalReason" name="raison" placeholder="Raison du refus">${refusal}</textarea>
+                            
+                            <div class="d-flex justify-content-center">
+                              <button id="updateBtn" class="btn btn-primary mb-2 ms-3" type="submit">Mettre à jour</button>
                             </div>
-                            <button id="updateBtn" class="btn btn-primary mb-2 ms-3" type="submit">Mettre à jour</button>
+                            
                             <h2 id="error-message"></h2>
                         </div>
                     </div>
         `
+
+    const selectState = document.querySelector('#selectedState');
+    const admitExtra = document.querySelector('.admit-extra');
+    const refusedExtra = document.querySelector('.refused-extra');
+    selectState.addEventListener('change', () => {
+      if (selectState.value === 'admitted') {
+        admitExtra.style.visibility = 'visible';
+        admitExtra.style.height = 'auto';
+      } else if (selectState.value === 'turnedDown') {
+        refusedExtra.style.visibility = 'visible';
+        refusedExtra.style.height = 'auto';
+      } else {
+        admitExtra.style.visibility = 'hidden';
+        admitExtra.style.height = '0';
+        refusedExtra.style.visibility = 'hidden';
+        refusedExtra.style.height = '0';
+      }
+    })
 
     let phone;
     let address;
@@ -408,7 +443,11 @@ const DashboardPage = async () => {
       const errorMessage = document.getElementById("error-message");
       switch (newState) {
         case "admitted":
-          options.body = JSON.stringify({"contactId": id, "meeting": meeting, "version":contactInfoJSON.version});
+          options.body = JSON.stringify({
+            "contactId": id,
+            "meeting": meeting,
+            "version": contactInfoJSON.version
+          });
           try {
             const response = await fetch("/api/contacts/admit", options);
             if (!response.ok) {
@@ -437,7 +476,11 @@ const DashboardPage = async () => {
           break;
         case "turnedDown":
           options.body = JSON.stringify(
-              {contactId: id, reasonForRefusal: refusalReason, "version": contactInfoJSON.version});
+              {
+                contactId: id,
+                reasonForRefusal: refusalReason,
+                "version": contactInfoJSON.version
+              });
           try {
             const response = await fetch("/api/contacts/turnDown", options);
             if (!response.ok) {
@@ -472,7 +515,8 @@ const DashboardPage = async () => {
           break;
 
         case "unsupervised":
-          options.body = JSON.stringify({contactId: id, "version": contactInfoJSON.version});
+          options.body = JSON.stringify(
+              {contactId: id, "version": contactInfoJSON.version});
           try {
             const response = await fetch("/api/contacts/unsupervise", options);
             if (!response.ok) {
