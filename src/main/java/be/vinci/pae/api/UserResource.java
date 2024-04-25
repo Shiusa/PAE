@@ -170,9 +170,7 @@ public class UserResource {
       throw new WebApplicationException("Inputs cannot be blank", Response.Status.BAD_REQUEST);
     }
 
-    UserDTO registeredUser;
-
-    registeredUser = userUCC.register(userToRegister);
+    UserDTO registeredUser = userUCC.register(userToRegister);
     Logs.log(Level.INFO, "UserResource (register) : success!");
     return registeredUser;
 
@@ -197,8 +195,8 @@ public class UserResource {
       Logs.log(Level.ERROR, "UserResource (editUser) : unauthorized");
       throw new WebApplicationException("you can't see this user", Response.Status.UNAUTHORIZED);
     }
-    UserDTO editedUser;
-    editedUser = userUCC.editOneUser(userDTO, userDTOEdit);
+
+    UserDTO editedUser = userUCC.editOneUser(userDTO, userDTOEdit);
     Logs.log(Level.INFO, "UserResource (editUser) : success!");
     return editedUser;
   }
