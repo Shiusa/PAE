@@ -222,9 +222,9 @@ public class UserResource {
       throw new WebApplicationException("old ,new and repeated password required",
           Response.Status.BAD_REQUEST);
     }
-    if (!json.get("oldPassword").asText().isBlank()
-        || !json.get("newPassword").asText().isBlank()
-        || !json.get("repeatedPassword").asText().isBlank()) {
+    if (json.get("oldPassword").asText().isBlank()
+        || json.get("newPassword").asText().isBlank()
+        || json.get("repeatedPassword").asText().isBlank()) {
       throw new WebApplicationException("old ,new and repeated password required",
           Response.Status.BAD_REQUEST);
     }
