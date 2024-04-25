@@ -136,7 +136,7 @@ public class ContactUCCImplTest {
   @DisplayName("Test unsupervise contact is null")
   public void testUnsuperviseContactNotFound() {
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(null);
-    assertThrows(ResourceNotFoundException.class, () -> contactUCC.unsupervise(1, 1));
+    assertThrows(ResourceNotFoundException.class, () -> contactUCC.unsupervise(1, 1, 1));
   }
 
   @Test
@@ -146,7 +146,7 @@ public class ContactUCCImplTest {
     contactDTO.setStudent(userDTO);
     contactDTO.setState("initié");
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
-    assertThrows(NotAllowedException.class, () -> contactUCC.unsupervise(1, 1));
+    assertThrows(NotAllowedException.class, () -> contactUCC.unsupervise(1, 1, 1));
   }
 
   @Test
@@ -156,7 +156,7 @@ public class ContactUCCImplTest {
     contactDTO.setStudent(userDTO);
     contactDTO.setState("refusé");
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
-    assertThrows(NotAllowedException.class, () -> contactUCC.unsupervise(1, 1));
+    assertThrows(NotAllowedException.class, () -> contactUCC.unsupervise(1, 1, 1));
   }
 
   @Test
@@ -165,10 +165,22 @@ public class ContactUCCImplTest {
     userDTO.setId(1);
     contactDTO.setStudent(userDTO);
     contactDTO.setState("initié");
-    contactDTO.setVersion(1);
+    contactDTO.setVersion(2);
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
     Mockito.when(contactDAOMock.unsupervise(1, 1)).thenReturn(contactDTO);
-    assertNotNull(contactUCC.unsupervise(1, 1));
+    assertNotNull(contactUCC.unsupervise(1, 1, 1));
+  }
+
+  @Test
+  @DisplayName("Test unsupervise contact with wrong version")
+  public void testUnsuperviseContactWithWrongVersion() {
+    userDTO.setId(1);
+    contactDTO.setStudent(userDTO);
+    contactDTO.setState("pris");
+    contactDTO.setVersion(3);
+    Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
+    Mockito.when(contactDAOMock.unsupervise(1, 1)).thenReturn(contactDTO);
+    assertThrows(InvalidRequestException.class, () -> contactUCC.unsupervise(1, 1, 1));
   }
 
   @Test
@@ -179,12 +191,12 @@ public class ContactUCCImplTest {
     contactDTO.setState("pris");
     contactDTO.setVersion(2);
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
-    Mockito.when(contactDAOMock.unsupervise(1, 2)).thenReturn(contactDTO);
-    assertNotNull(contactUCC.unsupervise(1, 1));
+    Mockito.when(contactDAOMock.unsupervise(1, 1)).thenReturn(contactDTO);
+    assertNotNull(contactUCC.unsupervise(1, 1, 1));
   }
 
   @Test
-  @DisplayName("Test unsupervise contact crash transaction")
+  @DisplayName("Test start, unsupervise, admit, turn down, getOneById, getAllContactsByStudent, getAllContactsByCompany contact crash transaction")
   public void testCrashTransaction() {
     Mockito.doThrow(new FatalException(new RuntimeException()))
         .when(dalServicesMock).startTransaction();
@@ -193,7 +205,7 @@ public class ContactUCCImplTest {
           contactUCC.start(1, 1);
         }),
         () -> assertThrows(FatalException.class, () -> {
-          contactUCC.unsupervise(1, 1);
+          contactUCC.unsupervise(1, 1, 1);
         }),
         () -> assertThrows(FatalException.class, () -> {
           contactUCC.admit(1, "sur place", 1, 1);

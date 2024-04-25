@@ -108,7 +108,7 @@ public class ContactUCCImpl implements ContactUCC {
   }
 
   @Override
-  public ContactDTO unsupervise(int contactId, int student) {
+  public ContactDTO unsupervise(int contactId, int student, int version) {
     Contact contact;
     ContactDTO contactDTO;
     try {
@@ -120,8 +120,6 @@ public class ContactUCCImpl implements ContactUCC {
         throw new ResourceNotFoundException();
       }
 
-      int version = contact.getVersion();
-
       if (!contact.isStarted() && !contact.isAdmitted()) {
         throw new NotAllowedException();
       } else if (contact.getStudent().getId() != student) {
@@ -129,6 +127,11 @@ public class ContactUCCImpl implements ContactUCC {
       }
 
       contactDTO = contactDAO.unsupervise(contactId, version);
+
+      if (contactDTO.getVersion() != version + 1) {
+        Logs.log(Level.ERROR, "ContactUCC (admit) : the contact's version isn't matching");
+        throw new InvalidRequestException();
+      }
 
       dalServices.commitTransaction();
       Logs.log(Level.DEBUG, "ContactUCC (unsupervise) : success!");

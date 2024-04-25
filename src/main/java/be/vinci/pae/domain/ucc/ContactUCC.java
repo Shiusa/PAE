@@ -52,9 +52,10 @@ public interface ContactUCC {
    *
    * @param contactId the id of the contact.
    * @param studentId the id of the student.
+   * @param vesrion   the version of the contact.
    * @return the unsupervised state of a contact.
    */
-  ContactDTO unsupervise(int contactId, int studentId);
+  ContactDTO unsupervise(int contactId, int studentId, int vesrion);
 
   /**
    * turn down the contact.
