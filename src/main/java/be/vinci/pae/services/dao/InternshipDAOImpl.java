@@ -146,6 +146,7 @@ public class InternshipDAOImpl implements InternshipDAO {
     }
   }
 
+  @Override
   public List<InternshipDTO> getAllInternships() {
     String requestSql = """
         SELECT i.internship_id, i.contact, i.supervisor, i.signature_date, i.project, i.school_year,

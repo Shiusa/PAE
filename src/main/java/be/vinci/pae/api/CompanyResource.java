@@ -69,7 +69,8 @@ public class CompanyResource {
     companyList = companyUCC.getAllCompanies();
 
     ObjectNode statObject = jsonMapper.createObjectNode();
-    for (Map.Entry<Integer, Map<CompanyDTO, Map<String, Integer>>> companies : companyList.entrySet()) {
+    for (Map.Entry<Integer, Map<CompanyDTO,
+        Map<String, Integer>>> companies : companyList.entrySet()) {
 
       int id = companies.getKey();
       Map<CompanyDTO, Map<String, Integer>> companyValue = companies.getValue();
@@ -77,7 +78,6 @@ public class CompanyResource {
       for (Map.Entry<CompanyDTO, Map<String, Integer>> companyData : companyValue.entrySet()) {
 
         CompanyDTO company = companyData.getKey();
-        Map<String, Integer> statMap = companyData.getValue();
 
         ObjectNode companyNode = jsonMapper.createObjectNode();
         companyNode.put("id", company.getId());
@@ -90,6 +90,7 @@ public class CompanyResource {
         companyNode.put("blacklistMotivation", company.getBlacklistMotivation());
         companyNode.put("version", company.getVersion());
 
+        Map<String, Integer> statMap = companyData.getValue();
         ObjectNode data = jsonMapper.createObjectNode();
         for (Map.Entry<String, Integer> internshipData : statMap.entrySet()) {
           data.put(internshipData.getKey(), internshipData.getValue());
