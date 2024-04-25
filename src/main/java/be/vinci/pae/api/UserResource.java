@@ -215,13 +215,18 @@ public class UserResource {
   @Authorize
   public UserDTO editPassword(@Context ContainerRequest request, JsonNode json) {
     Logs.log(Level.INFO, "UserResource (editPassword) : entrance");
-    if (!json.hasNonNull("oldPassword") || !json.hasNonNull("newPassword") || !json.hasNonNull(
+    if (!json.hasNonNull("oldPassword")
+        || !json.hasNonNull("newPassword")
+        || !json.hasNonNull(
         "repeatedPassword")) {
       throw new WebApplicationException("old ,new and repeated password required",
           Response.Status.BAD_REQUEST);
     }
-    if(!json.get("oldPassword").asText().isBlank() || !json.get("newPassword").asText().isBlank() || !json.get("repeatedPassword").asText().isBlank()) {
-      throw new WebApplicationException("old ,new and repeated password required", Response.Status.BAD_REQUEST);
+    if (!json.get("oldPassword").asText().isBlank()
+        || !json.get("newPassword").asText().isBlank()
+        || !json.get("repeatedPassword").asText().isBlank()) {
+      throw new WebApplicationException("old ,new and repeated password required",
+          Response.Status.BAD_REQUEST);
     }
 
     UserDTO user = (UserDTO) request.getProperty("user");

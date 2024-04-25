@@ -73,8 +73,7 @@ public class SupervisorResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize
-  public SupervisorDTO addSupervisor(@Context ContainerRequest request,
-      SupervisorDTO supervisorDTO) {
+  public SupervisorDTO addSupervisor(SupervisorDTO supervisorDTO) {
     Logs.log(Level.INFO, "SupervisorResource (addSupervisor) : entrance");
     if (supervisorDTO.getFirstname().isBlank() || supervisorDTO.getLastname().isBlank()
         || supervisorDTO.getPhoneNumber().isBlank()) {

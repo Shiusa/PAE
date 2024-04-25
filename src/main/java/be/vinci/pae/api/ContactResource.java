@@ -80,7 +80,7 @@ public class ContactResource {
   @Path("/{id}")
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize
-  public Response getOneContact(@Context ContainerRequest request, @PathParam("id") int id) {
+  public Response getOneContact(@PathParam("id") int id) {
     Logs.log(Level.INFO, "ContactResource (getOneContact) : entrance");
     ContactDTO contactDTO = contactUCC.getOneById(id);
     String contact;

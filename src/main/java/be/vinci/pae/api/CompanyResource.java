@@ -143,6 +143,7 @@ public class CompanyResource {
   @Path("register")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
+  @Authorize
   public CompanyDTO register(CompanyDTO companyToRegister) {
 
     Logs.log(Level.INFO, "CompanyResource (register) : entrance");

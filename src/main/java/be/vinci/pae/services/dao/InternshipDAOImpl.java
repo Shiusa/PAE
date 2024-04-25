@@ -253,6 +253,7 @@ public class InternshipDAOImpl implements InternshipDAO {
     }
   }
 
+  @Override
   public InternshipDTO editProject(String project, int version, int internshipId) {
     String requestSql = """
         UPDATE proStage.internships
@@ -271,6 +272,7 @@ public class InternshipDAOImpl implements InternshipDAO {
       throw new FatalException(e);
     }
   }
+
   private List<InternshipDTO> buildListInternshipDTO(PreparedStatement ps) {
     try (ResultSet rs = ps.executeQuery()) {
       List<InternshipDTO> internshipDTOList = new ArrayList<>();
