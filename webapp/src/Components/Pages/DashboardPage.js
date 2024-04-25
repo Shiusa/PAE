@@ -136,11 +136,7 @@ const DashboardPage = async () => {
   const userInfoID = await readUserInfo();
   const stageInfo = await readInternship();
   const contacts = await readAllContactsByStudent();
-
-  console.log("contactdata")
-  console.log(contacts)
-  console.log(contacts.find(obj => obj.id === 15))
-
+  
   showNavStyle("dashboard");
 
   main.innerHTML = `        
