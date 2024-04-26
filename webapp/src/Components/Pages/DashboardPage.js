@@ -1,5 +1,4 @@
 import {awaitFront, showNavStyle} from "../../utils/function";
-/* eslint-disable prefer-template */
 
 import {
   getAuthenticatedUser,
@@ -37,7 +36,7 @@ const DashboardPage = async () => {
         'Authorization': userToken
       }
     }
-    const response = await fetch('api/users/' + localUser.id, options);
+    const response = await fetch(`api/users/${localUser.id}`, options);
 
     if (!response.ok) {
       throw new Error(
@@ -57,7 +56,7 @@ const DashboardPage = async () => {
           'Authorization': userToken
         }
       }
-      const response = await fetch('api/internships/student/' + localUser.id,
+      const response = await fetch(`api/internships/student/${localUser.id}`,
           options);
 
       if (!response.ok) {
@@ -91,7 +90,7 @@ const DashboardPage = async () => {
         'Authorization': userToken
       }
     }
-    const response = await fetch('api/contacts/' + idContact, options);
+    const response = await fetch(`api/contacts/${idContact}`, options);
 
     if (!response.ok) {
       throw new Error(
@@ -112,7 +111,7 @@ const DashboardPage = async () => {
         }
       }
 
-      const response = await fetch('api/contacts/all/' + localUser.id, options);
+      const response = await fetch(`api/contacts/all/${localUser.id}`, options);
 
       if (!response.ok) {
         if (response.status === 401) {

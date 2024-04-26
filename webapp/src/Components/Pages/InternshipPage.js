@@ -1,7 +1,6 @@
 import TomSelect from "tom-select";
 
 import {awaitFront, showNavStyle} from "../../utils/function";
-/* eslint-disable prefer-template */
 import {getAuthenticatedUser,} from "../../utils/session";
 import Navigate from "../../utils/Navigate";
 
@@ -22,7 +21,7 @@ const InternshipPage = async () => {
           'Authorization': user.token
         }
       }
-      const response = await fetch('api/internships/student/' + user.user.id,
+      const response = await fetch(`api/internships/student/${user.user.id}`,
           options);
 
       if (!response.ok) {
@@ -377,7 +376,7 @@ const CreateInternshipPage = async (contact) => {
       };
 
       const response = await fetch(
-          '/api/supervisors/allByCompany/' + contact.company.id, options);
+          `/api/supervisors/allByCompany/${contact.company.id}`, options);
 
       if (!response.ok) {
         throw new Error(
