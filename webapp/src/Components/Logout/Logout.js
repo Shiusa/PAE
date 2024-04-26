@@ -1,6 +1,5 @@
 import Navbar from "../Navbar/Navbar";
-// eslint-disable-next-line import/extensions
-import {removeSessionData} from "../../utils/session.js";
+import {removeSessionData} from "../../utils/session";
 import Navigate from "../../utils/Navigate";
 
 const Logout = () => {
