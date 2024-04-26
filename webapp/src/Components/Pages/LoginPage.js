@@ -1,7 +1,5 @@
-// eslint-disable-next-line import/no-cycle
 import Navbar from "../Navbar/Navbar";
 
-// eslint-disable-next-line import/no-cycle
 import {
   getAuthenticatedUser,
   setAuthenticatedUser,
