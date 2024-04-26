@@ -1,7 +1,4 @@
 // eslint-disable-next-line import/no-cycle
-import {Redirect} from "../Router/Router";
-
-// eslint-disable-next-line import/no-cycle
 import Navbar from "../Navbar/Navbar";
 
 // eslint-disable-next-line import/no-cycle
@@ -12,6 +9,7 @@ import {
 } from "../../utils/session";
 
 import {showNavStyle} from "../../utils/function";
+import Navigate from "../../utils/Navigate";
 
 const onUserLogin = async (userData) => {
   if (document.getElementById("stayconnected").checked) {
@@ -24,11 +22,11 @@ const onUserLogin = async (userData) => {
   await Navbar();
   if (userData.user.role === 'Professeur' || userData.user.role
       === 'Administratif') {
-    Redirect('/adminBoard');
+    Navigate('/adminBoard');
   } else if (userData.user.role === 'Etudiant') {
-    Redirect('/dashboard');
+    Navigate('/dashboard');
   } else {
-    Redirect('/');
+    Navigate('/');
   }
 };
 
@@ -44,7 +42,7 @@ async function login(e) {
   if (userTemp) {
     // re-render the navbar for the authenticated user
     Navbar();
-    Redirect("/");
+    Navigate("/");
   } else {
     try {
       const options = {
@@ -117,7 +115,7 @@ const LoginPage = () => {
 
   const registerBtn = document.querySelector(".btn-register");
   registerBtn.addEventListener('click', () => {
-    Redirect("/register");
+    Navigate("/register");
   });
 
   showNavStyle("login");

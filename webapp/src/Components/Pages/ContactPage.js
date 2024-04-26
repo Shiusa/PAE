@@ -1,11 +1,10 @@
-// eslint-disable-next-line import/no-cycle
-import {Redirect} from "../Router/Router";
 import {awaitFront, showNavStyle} from "../../utils/function";
 import {
   getAuthenticatedUser,
   getToken,
   setAuthenticatedUser
 } from "../../utils/session";
+import Navigate from "../../utils/Navigate";
 
 let userToken;
 
@@ -86,7 +85,7 @@ const submitRegistration = async (e) => {
     return;
   }
   closeForm();
-  Redirect('/contact');
+  Navigate('/contact');
 }
 
 const renderRegisterCompanyForm = async () => {
@@ -163,7 +162,7 @@ const ContactPage = async () => {
 
   userToken = getToken();
   if (!userToken) {
-    Redirect('/');
+    Navigate('/');
     return;
   }
 
@@ -314,7 +313,7 @@ const ContactPage = async () => {
     companiesBtn.forEach(element => {
       element.addEventListener('click', async () => {
         if (await createContact(element.id)) {
-          Redirect('/dashboard');
+          Navigate('/dashboard');
         }
       });
     });

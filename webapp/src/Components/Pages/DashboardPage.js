@@ -1,7 +1,5 @@
 import {awaitFront, showNavStyle} from "../../utils/function";
 /* eslint-disable prefer-template */
-// eslint-disable-next-line import/no-cycle
-import {Redirect} from "../Router/Router";
 
 import {
   getAuthenticatedUser,
@@ -11,6 +9,7 @@ import {
 } from "../../utils/session";
 import Navbar from "../Navbar/Navbar";
 import {CreateInternshipPage} from "./InternshipPage";
+import Navigate from "../../utils/Navigate";
 
 const DashboardPage = async () => {
 
@@ -26,7 +25,7 @@ const DashboardPage = async () => {
     localUser = getLocalUser();
   }
   if (!userToken) {
-    Redirect('/');
+    Navigate('/');
     return;
   }
 
@@ -117,7 +116,7 @@ const DashboardPage = async () => {
 
       if (!response.ok) {
         if (response.status === 401) {
-          Redirect("/");
+          Navigate("/");
         }
         throw new Error(
             `fetch error : ${response.status} : ${response.statusText}`);
@@ -136,7 +135,7 @@ const DashboardPage = async () => {
   const userInfoID = await readUserInfo();
   const stageInfo = await readInternship();
   const contacts = await readAllContactsByStudent();
-  
+
   showNavStyle("dashboard");
 
   main.innerHTML = `        
@@ -238,7 +237,7 @@ const DashboardPage = async () => {
 
   if (btnChangeInfo) {
     btnChangeInfo.addEventListener('click', () => {
-      Redirect('/info');
+      Navigate('/info');
     });
   }
 
@@ -469,7 +468,7 @@ const DashboardPage = async () => {
             errorMessage.style.display = "block";
             return;
           }
-          Redirect("/dashboard");
+          Navigate("/dashboard");
           break;
         case "turnedDown":
           options.body = JSON.stringify(
@@ -508,7 +507,7 @@ const DashboardPage = async () => {
             errorMessage.style.display = "block";
             return;
           }
-          Redirect("/dashboard");
+          Navigate("/dashboard");
           break;
 
         case "unsupervised":
@@ -544,7 +543,7 @@ const DashboardPage = async () => {
             errorMessage.style.display = "block";
             return;
           }
-          Redirect("/dashboard");
+          Navigate("/dashboard");
           break;
         default:
           errorMessage.innerHTML = "Veuillez entrer un contact ou vérifiez que vous pouvez effectuer ce changement.";

@@ -1,8 +1,7 @@
 import {awaitFront, showNavStyle} from "../../utils/function";
 import {getToken} from "../../utils/session";
-// eslint-disable-next-line import/no-cycle
-import {Redirect} from "../Router/Router";
 import BlacklistPage from "./BlacklistPage";
+import Navigate from "../../utils/Navigate";
 
 let dataCompany = [];
 let filteredData = [];
@@ -32,7 +31,7 @@ const fetchInternshipStat = async () => {
   } catch (error) {
     if (error instanceof Error && error.message.startsWith(
         "fetch error : 403")) {
-      Redirect('/');
+      Navigate('/');
     }
     return null;
   }
@@ -60,7 +59,7 @@ const fetchCompaniesData = async () => {
   } catch (error) {
     if (error instanceof Error && error.message.startsWith(
         "fetch error : 403")) {
-      Redirect('/');
+      Navigate('/');
     }
     return null;
   }
@@ -87,7 +86,7 @@ const fetchCompanyContactData = async (companyId) => {
   } catch (error) {
     if (error instanceof Error && error.message.startsWith(
         "fetch error : 403")) {
-      Redirect('/');
+      Navigate('/');
     }
     return null;
   }

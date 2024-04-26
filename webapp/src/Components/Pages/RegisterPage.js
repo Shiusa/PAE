@@ -1,7 +1,6 @@
-// eslint-disable-next-line import/no-cycle
-import {Redirect} from "../Router/Router";
 import {showNavStyle} from "../../utils/function";
 import Navbar from "../Navbar/Navbar";
+import Navigate from "../../utils/Navigate";
 
 const RegisterPage = () => {
   const main = document.querySelector('main');
@@ -54,7 +53,7 @@ const RegisterPage = () => {
 
   const loginBtn = document.querySelector(".btn-register");
   loginBtn.addEventListener('click', () => {
-    Redirect("/login");
+    Navigate("/login");
   });
 
   const registerBtn = document.getElementById("register-btn");
@@ -155,7 +154,7 @@ async function register(e) {
     return;
   }
   await Navbar();
-  Redirect("/");
+  Navigate("/");
 }
 
 function roleSelector() {
