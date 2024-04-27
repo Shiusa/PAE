@@ -483,7 +483,7 @@ h2 {
   border: 3px solid var(--ma-couleur);
   border-radius: 10px;
   width: 80%;
-  height: 75%;
+  height: 76%;
 
 p {
   color: var(--ma-couleur);
@@ -1248,7 +1248,7 @@ h2 {
   border-bottom-right-radius: 7px;
 }
 
-#good-message{
+#good-message {
   color: var(--ma-couleur);
   font-size: 15px;
   display: none;
@@ -1368,7 +1368,7 @@ input {
 
 }
 }
-#btn-change-pwd{
+#btn-change-pwd {
   color: var(--ma-couleur);
   border-color: var(--ma-couleur);
 }
