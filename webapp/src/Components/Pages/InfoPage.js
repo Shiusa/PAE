@@ -1,14 +1,11 @@
 import {awaitFront} from "../../utils/function";
-
-/* eslint-disable prefer-template */
-// eslint-disable-next-line import/no-cycle
-import {Redirect} from "../Router/Router";
 import {
   getAuthenticatedUser,
   getLocalUser,
   getToken,
 } from "../../utils/session";
 import Navbar from "../Navbar/Navbar";
+import Navigate from "../../utils/Navigate";
 
 const InfoPage = async () => {
 
@@ -24,7 +21,7 @@ const InfoPage = async () => {
     localUser = getLocalUser();
   }
   if (!userToken) {
-    Redirect('/');
+    Navigate('/');
     return;
   }
 
@@ -36,7 +33,7 @@ const InfoPage = async () => {
         'Authorization': userToken
       }
     }
-    const response = await fetch('api/users/' + localUser.id, options);
+    const response = await fetch(`api/users/${localUser.id}`, options);
 
     if (!response.ok) {
       throw new Error(
@@ -144,7 +141,7 @@ const InfoPage = async () => {
       const error = document.querySelector("#good-message");
       error.innerHTML = "Vous avez modifier votre mot de passe";
       error.style.display = "block";
-      Redirect("/dashboard");
+      Navigate("/dashboard");
     }
 
     return savedUserPassword;

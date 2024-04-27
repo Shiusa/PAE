@@ -1,7 +1,6 @@
 import {getAuthenticatedUser} from "../../utils/session";
-// eslint-disable-next-line import/no-cycle
-import {Redirect} from "../Router/Router";
 import {awaitFront} from "../../utils/function";
+import Navigate from "../../utils/Navigate";
 
 const BlacklistPage = async (companyId) => {
   awaitFront();
@@ -91,7 +90,7 @@ const BlacklistPage = async (companyId) => {
               `fetch error : ${response.status} : ${response.statusText}`
           );
         } else {
-          Redirect("/adminBoard");
+          Navigate("/adminBoard");
         }
 
       } catch (error) {

@@ -1,14 +1,11 @@
-// eslint-disable-next-line import/no-cycle
-import { Redirect } from "../Router/Router";
 import {getAuthenticatedUser} from "../../utils/session";
 import {showNavStyle} from "../../utils/function";
+import Navigate from "../../utils/Navigate";
 
 const HomePage = async () => {
-  
 
   const user = await getAuthenticatedUser();
   showNavStyle("home");
-
 
   const main = document.querySelector('main');
 
@@ -20,15 +17,13 @@ const HomePage = async () => {
   `;
 
   document.querySelector(".con").addEventListener("click", () => {
-    Redirect("/login");
+    Navigate("/login");
   });
-
-
 
   const emailSpan = document.getElementById("test-email");
   const lienCon = document.querySelector(".con");
 
-  if(user) {
+  if (user) {
     // eslint-disable-next-line
     emailSpan.innerHTML = ", " + user.user.firstname;
     lienCon.style.display = "none";
