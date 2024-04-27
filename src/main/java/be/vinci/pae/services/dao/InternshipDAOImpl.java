@@ -18,7 +18,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.logging.log4j.Level;
@@ -205,17 +205,16 @@ public class InternshipDAOImpl implements InternshipDAO {
   public Map<String, Integer[]> getInternshipCountByYear() {
     String requestSql = """
         SELECT cn.school_year, count(i.internship_id) AS internship_count,
-        count(DISTINCT us.user_id) AS total_students
+        count(DISTINCT cn.student) AS total_students
         FROM prostage.contacts cn
         left outer join prostage.internships i on cn.contact_id = i.contact
-        left outer join prostage.users us on cn.student = us.user_id
-        WHERE us.role = 'Etudiant'
-        GROUP BY cn.school_year;
+        GROUP BY cn.school_year
+        ORDER BY cn.school_year DESC
         """;
 
     try (PreparedStatement ps = dalServices.getPreparedStatement(requestSql)) {
       try (ResultSet rs = ps.executeQuery()) {
-        Map<String, Integer[]> internshipCountMap = new HashMap<>();
+        Map<String, Integer[]> internshipCountMap = new LinkedHashMap<>();
         while (rs.next()) {
           String year = rs.getString("school_year");
           int internshipCount = rs.getInt("internship_count");
