@@ -1,6 +1,4 @@
 import {awaitFront} from "../../utils/function";
-
-/* eslint-disable prefer-template */
 import {
   getAuthenticatedUser,
   getLocalUser,
@@ -35,7 +33,7 @@ const InfoPage = async () => {
         'Authorization': userToken
       }
     }
-    const response = await fetch('api/users/' + localUser.id, options);
+    const response = await fetch(`api/users/${localUser.id}`, options);
 
     if (!response.ok) {
       throw new Error(
