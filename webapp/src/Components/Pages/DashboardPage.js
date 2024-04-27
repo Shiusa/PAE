@@ -315,6 +315,9 @@ const DashboardPage = async () => {
       refusal = contactInfoJSON.reasonRefusal;
     }
 
+    const disableRadioButtons = meetingType !== null ? 'disabled' : '';
+    const disableTextarea = refusal !== "" ? 'readonly' : '';
+
     boxInfo.style.visibility = "visible";
 
     const init = `
@@ -329,7 +332,7 @@ const DashboardPage = async () => {
     entrepriseBox.innerHTML = `
                     <div class="entreprise-container d-flex justify-contain-center align-items-center flex-column mx-auto">
                         <i id="btn-back2" class="fa-solid fa-circle-arrow-left" title="Retour"></i>
-                        <h1 class="mt-4">${contactInfoJSON.company.name}</h1>
+                        <h1 class="mt-3">${contactInfoJSON.company.name}</h1>
                         <div class="entreprise-info overflow-y-scroll" style="scrollbar-width:none">
                             <p class="mt-3"><i class="fa-solid fa-phone"></i><i id="phoneNumber"></i></p>
                             <p class="mt-1"><i class="fa-solid fa-map-location-dot"></i><i id="address"></i></p>
@@ -351,23 +354,24 @@ const DashboardPage = async () => {
                             <div class="radioButton d-flex mt-4 align-items-center admit-extra" style="visibility: hidden; height: 0">
                                 <p class="fw-bold me-4" style="width: 30%;">Type de rencontre</p>
                                 <div class="ent-radio form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="Dans l entreprise" ${checkedSurPlace}>
+                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="Dans l entreprise" ${checkedSurPlace} ${disableRadioButtons}>
                                     <label class="form-check-label" for="inlineRadio1">Dans l'entreprise</label>
                                 </div>
                                 <div class="ent-radio form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="A distance" ${checkedADistance}>
+                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="A distance" ${checkedADistance} ${disableRadioButtons}>
                                     <label class="form-check-label" for="inlineRadio2">A Distance</label>
                                 </div>
                             </div>
                             
-                            <div class="d-flex mt-2 mb-2 refused-extra" style="visibility: hidden; height: 0;"> 
-                                <p class="fw-bold me-4" style="width: 30%;">Raison</p>
-                                <textarea id="refusalReason" class="px-3 pt-3" style="" name="raison" placeholder="Raison du refus">${refusal}</textarea>
+                            <div class="d-flex mt-2 mb-2 refused-extra align-items-center" style="visibility: hidden; height: 0;"> 
+                                <p class="fw-bold me-4 mb-0" style="width: 30%;">Raison du refus</p>
+                                <textarea id="refusalReason" class="px-3 pt-4" name="raison" placeholder="Raison du refus" ${disableTextarea}>${refusal}</textarea>
                             </div>
                             
                             <div class="d-flex justify-content-center">
-                              <button id="updateBtn" class="btn btn-primary mt-1 mb-2 ms-3  ${contactInfoJSON.state
-    === 'accepté' ? 'invisible' : 'visible'}" type="submit">Mettre à jour</button>
+                              <button id="updateBtn" class="btn btn-primary mt-1 mb-2 ms-3 ${
+        contactInfoJSON.state === 'initié' ||
+        contactInfoJSON.state === 'pris' ? 'visible' : 'invisible'}" type="submit">Mettre à jour</button>
                             </div>
                             
                             <h2 id="error-message" class="mt-2"></h2>
@@ -378,18 +382,31 @@ const DashboardPage = async () => {
     const selectState = document.querySelector('#selectedState');
     const admitExtra = document.querySelector('.admit-extra');
     const refusedExtra = document.querySelector('.refused-extra');
+
+    if (meetingType !== null) {
+      admitExtra.style.visibility = 'visible';
+      admitExtra.style.height = 'auto';
+    }
+    if (refusal !== "") {
+      refusedExtra.style.visibility = 'visible';
+      refusedExtra.style.height = 'auto';
+    }
+
     selectState.addEventListener('change', () => {
-      if (selectState.value === 'admitted') {
-        admitExtra.style.visibility = 'visible';
-        admitExtra.style.height = 'auto';
-      } else if (selectState.value === 'turnedDown') {
-        refusedExtra.style.visibility = 'visible';
-        refusedExtra.style.height = 'auto';
-      } else {
+      if (meetingType === null) {
         admitExtra.style.visibility = 'hidden';
         admitExtra.style.height = '0';
+      }
+      if (refusal === "") {
         refusedExtra.style.visibility = 'hidden';
         refusedExtra.style.height = '0';
+      }
+      if (selectState.value === 'admitted' && meetingType === null) {
+        admitExtra.style.visibility = 'visible';
+        admitExtra.style.height = 'auto';
+      } else if (selectState.value === 'turnedDown' && refusal === "") {
+        refusedExtra.style.visibility = 'visible';
+        refusedExtra.style.height = 'auto';
       }
     })
 
