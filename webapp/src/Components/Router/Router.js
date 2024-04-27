@@ -1,5 +1,3 @@
-/* eslint-disable import/no-cycle */
-
 import HomePage from '../Pages/HomePage';
 import LoginPage from '../Pages/LoginPage';
 import RegisterPage from '../Pages/RegisterPage';
@@ -9,7 +7,7 @@ import InfoPage from '../Pages/InfoPage';
 import DashboardPage from '../Pages/DashboardPage';
 import UserListPage from '../Pages/UserListPage';
 import AdminDashboardPage from '../Pages/AdminDashboardPage';
-import {InternshipPage, CreateInternshipPage} from "../Pages/InternshipPage";
+import {CreateInternshipPage, InternshipPage} from "../Pages/InternshipPage";
 
 const routes = {
   "/": HomePage,
