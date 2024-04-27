@@ -159,7 +159,7 @@ const DashboardPage = async () => {
                     
                 </div>
                 <div class="dash-en-container mt-4 d-flex justify-content-center align-items-center overflow-hidden">
-                    <div class="dash-en d-flex align-items-center flex-column">
+                    <div class="dash-en d-flex align-items-center flex-column pb-3">
                         <div class="table-title d-flex justify-content-center align-items-center mt-3 font-weight-bold">
                                 <div class="title-col-1 mt-3">
                                     <p>Nom</p>
@@ -171,7 +171,7 @@ const DashboardPage = async () => {
                                     <p>Action</p>
                                 </div>
                         </div>
-                        <div class="table-line-box overflow-auto">
+                        <div class="table-line-box overflow-auto mt-1 rounded-3">
                             
                         </div>
                     </div>
