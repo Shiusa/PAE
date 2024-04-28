@@ -1,10 +1,8 @@
 import TomSelect from "tom-select";
 
 import {awaitFront, showNavStyle} from "../../utils/function";
-/* eslint-disable prefer-template */
-// eslint-disable-next-line import/no-cycle
-import {Redirect} from "../Router/Router";
 import {getAuthenticatedUser,} from "../../utils/session";
+import Navigate from "../../utils/Navigate";
 
 const InternshipPage = async () => {
   const main = document.querySelector('main');
@@ -23,7 +21,7 @@ const InternshipPage = async () => {
           'Authorization': user.token
         }
       }
-      const response = await fetch('api/internships/student/' + user.user.id,
+      const response = await fetch(`api/internships/student/${user.user.id}`,
           options);
 
       if (!response.ok) {
@@ -51,7 +49,7 @@ const InternshipPage = async () => {
   };
 
   const internship = await readInternship();
-  if(!internship) {
+  if (!internship) {
     main.innerHTML = `
       <div class="dash d-flex justify-content-center align-items-center mt-5 mb-5 mx-auto">
         <div class="dash-content d-flex justify-content-center align-items-center flex-column">
@@ -64,7 +62,7 @@ const InternshipPage = async () => {
     `
     const btnChangeInfo = document.getElementById("btn-info-change");
     btnChangeInfo.addEventListener('click', () => {
-      Redirect('/dashboard');
+      Navigate('/dashboard');
     });
   } else {
     const divMaster = document.createElement("div");
@@ -172,15 +170,14 @@ const InternshipPage = async () => {
       const errorMessage = document.createElement("p");
       labelInternshipProject.appendChild(errorMessage);
 
-
-      submitButton.addEventListener("click", async() => {
+      submitButton.addEventListener("click", async () => {
         try {
           const options = {
             method: "POST",
             body: JSON.stringify({
-              project : newValueLabelInternshipProject.value,
-              version : internship.version,
-              internshipId : internship.id
+              project: newValueLabelInternshipProject.value,
+              version: internship.version,
+              internshipId: internship.id
             }),
             headers: {
               "Content-Type": "application/json",
@@ -192,16 +189,17 @@ const InternshipPage = async () => {
 
           if (!response.ok) {
             throw new Error(
-              `fetch error : ${response.status} : ${response.statusText}`
+                `fetch error : ${response.status} : ${response.statusText}`
             );
           }
 
           const editProject = await response.json();
-          Redirect("/internship")
+          Navigate("/internship")
           return editProject;
 
         } catch (error) {
-          if (error instanceof Error && error.message.startsWith("fetch error : 400")) {
+          if (error instanceof Error && error.message.startsWith(
+              "fetch error : 400")) {
             errorMessage.innerText = "le sujet du projet est vide !"
           }
           errorMessage.id = "error-message"
@@ -239,13 +237,12 @@ const InternshipPage = async () => {
     divRight.appendChild(labelSupervisorPhoneNumber);
     divRight.appendChild(document.createElement("br"));
 
-
     // supervisor email
     const labelSupervisorEmail = document.createElement("label");
     labelSupervisorEmail.innerText = "Email :";
     labelSupervisorEmail.className = "textCSS";
     const valueLabelSupervisorEmail = document.createElement("p");
-    if(internship.supervisor.email === null) {
+    if (internship.supervisor.email === null) {
       valueLabelSupervisorEmail.innerText = `Aucun email`;
     } else {
       valueLabelSupervisorEmail.innerText = `${internship.supervisor.email}`;
@@ -320,7 +317,8 @@ const CreateInternshipPage = async (contact) => {
     return undefined;
   };
 
-  const createSupervisor = async (lastname, firstname, phoneNumber, emailToCheck) => {
+  const createSupervisor = async (lastname, firstname, phoneNumber,
+      emailToCheck) => {
     try {
       const {company} = contact;
       const email = emailToCheck === "" ? null : emailToCheck;
@@ -377,9 +375,10 @@ const CreateInternshipPage = async (contact) => {
         }
       };
 
-      const response = await fetch('/api/supervisors/allByCompany/' + contact.company.id, options);
+      const response = await fetch(
+          `/api/supervisors/allByCompany/${contact.company.id}`, options);
 
-      if(!response.ok) {
+      if (!response.ok) {
         throw new Error(
             `fetch error : ${response.status} : ${response.statusText}`);
       }
@@ -402,7 +401,9 @@ const CreateInternshipPage = async (contact) => {
   const allSupervisors = await getSupervisors();
 
   let desi = contact.company.designation;
-  if(desi === null) desi = "";
+  if (desi === null) {
+    desi = "";
+  }
 
   main.innerHTML = `
     <div class="container-create d-flex justify-content-center align-items-end mt-5 mb-5">
@@ -461,7 +462,7 @@ const CreateInternshipPage = async (contact) => {
     maxItems: 1,
     render: {
       no_results() {
-          return '<div class="no-results">Aucun superviseur trouvé</div>';
+        return '<div class="no-results">Aucun superviseur trouvé</div>';
       }
     },
   });
@@ -477,8 +478,9 @@ const CreateInternshipPage = async (contact) => {
     const firstname = document.getElementById('input-firstname').value;
     const phoneNumber = document.getElementById('input-phone').value;
     const email = document.getElementById('input-email').value;
-    const supervisor = await createSupervisor(lastname, firstname, phoneNumber, email);
-    if(supervisor) {
+    const supervisor = await createSupervisor(lastname, firstname, phoneNumber,
+        email);
+    if (supervisor) {
       await CreateInternshipPage(contact);
     }
   });
@@ -487,23 +489,24 @@ const CreateInternshipPage = async (contact) => {
   registerStageBtn.addEventListener('click', async () => {
     const supervisorId = document.getElementById('input-supervisor').value;
     let supervisor;
-    for(let i = 0 ; i < allSupervisors.length ; i+=1) {
-      if(allSupervisors[i].id === parseInt(supervisorId, 10)) {
+    for (let i = 0; i < allSupervisors.length; i += 1) {
+      if (allSupervisors[i].id === parseInt(supervisorId, 10)) {
         supervisor = allSupervisors[i];
         break;
       }
     }
     const signatureDate = document.getElementById('input-date').value;
     let project = document.getElementById('input-subject').value;
-    if(project === "") {
+    if (project === "") {
       project = null;
     }
-    const internship = await createInternship(supervisor, signatureDate, project);
-    if(internship) {
-      Redirect("/internship");
+    const internship = await createInternship(supervisor, signatureDate,
+        project);
+    if (internship) {
+      Navigate("/internship");
     }
   });
-  
+
 }
 
 export {InternshipPage, CreateInternshipPage};
