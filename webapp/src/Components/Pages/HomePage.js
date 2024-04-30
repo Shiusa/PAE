@@ -1,10 +1,13 @@
-import {getAuthenticatedUser} from "../../utils/session";
+import {getAuthenticatedUser, setAuthenticatedUser} from "../../utils/session";
 import {showNavStyle} from "../../utils/function";
 import Navigate from "../../utils/Navigate";
+import Navbar from "../Navbar/Navbar";
 
 const HomePage = async () => {
 
   const user = await getAuthenticatedUser();
+  setAuthenticatedUser(user);
+  Navbar();
   showNavStyle("home");
 
   const main = document.querySelector('main');

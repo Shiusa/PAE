@@ -1,8 +1,14 @@
 import TomSelect from "tom-select";
 
-import {showNavStyle, awaitFront} from "../../utils/function";
-import {getAuthenticatedUser} from "../../utils/session";
-
+import {awaitFront, showNavStyle} from "../../utils/function";
+import {
+  getAuthenticatedUser,
+  getLocalUser,
+  getToken,
+  setAuthenticatedUser
+} from "../../utils/session";
+import Navbar from "../Navbar/Navbar";
+import Navigate from "../../utils/Navigate";
 
 const UserListPage = async () => {
 
@@ -10,50 +16,59 @@ const UserListPage = async () => {
 
   awaitFront();
 
-  // eslint-disable-next-line
   const userAuth = await getAuthenticatedUser();
+  setAuthenticatedUser(userAuth);
+  Navbar();
+  const localUser = getLocalUser();
+  if (!getToken() || !localUser) {
+    Navigate('/');
+    return;
+  }
+  if (localUser.role !== 'Professeur' && localUser.role
+      !== 'Administratif') {
+    Navigate('/dashboard');
+    return;
+  }
 
   showNavStyle("userList");
 
   const readAllUsers = async () => {
-      const options = {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': userAuth.token
-        }
+    const options = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': userAuth.token
       }
-      const response = await fetch('api/users/all', options);
+    }
+    const response = await fetch('api/users/all', options);
 
-      if (!response.ok) {
-        throw new Error(
-            `fetch error : ${response.status} : ${response.statusText}`);
-      }
+    if (!response.ok) {
+      throw new Error(
+          `fetch error : ${response.status} : ${response.statusText}`);
+    }
 
-      const userInfo = await response.json();
-      return userInfo;
+    const userInfo = await response.json();
+    return userInfo;
   };
 
   const readAllInternships = async () => {
-      const options = {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': userAuth.token
-        }
+    const options = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': userAuth.token
       }
-      const response = await fetch('api/internships/all', options);
+    }
+    const response = await fetch('api/internships/all', options);
 
-      if (!response.ok) {
-        throw new Error(
-            `fetch error : ${response.status} : ${response.statusText}`);
-      }
+    if (!response.ok) {
+      throw new Error(
+          `fetch error : ${response.status} : ${response.statusText}`);
+    }
 
-      const userInfo = await response.json();
-      return userInfo;
+    const userInfo = await response.json();
+    return userInfo;
   };
-
-  
 
   main.innerHTML = `
     <div class="d-flex justify-content-center align-items-center flex-column mb-5">
@@ -93,17 +108,18 @@ const UserListPage = async () => {
       const utilisateursFiltres = users.filter(utilisateur => {
         const flname = `${utilisateur.firstname} ${utilisateur.lastname}`;
         return flname.toLowerCase().includes(query.toLowerCase());
-            
+
       });
 
-      const idsUtilisateursFiltres = utilisateursFiltres.map(utilisateur => utilisateur.id);
+      const idsUtilisateursFiltres = utilisateursFiltres.map(
+          utilisateur => utilisateur.id);
       showUsers(idsUtilisateursFiltres);
       callback(idsUtilisateursFiltres);
     },
     onChange: showUsers,
     render: {
       no_results() {
-          return '<div class="no-results">Aucun utilisateur trouvé</div>';
+        return '<div class="no-results">Aucun utilisateur trouvé</div>';
       }
     },
   });
@@ -120,54 +136,54 @@ const UserListPage = async () => {
   let yearValue;
   let yearAdd = ``;
 
-  while(o<users.length) {
+  while (o < users.length) {
     yearValue = users[o].schoolYear;
-    p=0;
+    p = 0;
     yearCheck = false;
-    while(p<yearsTable.length) {
-      if(yearsTable[p] === users[o].schoolYear) {
+    while (p < yearsTable.length) {
+      if (yearsTable[p] === users[o].schoolYear) {
         yearCheck = true;
-      } 
-      p+=1;
+      }
+      p += 1;
     }
 
-    if(yearCheck === false) {
+    if (yearCheck === false) {
       yearsTable.push(yearValue);
     }
-    
-    o+=1;
-  }  
 
-  p=0;
+    o += 1;
+  }
+
+  p = 0;
 
   function comparerDates(a, b) {
     // eslint-disable-next-line
     const anneeDebutA = parseInt(a.split('-')[0]);
     // eslint-disable-next-line
     const anneeDebutB = parseInt(b.split('-')[0]);
-    
+
     return anneeDebutA - anneeDebutB;
   }
 
   yearsTable.sort(comparerDates);
 
-  while(p<yearsTable.length) {
+  while (p < yearsTable.length) {
 
-    if(yearsTable[p] === "2023-2024") {
+    if (yearsTable[p] === "2023-2024") {
       yearAdd += `<option value="${yearsTable[p]}" selected>${yearsTable[p]}</option>`;
     } else {
       yearAdd += `<option value="${yearsTable[p]}">${yearsTable[p]}</option>`;
     }
-    p+=1;
-  }  
+    p += 1;
+  }
 
-  yearAdd += `<option value="all">Toutes</option>`; 
+  yearAdd += `<option value="all">Toutes</option>`;
   yearsInput.innerHTML = yearAdd;
 
   allUsers();
 
   document.querySelector('.form-check-label').addEventListener('click', () => {
-    if(checkBox === false) {
+    if (checkBox === false) {
       checkBox = true;
       labelCheck.innerHTML = `Etudiants`;
     } else {
@@ -182,9 +198,9 @@ const UserListPage = async () => {
   });
 
   function showUsers(selectedIds) {
-  
+
     let userLine = ``;
-    if(selectedIds.length <= 0) {
+    if (selectedIds.length <= 0) {
       tomSelectInstance.clear();
       allUsers();
     } else {
@@ -192,10 +208,12 @@ const UserListPage = async () => {
       for (let i = 0; i < selectedIds.length; i++) {
         const currentUser = users[selectedIds[i] - 1];
         if (
-            (yearsInput.value === "all" || currentUser.schoolYear === yearsInput.value) &&
-            (checkBox === true && currentUser.role === "Etudiant" || checkBox === false)
+            (yearsInput.value === "all" || currentUser.schoolYear
+                === yearsInput.value) &&
+            (checkBox === true && currentUser.role === "Etudiant" || checkBox
+                === false)
         ) {
-            userLine += generateUserHTML(currentUser);
+          userLine += generateUserHTML(currentUser);
         }
       }
       userTable.innerHTML = userLine;
@@ -204,12 +222,14 @@ const UserListPage = async () => {
 
   function allUsers() {
     let info = ``;
-    let u =0;
-    
+    let u = 0;
+
     while (u < users.length) {
-      if ((yearsInput.value === "all" || users[u].schoolYear === yearsInput.value) &&
-          (checkBox === true && users[u].role === "Etudiant" || checkBox === false)) {
-          info += generateUserHTML(users[u]);
+      if ((yearsInput.value === "all" || users[u].schoolYear
+              === yearsInput.value) &&
+          (checkBox === true && users[u].role === "Etudiant" || checkBox
+              === false)) {
+        info += generateUserHTML(users[u]);
       }
       u += 1;
     }
@@ -218,16 +238,19 @@ const UserListPage = async () => {
 
   function generateUserHTML(userTemp) {
 
-    if(userTemp.role === "Etudiant") {
+    if (userTemp.role === "Etudiant") {
       let k = 0;
       let findStageB = false;
 
-      while(k<interships.length) {
-        if(interships[k].contact.student.id === userTemp.id) findStageB = true;
-        k+=1;
+      while (k < interships.length) {
+        if (interships[k].contact.student.id === userTemp.id) {
+          findStageB = true;
+        }
+        k += 1;
       }
 
-      const findStage = (findStageB === true) ? 'A trouvé<br>un stage' : 'N\'a pas trouvé<br>de stage';
+      const findStage = (findStageB === true) ? 'A trouvé<br>un stage'
+          : 'N\'a pas trouvé<br>de stage';
       return `
           <div class="user-line d-flex align-items-center">
               <i class="users-icon fa-solid fa-user"></i>
@@ -257,7 +280,6 @@ const UserListPage = async () => {
       `;
     }
   }
-
 
 };
 

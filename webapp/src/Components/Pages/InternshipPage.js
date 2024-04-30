@@ -1,14 +1,26 @@
 import TomSelect from "tom-select";
 
 import {awaitFront, showNavStyle} from "../../utils/function";
-import {getAuthenticatedUser,} from "../../utils/session";
+import {
+  getAuthenticatedUser,
+  getToken,
+  setAuthenticatedUser,
+} from "../../utils/session";
 import Navigate from "../../utils/Navigate";
+import Navbar from "../Navbar/Navbar";
 
 const InternshipPage = async () => {
   const main = document.querySelector('main');
   awaitFront();
 
   const user = await getAuthenticatedUser();
+  setAuthenticatedUser(user);
+  Navbar();
+  const userToken = getToken();
+  if (!userToken) {
+    Navigate('/');
+    return;
+  }
 
   showNavStyle("internship");
 
@@ -268,6 +280,13 @@ const CreateInternshipPage = async (contact) => {
   awaitFront();
 
   const user = await getAuthenticatedUser();
+  setAuthenticatedUser(user);
+  Navbar();
+  const userToken = getToken();
+  if (!userToken) {
+    Navigate('/');
+    return;
+  }
 
   showNavStyle("dashboard");
 

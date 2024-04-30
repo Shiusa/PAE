@@ -5,8 +5,9 @@ import {
   setAuthenticatedUser
 } from "../../utils/session";
 import Navigate from "../../utils/Navigate";
+import Navbar from "../Navbar/Navbar";
 
-let userToken;
+let companiesTable;
 
 const closeForm = () => {
   const addCompanyContainer = document.querySelector(
@@ -21,15 +22,33 @@ const closeForm = () => {
   }, 300);
 }
 
+const readAllCompanies = async () => {
+  const user = await getAuthenticatedUser();
+  setAuthenticatedUser(user);
+
+  const options = {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': getToken()
+    }
+  }
+  const response = await fetch('api/companies/all/user', options);
+
+  if (!response.ok) {
+    throw new Error(
+        `fetch error : ${response.status} : ${response.statusText}`);
+  }
+
+  const companyInfo = await response.json();
+  return companyInfo;
+};
+
 const submitRegistration = async (e) => {
   e.preventDefault();
 
   const user = await getAuthenticatedUser();
-  if (user) {
-    setAuthenticatedUser(user);
-  } else {
-    return;
-  }
+  setAuthenticatedUser(user);
 
   const name = document.querySelector("#input-name").value;
   const designation = document.querySelector("#input-designation").value;
@@ -50,7 +69,7 @@ const submitRegistration = async (e) => {
       }), // body data type must match "Content-Type" header
       headers: {
         "Content-Type": "application/json",
-        "Authorization": user.token
+        "Authorization": getToken()
       },
     };
 
@@ -84,8 +103,10 @@ const submitRegistration = async (e) => {
     }
     return;
   }
+  companiesTable = await readAllCompanies();
+  showCompaniesList(companiesTable)
   closeForm();
-  Navigate('/contact');
+  // Navigate('/contact');
 }
 
 const renderRegisterCompanyForm = async () => {
@@ -160,32 +181,16 @@ const ContactPage = async () => {
   const main = document.querySelector('main');
   awaitFront();
 
-  userToken = getToken();
+  const loggedUser = await getAuthenticatedUser();
+  setAuthenticatedUser(loggedUser);
+  Navbar();
+  const userToken = getToken();
   if (!userToken) {
     Navigate('/');
     return;
   }
 
-  const readAllCompanies = async () => {
-    const options = {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': userToken
-      }
-    }
-    const response = await fetch('api/companies/all/user', options);
-
-    if (!response.ok) {
-      throw new Error(
-          `fetch error : ${response.status} : ${response.statusText}`);
-    }
-
-    const companyInfo = await response.json();
-    return companyInfo;
-  };
-
-  const companiesTable = await readAllCompanies();
+  companiesTable = await readAllCompanies();
 
   showNavStyle("contact");
 
@@ -239,73 +244,7 @@ const ContactPage = async () => {
     renderRegisterCompanyForm();
   })
 
-  const companiesContainer = document.querySelector('.users-container');
-
   showCompaniesList(companiesTable)
-
-  function showCompaniesList(companies) {
-    companiesContainer.innerHTML = ``;
-
-    let u = 0;
-    let info = ``;
-    while (u < companies.length) {
-      let designation;
-      let email;
-      let phone;
-
-      if (companies[u].designation === null || companies[u].designation
-          === '') {
-        designation = "Appellation";
-      } else {
-        designation = companies[u].designation;
-      }
-
-      if (companies[u].email === null || companies[u].email === '') {
-        email = "Email";
-      } else {
-        email = companies[u].email;
-      }
-
-      if (companies[u].phoneNumber === null || companies[u].phoneNumber
-          === '') {
-        phone = "Numéro de téléphone";
-      } else {
-        phone = companies[u].phoneNumber;
-      }
-      info += `
-            <div data-${companies[u].id} class="w-100 d-flex justify-content-center align-items-center mt-2 py-2 border rounded-3 adminCompanyListTile">
-              <div class="d-flex align-items-center justify-content-center h-75" style="width: 25%; border-right: 2px solid white;">
-                <p class="p-0 m-0 text-center">${companies[u].name}</p>
-              </div>
-              <div class="d-flex align-items-center justify-content-center h-75" style="width: 25%; border-right: 2px solid white;">
-                <p class="p-0 m-0 text-center">${designation}</p>
-              </div>
-              <div class="d-flex align-items-center justify-content-center h-75" style="width: 20%; border-right: 2px solid white;">
-                <p class="p-0 m-0 text-center">${email}</p>
-              </div>
-              <div class="d-flex align-items-center justify-content-center h-75" style="width: 20%; border-right: 2px solid white;">
-                <p class="p-0 m-0 text-center">${phone}</p>
-              </div>
-            `;
-      if (companies[u].blacklisted === false) {
-        info += `
-          <div class="d-flex align-items-center justify-content-center h-75" style="width: 10%;">
-            <button id="${companies[u].id}" class="company-btn btn">Initier</button>
-          </div>
-        `;
-      } else {
-        info += `
-          <div class="d-flex align-items-center justify-content-center" style="width: 10%;">
-            <button id="${companies[u].id}" class="company-btn btn disabled">Initier</button>
-          </div>
-        `;
-      }
-      info += `</div>`;
-      u += 1;
-    }
-    info += `<h2 id="error-message"></h2>`
-    companiesContainer.innerHTML = info;
-  }
 
   const companiesBtn = document.querySelectorAll('.company-btn');
 
@@ -354,5 +293,70 @@ const ContactPage = async () => {
   }
 
 };
+
+function showCompaniesList(companies) {
+  const companiesContainer = document.querySelector('.users-container');
+  companiesContainer.innerHTML = ``;
+
+  let u = 0;
+  let info = ``;
+  while (u < companies.length) {
+    let designation;
+    let email;
+    let phone;
+
+    if (companies[u].designation === null || companies[u].designation
+        === '') {
+      designation = "Appellation";
+    } else {
+      designation = companies[u].designation;
+    }
+
+    if (companies[u].email === null || companies[u].email === '') {
+      email = "Email";
+    } else {
+      email = companies[u].email;
+    }
+
+    if (companies[u].phoneNumber === null || companies[u].phoneNumber
+        === '') {
+      phone = "Numéro de téléphone";
+    } else {
+      phone = companies[u].phoneNumber;
+    }
+    info += `
+            <div data-${companies[u].id} class="w-100 d-flex justify-content-center align-items-center mt-2 py-2 border rounded-3 adminCompanyListTile">
+              <div class="d-flex align-items-center justify-content-center h-75" style="width: 25%; border-right: 2px solid white;">
+                <p class="p-0 m-0 text-center">${companies[u].name}</p>
+              </div>
+              <div class="d-flex align-items-center justify-content-center h-75" style="width: 25%; border-right: 2px solid white;">
+                <p class="p-0 m-0 text-center">${designation}</p>
+              </div>
+              <div class="d-flex align-items-center justify-content-center h-75" style="width: 20%; border-right: 2px solid white;">
+                <p class="p-0 m-0 text-center">${email}</p>
+              </div>
+              <div class="d-flex align-items-center justify-content-center h-75" style="width: 20%; border-right: 2px solid white;">
+                <p class="p-0 m-0 text-center">${phone}</p>
+              </div>
+            `;
+    if (companies[u].blacklisted === false) {
+      info += `
+          <div class="d-flex align-items-center justify-content-center h-75" style="width: 10%;">
+            <button id="${companies[u].id}" class="company-btn btn">Initier</button>
+          </div>
+        `;
+    } else {
+      info += `
+          <div class="d-flex align-items-center justify-content-center" style="width: 10%;">
+            <button id="${companies[u].id}" class="company-btn btn disabled">Initier</button>
+          </div>
+        `;
+    }
+    info += `</div>`;
+    u += 1;
+  }
+  info += `<h2 id="error-message"></h2>`
+  companiesContainer.innerHTML = info;
+}
 
 export default ContactPage;

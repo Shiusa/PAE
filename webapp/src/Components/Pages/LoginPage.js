@@ -1,13 +1,14 @@
-import Navbar from "../Navbar/Navbar";
-
 import {
   getAuthenticatedUser,
+  getLocalUser,
+  getToken,
   setAuthenticatedUser,
   setRemember,
 } from "../../utils/session";
 
 import {showNavStyle} from "../../utils/function";
 import Navigate from "../../utils/Navigate";
+import Navbar from "../Navbar/Navbar";
 
 const onUserLogin = async (userData) => {
   if (document.getElementById("stayconnected").checked) {
@@ -17,7 +18,7 @@ const onUserLogin = async (userData) => {
     setAuthenticatedUser(userData);
   }
   // re-render the navbar for the authenticated user
-  await Navbar();
+  // await Navbar();
   if (userData.user.role === 'Professeur' || userData.user.role
       === 'Administratif') {
     Navigate('/adminBoard');
@@ -36,10 +37,12 @@ async function login(e) {
   const password = document.querySelector("#input-pwd").value;
 
   const userTemp = await getAuthenticatedUser();
+  setAuthenticatedUser(userTemp);
+  Navbar();
 
   if (userTemp) {
     // re-render the navbar for the authenticated user
-    Navbar();
+    // Navbar();
     Navigate("/");
   } else {
     try {
@@ -80,7 +83,22 @@ const keypressSubmit = async (e) => {
   }
 }
 
-const LoginPage = () => {
+const LoginPage = async () => {
+  const loggedUser = await getAuthenticatedUser();
+  setAuthenticatedUser(loggedUser);
+  Navbar();
+  const userToken = getToken();
+  const localUser = getLocalUser();
+  if (userToken) {
+    if (localUser.role === "Etudiant") {
+      Navigate('/dashboard');
+      return;
+    }
+    if (localUser.role === 'Professeur' || localUser.role === 'Administratif') {
+      Navigate('/adminBoard');
+      return;
+    }
+  }
   const main = document.querySelector('main');
   main.innerHTML = `
         <div class="page-login d-flex justify-content-center align-items-center mb-4 mt-5">
