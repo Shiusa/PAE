@@ -175,7 +175,6 @@ async function register(e) {
     }
     return;
   }
-  await Navbar();
   Navigate("/");
 }
 
