@@ -121,10 +121,10 @@ public class CompanyUCCImplTest {
   }
 
   @Test
-  @DisplayName("Test register non existing company with null designation "
+  @DisplayName("Test register non existing company with blank designation "
       + "and null email should return a company")
   public void testRegisterCompanyNonDuplicateDesignationNullEmailNull() {
-    companyDTO.setDesignation(null);
+    companyDTO.setDesignation("");
     companyDTO.setName("test");
     companyDTO.setPhoneNumber("0400000000");
     companyDTO.setEmail("");
@@ -141,10 +141,10 @@ public class CompanyUCCImplTest {
   }
 
   @Test
-  @DisplayName("Test register non existing company with null designation "
+  @DisplayName("Test register non existing company with blank designation "
       + "and null phoneNumber should return a company")
   public void testRegisterCompanyNonDuplicateDesignationNullPhoneNull() {
-    companyDTO.setDesignation(null);
+    companyDTO.setDesignation("");
     companyDTO.setName("test");
     companyDTO.setPhoneNumber("");
     companyDTO.setEmail("test@test.be");
@@ -181,10 +181,10 @@ public class CompanyUCCImplTest {
   }
 
   @Test
-  @DisplayName("Test register existing company with null designation "
+  @DisplayName("Test register existing company with blank designation "
       + "should throw InvalidRequestException")
   public void testRegisterCompanyDuplicateDesignationNull() {
-    companyDTO.setDesignation(null);
+    companyDTO.setDesignation("");
     companyDTO.setName("test");
     companyDTO.setPhoneNumber("0400000000");
     companyDTO.setEmail("");

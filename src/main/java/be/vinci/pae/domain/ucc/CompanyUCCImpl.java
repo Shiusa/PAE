@@ -104,7 +104,8 @@ public class CompanyUCCImpl implements CompanyUCC {
     try {
       dalServices.startTransaction();
       CompanyDTO existingCompany;
-      if (company.getDesignation() == null) {
+      if (company.getDesignation().isBlank()) {
+        company.setDesignation(null);
         List<CompanyDTO> existingCompaniesWithNullDesignation = companyDAO.getAllCompaniesByName(
             company.getName());
         if (existingCompaniesWithNullDesignation.size() > 0) {
