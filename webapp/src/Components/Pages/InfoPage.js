@@ -140,7 +140,7 @@ const InfoPage = async () => {
       const savedUserPassword = await response.json();
 
       if (savedUserPassword) {
-        Redirect("/dashboard");
+        Navigate("/dashboard");
       }
     } catch (error) {
       const errorMessage = document.querySelector("#error-message");
