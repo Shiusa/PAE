@@ -15,14 +15,11 @@ const DashboardPage = async () => {
   const main = document.querySelector('main');
   awaitFront();
 
-  // await getAuthenticatedUser();
+  let loggedUser = await getAuthenticatedUser();
+  setAuthenticatedUser(loggedUser);
+  Navbar();
   let userToken = getToken();
   let localUser = getLocalUser();
-  if (!localUser) {
-    await Navbar();
-    userToken = getToken();
-    localUser = getLocalUser();
-  }
   if (!userToken) {
     Navigate('/');
     return;
@@ -83,6 +80,10 @@ const DashboardPage = async () => {
   };
 
   const readContactById = async (idContact) => {
+    loggedUser = await getAuthenticatedUser();
+    setAuthenticatedUser(loggedUser);
+    userToken = getToken();
+    localUser = getLocalUser();
     const options = {
       method: 'GET',
       headers: {
@@ -316,7 +317,7 @@ const DashboardPage = async () => {
     }
 
     const disableRadioButtons = meetingType !== null ? 'disabled' : '';
-    const disableTextarea = refusal !== "" ? 'readonly' : '';
+    const disableTextarea = refusal !== "" ? 'disabled' : '';
 
     boxInfo.style.visibility = "visible";
 
@@ -431,9 +432,7 @@ const DashboardPage = async () => {
     updateState.addEventListener('click', async (e) => {
       e.preventDefault();
       const user = await getAuthenticatedUser();
-      if (user) {
-        setAuthenticatedUser(user);
-      }
+      setAuthenticatedUser(user);
       const options = {
         method: 'POST',
         headers: {

@@ -1,24 +1,18 @@
-import {getAuthenticatedUser, setAuthenticatedUser} from "../../utils/session";
+import {getLocalUser} from "../../utils/session";
 
-const Navbar = async () => {
+let previousLocalUser;
+
+const Navbar = () => {
 
   const navbarWrapper = document.querySelector("#navbarWrapper");
 
-  const userConnected = await getAuthenticatedUser();
-  if (userConnected) {
-    setAuthenticatedUser(userConnected);
-  }
-  /* if (isConnected) {
-    setLocalUser(isConnected.user)
-  } */
-  // console.log(getLocalUser())
+  const renderNavbar = (userConnected) => {
+    let navbar = ``;
 
-  let navbar = ``;
-
-  if (userConnected) {
-    const userRole = userConnected.user.role;
-    if (userRole === "Etudiant") {
-      navbar = `
+    if (userConnected) {
+      const userRole = userConnected.role;
+      if (userRole === "Etudiant") {
+        navbar = `
         <nav class="d-flex justify-content-center align-items-center flex-wrap">
           <a class="nav-link nav-btn d-flex justify-content-center align-items-center" id="home" href="#" data-uri="/">
             <p data-uri="/">Accueil</p>
@@ -37,10 +31,10 @@ const Navbar = async () => {
           </a>
         </nav>
       `;
-    }
+      }
 
-    if (userRole === "Professeur" || userRole === "Administratif") {
-      navbar = `
+      if (userRole === "Professeur" || userRole === "Administratif") {
+        navbar = `
         <nav class="d-flex justify-content-center align-items-center flex-wrap">
           <a class="nav-link nav-btn d-flex justify-content-center align-items-center" id="home" href="#" data-uri="/">
             <p data-uri="/">Accueil</p>
@@ -56,9 +50,9 @@ const Navbar = async () => {
           </a>
         </nav>
       `;
-    }
-  } else {
-    navbar = `
+      }
+    } else {
+      navbar = `
       <nav class="d-flex justify-content-center align-items-center flex-wrap">
         <a class="nav-link nav-btn d-flex justify-content-center align-items-center" id="home" href="#" data-uri="/">
           <p data-uri="/">Accueil</p>
@@ -71,8 +65,15 @@ const Navbar = async () => {
         </a> 
       </nav>
     `;
+    }
+    navbarWrapper.innerHTML = navbar;
+  };
+
+  const userConnected = getLocalUser();
+  if (JSON.stringify(userConnected) !== JSON.stringify(previousLocalUser)) {
+    previousLocalUser = userConnected;
+    renderNavbar(userConnected);
   }
-  navbarWrapper.innerHTML = navbar;
 
 };
 

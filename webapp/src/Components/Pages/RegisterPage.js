@@ -1,8 +1,30 @@
 import {showNavStyle} from "../../utils/function";
 import Navbar from "../Navbar/Navbar";
 import Navigate from "../../utils/Navigate";
+import {
+  getAuthenticatedUser,
+  getLocalUser,
+  getToken,
+  setAuthenticatedUser
+} from "../../utils/session";
 
-const RegisterPage = () => {
+const RegisterPage = async () => {
+  const loggedUser = await getAuthenticatedUser();
+  setAuthenticatedUser(loggedUser);
+  Navbar();
+  const userToken = getToken();
+  const localUser = getLocalUser();
+  if (userToken) {
+    if (localUser.role === "Etudiant") {
+      Navigate('/dashboard');
+      return;
+    }
+    if (localUser.role === 'Professeur' || localUser.role === 'Administratif') {
+      Navigate('/adminBoard');
+      return;
+    }
+  }
+
   const main = document.querySelector('main');
   main.innerHTML = ` 
         <div class="page-login d-flex justify-content-center align-items-center mb-4 mt-5">
@@ -153,7 +175,6 @@ async function register(e) {
     }
     return;
   }
-  await Navbar();
   Navigate("/");
 }
 

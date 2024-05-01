@@ -51,7 +51,9 @@ const getToken = () => {
 }
 
 const setAuthenticatedUser = (authenticatedUser) => {
-  if (getRemember()) {
+  if (!authenticatedUser) {
+    removeSessionData();
+  } else if (getRemember()) {
     setUserLocalStorage(authenticatedUser);
     setLocalUser(authenticatedUser.user);
   } else {

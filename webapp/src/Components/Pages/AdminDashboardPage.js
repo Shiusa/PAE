@@ -1,7 +1,13 @@
 import {awaitFront, showNavStyle} from "../../utils/function";
-import {getToken} from "../../utils/session";
+import {
+  getAuthenticatedUser,
+  getLocalUser,
+  getToken,
+  setAuthenticatedUser
+} from "../../utils/session";
 import BlacklistPage from "./BlacklistPage";
 import Navigate from "../../utils/Navigate";
+import Navbar from "../Navbar/Navbar";
 
 let dataCompany = [];
 let filteredData = [];
@@ -465,12 +471,23 @@ const renderYearOptions = (internshipStats, companiesData) => {
 
 const AdminDashboardPage = async () => {
 
+  const loggedUser = await getAuthenticatedUser();
+  setAuthenticatedUser(loggedUser);
+  Navbar();
+  const userToken = getToken();
+  const localUser = getLocalUser();
+  if (!userToken || !localUser) {
+    Navigate('/');
+    return;
+  }
+  if (localUser.role !== 'Professeur' && localUser.role
+      !== 'Administratif') {
+    Navigate('/dashboard');
+    return;
+  }
   const main = document.querySelector('main');
   awaitFront();
   const internshipStats = await fetchInternshipStat();
-  if (internshipStats === null) {
-    return;
-  }
   dataCompany = await fetchCompaniesData();
   showNavStyle("dashboard");
 

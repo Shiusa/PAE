@@ -3,6 +3,7 @@ import {
   getAuthenticatedUser,
   getLocalUser,
   getToken,
+  setAuthenticatedUser,
 } from "../../utils/session";
 import Navbar from "../Navbar/Navbar";
 import Navigate from "../../utils/Navigate";
@@ -13,13 +14,11 @@ const InfoPage = async () => {
 
   awaitFront();
 
-  let userToken = getToken();
-  let localUser = getLocalUser();
-  if (!localUser) {
-    await Navbar();
-    userToken = getToken();
-    localUser = getLocalUser();
-  }
+  const loggedUser = await getAuthenticatedUser();
+  setAuthenticatedUser(loggedUser);
+  Navbar();
+  const userToken = getToken();
+  const localUser = getLocalUser();
   if (!userToken) {
     Navigate('/');
     return;
@@ -71,6 +70,8 @@ const InfoPage = async () => {
   const saveUserInfo = async (e) => {
     e.preventDefault();
     const user = await getAuthenticatedUser();
+    setAuthenticatedUser(user);
+    Navbar();
     const phoneNumber = document.querySelector("#input-phone").value;
     const options = {
       method: "POST",
@@ -111,6 +112,8 @@ const InfoPage = async () => {
   const saveUserPwd = async (e) => {
     e.preventDefault();
     const user = await getAuthenticatedUser();
+    setAuthenticatedUser(user);
+    Navbar();
     const oldPassword = document.querySelector('#input-old-pwd').value;
     const newPassword = document.querySelector('#input-new-pwd').value;
     const repeatedPassword = document.querySelector(
