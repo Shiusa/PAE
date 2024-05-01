@@ -101,9 +101,9 @@ const InfoPage = async () => {
 
     const savedUserInfo = await response.json();
     if (savedUserInfo) {
-      const error = document.querySelector("#good-message");
-      error.innerHTML = "Changement effectué.";
-      error.style.display = "block";
+      const goodMesssage = document.querySelector("#good-message");
+      goodMesssage.innerHTML = "Changement effectué.";
+      goodMesssage.style.display = "block";
     }
 
     return savedUserInfo;
@@ -118,36 +118,38 @@ const InfoPage = async () => {
     const newPassword = document.querySelector('#input-new-pwd').value;
     const repeatedPassword = document.querySelector(
         '#input-new-pwd-verif').value;
-    const options = {
-      method: "POST",
-      body: JSON.stringify({
-        "id": userInfoID.id,
-        "oldPassword": oldPassword,
-        "newPassword": newPassword,
-        "repeatedPassword": repeatedPassword
-      }),
-      headers: {
-        "Content-Type": "application/json",
-        'Authorization': user.token
-      },
-    };
+    try {
+      const options = {
+        method: "POST",
+        body: JSON.stringify({
+          "id": userInfoID.id,
+          "oldPassword": oldPassword,
+          "newPassword": newPassword,
+          "repeatedPassword": repeatedPassword
+        }),
+        headers: {
+          "Content-Type": "application/json",
+          'Authorization': user.token
+        },
+      };
 
-    const response = await fetch('/api/users/editPassword', options);
+      const response = await fetch('/api/users/editPassword', options);
 
-    if (!response.ok) {
-      throw new Error(
-          `fetch error : ${response.status} : ${response.statusText}`);
+      if (!response.ok) {
+        throw new Error(
+            `fetch error : ${response.status} : ${response.statusText}`);
+      }
+
+      const savedUserPassword = await response.json();
+
+      if (savedUserPassword) {
+        Navigate("/dashboard");
+      }
+    } catch (error) {
+      const errorMessage = document.querySelector("#error-message");
+      errorMessage.innerHTML = "Veuillez compléter tous les champs !";
+      errorMessage.style.display = "block";
     }
-
-    const savedUserPassword = await response.json();
-    if (savedUserPassword) {
-      const error = document.querySelector("#good-message");
-      error.innerHTML = "Vous avez modifier votre mot de passe";
-      error.style.display = "block";
-      Navigate("/dashboard");
-    }
-
-    return savedUserPassword;
   }
   main.innerHTML = `        
         <div class="d-flex justify-content-center align-items-center mt-5 mb-5">
@@ -184,6 +186,7 @@ const InfoPage = async () => {
                 </div>
                 <h2 id="good-message"></h2>
                 <p class="btn btn-primary mt-2" id="btn-save-pwd">Enregistrer le mot de passe</p>
+                <h2 id="error-message"></h2>
             `;
 
       const btnBack = document.getElementById("btn-back");
@@ -198,7 +201,6 @@ const InfoPage = async () => {
   }
 
   const saveButton = document.getElementById("btn-save-phone-number");
-  console.log(saveButton);
   saveButton.addEventListener('click', async (e) => {
     await saveUserInfo(e);
   });
