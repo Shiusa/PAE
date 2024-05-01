@@ -1,10 +1,28 @@
-import {getAuthenticatedUser} from "../../utils/session";
+import {
+  getAuthenticatedUser,
+  getLocalUser,
+  getToken,
+  setAuthenticatedUser
+} from "../../utils/session";
 import {awaitFront} from "../../utils/function";
 import Navigate from "../../utils/Navigate";
+import Navbar from "../Navbar/Navbar";
 
 const BlacklistPage = async (companyId) => {
   awaitFront();
   const user = await getAuthenticatedUser();
+  setAuthenticatedUser(user);
+  Navbar();
+  const localUser = getLocalUser();
+  if (!getToken() || !localUser) {
+    Navigate('/');
+    return;
+  }
+  if (localUser.role !== 'Professeur' && localUser.role
+      !== 'Administratif') {
+    Navigate('/dashboard');
+    return;
+  }
 
   const getCompanyInfo = async (id) => {
     try {
