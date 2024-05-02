@@ -11,6 +11,14 @@ import Navbar from "../Navbar/Navbar";
 
 let dataCompany = [];
 let filteredData = [];
+const sortStates = {
+  name: 'asc',
+  designation: 'asc',
+  phoneNumber: 'asc',
+  data: 'asc',
+  blacklist: 'asc'
+};
+let clickTimer = null;
 
 const fetchInternshipStat = async () => {
   try {
@@ -111,17 +119,37 @@ const closeForm = () => {
   }, 300);
 }
 
-const sortData = (data, sortingType) => Object.values(data).sort((a, b) => {
-  const valueA = a[sortingType] ? a[sortingType].toLowerCase() : '';
-  const valueB = b[sortingType] ? b[sortingType].toLowerCase() : '';
+const sortData = (data, sortingType) => {
+  const sortOrder = sortStates[sortingType];
+  const sortedData = Object.values(data).sort((a, b) => {
+    if (sortingType === 'isBlacklisted') {
+      // return a[sortingType] - b[sortingType];
+      return sortOrder === 'asc' ? a[sortingType] - b[sortingType]
+          : b[sortingType] - a[sortingType];
+    }
+    if (sortingType === 'data') {
+      const valueA = Object.values(a[sortingType])[0]; // Sélectionner la première valeur de 'data' pour l'objet 'a'
+      const valueB = Object.values(b[sortingType])[0]; // Sélectionner la première valeur de 'data' pour l'objet 'b'
+      return sortOrder === 'asc' ? valueA - valueB : valueB - valueA;
+    }
+    const valueA = a[sortingType] ? a[sortingType].toLowerCase() : '';
+    const valueB = b[sortingType] ? b[sortingType].toLowerCase() : '';
 
-  if (sortingType === 'name' && valueA === valueB) {
-    const designationA = a.designation ? a.designation.toLowerCase() : '';
-    const designationB = b.designation ? b.designation.toLowerCase() : '';
-    return designationA.localeCompare(designationB);
-  }
-  return valueA.localeCompare(valueB);
-})
+    if (sortingType === 'name' && valueA === valueB) {
+      console.log("sort click")
+      console.log(filteredData)
+      console.log(dataCompany)
+      const designationA = a.designation ? a.designation.toLowerCase() : '';
+      const designationB = b.designation ? b.designation.toLowerCase() : '';
+      return designationA.localeCompare(designationB);
+    }
+    // return valueA.localeCompare(valueB);
+    return sortOrder === 'asc' ? valueA.localeCompare(valueB)
+        : valueB.localeCompare(valueA);
+  });
+  sortStates[sortingType] = sortOrder === 'asc' ? 'desc' : 'asc';
+  return sortedData;
+}
 
 const hideTooltip = () => {
   document.getElementById('tooltip').style.display = 'none';
@@ -420,11 +448,24 @@ const addColumnHeaderListeners = () => {
         case 'Numéro de téléphone':
           sortingType = 'phoneNumber';
           break;
+        case 'Pris en stage':
+          sortingType = 'data';
+          break;
+        case 'Black-listé':
+          sortingType = 'isBlacklisted';
+          break;
         default:
           sortingType = 'name'; // Par défaut, tri par nom
       }
-      const sortedData = sortData(filteredData, sortingType);
-      renderCompanyList(sortedData);
+      // const sortedData = sortData(filteredData, sortingType);
+      // renderCompanyList(sortedData);
+      clearTimeout(clickTimer);
+
+      // Déclencher le tri après un court délai
+      clickTimer = setTimeout(() => {
+        const sortedData = sortData(filteredData, sortingType);
+        renderCompanyList(sortedData);
+      }, 200);
     });
   });
 }
@@ -452,12 +493,31 @@ const renderYearOptions = (internshipStats, companiesData) => {
           }, {internshipCount: 0, totalStudents: 0});
       selectedStats = allYearsStats; */
       selectedStats = internshipStats[years[1]];
-      filteredData = dataCompany;
+      // filteredData = dataCompany;
+      filteredData = Object.values(companiesData).map(company => {
+        const totalData = Object.values(company.data).reduce(
+            (acc, curr) => acc + curr, 0);
+        return {
+          ...company,
+          data: {[selectedYear]: totalData}
+        };
+      });
+      console.log("unfiltered")
+      console.log(filteredData)
     } else {
       selectedStats = internshipStats[selectedYear];
 
-      filteredData = Object.values(companiesData).filter(
-          company => company.data[selectedYear] !== undefined)
+      /* filteredData = Object.values(companiesData).filter(
+          company => company.data[selectedYear] !== undefined) */
+      filteredData = Object.values(companiesData).map(company => {
+        const filteredDataForYear = company.data[selectedYear];
+        return {
+          ...company,
+          data: filteredDataForYear ? {[selectedYear]: filteredDataForYear} : {}
+        };
+      }).filter(company => Object.keys(company.data).length > 0);
+      console.log("filtered")
+      console.log(filteredData)
     }
 
     renderChart(selectedStats);
@@ -466,7 +526,9 @@ const renderYearOptions = (internshipStats, companiesData) => {
 
     renderCompanyList(filteredData);
     addColumnHeaderListeners();
-  })
+  });
+
+  selectYear.dispatchEvent(new Event('change'));
 }
 
 const AdminDashboardPage = async () => {
@@ -489,6 +551,7 @@ const AdminDashboardPage = async () => {
   awaitFront();
   const internshipStats = await fetchInternshipStat();
   dataCompany = await fetchCompaniesData();
+  console.log(dataCompany)
   showNavStyle("dashboard");
 
   const sortDataCompany = sortData(dataCompany, 'name');
@@ -556,11 +619,19 @@ const AdminDashboardPage = async () => {
                         <span class="triangle-down h-25" style="font-size: 10px;">&#9660;</span>
                       </div>
                   </div>
-                  <div class="d-flex align-items-center justify-content-center" style="width: 10%">
+                  <div data-sort class="sort-header d-flex align-items-center justify-content-center position-relative" style="width: 10%">
                       <p class="p-2 m-0 text-center">Pris en stage</p>
+                      <div class="d-flex flex-column position-absolute" style="right: 10%;">
+                        <span class="triangle-up h-25" style="font-size: 10px;">&#9650;</span>
+                        <span class="triangle-down h-25" style="font-size: 10px;">&#9660;</span>
+                      </div>
                   </div>
-                  <div class="d-flex align-items-center justify-content-center" style="width: 10%">
+                  <div data-sort class="sort-header d-flex align-items-center justify-content-center position-relative" style="width: 10%">
                       <p class="p-2 m-0 text-center">Black-listé</p>
+                      <div class="d-flex flex-column position-absolute" style="right: 10%;">
+                        <span class="triangle-up h-25" style="font-size: 10px;">&#9650;</span>
+                        <span class="triangle-down h-25" style="font-size: 10px;">&#9660;</span>
+                      </div>
                   </div>
                 </div>
                 
