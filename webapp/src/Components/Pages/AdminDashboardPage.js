@@ -123,27 +123,22 @@ const sortData = (data, sortingType) => {
   const sortOrder = sortStates[sortingType];
   const sortedData = Object.values(data).sort((a, b) => {
     if (sortingType === 'isBlacklisted') {
-      // return a[sortingType] - b[sortingType];
       return sortOrder === 'asc' ? a[sortingType] - b[sortingType]
           : b[sortingType] - a[sortingType];
     }
     if (sortingType === 'data') {
-      const valueA = Object.values(a[sortingType])[0]; // Sélectionner la première valeur de 'data' pour l'objet 'a'
-      const valueB = Object.values(b[sortingType])[0]; // Sélectionner la première valeur de 'data' pour l'objet 'b'
+      const valueA = Object.values(a[sortingType])[0];
+      const valueB = Object.values(b[sortingType])[0];
       return sortOrder === 'asc' ? valueA - valueB : valueB - valueA;
     }
     const valueA = a[sortingType] ? a[sortingType].toLowerCase() : '';
     const valueB = b[sortingType] ? b[sortingType].toLowerCase() : '';
 
     if (sortingType === 'name' && valueA === valueB) {
-      console.log("sort click")
-      console.log(filteredData)
-      console.log(dataCompany)
       const designationA = a.designation ? a.designation.toLowerCase() : '';
       const designationB = b.designation ? b.designation.toLowerCase() : '';
       return designationA.localeCompare(designationB);
     }
-    // return valueA.localeCompare(valueB);
     return sortOrder === 'asc' ? valueA.localeCompare(valueB)
         : valueB.localeCompare(valueA);
   });
@@ -455,13 +450,10 @@ const addColumnHeaderListeners = () => {
           sortingType = 'isBlacklisted';
           break;
         default:
-          sortingType = 'name'; // Par défaut, tri par nom
+          sortingType = 'name';
       }
-      // const sortedData = sortData(filteredData, sortingType);
-      // renderCompanyList(sortedData);
       clearTimeout(clickTimer);
 
-      // Déclencher le tri après un court délai
       clickTimer = setTimeout(() => {
         const sortedData = sortData(filteredData, sortingType);
         renderCompanyList(sortedData);
@@ -485,15 +477,7 @@ const renderYearOptions = (internshipStats, companiesData) => {
     let selectedStats;
 
     if (selectedYear === "Par défaut") {
-      /* const allYearsStats = Object.values(internshipStats).reduce(
-          (acc, curr) => {
-            acc.internshipCount += curr.internshipCount;
-            acc.totalStudents += curr.totalStudents;
-            return acc;
-          }, {internshipCount: 0, totalStudents: 0});
-      selectedStats = allYearsStats; */
       selectedStats = internshipStats[years[1]];
-      // filteredData = dataCompany;
       filteredData = Object.values(companiesData).map(company => {
         const totalData = Object.values(company.data).reduce(
             (acc, curr) => acc + curr, 0);
@@ -502,13 +486,8 @@ const renderYearOptions = (internshipStats, companiesData) => {
           data: {[selectedYear]: totalData}
         };
       });
-      console.log("unfiltered")
-      console.log(filteredData)
     } else {
       selectedStats = internshipStats[selectedYear];
-
-      /* filteredData = Object.values(companiesData).filter(
-          company => company.data[selectedYear] !== undefined) */
       filteredData = Object.values(companiesData).map(company => {
         const filteredDataForYear = company.data[selectedYear];
         return {
@@ -516,8 +495,6 @@ const renderYearOptions = (internshipStats, companiesData) => {
           data: filteredDataForYear ? {[selectedYear]: filteredDataForYear} : {}
         };
       }).filter(company => Object.keys(company.data).length > 0);
-      console.log("filtered")
-      console.log(filteredData)
     }
 
     renderChart(selectedStats);
@@ -547,11 +524,13 @@ const AdminDashboardPage = async () => {
     Navigate('/dashboard');
     return;
   }
+
   const main = document.querySelector('main');
   awaitFront();
+
   const internshipStats = await fetchInternshipStat();
   dataCompany = await fetchCompaniesData();
-  console.log(dataCompany)
+  
   showNavStyle("dashboard");
 
   const sortDataCompany = sortData(dataCompany, 'name');
