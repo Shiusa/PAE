@@ -11,13 +11,7 @@ import Navbar from "../Navbar/Navbar";
 
 let dataCompany = [];
 let filteredData = [];
-const sortStates = {
-  name: 'asc',
-  designation: 'asc',
-  phoneNumber: 'asc',
-  data: 'asc',
-  blacklist: 'asc'
-};
+let sortStates = {};
 let clickTimer = null;
 
 const fetchInternshipStat = async () => {
@@ -530,8 +524,16 @@ const AdminDashboardPage = async () => {
 
   const internshipStats = await fetchInternshipStat();
   dataCompany = await fetchCompaniesData();
-  
+
   showNavStyle("dashboard");
+
+  sortStates = {
+    name: 'asc',
+    designation: 'asc',
+    phoneNumber: 'asc',
+    data: 'asc',
+    blacklist: 'asc'
+  };
 
   const sortDataCompany = sortData(dataCompany, 'name');
 
