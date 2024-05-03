@@ -70,8 +70,8 @@ public class InternshipResource {
       @PathParam("idUser") int idUser) {
     Logs.log(Level.INFO, "InternshipResource (getOneInternshipByIdUser) : entrance");
     UserDTO user = (UserDTO) request.getProperty("user");
-    if (user.getId() != idUser && (!user.getRole().equals("Professeur") && !user.getRole()
-        .equals("Administratif"))) {
+    if (user.getId() != idUser && !user.getRole().equals("Professeur") && !user.getRole()
+        .equals("Administratif")) {
       Logs.log(Level.ERROR, "InternshipResource (getOneInternshipByIdUser) : unauthorized");
       throw new WebApplicationException("unauthorized", Status.FORBIDDEN);
     }
