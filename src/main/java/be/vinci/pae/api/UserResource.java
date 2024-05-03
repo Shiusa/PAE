@@ -135,9 +135,12 @@ public class UserResource {
   public Response getOneUser(@Context ContainerRequest request, @PathParam("id") int id) {
     Logs.log(Level.INFO, "UserResource (getOneUser) : entrance");
     UserDTO userCheck = (UserDTO) request.getProperty("user");
-    if (userCheck.getId() != id) {
-      throw new WebApplicationException("you can't see this user", Response.Status.UNAUTHORIZED);
+    if (!userCheck.getRole().equals("Professeur") && !userCheck.getRole().equals("Administratif")) {
+      if (userCheck.getId() != id) {
+        throw new WebApplicationException("you can't see this user", Response.Status.UNAUTHORIZED);
+      }
     }
+
     UserDTO userDTO = userUCC.getOneById(id);
     String user;
     try {
