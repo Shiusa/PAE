@@ -76,7 +76,7 @@ const UserListPage = async () => {
   const interships = await readAllInternships();
 
   main.innerHTML = `
-    <div class="d-flex justify-content-center align-items-center flex-column mt-5 mb-0 pb-5 position-relative" style="height: 74vh;">
+    <div class="d-flex align-items-center flex-column mt-5 mb-0 pb-5 position-relative" style="height: 74vh;">
     
       <div class="search-criteria d-flex justify-content-center align-items-center mb-5">
         <select id="year-input" class="me-3">
@@ -93,7 +93,7 @@ const UserListPage = async () => {
               
       </div>
       
-      <div class="add-company-box w-100 h-100 d-flex justify-contain-center align-items-center student-page-container overflow-y-scroll" style="background: white; z-index: 2;">
+      <div class="add-company-box w-100 d-flex align-items-center student-page-container overflow-y-scroll overflow-x-hidden" style="background: white; z-index: 2; height: 96%;">
       
       </div>
       
