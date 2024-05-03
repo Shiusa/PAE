@@ -11,6 +11,15 @@ import Navbar from "../Navbar/Navbar";
 import Navigate from "../../utils/Navigate";
 import StudentPage from "./StudentPage";
 
+const attachRenderStudentEvent = () => {
+  const studentTiles = document.querySelectorAll('[data-student]');
+  studentTiles.forEach(studentTile => {
+    studentTile.addEventListener('click', async () => {
+      await StudentPage(studentTile.dataset.student);
+    })
+  });
+}
+
 const UserListPage = async () => {
 
   const main = document.querySelector('main');
@@ -190,6 +199,7 @@ const UserListPage = async () => {
   yearsInput.innerHTML = yearAdd;
 
   allUsers();
+  attachRenderStudentEvent();
 
   document.querySelector('.form-check-label').addEventListener('click', () => {
     if (checkBox === false) {
@@ -227,6 +237,7 @@ const UserListPage = async () => {
       }
       userTable.innerHTML = userLine;
     }
+    attachRenderStudentEvent();
   }
 
   function allUsers() {
@@ -243,12 +254,6 @@ const UserListPage = async () => {
       u += 1;
     }
     userTable.innerHTML = info;
-    const studentTiles = document.querySelectorAll('[data-student]');
-    studentTiles.forEach(studentTile => {
-      studentTile.addEventListener('click', async () => {
-        await StudentPage(studentTile.dataset.student);
-      })
-    });
   }
 
   function generateUserHTML(userTemp) {
