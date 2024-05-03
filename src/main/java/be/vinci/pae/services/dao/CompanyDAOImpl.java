@@ -143,6 +143,7 @@ public class CompanyDAOImpl implements CompanyDAO {
           FROM prostage.contacts
           WHERE student = ?
         )
+        ORDER BY cm.name, cm.company_id
         """;
 
     try (PreparedStatement ps = dalServices.getPreparedStatement(requestSql)) {

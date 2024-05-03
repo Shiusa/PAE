@@ -104,7 +104,8 @@ const submitRegistration = async (e) => {
     return;
   }
   companiesTable = await readAllCompanies();
-  showCompaniesList(companiesTable)
+  showCompaniesList(companiesTable);
+  await attachStartEvent();
   closeForm();
   // Navigate('/contact');
 }
@@ -244,53 +245,8 @@ const ContactPage = async () => {
     renderRegisterCompanyForm();
   })
 
-  showCompaniesList(companiesTable)
-
-  const companiesBtn = document.querySelectorAll('.company-btn');
-
-  if (companiesBtn) {
-    companiesBtn.forEach(element => {
-      element.addEventListener('click', async () => {
-        if (await createContact(element.id)) {
-          Navigate('/dashboard');
-        }
-      });
-    });
-  }
-
-  async function createContact(idCompany) {
-    try {
-      const user = await getAuthenticatedUser();
-      const options = {
-        method: 'POST',
-        body: JSON.stringify({
-          company: idCompany,
-        }),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': user.token
-        }
-      }
-      const response = await fetch('api/contacts/start', options);
-
-      if (!response.ok) {
-        throw new Error(
-            `fetch error : ${response.status} : ${response.statusText}`);
-      }
-
-      const companyInfo = await response.json();
-      return companyInfo;
-    } catch (error) {
-      const errorMessage = document.getElementById("error-message");
-      errorMessage.style.display = "block";
-
-      if (error instanceof Error && error.message.startsWith(
-          "fetch error : 400")) {
-        errorMessage.innerText = "Vous avez déjà un contact accepté.";
-      }
-      return undefined;
-    }
-  }
+  showCompaniesList(companiesTable);
+  await attachStartEvent();
 
 };
 
@@ -357,6 +313,54 @@ function showCompaniesList(companies) {
   }
   info += `<h2 id="error-message"></h2>`
   companiesContainer.innerHTML = info;
+}
+
+async function attachStartEvent() {
+  const companiesBtn = document.querySelectorAll('.company-btn');
+
+  if (companiesBtn) {
+    companiesBtn.forEach(element => {
+      element.addEventListener('click', async () => {
+        if (await createContact(element.id)) {
+          Navigate('/dashboard');
+        }
+      });
+    });
+  }
+}
+
+async function createContact(idCompany) {
+  try {
+    const user = await getAuthenticatedUser();
+    const options = {
+      method: 'POST',
+      body: JSON.stringify({
+        company: idCompany,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': user.token
+      }
+    }
+    const response = await fetch('api/contacts/start', options);
+
+    if (!response.ok) {
+      throw new Error(
+          `fetch error : ${response.status} : ${response.statusText}`);
+    }
+
+    const companyInfo = await response.json();
+    return companyInfo;
+  } catch (error) {
+    const errorMessage = document.getElementById("error-message");
+    errorMessage.style.display = "block";
+
+    if (error instanceof Error && error.message.startsWith(
+        "fetch error : 400")) {
+      errorMessage.innerText = "Vous avez déjà un contact accepté.";
+    }
+    return undefined;
+  }
 }
 
 export default ContactPage;
