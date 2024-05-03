@@ -2,7 +2,7 @@ import HomePage from '../Pages/HomePage';
 import LoginPage from '../Pages/LoginPage';
 import RegisterPage from '../Pages/RegisterPage';
 import Logout from '../Logout/Logout';
-import ContactPage from '../Pages/ContactPage';
+import {ContactPage} from '../Pages/ContactPage';
 import InfoPage from '../Pages/InfoPage';
 import DashboardPage from '../Pages/DashboardPage';
 import UserListPage from '../Pages/UserListPage';
