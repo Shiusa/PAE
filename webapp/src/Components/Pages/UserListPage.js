@@ -15,6 +15,11 @@ const attachRenderStudentEvent = () => {
   const studentTiles = document.querySelectorAll('[data-student]');
   studentTiles.forEach(studentTile => {
     studentTile.addEventListener('click', async () => {
+      setTimeout(() => {
+        const loadContainer = document.querySelector(".load-container");
+        loadContainer.style.visibility = "visible";
+      }, 350);
+
       await StudentPage(studentTile.dataset.student);
     })
   });
@@ -99,6 +104,14 @@ const UserListPage = async () => {
       
       <div class="users-table d-flex flex-column align-items-center">
               
+      </div>
+      
+      <div class="d-flex justify-content-center align-items-center w-100 load-container position-absolute" style="visibility: hidden; background: white; z-index: 2;">
+        <div class="await d-flex justify-content-center align-items-center">
+            <i class="fa-solid fa-circle"></i>
+            <i class="fa-solid fa-circle"></i>
+            <i class="fa-solid fa-circle"></i>
+        </div>
       </div>
       
       <div class="add-company-box w-100 d-flex align-items-center student-page-container overflow-y-scroll overflow-x-hidden" style="background: white; z-index: 2; height: 96%; scrollbar-width:none;">

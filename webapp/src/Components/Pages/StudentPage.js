@@ -409,6 +409,9 @@ const StudentPage = async (student) => {
     closeForm();
   });
 
+  const loadContainer = document.querySelector(".load-container");
+  loadContainer.style.visibility = "hidden";
+
 };
 
 export default StudentPage;
