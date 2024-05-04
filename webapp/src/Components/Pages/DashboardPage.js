@@ -20,12 +20,13 @@ const DashboardPage = async () => {
   Navbar();
   let userToken = getToken();
   let localUser = getLocalUser();
+  console.log(localUser)
   if (!userToken) {
     Navigate('/');
     return;
   }
 
-  const readUserInfo = async () => {
+  /* const readUserInfo = async () => {
     const options = {
       method: 'GET',
       headers: {
@@ -42,7 +43,7 @@ const DashboardPage = async () => {
 
     const userInfo = await response.json();
     return userInfo;
-  };
+  }; */
 
   const readInternship = async () => {
     try {
@@ -132,7 +133,7 @@ const DashboardPage = async () => {
 
   };
 
-  const userInfoID = await readUserInfo();
+  // const userInfoID = await readUserInfo();
   const stageInfo = await readInternship();
   let contacts = await readAllContactsByStudent();
 
@@ -143,15 +144,15 @@ const DashboardPage = async () => {
             <div class="dash-left d-flex align-items-center flex-column ms-3 me-3 h-100">
                 <div class="dash-year d-flex justify-content-center align-items-center flex-column">
                     <i class="fa-solid fa-calendar-days mt-3"></i>
-                    <p class="mt-2">${userInfoID.schoolYear}</p>
+                    <p class="mt-2">${localUser.schoolYear}</p>
                 </div>
                 <div class="dash-info mt-4 d-flex justify-content-center align-items-center flex-column">   
                     <i class="fa-solid fa-circle-info"></i>
                     <h1 class="mt-2 mb-5">Informations<br>personnelles</h1>
-                    <p>${userInfoID.email}</p>
-                    <p>${userInfoID.firstname}</p>
-                    <p>${userInfoID.lastname}</p>
-                    <p>${userInfoID.phoneNumber}</p>
+                    <p>${localUser.email}</p>
+                    <p>${localUser.firstname}</p>
+                    <p>${localUser.lastname}</p>
+                    <p>${localUser.phoneNumber}</p>
                     <span id="btn-info-change" class="mt-4">Changer mes informations</span>
                 </div>
             </div>
@@ -261,22 +262,47 @@ const DashboardPage = async () => {
       } else {
         designation = contactsTable[u].company.designation;
       }
+
+      let stateColor = '';
+      switch (contactsTable[u].state) {
+        case "non suivi":
+          stateColor = "greyout"
+          break;
+        case "suspendu":
+          stateColor = "greyout"
+          break;
+        case "refusé":
+          stateColor = "redout"
+          break;
+        case "initié":
+          stateColor = "lightblueout"
+          break;
+        case "pris":
+          stateColor = "blueout"
+          break;
+        case "accepté":
+          stateColor = "greenout"
+          break;
+        default:
+          stateColor = "greyout"
+      }
+
       info += `
                 <div class="table-line d-flex align-items-center mt-2 mb-2 rounded-3">
                     <div class="d-flex justify-content-center align-items-center position-relative" style="width: 60%;">
                       <i class="line-info fa-solid fa-circle-info position-absolute" style="left: 0;" id="${contactsTable[u].id}"></i>
                       <div class="line-col-1" >
-                          <p class="mx-auto mt-3">${contactsTable[u].company.name}<br>${designation}</p>
+                          <p class="mx-auto mt-3" style="color: #119DB8">${contactsTable[u].company.name}<br>${designation}</p>
                       </div>
                     </div>
                     
                     <div class="line-col-2 d-flex flex-column align-items-center justify-content-center" style="width: 20%;">
-                      <p class="m-0">${contactsTable[u].state}</p>
+                      <p class="m-0 rounded-1 py-1 w-50 ${stateColor}">${contactsTable[u].state}</p>
                     </div>
                     
                     <div class="${contactsTable[u].state === 'pris' ? 'd-block'
           : 'd-none'}" style="width: 20%;">
-                      <button data-id="${contactsTable[u].id}" class="accept-contact-btn rounded-1 px-0 py-2 w-50 bg-danger">Accepter</button>
+                      <button data-id="${contactsTable[u].id}" class="accept-contact-btn rounded-1 px-0 py-2 w-50">Accepter</button>
                     </div>
                 </div>
             `;
@@ -369,7 +395,7 @@ const DashboardPage = async () => {
                             
                             <div class="d-flex mt-2 mb-2 refused-extra align-items-center" style="visibility: hidden; height: 0;"> 
                                 <p class="fw-bold me-4 mb-0" style="width: 30%;">Raison du refus</p>
-                                <textarea id="refusalReason" class="px-3 pt-4" name="raison" placeholder="Raison du refus" ${disableTextarea}>${refusal}</textarea>
+                                <textarea id="refusalReason" class="px-3 pt-4 rounded-1" name="raison" placeholder="Raison du refus" ${disableTextarea}>${refusal}</textarea>
                             </div>
                             
                             <div class="d-flex justify-content-center">

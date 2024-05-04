@@ -241,6 +241,31 @@ const renderContactList = (contactsTable) => {
     } else {
       designation = contactsTable[u].company.designation;
     }
+
+    let stateColor = '';
+    switch (contactsTable[u].state) {
+      case "non suivi":
+        stateColor = "greyout"
+        break;
+      case "suspendu":
+        stateColor = "greyout"
+        break;
+      case "refusé":
+        stateColor = "redout"
+        break;
+      case "initié":
+        stateColor = "lightblueout"
+        break;
+      case "pris":
+        stateColor = "blueout"
+        break;
+      case "accepté":
+        stateColor = "greenout"
+        break;
+      default:
+        stateColor = "greyout"
+    }
+
     info += `
                 <div class="table-line d-flex align-items-center mt-2 mb-2 rounded-3">
                     <div class="d-flex justify-content-center align-items-center position-relative" style="width: 60%;">
@@ -251,12 +276,12 @@ const renderContactList = (contactsTable) => {
                     </div>
                     
                     <div class="line-col-2 d-flex flex-column align-items-center justify-content-center" style="width: 20%;">
-                      <p class="m-0">${contactsTable[u].state}</p>
+                      <p class="m-0 rounded-1 py-1 w-50 ${stateColor}">${contactsTable[u].state}</p>
                     </div>
                     
                     <div class="${contactsTable[u].state === 'pris' ? 'd-block'
         : 'd-none'}" style="width: 20%;">
-                      <button data-id="${contactsTable[u].id}" class="accept-contact-btn rounded-1 px-0 py-2 w-50 bg-secondary" disabled>Accepter</button>
+                      <button data-id="${contactsTable[u].id}" class="accept-contact-btn rounded-1 px-0 py-2 w-50 bg-secondary" style="animation: none;" disabled>Accepter</button>
                     </div>
                 </div>
             `;

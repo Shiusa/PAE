@@ -709,9 +709,76 @@ input::placeholder {
   transform: translateX(-5px);
 }
 
+/* color state */
+.greyout {
+  background-color: #408699;
+  color: white;
+}
+
+.redout {
+  /*background-color: #B31E55;*/
+  /*background-color: #B8117F;*/
+  background-color: #E6608B;
+  color: white;
+}
+
+.lightblueout {
+  background-color: #eef7f9;
+  color: var(--ma-couleur);
+}
+
+.blueout {
+  background-color: #60C9E6;
+  /*background-color: #058AAE;*/
+  color: white;
+}
+
+.greenout {
+  /*background-color: #E6C060;*/
+  background-color: #058aae;
+  color: white;
+}
+
 .accept-contact-btn {
   border: none;
   color: white;
+  /*background-color: #019670;*/
+  /*background-color: #e7276c;*/
+  /*background-color: #E6A260;*/
+  background-color: #058aae;
+  /*background-color: #B8117F;*/
+  /*background-color: #E6C060;*/
+  transition: 0.2s ease-in-out;
+}
+
+.accept-contact-btn:hover {
+  /*transform: scale(0.95);*/
+  /*background-color: #B8117F;*/
+  /*color: #058aae;*/
+  /*outline: 2px solid #B8117F;*/
+  /*border: 2px solid #B8117F;*/
+  animation: vibration 80ms;
+}
+
+@keyframes vibration {
+  0% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-3px);
+  }
+  40% {
+    transform: translateX(3px);
+  }
+  60% {
+    transform: translateX(-3px);
+  }
+  80% {
+    transform: translateX(3px);
+  }
+  100% {
+    transform: translateX(0);
+  }
 }
 
 #selectedState {
