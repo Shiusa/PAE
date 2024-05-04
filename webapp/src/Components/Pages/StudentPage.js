@@ -64,7 +64,7 @@ const readInternship = async () => {
   }
 };
 
-/* const readContactById = async (idContact) => {
+const readContactById = async (idContact) => {
   const options = {
     method: 'GET',
     headers: {
@@ -81,7 +81,7 @@ const readInternship = async () => {
 
   const userInfo = await response.json();
   return userInfo;
-}; */
+};
 
 const readAllContactsByStudent = async () => {
   try {
@@ -111,6 +111,100 @@ const readAllContactsByStudent = async () => {
     return null;
   }
 };
+
+const conctactInfo = async (id) => {
+  const entrepriseBox = document.querySelector(".entreprise-box");
+  const contactInfoJSON = await readContactById(id);
+  console.log("contact")
+  console.log(contactInfoJSON)
+  const meetingType = contactInfoJSON.meeting;
+
+  const checkedSurPlace = meetingType === "Dans l entreprise" ? 'checked'
+      : '';
+  const checkedADistance = meetingType === "A distance" ? 'checked' : '';
+
+  let refusal;
+  if (!contactInfoJSON.reasonRefusal) {
+    refusal = "";
+  } else {
+    refusal = contactInfoJSON.reasonRefusal;
+  }
+
+  entrepriseBox.style.visibility = "visible";
+
+  entrepriseBox.innerHTML = `
+                    <div class="entreprise-container d-flex justify-contain-center align-items-center flex-column mx-auto">
+                        <i id="btn-back2" class="fa-solid fa-circle-arrow-left" title="Retour"></i>
+                        <h1 class="mt-3">${contactInfoJSON.company.name}</h1>
+                        <div class="entreprise-info overflow-y-scroll" style="scrollbar-width:none">
+                            <p class="mt-3"><i class="fa-solid fa-phone"></i><i id="phoneNumber">${contactInfoJSON.company.phoneNumber
+      ? contactInfoJSON.company.phoneNumber : ''}</i></p>
+                            <p class="mt-1"><i class="fa-solid fa-map-location-dot"></i><i id="address">${contactInfoJSON.company.address
+      ? contactInfoJSON.company.address : ''}</i></p>
+                        
+                            <div class="d-flex mt-2">
+                                <p class="fw-bold me-4" style="width: 30%;">Etat</p>
+                                <select id="selectedState" class="form-select" aria-label="Default select example" disabled>
+                                    <option value="basic" selected>${contactInfoJSON.state}</option>
+                                </select>
+                            </div>
+                            
+                            <div class="radioButton d-flex mt-4 align-items-center admit-extra" style="visibility: hidden; height: 0">
+                                <p class="fw-bold me-4" style="width: 30%;">Type de rencontre</p>
+                                <div class="ent-radio form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="Dans l entreprise" ${checkedSurPlace} disabled>
+                                    <label class="form-check-label" for="inlineRadio1">Dans l'entreprise</label>
+                                </div>
+                                <div class="ent-radio form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="A distance" ${checkedADistance} disabled>
+                                    <label class="form-check-label" for="inlineRadio2">A Distance</label>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex mt-2 mb-2 refused-extra align-items-center" style="visibility: hidden; height: 0;"> 
+                                <p class="fw-bold me-4 mb-0" style="width: 30%;">Raison du refus</p>
+                                <textarea id="refusalReason" class="px-3 pt-4" name="raison" placeholder="Raison du refus" disabled>${refusal}</textarea>
+                            </div>
+                            
+                            <div class="d-flex justify-content-center">
+                              <button id="updateBtn" class="btn btn-secondary mt-1 mb-2 ms-3 ${
+      contactInfoJSON.state === 'initié' ||
+      contactInfoJSON.state === 'pris' ? 'visible' : 'invisible'}" type="submit" disabled>Mettre à jour</button>
+                            </div>
+                            
+                            <h2 id="error-message" class="mt-2"></h2>
+                        </div>
+                    </div>
+        `
+
+  const admitExtra = document.querySelector('.admit-extra');
+  const refusedExtra = document.querySelector('.refused-extra');
+
+  if (meetingType !== null) {
+    admitExtra.style.visibility = 'visible';
+    admitExtra.style.height = 'auto';
+  }
+  if (refusal !== "") {
+    refusedExtra.style.visibility = 'visible';
+    refusedExtra.style.height = 'auto';
+  }
+
+  const btnBack = document.getElementById('btn-back2');
+  btnBack.addEventListener('click', () => {
+    entrepriseBox.style.visibility = "hidden";
+    entrepriseBox.innerHTML = ``;
+  });
+}
+
+const attachInfoEvent = () => {
+  const allContactsBtn = document.querySelectorAll(".line-info");
+  allContactsBtn.forEach(element => {
+    element.addEventListener('click', async (e) => {
+      e.preventDefault();
+      await conctactInfo(element.id);
+    });
+  });
+}
 
 const renderContactList = (contactsTable) => {
   const tableContacts = document.querySelector(".table-line-box");
@@ -150,7 +244,7 @@ const renderContactList = (contactsTable) => {
     u += 1;
   }
   tableContacts.innerHTML = info;
-  // clickContactInfo();
+  attachInfoEvent();
 }
 
 const renderInternshipInfo = (stageObj) => {
@@ -269,7 +363,7 @@ const StudentPage = async (student) => {
                             
                         </div>
                     </div>
-                    <div class="entreprise-box d-flex justify-contain-center align-items-center">    
+                    <div class="entreprise-box d-flex justify-contain-center align-items-center">
                         
                     </div>
                 </div>
