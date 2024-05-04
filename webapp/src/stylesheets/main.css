@@ -253,7 +253,7 @@ p {
 
 .dash-info {
   width: 100%;
-  height: 650px;
+  min-height: 650px;
   background: var(--ma-couleur);
   border-radius: 10px;
 
@@ -293,7 +293,7 @@ span:hover {
 
 .dash-stage {
   width: 100%;
-  height: 150px;
+  min-height: 150px;
   border: 3px solid var(--ma-couleur);
   border-radius: 10px;
 
@@ -321,8 +321,8 @@ i {
 .respo-bloc {
   background: var(--ma-couleur);
   border-radius: 10px;
-  height: 90%;
-  width: 35%;
+  height: 100%;
+  width: 40%;
   overflow: hidden;
 
 h1 {
@@ -449,6 +449,7 @@ i {
   background: rgba(255, 255, 255, 0.947);
   border-radius: 10px;
   position: relative;
+  transition: ease-in-out;
 
 #btn-back2 {
   position: absolute;
@@ -708,9 +709,76 @@ input::placeholder {
   transform: translateX(-5px);
 }
 
+/* color state */
+.greyout {
+  background-color: #408699;
+  color: white;
+}
+
+.redout {
+  /*background-color: #B31E55;*/
+  /*background-color: #B8117F;*/
+  background-color: #E6608B;
+  color: white;
+}
+
+.lightblueout {
+  background-color: #eef7f9;
+  color: var(--ma-couleur);
+}
+
+.blueout {
+  background-color: #60C9E6;
+  /*background-color: #058AAE;*/
+  color: white;
+}
+
+.greenout {
+  /*background-color: #E6C060;*/
+  background-color: #058aae;
+  color: white;
+}
+
 .accept-contact-btn {
   border: none;
   color: white;
+  /*background-color: #019670;*/
+  /*background-color: #e7276c;*/
+  /*background-color: #E6A260;*/
+  background-color: #058aae;
+  /*background-color: #B8117F;*/
+  /*background-color: #E6C060;*/
+  transition: 0.2s ease-in-out;
+}
+
+.accept-contact-btn:hover {
+  /*transform: scale(0.95);*/
+  /*background-color: #B8117F;*/
+  /*color: #058aae;*/
+  /*outline: 2px solid #B8117F;*/
+  /*border: 2px solid #B8117F;*/
+  animation: vibration 80ms;
+}
+
+@keyframes vibration {
+  0% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-3px);
+  }
+  40% {
+    transform: translateX(3px);
+  }
+  60% {
+    transform: translateX(-3px);
+  }
+  80% {
+    transform: translateX(3px);
+  }
+  100% {
+    transform: translateX(0);
+  }
 }
 
 #selectedState {
@@ -989,6 +1057,20 @@ input::placeholder {
   background: #A10E31;
 }
 
+#student-back-btn {
+  color: var(--ma-couleur);
+  font-size: 50px;
+  position: sticky;
+  top: 8%;
+  right: 94%;
+  transition: 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+#student-back-btn:hover {
+  transform: scale(0.9);
+}
+
 .search-criteria {
   width: 85%;
   max-width: 1000px;
@@ -1099,8 +1181,7 @@ label {
   max-width: 1300px;
   border: 3px solid var(--ma-couleur);
   border-radius: 15px;
-  min-height: 100px;
-  max-height: 510px;
+  height: 100%;
   overflow-y: auto;
 }
 
@@ -1195,6 +1276,80 @@ h2 {
   font-weight: bold;
 }
 
+}
+
+.user-line-student:hover {
+  cursor: pointer;
+  background-color: #1489a0;
+  border: 4px solid #1489a0;
+}
+
+@keyframes zoomIn {
+  0% {
+    transform: scale(0.5) translateY(200%);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(0.5) translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes zoomOut {
+  0% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(0.5) translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.5) translateY(200%);
+    opacity: 0;
+  }
+}
+
+.zoom-in {
+  animation: zoomIn 400ms forwards;
+}
+
+.zoom-out {
+  animation: zoomOut 400ms forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 100ms forwards;
+}
+
+.fade-out {
+  animation: fadeOut 150ms forwards;
 }
 
 .box-internshipMother {

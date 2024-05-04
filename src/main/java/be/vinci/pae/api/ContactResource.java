@@ -108,7 +108,8 @@ public class ContactResource {
       @PathParam("idStudent") int student) {
     Logs.log(Level.INFO, "ContactResource (getAllByStudent) : entrance");
     UserDTO user = (UserDTO) request.getProperty("user");
-    if (user.getId() != student) {
+    if (user.getId() != student && !user.getRole().equals("Professeur") && !user.getRole()
+        .equals("Administratif")) {
       Logs.log(Level.ERROR, "ContactResource (getAllByStudent) : not allowed");
       throw new WebApplicationException("unauthorized", Response.Status.UNAUTHORIZED);
     }

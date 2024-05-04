@@ -9,6 +9,21 @@ import {
 } from "../../utils/session";
 import Navbar from "../Navbar/Navbar";
 import Navigate from "../../utils/Navigate";
+import StudentPage from "./StudentPage";
+
+const attachRenderStudentEvent = () => {
+  const studentTiles = document.querySelectorAll('[data-student]');
+  studentTiles.forEach(studentTile => {
+    studentTile.addEventListener('click', async () => {
+      setTimeout(() => {
+        const loadContainer = document.querySelector(".load-container");
+        loadContainer.style.visibility = "visible";
+      }, 350);
+
+      await StudentPage(studentTile.dataset.student);
+    })
+  });
+}
 
 const UserListPage = async () => {
 
@@ -70,9 +85,13 @@ const UserListPage = async () => {
     return userInfo;
   };
 
+  const users = await readAllUsers();
+  const interships = await readAllInternships();
+
   main.innerHTML = `
-    <div class="d-flex justify-content-center align-items-center flex-column mb-5">
-      <div class="search-criteria d-flex justify-content-center align-items-center mt-5 mb-5">
+    <div class="d-flex align-items-center flex-column mt-5 mb-0 pb-5 position-relative" style="height: 74vh;">
+    
+      <div class="search-criteria d-flex justify-content-center align-items-center mb-5">
         <select id="year-input" class="me-3">
           <option selected>2023-2024</option>
         </select> 
@@ -82,9 +101,23 @@ const UserListPage = async () => {
           <label class="form-check-label" for="filter-students">Utilisateurs</label>
         </div>
       </div>
+      
       <div class="users-table d-flex flex-column align-items-center">
               
       </div>
+      
+      <div class="d-flex justify-content-center align-items-center w-100 load-container position-absolute" style="visibility: hidden; background: white; z-index: 2;">
+        <div class="await d-flex justify-content-center align-items-center">
+            <i class="fa-solid fa-circle"></i>
+            <i class="fa-solid fa-circle"></i>
+            <i class="fa-solid fa-circle"></i>
+        </div>
+      </div>
+      
+      <div class="add-company-box w-100 d-flex align-items-center student-page-container overflow-y-scroll overflow-x-hidden" style="background: white; z-index: 2; height: 96%; scrollbar-width:none;">
+      
+      </div>
+      
     </div>
   `;
 
@@ -93,9 +126,6 @@ const UserListPage = async () => {
   let checkBox = false;
   const labelCheck = document.querySelector(".form-check-label");
   const yearsInput = document.getElementById("year-input");
-
-  const users = await readAllUsers();
-  const interships = await readAllInternships();
 
   // eslint-disable-next-line no-unused-vars
   const tomSelectInstance = new TomSelect(selectElement, {
@@ -181,6 +211,7 @@ const UserListPage = async () => {
   yearsInput.innerHTML = yearAdd;
 
   allUsers();
+  attachRenderStudentEvent();
 
   document.querySelector('.form-check-label').addEventListener('click', () => {
     if (checkBox === false) {
@@ -218,6 +249,7 @@ const UserListPage = async () => {
       }
       userTable.innerHTML = userLine;
     }
+    attachRenderStudentEvent();
   }
 
   function allUsers() {
@@ -252,7 +284,7 @@ const UserListPage = async () => {
       const findStage = (findStageB === true) ? 'A trouvé<br>un stage'
           : 'N\'a pas trouvé<br>de stage';
       return `
-          <div class="user-line d-flex align-items-center">
+          <div data-student="${userTemp.id}" class="user-line d-flex align-items-center user-line-student">
               <i class="users-icon fa-solid fa-user"></i>
               <h1>${userTemp.firstname}<br>${userTemp.lastname}</h1>
               <div class="user-email-tel d-flex justify-content-center flex-column">

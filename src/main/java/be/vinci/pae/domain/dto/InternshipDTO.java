@@ -1,6 +1,7 @@
 package be.vinci.pae.domain.dto;
 
 import be.vinci.pae.domain.InternshipImpl;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.sql.Date;
 
@@ -57,6 +58,7 @@ public interface InternshipDTO {
    *
    * @return the internship's signature date.
    */
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
   Date getSignatureDate();
 
   /**

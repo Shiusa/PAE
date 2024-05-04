@@ -25,7 +25,7 @@ const DashboardPage = async () => {
     return;
   }
 
-  const readUserInfo = async () => {
+  /* const readUserInfo = async () => {
     const options = {
       method: 'GET',
       headers: {
@@ -42,7 +42,7 @@ const DashboardPage = async () => {
 
     const userInfo = await response.json();
     return userInfo;
-  };
+  }; */
 
   const readInternship = async () => {
     try {
@@ -132,31 +132,31 @@ const DashboardPage = async () => {
 
   };
 
-  const userInfoID = await readUserInfo();
+  // const userInfoID = await readUserInfo();
   const stageInfo = await readInternship();
-  const contacts = await readAllContactsByStudent();
+  let contacts = await readAllContactsByStudent();
 
   showNavStyle("dashboard");
 
-  main.innerHTML = `        
-        <div class="dash d-flex justify-content-center align-items-center mt-5 mb-5 mx-auto">
-            <div class="dash-left d-flex justify-content-center align-items-center flex-column ms-3 me-3">
+  main.innerHTML = `
+        <div class="dash d-flex justify-content-center mt-5 mb-5 mx-auto">
+            <div class="dash-left d-flex align-items-center flex-column ms-3 me-3 h-100">
                 <div class="dash-year d-flex justify-content-center align-items-center flex-column">
                     <i class="fa-solid fa-calendar-days mt-3"></i>
-                    <p class="mt-2">${userInfoID.schoolYear}</p>
+                    <p class="mt-2">${localUser.schoolYear}</p>
                 </div>
                 <div class="dash-info mt-4 d-flex justify-content-center align-items-center flex-column">   
                     <i class="fa-solid fa-circle-info"></i>
                     <h1 class="mt-2 mb-5">Informations<br>personnelles</h1>
-                    <p>${userInfoID.email}</p>
-                    <p>${userInfoID.firstname}</p>
-                    <p>${userInfoID.lastname}</p>
-                    <p>${userInfoID.phoneNumber}</p>
+                    <p>${localUser.email}</p>
+                    <p>${localUser.firstname}</p>
+                    <p>${localUser.lastname}</p>
+                    <p>${localUser.phoneNumber}</p>
                     <span id="btn-info-change" class="mt-4">Changer mes informations</span>
                 </div>
             </div>
             <div class="dash-right d-flex justify-content-center align-items-center flex-column ms-3 me-3">
-                <div class="dash-stage d-flex justify-content-center align-items-center">
+                <div class="dash-stage d-flex justify-content-center align-items-center py-1 px-3">
                     
                 </div>
                 <div class="dash-en-container mt-4 d-flex justify-content-center align-items-center overflow-hidden">
@@ -172,7 +172,7 @@ const DashboardPage = async () => {
                                     <p>Action</p>
                                 </div>
                         </div>
-                        <div class="table-line-box overflow-auto mt-1 rounded-3">
+                        <div class="table-line-box overflow-auto mt-1" style="scrollbar-width:none;">
                             
                         </div>
                     </div>
@@ -191,7 +191,7 @@ const DashboardPage = async () => {
     let {designation} = stageInfo.contact.company;
     const {address, name} = stageInfo.contact.company;
     let {project} = stageInfo;
-    let {email} = stageInfo.contact.company;
+    let {email} = stageInfo.supervisor;
     const {lastname, firstname, phoneNumber} = stageInfo.supervisor;
 
     if (designation === null) {
@@ -211,13 +211,18 @@ const DashboardPage = async () => {
                   <p class="me-4"><i class="fa-solid fa-signature"></i> ${name} ${designation}</p>
                   <p><i class="fa-solid fa-location-dot"></i> ${address}</p>
               </div>
-              <p><i class="fa-solid fa-list"></i> ${project}</p>
+              <div class="d-flex flex-wrap">
+                <p class="me-4"><i class="fa-solid fa-list"></i> ${project}</p>
+                <p class="me-4"><i class="fa fa-calendar-check-o"></i> ${stageInfo.signatureDate}</p>
+              </div>
           </div>
-          <div class="respo-bloc">
-              <h1 class="mt-3 ms-4">Votre responsable</h1>
-              <p class="mt-2 ms-4"><i class="fa-solid fa-user"></i> ${firstname} ${lastname}</p>
-              <span class="ms-4"><i class="fa-solid fa-phone"></i>${phoneNumber}</span>
-              <span class="ms-4"><i class="fa-solid fa-at"></i>${email}</span>
+          <div class="respo-bloc py-3 px-4">
+              <h1 class="mt-0">Votre responsable</h1>
+              <p class="mt-2 mb-0"><i class="fa-solid fa-user me-3"></i> ${firstname} ${lastname}</p>
+              <div class="d-flex flex-wrap">
+                <span class="mt-2 me-3"><i class="fa-solid fa-phone"></i>${phoneNumber}</span>
+                <span class="mt-2 me-3"><i class="fa-solid fa-at"></i>${email}</span>
+              </div>
           </div>
       `;
   } else {
@@ -256,22 +261,47 @@ const DashboardPage = async () => {
       } else {
         designation = contactsTable[u].company.designation;
       }
+
+      let stateColor = '';
+      switch (contactsTable[u].state) {
+        case "non suivi":
+          stateColor = "greyout"
+          break;
+        case "suspendu":
+          stateColor = "greyout"
+          break;
+        case "refusé":
+          stateColor = "redout"
+          break;
+        case "initié":
+          stateColor = "lightblueout"
+          break;
+        case "pris":
+          stateColor = "blueout"
+          break;
+        case "accepté":
+          stateColor = "greenout"
+          break;
+        default:
+          stateColor = "greyout"
+      }
+
       info += `
-                <div class="table-line d-flex align-items-center mt-2 mb-2">
+                <div class="table-line d-flex align-items-center mt-2 mb-2 rounded-3">
                     <div class="d-flex justify-content-center align-items-center position-relative" style="width: 60%;">
                       <i class="line-info fa-solid fa-circle-info position-absolute" style="left: 0;" id="${contactsTable[u].id}"></i>
                       <div class="line-col-1" >
-                          <p class="mx-auto mt-3">${contactsTable[u].company.name}<br>${designation}</p>
+                          <p class="mx-auto mt-3" style="color: #119DB8">${contactsTable[u].company.name}<br>${designation}</p>
                       </div>
                     </div>
                     
                     <div class="line-col-2 d-flex flex-column align-items-center justify-content-center" style="width: 20%;">
-                      <p class="m-0">${contactsTable[u].state}</p>
+                      <p class="m-0 rounded-1 py-1 w-50 ${stateColor}">${contactsTable[u].state}</p>
                     </div>
                     
                     <div class="${contactsTable[u].state === 'pris' ? 'd-block'
           : 'd-none'}" style="width: 20%;">
-                      <button data-id="${contactsTable[u].id}" class="accept-contact-btn rounded-1 px-0 py-2 w-50 bg-danger">Accepter</button>
+                      <button data-id="${contactsTable[u].id}" class="accept-contact-btn rounded-1 px-0 py-2 w-50">Accepter</button>
                     </div>
                 </div>
             `;
@@ -319,8 +349,6 @@ const DashboardPage = async () => {
     const disableRadioButtons = meetingType !== null ? 'disabled' : '';
     const disableTextarea = refusal !== "" ? 'disabled' : '';
 
-    boxInfo.style.visibility = "visible";
-
     const init = `
       <option value="admitted">pris</option>
       <option value="unsupervised">ne plus suivre</option>
@@ -366,7 +394,7 @@ const DashboardPage = async () => {
                             
                             <div class="d-flex mt-2 mb-2 refused-extra align-items-center" style="visibility: hidden; height: 0;"> 
                                 <p class="fw-bold me-4 mb-0" style="width: 30%;">Raison du refus</p>
-                                <textarea id="refusalReason" class="px-3 pt-4" name="raison" placeholder="Raison du refus" ${disableTextarea}>${refusal}</textarea>
+                                <textarea id="refusalReason" class="px-3 pt-4 rounded-1" name="raison" placeholder="Raison du refus" ${disableTextarea}>${refusal}</textarea>
                             </div>
                             
                             <div class="d-flex justify-content-center">
@@ -483,7 +511,7 @@ const DashboardPage = async () => {
             errorMessage.style.display = "block";
             return;
           }
-          Navigate("/dashboard");
+          // Navigate("/dashboard");
           break;
         case "turnedDown":
           options.body = JSON.stringify(
@@ -522,7 +550,7 @@ const DashboardPage = async () => {
             errorMessage.style.display = "block";
             return;
           }
-          Navigate("/dashboard");
+          // Navigate("/dashboard");
           break;
 
         case "unsupervised":
@@ -558,19 +586,38 @@ const DashboardPage = async () => {
             errorMessage.style.display = "block";
             return;
           }
-          Navigate("/dashboard");
+          // Navigate("/dashboard");
           break;
         default:
           errorMessage.innerHTML = "Veuillez entrer un contact ou vérifiez que vous pouvez effectuer ce changement.";
           errorMessage.style.display = "block";
       }
+      contacts = await readAllContactsByStudent();
+      showContacts(contacts);
+      closeBox();
     });
+
+    const entrepriseContainer = document.querySelector('.entreprise-container');
+    entrepriseContainer.classList.add('fade-in');
+    boxInfo.style.visibility = "visible";
 
     const btnBack = document.getElementById('btn-back2');
     btnBack.addEventListener('click', () => {
+
+      entrepriseContainer.classList.remove('fade-in');
+      entrepriseContainer.classList.add('fade-out');
+
+      setTimeout(() => {
+        boxInfo.style.visibility = "hidden";
+        boxInfo.innerHTML = ``;
+      }, 150)
+
+    });
+
+    function closeBox() {
       boxInfo.style.visibility = "hidden";
       boxInfo.innerHTML = ``;
-    });
+    }
   }
 };
 
