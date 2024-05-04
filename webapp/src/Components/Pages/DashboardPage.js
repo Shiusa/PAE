@@ -20,7 +20,6 @@ const DashboardPage = async () => {
   Navbar();
   let userToken = getToken();
   let localUser = getLocalUser();
-  console.log(localUser)
   if (!userToken) {
     Navigate('/');
     return;
