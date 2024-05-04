@@ -81,7 +81,6 @@ const UserListPage = async () => {
   };
 
   const users = await readAllUsers();
-  console.log(users)
   const interships = await readAllInternships();
 
   main.innerHTML = `

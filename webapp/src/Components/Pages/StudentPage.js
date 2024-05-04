@@ -127,8 +127,6 @@ const readAllContactsByStudent = async () => {
 const conctactInfo = async (id) => {
   const entrepriseBox = document.querySelector(".entreprise-box");
   const contactInfoJSON = await readContactById(id);
-  console.log("contact")
-  console.log(contactInfoJSON)
   const meetingType = contactInfoJSON.meeting;
 
   const checkedSurPlace = meetingType === "Dans l entreprise" ? 'checked'
@@ -354,12 +352,9 @@ const StudentPage = async (student) => {
   }
 
   const studentInfo = await readUserInfo();
-  console.log(studentInfo)
   const internshipInfo = await readInternship();
-  console.log(internshipInfo)
   const contactsInfo = await readAllContactsByStudent();
-  console.log(contactsInfo)
-  // const studentPageContainer = document.querySelector('student-page-container');
+
   const studentBox = document.querySelector(".add-company-box");
   studentBox.innerHTML = `
     <i id="student-back-btn" class="fa-solid fa-times-circle" title="Retour" style="z-index: 4;"></i>
