@@ -272,7 +272,7 @@ const UserListPage = async () => {
       const findStage = (findStageB === true) ? 'A trouvé<br>un stage'
           : 'N\'a pas trouvé<br>de stage';
       return `
-          <div data-student="${userTemp.id}" class="user-line d-flex align-items-center">
+          <div data-student="${userTemp.id}" class="user-line d-flex align-items-center user-line-student">
               <i class="users-icon fa-solid fa-user"></i>
               <h1>${userTemp.firstname}<br>${userTemp.lastname}</h1>
               <div class="user-email-tel d-flex justify-content-center flex-column">

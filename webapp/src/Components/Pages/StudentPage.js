@@ -223,7 +223,7 @@ const renderContactList = (contactsTable) => {
       designation = contactsTable[u].company.designation;
     }
     info += `
-                <div class="table-line d-flex align-items-center mt-2 mb-2">
+                <div class="table-line d-flex align-items-center mt-2 mb-2 rounded-3">
                     <div class="d-flex justify-content-center align-items-center position-relative" style="width: 60%;">
                       <i class="line-info fa-solid fa-circle-info position-absolute" style="left: 0;" id="${contactsTable[u].id}"></i>
                       <div class="line-col-1" >
@@ -253,7 +253,7 @@ const renderInternshipInfo = (stageObj) => {
     let {designation} = stageObj.contact.company;
     const {address, name} = stageObj.contact.company;
     let {project} = stageObj;
-    let {email} = stageObj.contact.company;
+    let {email} = stageObj.supervisor;
     const {lastname, firstname, phoneNumber} = stageObj.supervisor;
 
     if (designation === null) {
@@ -273,13 +273,18 @@ const renderInternshipInfo = (stageObj) => {
                   <p class="me-4"><i class="fa-solid fa-signature"></i> ${name} ${designation}</p>
                   <p><i class="fa-solid fa-location-dot"></i> ${address}</p>
               </div>
-              <p><i class="fa-solid fa-list"></i> ${project}</p>
+              <div class="d-flex flex-wrap">
+                <p class="me-4"><i class="fa-solid fa-list"></i> ${project}</p>
+                <p class="me-4"><i class="fa fa-calendar-check-o"></i> ${stageObj.signatureDate}</p>
+              </div>
           </div>
-          <div class="respo-bloc">
-              <h1 class="mt-3 ms-4">Votre responsable</h1>
-              <p class="mt-2 ms-4"><i class="fa-solid fa-user"></i> ${firstname} ${lastname}</p>
-              <span class="ms-4"><i class="fa-solid fa-phone"></i>${phoneNumber}</span>
-              <span class="ms-4"><i class="fa-solid fa-at"></i>${email}</span>
+          <div class="respo-bloc py-3 px-4">
+              <h1 class="mt-0">Votre responsable</h1>
+              <p class="mt-2 mb-0"><i class="fa-solid fa-user me-3"></i> ${firstname} ${lastname}</p>
+              <div class="d-flex flex-wrap">
+                <span class="mt-2 me-3"><i class="fa-solid fa-phone"></i>${phoneNumber}</span>
+                <span class="mt-2 me-3"><i class="fa-solid fa-at"></i>${email}</span>
+              </div>
           </div>
       `;
   } else {
@@ -339,11 +344,11 @@ const StudentPage = async (student) => {
           <i id="student-back-btn" class="fa-solid fa-circle-arrow-left sticky-top" title="Retour"></i>
     <div class="add-company-container d-flex justify-contain-center align-items-center flex-column mx-auto w-100 h-100">
           <div class="dash d-flex justify-content-center align-items-center mt-5 mb-5 mx-auto">
-            <div class="dash-left d-flex justify-content-center align-items-center flex-column ms-3 me-3">
+            <div class="dash-left d-flex align-items-center flex-column ms-3 me-3 h-100">
                 
             </div>
             <div class="dash-right d-flex justify-content-center align-items-center flex-column ms-3 me-3">
-                <div class="dash-stage d-flex justify-content-center align-items-center">
+                <div class="dash-stage d-flex justify-content-center align-items-center py-1 px-3">
                     
                 </div>
                 <div class="dash-en-container mt-4 d-flex justify-content-center align-items-center overflow-hidden">
@@ -359,7 +364,7 @@ const StudentPage = async (student) => {
                                     <p>Action</p>
                                 </div>
                         </div>
-                        <div class="table-line-box overflow-auto mt-1 rounded-3">
+                        <div class="table-line-box overflow-auto mt-1" style="scrollbar-width:none;">
                             
                         </div>
                     </div>
