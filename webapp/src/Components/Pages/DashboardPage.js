@@ -324,8 +324,6 @@ const DashboardPage = async () => {
     const disableRadioButtons = meetingType !== null ? 'disabled' : '';
     const disableTextarea = refusal !== "" ? 'disabled' : '';
 
-    boxInfo.style.visibility = "visible";
-
     const init = `
       <option value="admitted">pris</option>
       <option value="unsupervised">ne plus suivre</option>
@@ -571,10 +569,21 @@ const DashboardPage = async () => {
       }
     });
 
+    const entrepriseContainer = document.querySelector('.entreprise-container');
+    entrepriseContainer.classList.add('fade-in');
+    boxInfo.style.visibility = "visible";
+
     const btnBack = document.getElementById('btn-back2');
     btnBack.addEventListener('click', () => {
-      boxInfo.style.visibility = "hidden";
-      boxInfo.innerHTML = ``;
+
+      entrepriseContainer.classList.remove('fade-in');
+      entrepriseContainer.classList.add('fade-out');
+
+      setTimeout(() => {
+        boxInfo.style.visibility = "hidden";
+        boxInfo.innerHTML = ``;
+      }, 150)
+
     });
   }
 };

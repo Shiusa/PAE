@@ -102,7 +102,7 @@ const UserListPage = async () => {
               
       </div>
       
-      <div class="add-company-box w-100 d-flex align-items-center student-page-container overflow-y-scroll overflow-x-hidden" style="background: white; z-index: 2; height: 96%;">
+      <div class="add-company-box w-100 d-flex align-items-center student-page-container overflow-y-scroll overflow-x-hidden" style="background: white; z-index: 2; height: 96%; scrollbar-width:none;">
       
       </div>
       

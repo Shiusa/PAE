@@ -6,9 +6,21 @@ import {
 } from "../../utils/session";
 import Navigate from "../../utils/Navigate";
 import Navbar from "../Navbar/Navbar";
-import {closeForm} from "./ContactPage";
 
 let studentId;
+
+const closeForm = () => {
+  const addCompanyContainer = document.querySelector(
+      '.add-company-container');
+  addCompanyContainer.classList.remove('zoom-in');
+  addCompanyContainer.classList.add('zoom-out');
+  const entrepriseBox = document.querySelector(".add-company-box");
+
+  setTimeout(() => {
+    entrepriseBox.style.visibility = "hidden";
+    entrepriseBox.innerHTML = ``;
+  }, 300);
+}
 
 const readUserInfo = async () => {
   const options = {
@@ -130,8 +142,6 @@ const conctactInfo = async (id) => {
     refusal = contactInfoJSON.reasonRefusal;
   }
 
-  entrepriseBox.style.visibility = "visible";
-
   entrepriseBox.innerHTML = `
                     <div class="entreprise-container d-flex justify-contain-center align-items-center flex-column mx-auto">
                         <i id="btn-back2" class="fa-solid fa-circle-arrow-left" title="Retour"></i>
@@ -189,10 +199,21 @@ const conctactInfo = async (id) => {
     refusedExtra.style.height = 'auto';
   }
 
+  const entrepriseContainer = document.querySelector('.entreprise-container');
+  entrepriseContainer.classList.add('fade-in');
+  entrepriseBox.style.visibility = "visible";
+
   const btnBack = document.getElementById('btn-back2');
   btnBack.addEventListener('click', () => {
-    entrepriseBox.style.visibility = "hidden";
-    entrepriseBox.innerHTML = ``;
+
+    entrepriseContainer.classList.remove('fade-in');
+    entrepriseContainer.classList.add('fade-out');
+
+    setTimeout(() => {
+      entrepriseBox.style.visibility = "hidden";
+      entrepriseBox.innerHTML = ``;
+    }, 150);
+
   });
 }
 
@@ -341,7 +362,7 @@ const StudentPage = async (student) => {
   // const studentPageContainer = document.querySelector('student-page-container');
   const studentBox = document.querySelector(".add-company-box");
   studentBox.innerHTML = `
-          <i id="student-back-btn" class="fa-solid fa-circle-arrow-left sticky-top" title="Retour"></i>
+    <i id="student-back-btn" class="fa-solid fa-times-circle" title="Retour" style="z-index: 4;"></i>
     <div class="add-company-container d-flex justify-contain-center align-items-center flex-column mx-auto w-100 h-100">
           <div class="dash d-flex justify-content-center align-items-center mt-5 mb-5 mx-auto">
             <div class="dash-left d-flex align-items-center flex-column ms-3 me-3 h-100">
@@ -386,7 +407,7 @@ const StudentPage = async (student) => {
 
   const addCompanyContainer = document.querySelector(
       '.add-company-container');
-  addCompanyContainer.classList.add('slide-in');
+  addCompanyContainer.classList.add('zoom-in');
 
   const btnBack = document.getElementById('student-back-btn');
   btnBack.addEventListener('click', () => {

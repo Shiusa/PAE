@@ -363,4 +363,4 @@ async function createContact(idCompany) {
   }
 }
 
-export {ContactPage, closeForm};
+export default ContactPage;
