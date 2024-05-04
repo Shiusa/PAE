@@ -134,12 +134,12 @@ const DashboardPage = async () => {
 
   const userInfoID = await readUserInfo();
   const stageInfo = await readInternship();
-  const contacts = await readAllContactsByStudent();
+  let contacts = await readAllContactsByStudent();
 
   showNavStyle("dashboard");
 
-  main.innerHTML = `        
-        <div class="dash d-flex justify-content-center align-items-center mt-5 mb-5 mx-auto">
+  main.innerHTML = `
+        <div class="dash d-flex justify-content-center mt-5 mb-5 mx-auto">
             <div class="dash-left d-flex align-items-center flex-column ms-3 me-3 h-100">
                 <div class="dash-year d-flex justify-content-center align-items-center flex-column">
                     <i class="fa-solid fa-calendar-days mt-3"></i>
@@ -486,7 +486,7 @@ const DashboardPage = async () => {
             errorMessage.style.display = "block";
             return;
           }
-          Navigate("/dashboard");
+          // Navigate("/dashboard");
           break;
         case "turnedDown":
           options.body = JSON.stringify(
@@ -525,7 +525,7 @@ const DashboardPage = async () => {
             errorMessage.style.display = "block";
             return;
           }
-          Navigate("/dashboard");
+          // Navigate("/dashboard");
           break;
 
         case "unsupervised":
@@ -561,12 +561,15 @@ const DashboardPage = async () => {
             errorMessage.style.display = "block";
             return;
           }
-          Navigate("/dashboard");
+          // Navigate("/dashboard");
           break;
         default:
           errorMessage.innerHTML = "Veuillez entrer un contact ou vérifiez que vous pouvez effectuer ce changement.";
           errorMessage.style.display = "block";
       }
+      contacts = await readAllContactsByStudent();
+      showContacts(contacts);
+      closeBox();
     });
 
     const entrepriseContainer = document.querySelector('.entreprise-container');
@@ -585,6 +588,11 @@ const DashboardPage = async () => {
       }, 150)
 
     });
+
+    function closeBox() {
+      boxInfo.style.visibility = "hidden";
+      boxInfo.innerHTML = ``;
+    }
   }
 };
 
