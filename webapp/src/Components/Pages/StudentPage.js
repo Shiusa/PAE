@@ -357,9 +357,9 @@ const StudentPage = async (student) => {
 
   const studentBox = document.querySelector(".add-company-box");
   studentBox.innerHTML = `
-    <i id="student-back-btn" class="fa-solid fa-times-circle" title="Retour" style="z-index: 4;"></i>
     <div class="add-company-container d-flex justify-contain-center align-items-center flex-column mx-auto w-100 h-100">
-          <div class="dash d-flex justify-content-center align-items-center mt-5 mb-5 mx-auto">
+          <i id="student-back-btn" class="fa-solid fa-times-circle" title="Retour" style="z-index: 4;"></i>
+          <div class="dash d-flex justify-content-center align-items-center mt-0 mb-5 mx-auto">
             <div class="dash-left d-flex align-items-center flex-column ms-3 me-3 h-100">
                 
             </div>

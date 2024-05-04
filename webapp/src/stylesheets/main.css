@@ -993,15 +993,15 @@ input::placeholder {
 #student-back-btn {
   color: var(--ma-couleur);
   font-size: 50px;
-  position: absolute;
+  position: sticky;
   top: 8%;
-  left: 2%;
+  right: 94%;
   transition: 0.2s ease-in-out;
   cursor: pointer;
 }
 
 #student-back-btn:hover {
-  transform: translateX(-3px);
+  transform: scale(0.9);
 }
 
 .search-criteria {
