@@ -268,13 +268,14 @@ public class ContactDAOImpl implements ContactDAO {
   @Override
   public List<ContactDTO> getAllContactsByStudentStartedOrAdmitted(int student) {
     List<ContactDTO> contactDTOList = getAllContactsByStudent(student);
+    List<ContactDTO> newContactList = new ArrayList<>();
     for (int i = 0; i < contactDTOList.size(); i++) {
       Contact contact = (Contact) contactDTOList.get(i);
-      if (!contact.isAdmitted() && !contact.isStarted()) {
-        contactDTOList.remove(i);
+      if (contact.isAdmitted() || contact.isStarted()) {
+        newContactList.add(contact);
       }
     }
-    return contactDTOList;
+    return newContactList;
   }
 
 
