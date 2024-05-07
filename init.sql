@@ -119,10 +119,10 @@ INSERT INTO proStage.contacts VALUES (DEFAULT, 6, 23, 'Dans l entreprise', 'refu
 INSERT INTO proStage.contacts VALUES (DEFAULT, 6, 21, 'A distance', 'refusé', 'Pas d affinité avec le l ERP Odoo', '2023-2024', 1);
 INSERT INTO proStage.contacts VALUES (DEFAULT, 7, 21, NULL, 'non suivi', NULL, '2023-2024', 1);
 INSERT INTO proStage.contacts VALUES (DEFAULT, 5, 21, 'A distance', 'pris', NULL, '2023-2024', 1);
-INSERT INTO proStage.contacts VALUES (DEFAULT, 7, 26, NULL, 'initité', NULL, '2023-2024', 1);
-INSERT INTO proStage.contacts VALUES (DEFAULT, 6, 26, NULL, 'initité', NULL, '2023-2024', 1);
-INSERT INTO proStage.contacts VALUES (DEFAULT, 5, 26, NULL, 'initité', NULL, '2023-2024', 1);
-INSERT INTO proStage.contacts VALUES (DEFAULT, 7, 24, NULL, 'initité', NULL, '2023-2024', 1);
+INSERT INTO proStage.contacts VALUES (DEFAULT, 7, 26, NULL, 'initié', NULL, '2023-2024', 1);
+INSERT INTO proStage.contacts VALUES (DEFAULT, 6, 26, NULL, 'initié', NULL, '2023-2024', 1);
+INSERT INTO proStage.contacts VALUES (DEFAULT, 5, 26, NULL, 'initié', NULL, '2023-2024', 1);
+INSERT INTO proStage.contacts VALUES (DEFAULT, 7, 24, NULL, 'initié', NULL, '2023-2024', 1);
 INSERT INTO proStage.contacts VALUES (DEFAULT, 4, 5, 'A distance', 'accepté', NULL, '2021-2022', 1);
 INSERT INTO proStage.contacts VALUES (DEFAULT, 7, 8, NULL, 'non suivi', NULL, '2021-2022', 1);
 INSERT INTO proStage.contacts VALUES (DEFAULT, 8, 7, 'A distance', 'refusé', 'ne prennent pas de stage', '2021-2022', 1);
