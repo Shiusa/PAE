@@ -2,6 +2,9 @@
   --ma-couleur: #119DB8;
   --ma-couleur-opacité: #119cb8c7;
   --ma-couleur-foncée: #1489a0;
+  --accent-color: #E6C060;
+  --accent-color-dark: #CFAD57;
+  --spacing-color: #eef7f9;
 }
 
 /* Scroll bar */
@@ -191,7 +194,7 @@ p {
   height: 50px;
   border-radius: 10px;
   border: 3px solid var(--ma-couleur);
-  color: var(--ma-couleur);
+  /*color: var(--ma-couleur);*/
   cursor: pointer;
   color: white;
   background: var(--ma-couleur);
@@ -294,7 +297,7 @@ span:hover {
 .dash-stage {
   width: 100%;
   min-height: 150px;
-  border: 3px solid var(--ma-couleur);
+  border: 3px solid var(--spacing-color);
   border-radius: 10px;
 
 .stage-bloc {
@@ -361,13 +364,13 @@ i {
   border-radius: 10px;
   width: 100%;
   height: 600px;
-  border: 3px solid var(--ma-couleur);
+  border: 3px solid var(--spacing-color);
   position: relative;
 
 .dash-en {
   width: 95%;
   height: 93%;
-  background: var(--ma-couleur-opacité);
+  background: var(--spacing-color);
   border-radius: 10px;
 
 .table-title {
@@ -412,7 +415,7 @@ i {
 
 .line-info {
   font-size: 45px;
-  color: var(--ma-couleur);
+  color: var(--accent-color);
   cursor: pointer;
   position: absolute;
   margin-left: 30px;
@@ -453,7 +456,7 @@ i {
   opacity: 0;
   z-index: -1;
   /*background: conic-gradient(from 106deg, #E6C060 0%, #E6C060 1%, transparent 1%, transparent 100%);*/
-  background: conic-gradient(from 90deg, transparent 90%, #E6C060 90%, #E6C060 100%);
+  background: conic-gradient(from 90deg, transparent 90%, var(--accent-color) 90%, var(--accent-color) 100%);
   /*background: var(--ma-couleur);*/
   /*animation: circling 400ms linear;*/
   animation: circling 800ms ease-in-out;
@@ -956,13 +959,13 @@ input::placeholder {
 }
 
 .add-company-btn {
-  background: var(--ma-couleur);
+  background: var(--accent-color);
   color: white;
   border: none;
 }
 
 .add-company-btn:hover {
-  background: var(--ma-couleur-foncée);
+  background: var(--accent-color-dark);
 }
 
 .add-company-box {
@@ -1114,6 +1117,10 @@ input::placeholder {
   text-align: center;
 }
 
+.triangle-up, .triangle-down {
+  color: var(--accent-color);
+}
+
 #blacklistMotivation {
   border-color: var(--ma-couleur);
 }
@@ -1148,6 +1155,7 @@ input::placeholder {
 .adminCompanyListHover:hover {
   background: var(--ma-couleur-foncée);
   cursor: pointer;
+  color: var(--accent-color-dark);
 }
 
 .sort-header:hover {
@@ -1337,7 +1345,7 @@ label {
 .users-icon {
   font-size: 30px;
   background: white;
-  color: var(--ma-couleur);
+  color: var(--accent-color);
   height: 100%;
   width: 70px;
   display: flex;

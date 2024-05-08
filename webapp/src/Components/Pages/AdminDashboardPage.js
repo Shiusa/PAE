@@ -639,7 +639,7 @@ const AdminDashboardPage = async () => {
   tooltip.id = 'tooltip';
   tooltip.style.position = 'absolute';
   tooltip.style.display = 'none';
-  tooltip.style.background = 'rgba(0, 0, 0, 0.3)';
+  tooltip.style.background = '#E6C060';
   tooltip.style.color = '#fff';
   tooltip.style.padding = '5px';
   tooltip.style.borderRadius = '5px';
