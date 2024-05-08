@@ -269,7 +269,11 @@ public class ContactUCCImpl implements ContactUCC {
     List<ContactDTO> contactDTOList =
         contactDAO.getAllContactsByStudentStartedOrAdmitted(studentId);
     for (ContactDTO c : contactDTOList) {
-      contactDAO.putContactOnHold(c);
+      int currentVersion = c.getVersion();
+      c.setVersion(currentVersion + 1);
+      c.setState("suspendu");
+      //contactDAO.putContactOnHold(c);
+      contactDAO.updateContact(c, currentVersion);
     }
   }
 
