@@ -164,6 +164,7 @@ public class ContactUCCImplTest {
     userDTO.setId(5);
     contactDTO.setStudent(userDTO);
     contactDTO.setState("initié");
+    contactDTO.setVersion(1);
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
     assertThrows(NotAllowedException.class, () -> contactUCC.unsupervise(1, 1, 1));
   }
@@ -174,6 +175,7 @@ public class ContactUCCImplTest {
     userDTO.setId(1);
     contactDTO.setStudent(userDTO);
     contactDTO.setState("refusé");
+    contactDTO.setVersion(1);
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
     assertThrows(NotAllowedException.class, () -> contactUCC.unsupervise(1, 1, 1));
   }
@@ -184,9 +186,9 @@ public class ContactUCCImplTest {
     userDTO.setId(1);
     contactDTO.setStudent(userDTO);
     contactDTO.setState("initié");
-    contactDTO.setVersion(2);
+    contactDTO.setVersion(1);
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
-    Mockito.when(contactDAOMock.unsupervise(1, 1)).thenReturn(contactDTO);
+    Mockito.when(contactDAOMock.updateContact(contactDTO, 1)).thenReturn(contactDTO);
     assertNotNull(contactUCC.unsupervise(1, 1, 1));
   }
 
@@ -196,10 +198,10 @@ public class ContactUCCImplTest {
     userDTO.setId(1);
     contactDTO.setStudent(userDTO);
     contactDTO.setState("pris");
-    contactDTO.setVersion(3);
+    contactDTO.setVersion(1);
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
-    Mockito.when(contactDAOMock.unsupervise(1, 1)).thenReturn(contactDTO);
-    assertThrows(InvalidRequestException.class, () -> contactUCC.unsupervise(1, 1, 1));
+    Mockito.when(contactDAOMock.updateContact(contactDTO, 1)).thenReturn(null);
+    assertThrows(DuplicateException.class, () -> contactUCC.unsupervise(1, 1, 1));
   }
 
   @Test
@@ -208,9 +210,9 @@ public class ContactUCCImplTest {
     userDTO.setId(1);
     contactDTO.setStudent(userDTO);
     contactDTO.setState("pris");
-    contactDTO.setVersion(2);
+    contactDTO.setVersion(1);
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
-    Mockito.when(contactDAOMock.unsupervise(1, 1)).thenReturn(contactDTO);
+    Mockito.when(contactDAOMock.updateContact(contactDTO, 1)).thenReturn(contactDTO);
     assertNotNull(contactUCC.unsupervise(1, 1, 1));
   }
 
