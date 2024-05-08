@@ -580,7 +580,6 @@ public class ContactUCCImplTest {
     contactDTO.setVersion(2);
 
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
-    //Mockito.when(contactDAOMock.accept(1, 1)).thenReturn(contactDTO);
 
     assertThrows(DuplicateException.class, () -> contactUCC.accept(1, 1, internshipDTO, 1));
   }
