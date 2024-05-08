@@ -34,7 +34,7 @@
   background: var(--ma-couleur-foncée);
 }
 
-.fa-solid {
+.fa-solid, .fa {
   color: var(--accent-color);
 }
 
@@ -346,6 +346,7 @@ p {
 
 i {
   margin-right: 20px;
+  color: white;
 }
 
 }
@@ -357,6 +358,7 @@ span {
 i {
   margin-right: 20px;
   font-size: 20px;
+  color: white;
 }
 
 }
@@ -1391,6 +1393,7 @@ p {
 i {
   font-size: 20px;
   margin-right: 5px;
+  color: white;
 }
 
 }
