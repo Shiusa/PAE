@@ -134,9 +134,8 @@ public class ContactUCCImpl implements ContactUCC {
       if (contact.getVersion() != version) {
         Logs.log(Level.ERROR,
             "ContactUCC (unsupervise) : different version");
-        throw new DuplicateException("Someone updated before us");
+        throw new DuplicateException("User looking at old version");
       }
-
       if (!contact.isStarted() && !contact.isAdmitted()) {
         throw new NotAllowedException();
       } else if (contact.getStudent().getId() != student) {
@@ -151,7 +150,7 @@ public class ContactUCCImpl implements ContactUCC {
 
       if (contactDTO == null) {
         Logs.log(Level.ERROR, "ContactUCC (unsupervise) : the contact's version isn't matching");
-        throw new DuplicateException();
+        throw new DuplicateException("Someone updated before us");
       }
 
       dalServices.commitTransaction();
@@ -175,6 +174,11 @@ public class ContactUCCImpl implements ContactUCC {
         Logs.log(Level.ERROR, "ContactUCC (admit) : contact not found");
         throw new ResourceNotFoundException();
       }
+      if (contact.getVersion() != version) {
+        Logs.log(Level.ERROR,
+            "ContactUCC (unsupervise) : different version");
+        throw new DuplicateException("User looking at old version");
+      }
       if (contact.getStudent().getId() != studentId) {
         Logs.log(Level.ERROR,
             "ContactUCC (admit) : the student of the contact isn't the student from the token");
@@ -188,11 +192,17 @@ public class ContactUCCImpl implements ContactUCC {
         Logs.log(Level.ERROR, "ContactUCC (admit) : contact's state isn't started");
         throw new InvalidRequestException();
       }
-      contactDTO = contactDAO.admitContact(contactId, meeting, version);
 
-      if (contactDTO.getVersion() != version + 1) {
+      contact.setVersion(version + 1);
+      contact.setState("pris");
+      contact.setMeeting(meeting);
+
+      // contactDTO = contactDAO.admitContact(contactId, meeting, version);
+      contactDTO = contactDAO.updateContact(contact, version);
+
+      if (contactDTO == null) {
         Logs.log(Level.ERROR, "ContactUCC (admit) : the contact's version isn't matching");
-        throw new InvalidRequestException();
+        throw new DuplicateException("Someone updated before us");
       }
 
       dalServices.commitTransaction();

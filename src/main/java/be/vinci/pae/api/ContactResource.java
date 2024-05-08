@@ -141,7 +141,7 @@ public class ContactResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize
-  public ObjectNode admit(@Context ContainerRequest request, JsonNode json) {
+  public ContactDTO admit(@Context ContainerRequest request, JsonNode json) {
     Logs.log(Level.INFO, "ContactResource (admit) : entrance");
     if (!json.hasNonNull("contactId") || !json.hasNonNull("meeting") || json.get("contactId")
         .asText().isBlank() || json.get("meeting").asText().isBlank()) {
@@ -157,7 +157,8 @@ public class ContactResource {
     ContactDTO contactDTO = contactUCC.admit(contactId, meeting, studentId, version);
     Logs.log(Level.DEBUG, "ContactResource (admit) : success!");
 
-    return jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
+    // return jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
+    return contactDTO;
   }
 
   /**
