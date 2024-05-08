@@ -206,30 +206,15 @@ public class ContactDAOImpl implements ContactDAO {
   public ContactDTO updateContact(ContactDTO contact, int contactCurrentVersion) {
     Logs.log(Level.DEBUG, "ContactDAO (updateContact) : entrance");
     String requestSql = """
-        UPDATE prostage.contacts ct, prostage.companies cm, prostage.users us
-        SET ct.contact_id = ?, ct.company = ?, ct.student = ?, ct.meeting = ?,
-        ct.contact_state = ?, ct.reason_for_refusal = ?, ct.school_year = ?,
-        ct.version = ?,
+        UPDATE prostage.contacts
                 
-        cm.company_id = ?, cm.name = ?, cm.designation = ?, cm.address = ?,
-        cm.phone_number = ?, cm.email = ?, cm.is_blacklisted = ?,
-        cm.blacklist_motivation = ?, cm.version = ?,
+        SET contact_id = ?, company = ?, student = ?, meeting = ?,
+        contact_state = ?, reason_for_refusal = ?, school_year = ?,
+        version = ?
                 
-        us.user_id = ?, us.email = ?, us.lastname = ?, us.firstname = ?,
-        us.phone_number = ?, us.password = ?, us.registration_date = ?,
-        us.school_year = ?, us.role = ?, us.version = ?
+        WHERE contact_id = ? AND version = ?
                 
-        WHERE ct.company = cm.company_id AND ct.student = us.user_id
-        AND ct.version = ? AND us.version = ?
-                
-        RETURNING
-        ct.contact_id, ct.company AS ct_company, ct.student, ct.meeting, ct.contact_state,
-        ct.reason_for_refusal, ct.school_year AS ct_school_year, ct.version AS ct_version,
-        cm.company_id, cm.name, cm.designation, cm.address, cm.phone_number AS cm_phone_number,
-        cm.email AS cm_email, cm.is_blacklisted, cm.blacklist_motivation, cm.version AS cm_version,
-        us.user_id, us.email AS us_email, us.lastname AS us_lastname, us.firstname AS us_firstname,
-        us.phone_number AS us_phone_number, us.password, us.registration_date,
-        us.school_year AS us_school_year, us.role, us.version AS us_version
+        RETURNING *
         """;
 
     try (PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql)) {
@@ -242,36 +227,13 @@ public class ContactDAOImpl implements ContactDAO {
       ps.setString(7, contact.getSchoolYear());
       ps.setInt(8, contact.getVersion());
 
-      ps.setInt(9, contact.getCompany().getId());
-      ps.setString(10, contact.getCompany().getName());
-      ps.setString(11, contact.getCompany().getDesignation());
-      ps.setString(12, contact.getCompany().getAddress());
-      ps.setString(13, contact.getCompany().getPhoneNumber());
-      ps.setString(14, contact.getCompany().getEmail());
-      ps.setBoolean(15, contact.getCompany().isBlacklisted());
-      ps.setString(16, contact.getCompany().getBlacklistMotivation());
-      ps.setInt(17, contact.getCompany().getVersion());
-
-      ps.setInt(18, contact.getStudent().getId());
-      ps.setString(19, contact.getStudent().getEmail());
-      ps.setString(20, contact.getStudent().getLastname());
-      ps.setString(21, contact.getStudent().getFirstname());
-      ps.setString(22, contact.getStudent().getPhoneNumber());
-      ps.setString(23, contact.getStudent().getPassword());
-      ps.setDate(24, contact.getStudent().getRegistrationDate());
-      ps.setString(25, contact.getStudent().getSchoolYear());
-      ps.setString(26, contact.getStudent().getRole());
-      ps.setInt(27, contact.getStudent().getVersion());
-
-      ps.setInt(28, contactCurrentVersion);
-      ps.setInt(29, contact.getStudent().getVersion());
+      ps.setInt(9, contact.getId());
+      ps.setInt(10, contactCurrentVersion);
 
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
-          CompanyDTO companyDTO = DTOSetServices.setCompanyDTO(companyFactory.getCompanyDTO(), rs);
-          UserDTO studentDTO = DTOSetServices.setUserDTO(userFactory.getUserDTO(), rs);
-          return DTOSetServices.setContactDTO(contactFactory.getContactDTO(), rs, companyDTO,
-              studentDTO);
+          Logs.log(Level.DEBUG, "ContactDAO (admit) : success!");
+          return findContactById(rs.getInt("contact_id"));
         }
         return null;
       }
