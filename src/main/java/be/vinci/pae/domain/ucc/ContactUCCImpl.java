@@ -291,17 +291,27 @@ public class ContactUCCImpl implements ContactUCC {
             "ContactUCC (accept) : contact not found");
         throw new ResourceNotFoundException();
       }
-
+      if (contact.getVersion() != version) {
+        Logs.log(Level.ERROR,
+            "ContactUCC (accept) : different version");
+        throw new DuplicateException("User looking at old version");
+      }
       if (!contact.isAdmitted()) {
         Logs.log(Level.ERROR, "ContactUCC (accept) : contact's state not admitted");
         throw new NotAllowedException();
       } else if (contact.getStudent().getId() != studentId) {
         throw new NotAllowedException();
       }
-      ContactDTO contactDTO = contactDAO.accept(contactId, version);
-      if (contactDTO.getVersion() != version + 1) {
+
+      contact.setVersion(version + 1);
+      contact.setState("accepté");
+
+      //ContactDTO contactDTO = contactDAO.accept(contactId, version);
+      ContactDTO contactDTO = contactDAO.updateContact(contact, version);
+
+      if (contactDTO == null) {
         Logs.log(Level.ERROR, "ContactUCC (accept) : the contact's version isn't matching");
-        throw new InvalidRequestException();
+        throw new DuplicateException("Someone updated before us");
       }
       InternshipDTO internshipDTO1 = internshipUCC.createInternship(internshipDTO, studentId);
       putStudentContactsOnHold(studentId);
