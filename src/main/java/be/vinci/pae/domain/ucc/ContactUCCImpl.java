@@ -227,7 +227,11 @@ public class ContactUCCImpl implements ContactUCC {
         Logs.log(Level.ERROR, "ContactUCC (turnDown) : contact not found");
         throw new ResourceNotFoundException();
       }
-
+      if (contact.getVersion() != version) {
+        Logs.log(Level.ERROR,
+            "ContactUCC (turnDown) : different version");
+        throw new DuplicateException("User looking at old version");
+      }
       if (contact.getStudent().getId() != studentId) {
         Logs.log(Level.ERROR,
             "ContactUCC (turnDown) : the student of the contact isn't the student from the token");
@@ -238,11 +242,16 @@ public class ContactUCCImpl implements ContactUCC {
         throw new NotAllowedException();
       }
 
-      contactDTO = contactDAO.turnDown(contactId, reasonForRefusal, version);
+      contact.setVersion(version + 1);
+      contact.setState("refusé");
+      contact.setReasonRefusal(reasonForRefusal);
 
-      if (contactDTO.getVersion() != version + 1) {
+      // contactDTO = contactDAO.turnDown(contactId, reasonForRefusal, version);
+      contactDTO = contactDAO.updateContact(contact, version);
+
+      if (contactDTO == null) {
         Logs.log(Level.ERROR, "ContactUCC (turndown) : the contact's version isn't matching");
-        throw new InvalidRequestException();
+        throw new DuplicateException("Someone updated before us");
       }
 
       dalServices.commitTransaction();

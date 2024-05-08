@@ -207,7 +207,7 @@ public class ContactResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize
-  public ObjectNode turnDown(@Context ContainerRequest request, JsonNode json) {
+  public ContactDTO turnDown(@Context ContainerRequest request, JsonNode json) {
     Logs.log(Level.INFO, "ContactResource (turnDown) : entrance");
     if (!json.hasNonNull("contactId") || json.get("contactId").asText().isBlank()
         || !json.hasNonNull("reasonForRefusal") || json.get("reasonForRefusal").asText()
@@ -224,11 +224,11 @@ public class ContactResource {
     int studentId = userDTO.getId();
 
     ContactDTO contactDTO = contactUCC.turnDown(contactId, reasonForRefusal, studentId, version);
-    ObjectNode contact = jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
+    // ObjectNode contact = jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
 
     Logs.log(Level.DEBUG, "ContactResource (turnDown) : success!");
 
-    return contact;
+    return contactDTO;
   }
 
 
