@@ -401,7 +401,7 @@ public class ContactUCCImplTest {
   }
 
   @Test
-  @DisplayName("Test unsupervise contact with wrong version")
+  @DisplayName("Test admit contact with wrong version")
   public void testAdmitContactConcurrentUpdate() {
     userDTO.setId(1);
     contactDTO.setStudent(userDTO);
@@ -426,6 +426,7 @@ public class ContactUCCImplTest {
     userDTO.setId(5);
     contactDTO.setStudent(userDTO);
     contactDTO.setState("pris");
+    contactDTO.setVersion(1);
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
     assertThrows(NotAllowedException.class,
         () -> contactUCC.turnDown(1, "Student has not answered fast enough", 1, 1));
@@ -437,6 +438,7 @@ public class ContactUCCImplTest {
     userDTO.setId(1);
     contactDTO.setStudent(userDTO);
     contactDTO.setState("initié");
+    contactDTO.setVersion(1);
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
     assertThrows(NotAllowedException.class,
         () -> contactUCC.turnDown(1, "Student has not answered fast enough", 1, 1));
@@ -450,9 +452,9 @@ public class ContactUCCImplTest {
     contactDTO.setState("pris");
     contactDTO.setVersion(3);
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
-    Mockito.when(contactDAOMock.turnDown(1, "Student has not answered fast enough", 1))
-        .thenReturn(contactDTO);
-    assertThrows(InvalidRequestException.class,
+    /*Mockito.when(contactDAOMock.turnDown(1, "Student has not answered fast enough", 1))
+        .thenReturn(contactDTO);*/
+    assertThrows(DuplicateException.class,
         () -> contactUCC.turnDown(1, "Student has not answered fast enough", 1, 1));
   }
 
@@ -462,11 +464,24 @@ public class ContactUCCImplTest {
     userDTO.setId(1);
     contactDTO.setStudent(userDTO);
     contactDTO.setState("pris");
-    contactDTO.setVersion(2);
+    contactDTO.setVersion(1);
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
-    Mockito.when(contactDAOMock.turnDown(1, "Student has not answered fast enough", 1))
+    Mockito.when(contactDAOMock.updateContact(contactDTO, 1))
         .thenReturn(contactDTO);
     assertNotNull(contactUCC.turnDown(1, "Student has not answered fast enough", 1, 1));
+  }
+
+  @Test
+  @DisplayName("Test turn down contact with wrong version")
+  public void testTurnDownContactConcurrentUpdate() {
+    userDTO.setId(1);
+    contactDTO.setStudent(userDTO);
+    contactDTO.setState("pris");
+    contactDTO.setVersion(1);
+    Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
+    Mockito.when(contactDAOMock.updateContact(contactDTO, 1)).thenReturn(null);
+    assertThrows(DuplicateException.class,
+        () -> contactUCC.turnDown(1, "Student has not answered fast enough", 1, 1));
   }
 
   @Test
