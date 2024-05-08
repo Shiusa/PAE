@@ -106,4 +106,13 @@ public interface ContactDAO {
    * @return a list of all contacts.
    */
   List<ContactDTO> getAllContactsByCompany(int company);
+
+  /**
+   * Update a contact.
+   *
+   * @param contact               contactDTO.
+   * @param contactCurrentVersion contact version.
+   * @return the updated contact.
+   */
+  ContactDTO updateContact(ContactDTO contact, int contactCurrentVersion);
 }
