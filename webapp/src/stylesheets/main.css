@@ -34,6 +34,9 @@
   background: var(--ma-couleur-foncée);
 }
 
+.fa-solid {
+  color: var(--accent-color);
+}
 
 /* await */
 
@@ -1191,12 +1194,13 @@ input::placeholder {
 
 .blacklist-company-btn {
   background: #B81139;
-  color: white;
+  color: var(--accent-color);
   border: none;
 }
 
 .blacklist-company-btn:hover {
   background: #A10E31;
+  color: var(--accent-color-dark);
 }
 
 #student-back-btn {
