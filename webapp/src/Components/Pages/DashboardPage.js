@@ -156,7 +156,7 @@ const DashboardPage = async () => {
                 </div>
             </div>
             <div class="dash-right d-flex justify-content-center align-items-center flex-column ms-3 me-3">
-                <div class="dash-stage d-flex justify-content-center align-items-center py-1 px-3">
+                <div class="dash-stage d-flex justify-content-center align-items-center py-1 px-3 overflow-x-hidden">
                     
                 </div>
                 <div class="dash-en-container mt-4 d-flex justify-content-center align-items-center overflow-hidden">
@@ -216,13 +216,15 @@ const DashboardPage = async () => {
                 <p class="me-4"><i class="fa fa-calendar-check-o"></i> ${stageInfo.signatureDate}</p>
               </div>
           </div>
-          <div class="respo-bloc py-3 px-4">
+          <div class="respo-bloc p-1" style="position: relative">
+            <div class="w-100 h-100 py-3 px-4" style="background: #119DB8; border-radius: 8px;">
               <h1 class="mt-0">Votre responsable</h1>
               <p class="mt-2 mb-0"><i class="fa-solid fa-user me-3"></i> ${firstname} ${lastname}</p>
               <div class="d-flex flex-wrap">
                 <span class="mt-2 me-3"><i class="fa-solid fa-phone"></i>${phoneNumber}</span>
                 <span class="mt-2 me-3"><i class="fa-solid fa-at"></i>${email}</span>
               </div>
+            </div>
           </div>
       `;
   } else {
@@ -287,7 +289,7 @@ const DashboardPage = async () => {
       }
 
       info += `
-                <div class="table-line d-flex align-items-center mt-2 mb-2 rounded-3">
+                <div class="table-line d-flex align-items-center mt-2 mb-2 rounded-3" style="--orderCT:${u}">
                     <div class="d-flex justify-content-center align-items-center position-relative" style="width: 60%;">
                       <i class="line-info fa-solid fa-circle-info position-absolute" style="left: 0;" id="${contactsTable[u].id}"></i>
                       <div class="line-col-1" >
@@ -403,7 +405,7 @@ const DashboardPage = async () => {
         contactInfoJSON.state === 'pris' ? 'visible' : 'invisible'}" type="submit">Mettre à jour</button>
                             </div>
                             
-                            <h2 id="error-message" class="mt-2"></h2>
+                            <h2 id="error-message" class="mt-0"></h2>
                         </div>
                     </div>
         `
@@ -591,6 +593,7 @@ const DashboardPage = async () => {
         default:
           errorMessage.innerHTML = "Veuillez entrer un contact ou vérifiez que vous pouvez effectuer ce changement.";
           errorMessage.style.display = "block";
+          return;
       }
       contacts = await readAllContactsByStudent();
       showContacts(contacts);

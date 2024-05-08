@@ -319,10 +319,13 @@ i {
 }
 
 .respo-bloc {
-  background: var(--ma-couleur);
+  /*background: var(--ma-couleur);*/
+  background: transparent;
   border-radius: 10px;
   height: 100%;
   width: 40%;
+  position: relative;
+  animation: slideOpen 600ms forwards ease-out;
   overflow: hidden;
 
 h1 {
@@ -403,6 +406,9 @@ i {
   border-radius: 10px;
   background: white;
   border-radius: 10px;
+  opacity: 0;
+  animation: staggerTile 300ms forwards ease-in-out;
+  animation-delay: calc(var(--orderCT) * 50ms);
 
 .line-info {
   font-size: 45px;
@@ -435,6 +441,72 @@ i {
 }
 }
 
+.respo-bloc::before {
+  content: '';
+  position: absolute;
+  /*top: 0;
+  left: 0;*/
+  width: 150%;
+  height: 150%;
+  left: -25%;
+  top: -25%;
+  opacity: 0;
+  z-index: -1;
+  /*background: conic-gradient(from 106deg, #E6C060 0%, #E6C060 1%, transparent 1%, transparent 100%);*/
+  background: conic-gradient(from 90deg, transparent 90%, #E6C060 90%, #E6C060 100%);
+  /*background: var(--ma-couleur);*/
+  /*animation: circling 400ms linear;*/
+  animation: circling 800ms ease-in-out;
+  animation-delay: 1200ms;
+  /*border-radius: 10px;*/
+}
+
+@keyframes circling {
+  /*0% {
+    background: #E6C060;
+    height: 110%;
+    width: 110%;
+    opacity: 1;
+  }*/
+  /*50% {
+    background: #E6C060;
+    filter: hue-rotate(-90deg);
+  }*/
+  /*99% {
+    opacity: 1;
+  }*/
+  0% {
+    opacity: 1;
+    transform: rotate(0deg);
+  }
+  100% {
+    /*background: #E6C060;
+    height: 110%;
+    width: 110%;*/
+    opacity: 1;
+    transform: rotate(720deg);
+  }
+}
+
+@keyframes slideOpen {
+  0% {
+    transform: translateX(80%);
+    height: 56px;
+  }
+  30% {
+    transform: translateX(0);
+    height: 56px;
+  }
+  50% {
+    transform: translateX(0);
+    height: 56px;
+  }
+  100% {
+    transform: translateX(0);
+    height: 100%;
+  }
+}
+
 
 .entreprise-box {
   width: 100%;
@@ -445,7 +517,7 @@ i {
 
 .entreprise-container {
   width: 80%;
-  height: 85%;
+  height: 90%;
   background: rgba(255, 255, 255, 0.947);
   border-radius: 10px;
   position: relative;
@@ -484,7 +556,7 @@ h2 {
   border: 3px solid var(--ma-couleur);
   border-radius: 10px;
   width: 80%;
-  height: 76%;
+  height: 78%;
 
 p {
   color: var(--ma-couleur);
@@ -556,6 +628,39 @@ textarea {
   border: 4px solid var(--ma-couleur);
   border-bottom-right-radius: 30px;
   border-top-right-radius: 30px;
+  background-color: white;
+}
+
+.login-slide-in {
+  /*transform: translateX(70%);*/
+  animation: slideInLogin 400ms forwards ease-in-out;
+}
+
+@keyframes slideInLogin {
+  from {
+    transform: translateX(-70%);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.register-slide-in {
+  /*transform: translateX(-70%);*/
+  animation: slideInRegister 400ms forwards ease-in-out;
+}
+
+@keyframes slideInRegister {
+  from {
+    transform: translateX(70%);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
 .box-in-login {
@@ -605,6 +710,21 @@ p:hover {
   transform: scale(1.1);
 }
 
+}
+
+.opacity-animation {
+  opacity: 0;
+  animation: opacityAni 300ms ease-in-out forwards;
+  animation-delay: 50ms;
+}
+
+@keyframes opacityAni {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 #box-register-left {
@@ -1005,6 +1125,20 @@ input::placeholder {
 .adminCompanyListTile {
   background: var(--ma-couleur);
   color: white;
+  opacity: 0;
+  animation: staggerTile 300ms forwards ease-in-out;
+  animation-delay: calc(var(--orderCM) * 50ms);
+}
+
+@keyframes staggerTile {
+  from {
+    transform: translateY(200%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 .noInternship {
@@ -1061,7 +1195,8 @@ input::placeholder {
   color: var(--ma-couleur);
   font-size: 50px;
   position: sticky;
-  top: 8%;
+  height: 0;
+  top: 0%;
   right: 94%;
   transition: 0.2s ease-in-out;
   cursor: pointer;
@@ -1315,11 +1450,11 @@ h2 {
 }
 
 .zoom-in {
-  animation: zoomIn 400ms forwards;
+  animation: zoomIn 400ms forwards ease-in-out;
 }
 
 .zoom-out {
-  animation: zoomOut 400ms forwards;
+  animation: zoomOut 400ms forwards ease-in-out;
 }
 
 @keyframes fadeIn {
@@ -1345,11 +1480,11 @@ h2 {
 }
 
 .fade-in {
-  animation: fadeIn 100ms forwards;
+  animation: fadeIn 150ms forwards ease-in-out;
 }
 
 .fade-out {
-  animation: fadeOut 150ms forwards;
+  animation: fadeOut 250ms forwards ease-in-out;
 }
 
 .box-internshipMother {

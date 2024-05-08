@@ -28,26 +28,26 @@ const RegisterPage = async () => {
   const main = document.querySelector('main');
   main.innerHTML = ` 
         <div class="page-login d-flex justify-content-center align-items-center mb-4 mt-5">
-          <div class="box-login d-flex justify-content-center align-items-center" id="box-register-left">
+          <div class="box-login d-flex justify-content-center align-items-center register-slide-in" id="box-register-left">
             <div class="box-in-login d-flex justify-content-center align-items-center flex-column">
-              <h1>Inscription</h1>
-              <div class="input-group mb-3">
+              <h1 class="opacity-animation">Inscription</h1>
+              <div class="input-group mb-3 opacity-animation">
                 <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-user"></i></span>
                 <input type="text" class="form-control" id="input-firstname" placeholder="Prénom" aria-label="Prénom" aria-describedby="basic-addon1">
               </div>
-              <div class="input-group mb-3">
+              <div class="input-group mb-3 opacity-animation">
                 <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-user"></i></span>
                 <input type="text" class="form-control" id="input-lastname" placeholder="Nom" aria-label="Nom" aria-describedby="basic-addon1">
               </div>
-              <div class="input-group mb-3">
+              <div class="input-group mb-3 opacity-animation">
                 <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-envelope"></i></span>
                 <input type="text" class="form-control" id="input-email" placeholder="Adresse email" aria-label="Adresse email" aria-describedby="basic-addon1">
               </div>
-              <div class="input-group mb-3">
+              <div class="input-group mb-3 opacity-animation">
                 <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-phone"></i></span>
                 <input type="tel" class="form-control" id="input-phone-number" placeholder="Téléphone" aria-label="Téléphone" aria-describedby="basic-addon1">
               </div>
-              <div class="input-group mb-3">
+              <div class="input-group mb-3 opacity-animation">
                 <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-key"></i></span>
                 <input type="password" class="form-control" id="input-pwd" placeholder="Mot de passe" aria-label="Mot de passe" aria-describedby="basic-addon1">
               </div>
@@ -61,7 +61,7 @@ const RegisterPage = async () => {
                   <label class="form-check-label" for="roleAdministrative">Administratif</label>
                 </div>
               </div>
-              <p class="btn-login" id="register-btn">S'inscrire</p>
+              <p class="btn-login opacity-animation" id="register-btn">S'inscrire</p>
               <h2 id="error-message">L'adresse email ou<br>le mot de passe est incorrect !</h2>
             </div>
           </div>
