@@ -198,9 +198,8 @@ public class ContactUCCImplTest {
     userDTO.setId(1);
     contactDTO.setStudent(userDTO);
     contactDTO.setState("pris");
-    contactDTO.setVersion(1);
+    contactDTO.setVersion(2);
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
-    Mockito.when(contactDAOMock.updateContact(contactDTO, 1)).thenReturn(null);
     assertThrows(DuplicateException.class, () -> contactUCC.unsupervise(1, 1, 1));
   }
 
@@ -214,6 +213,18 @@ public class ContactUCCImplTest {
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
     Mockito.when(contactDAOMock.updateContact(contactDTO, 1)).thenReturn(contactDTO);
     assertNotNull(contactUCC.unsupervise(1, 1, 1));
+  }
+
+  @Test
+  @DisplayName("Test unsupervise contact with wrong version")
+  public void testUnsuperviseContactConcurrentUpdate() {
+    userDTO.setId(1);
+    contactDTO.setStudent(userDTO);
+    contactDTO.setState("pris");
+    contactDTO.setVersion(1);
+    Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
+    Mockito.when(contactDAOMock.updateContact(contactDTO, 1)).thenReturn(null);
+    assertThrows(DuplicateException.class, () -> contactUCC.unsupervise(1, 1, 1));
   }
 
   @Test
