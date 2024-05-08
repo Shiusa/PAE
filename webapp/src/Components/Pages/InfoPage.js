@@ -1,4 +1,4 @@
-import {awaitFront} from "../../utils/function";
+import {awaitFront, showNavStyle} from "../../utils/function";
 import {
   getAuthenticatedUser,
   getLocalUser,
@@ -44,6 +44,8 @@ const InfoPage = async () => {
   };
 
   const userInfoID = await readUserInfo();
+
+  showNavStyle("home");
 
   const info = ` 
         <h1 class="">Vos informations</h1>
@@ -143,16 +145,32 @@ const InfoPage = async () => {
       const savedUserPassword = await response.json();
 
       if (savedUserPassword) {
-        Navigate("/dashboard");
+        const errorMessage = document.querySelector("#error-message");
+        errorMessage.innerHTML = "";
+        errorMessage.style.display = "none";
+        const goodMesssage = document.querySelector("#good-message");
+        goodMesssage.innerHTML = "Changement effectué.";
+        goodMesssage.style.display = "block";
+        // Navigate("/info");
       }
     } catch (error) {
+      const goodMesssage = document.querySelector("#good-message");
+      goodMesssage.style.display = "none";
       const errorMessage = document.querySelector("#error-message");
-      errorMessage.innerHTML = "Veuillez compléter tous les champs !";
-      errorMessage.style.display = "block";
+      if (error instanceof Error && error.message.startsWith(
+          "fetch error : 400")) {
+        errorMessage.innerText = "Mot de passe répété incorrecte ou vide !";
+        errorMessage.style.display = "block";
+      }
+      if (error instanceof Error && error.message.startsWith(
+          "fetch error : 401")) {
+        errorMessage.innerText = "Mot de passe actuel incorrecte !";
+        errorMessage.style.display = "block";
+      }
     }
   }
   main.innerHTML = `        
-        <div class="d-flex justify-content-center align-items-center mt-5 mb-5">
+        <div class="d-flex justify-content-center align-items-center mt-5 mb-5" style="height: 69vh;">
           <div class="info-square2"></div>
           <div class="info-square1"></div>
           <div class="info-container d-flex flex-column justify-content-center align-items-center">            
