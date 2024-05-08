@@ -1,4 +1,3 @@
-import HomePage from '../Pages/HomePage';
 import LoginPage from '../Pages/LoginPage';
 import RegisterPage from '../Pages/RegisterPage';
 import Logout from '../Logout/Logout';
@@ -10,7 +9,7 @@ import AdminDashboardPage from '../Pages/AdminDashboardPage';
 import {CreateInternshipPage, InternshipPage} from "../Pages/InternshipPage";
 
 const routes = {
-  "/": HomePage,
+  "/": LoginPage,
   "/login": LoginPage,
   "/register": RegisterPage,
   "/logout": Logout,
