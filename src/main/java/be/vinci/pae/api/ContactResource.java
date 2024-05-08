@@ -172,7 +172,7 @@ public class ContactResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize
-  public ObjectNode unsupervise(@Context ContainerRequest request, JsonNode json) {
+  public ContactDTO unsupervise(@Context ContainerRequest request, JsonNode json) {
     Logs.log(Level.INFO, "ContactResource (unsupervise) : entrance");
     UserDTO userDTO = (UserDTO) request.getProperty("user");
     if (!json.hasNonNull("contactId")) {
@@ -188,8 +188,9 @@ public class ContactResource {
     int studentId = userDTO.getId();
 
     Logs.log(Level.DEBUG, "ContactResource (unsupervise) : success!");
-    ContactDTO contactDTO = contactUCC.unsupervise(contactId, studentId, version);
-    return jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
+    /*ContactDTO contactDTO = contactUCC.unsupervise(contactId, studentId, version);
+    return jsonMapper.createObjectNode().putPOJO("contact", contactDTO);*/
+    return contactUCC.unsupervise(contactId, studentId, version);
   }
 
   /**

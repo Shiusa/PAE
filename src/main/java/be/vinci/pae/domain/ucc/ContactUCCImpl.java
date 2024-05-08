@@ -131,6 +131,11 @@ public class ContactUCCImpl implements ContactUCC {
             "ContactUCC (unsupervise) : contact not found");
         throw new ResourceNotFoundException();
       }
+      if (contact.getVersion() != version) {
+        Logs.log(Level.ERROR,
+            "ContactUCC (unsupervise) : different version");
+        throw new DuplicateException("Someone updated before us");
+      }
 
       if (!contact.isStarted() && !contact.isAdmitted()) {
         throw new NotAllowedException();
@@ -138,11 +143,15 @@ public class ContactUCCImpl implements ContactUCC {
         throw new NotAllowedException();
       }
 
-      contactDTO = contactDAO.unsupervise(contactId, version);
+      contact.setVersion(version + 1);
+      contact.setState("non suivi");
 
-      if (contactDTO.getVersion() != version + 1) {
+      // contactDTO = contactDAO.unsupervise(contactId, version);
+      contactDTO = contactDAO.updateContact(contact, version);
+
+      if (contactDTO == null) {
         Logs.log(Level.ERROR, "ContactUCC (unsupervise) : the contact's version isn't matching");
-        throw new InvalidRequestException();
+        throw new DuplicateException();
       }
 
       dalServices.commitTransaction();
