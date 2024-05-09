@@ -24,7 +24,7 @@ const showNavStyle = (id) => {
   const selectedNav = document.getElementById(id);
   if (id === "home") {
     selectedNav.style.boxShadow = "8px 8px 0px var(--accent-color)";
-    selectedNav.style.fontWeight = "bold";
+    // selectedNav.style.fontWeight = "bold";
   } else {
     selectedNav.style.boxShadow = "8px 8px 0px var(--ma-couleur)";
     selectedNav.style.fontWeight = "bold";

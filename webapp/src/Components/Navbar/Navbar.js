@@ -15,7 +15,7 @@ const Navbar = () => {
         navbar = `
         <nav class="d-flex justify-content-center align-items-center flex-wrap">
           <a class="nav-link nav-btn d-flex justify-content-center align-items-center" id="home" href="#" data-uri="/info" style="border-color: #E6C060;">
-            <p data-uri="/info" style="color: #E6C060">${userConnected.firstname}<br>${userConnected.lastname}</p>
+            <p data-uri="/info">${userConnected.firstname}<br>${userConnected.lastname}</p>
           </a>
           <a class="nav-link nav-btn d-flex justify-content-center align-items-center" id="dashboard" href="#" data-uri="/dashboard">
             <p data-uri="/dashboard">Tableau de<br>bord</p>
@@ -37,7 +37,7 @@ const Navbar = () => {
         navbar = `
         <nav class="d-flex justify-content-center align-items-center flex-wrap">
           <a class="nav-link nav-btn d-flex justify-content-center align-items-center" id="home" href="#" data-uri="/info" style="border-color: #E6C060;">
-            <p data-uri="/info" style="color: #E6C060">${userConnected.firstname}<br>${userConnected.lastname}</p>
+            <p data-uri="/info">${userConnected.firstname}<br>${userConnected.lastname}</p>
           </a>
           <a class="nav-link nav-btn d-flex justify-content-center align-items-center" id="dashboard" href="#" data-uri="/adminBoard">
             <p data-uri="/adminBoard">Tableau de<br>bord</p>
@@ -57,12 +57,12 @@ const Navbar = () => {
         <!--<a class="nav-link nav-btn d-flex justify-content-center align-items-center" id="home" href="#" data-uri="/">
           <p data-uri="/">Accueil</p>
         </a>-->
-        <a class="nav-link nav-btn d-flex justify-content-center align-items-center" id="login" href="#" data-uri="/login">
-          <p data-uri="/login">Connexion</p>
-        </a>
         <a class="nav-link nav-btn d-flex justify-content-center align-items-center" id="register" href="#" data-uri="/register">
           <p data-uri="/register">Inscription</p>
         </a> 
+        <a class="nav-link nav-btn d-flex justify-content-center align-items-center" id="login" href="#" data-uri="/login">
+          <p data-uri="/login">Connexion</p>
+        </a>
       </nav>
     `;
     }
