@@ -4,6 +4,7 @@
   --ma-couleur-foncée: #1489a0;
   --accent-color: #E6C060;
   --accent-color-dark: #CFAD57;
+  --accent-color-contrast: #F7D154;
   --spacing-color: #eef7f9;
 }
 
@@ -837,6 +838,10 @@ input::placeholder {
   transform: translateX(-5px);
 }
 
+.input-group-text i {
+  color: var(--accent-color-contrast);
+}
+
 /* color state */
 .greyout {
   background-color: #408699;
@@ -1196,7 +1201,7 @@ input::placeholder {
 
 .blacklist-company-btn {
   background: #B81139;
-  color: var(--accent-color);
+  color: var(--accent-color-contrast);
   border: none;
 }
 

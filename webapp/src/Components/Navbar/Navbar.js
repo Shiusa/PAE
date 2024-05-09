@@ -27,7 +27,7 @@ const Navbar = () => {
             <p data-uri="/internship">Modifier mon stage</p>
           </a>
           <a class="nav-link nav-logout d-flex justify-content-center align-items-center" href="#" data-uri="/logout">
-            <p data-uri="/logout"><i class="fa-solid fa-arrow-right-from-bracket" data-uri="/logout"></i></p>
+            <p data-uri="/logout"><i class="fa-solid fa-arrow-right-from-bracket" data-uri="/logout" style="color: var(--accent-color-contrast)"></i></p>
           </a>
         </nav>
       `;
@@ -46,7 +46,7 @@ const Navbar = () => {
             <p data-uri="/userList">Utilisateurs<br>liste</p>
           </a>
           <a class="nav-link nav-logout d-flex justify-content-center align-items-center" href="#" data-uri="/logout">
-            <p data-uri="/logout"><i class="fa-solid fa-arrow-right-from-bracket" data-uri="/logout"></i></p>
+            <p data-uri="/logout"><i class="fa-solid fa-arrow-right-from-bracket" data-uri="/logout" style="color: var(--accent-color-contrast)"></i></p>
           </a>
         </nav>
       `;
