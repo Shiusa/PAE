@@ -123,37 +123,6 @@ public class ContactDAOImpl implements ContactDAO {
     }
   }
 
-
-  @Override
-  public ContactDTO unsupervise(int contactId, int version) {
-    Logs.log(Level.DEBUG, "ContactDAO (unsupervise) : entrance");
-    String requestSql = """
-        UPDATE proStage.contacts
-        SET contact_state = ? , version = ?
-        WHERE contact_id = ? AND version = ?
-        RETURNING *;
-        """;
-
-    try (PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql)) {
-      ps.setString(1, "non suivi");
-      ps.setInt(2, version + 1);
-      ps.setInt(3, contactId);
-      ps.setInt(4, version);
-      try (ResultSet rs = ps.executeQuery()) {
-        if (rs.next()) {
-          ContactDTO contact = findContactById(rs.getInt("contact_id"));
-
-          Logs.log(Level.DEBUG, "ContactDAO (unsupervise) : success!");
-          return contact;
-        }
-        return null;
-      }
-    } catch (SQLException e) {
-      Logs.log(Level.FATAL, "ContactDAO (unsupervise) : internal error");
-      throw new FatalException(e);
-    }
-  }
-
   @Override
   public List<ContactDTO> getAllContactsByStudent(int student) {
     List<ContactDTO> contactDTOList = new ArrayList<>();

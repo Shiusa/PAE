@@ -153,7 +153,6 @@ public class ContactUCCImpl implements ContactUCC {
       contact.setVersion(version + 1);
       contact.setState("non suivi");
 
-      // contactDTO = contactDAO.unsupervise(contactId, version);
       contactDTO = contactDAO.updateContact(contact, version);
 
       if (contactDTO == null) {
