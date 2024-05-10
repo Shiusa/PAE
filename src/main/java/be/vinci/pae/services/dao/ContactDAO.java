@@ -54,6 +54,14 @@ public interface ContactDAO {
   List<ContactDTO> getAllContactsByStudentStartedOrAdmitted(int student);
 
   /**
+   * Put a contact on hold.
+   *
+   * @param contactDTO the contact to put on hold.
+   * @return the updated contactDTO.
+   */
+  ContactDTO putContactOnHold(ContactDTO contactDTO);
+
+  /**
    * Get all contacts by a company id.
    *
    * @param company company's id.
