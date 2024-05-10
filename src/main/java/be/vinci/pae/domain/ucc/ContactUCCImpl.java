@@ -311,7 +311,6 @@ public class ContactUCCImpl implements ContactUCC {
       contact.setVersion(version + 1);
       contact.setState("accepté");
 
-      //ContactDTO contactDTO = contactDAO.accept(contactId, version);
       ContactDTO contactDTO = contactDAO.updateContact(contact, version);
 
       if (contactDTO == null) {

@@ -62,15 +62,6 @@ public interface ContactDAO {
   ContactDTO putContactOnHold(ContactDTO contactDTO);
 
   /**
-   * Accept a contact.
-   *
-   * @param contactId the contact id.
-   * @param version   the version of the contact.
-   * @return the accepted contact.
-   */
-  ContactDTO accept(int contactId, int version);
-
-  /**
    * Get all contacts by a company id.
    *
    * @param company company's id.
