@@ -277,6 +277,7 @@ public class ContactUCCImpl implements ContactUCC {
       int currentVersion = c.getVersion();
       c.setVersion(currentVersion + 1);
       c.setState("suspendu");
+      //contactDAO.putContactOnHold(c);
       contactDAO.updateContact(c, currentVersion);
     }
   }
