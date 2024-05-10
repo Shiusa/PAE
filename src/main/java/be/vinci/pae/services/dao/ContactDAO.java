@@ -46,12 +46,58 @@ public interface ContactDAO {
   ContactDTO findContactById(int contactId);
 
   /**
+   * admit the contact.
+   *
+   * @param contactId the id of the contact.
+   * @param meeting   the way how they met.
+   * @param version   the version of the objet
+   * @return the contact updated.
+   */
+  ContactDTO admitContact(int contactId, String meeting, int version);
+
+  /**
+   * Unsupervise the contact.
+   *
+   * @param contactId the contact id.
+   * @param version   the version of the contact
+   * @return the unsupervised contact.
+   */
+  ContactDTO unsupervise(int contactId, int version);
+
+  /**
+   * Turn down a contact and give the reason for refusal.
+   *
+   * @param contactId        the id of the contact.
+   * @param reasonForRefusal the reason of the refusal.
+   * @param version          the version of the contact
+   * @return a ContactDTO if the update of contact was successful, null otherwise.
+   */
+  ContactDTO turnDown(int contactId, String reasonForRefusal, int version);
+
+  /**
    * Get all the student's contact that are in started or admitted state.
    *
    * @param student the student to get contacts from.
    * @return a list containing all the contacts in the right state.
    */
   List<ContactDTO> getAllContactsByStudentStartedOrAdmitted(int student);
+
+  /**
+   * Put a contact on hold.
+   *
+   * @param contactDTO the contact to put on hold.
+   * @return the updated contactDTO.
+   */
+  ContactDTO putContactOnHold(ContactDTO contactDTO);
+
+  /**
+   * Accept a contact.
+   *
+   * @param contactId the contact id.
+   * @param version   the version of the contact.
+   * @return the accepted contact.
+   */
+  ContactDTO accept(int contactId, int version);
 
   /**
    * Get all contacts by a company id.

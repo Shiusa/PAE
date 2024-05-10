@@ -74,7 +74,7 @@ public class ContactUCCImpl implements ContactUCC {
       } else {
         schoolYear = date.getYear() + "-" + date.getYear() + 1;
       }
-      
+      System.out.println(schoolYear);
       ContactDTO contactFound = contactDAO
           .findContactByCompanyStudentSchoolYear(company, studentId, schoolYear);
       if (contactFound != null) {
@@ -153,6 +153,7 @@ public class ContactUCCImpl implements ContactUCC {
       contact.setVersion(version + 1);
       contact.setState("non suivi");
 
+      // contactDTO = contactDAO.unsupervise(contactId, version);
       contactDTO = contactDAO.updateContact(contact, version);
 
       if (contactDTO == null) {
@@ -204,6 +205,7 @@ public class ContactUCCImpl implements ContactUCC {
       contact.setState("pris");
       contact.setMeeting(meeting);
 
+      // contactDTO = contactDAO.admitContact(contactId, meeting, version);
       contactDTO = contactDAO.updateContact(contact, version);
 
       if (contactDTO == null) {
@@ -252,6 +254,7 @@ public class ContactUCCImpl implements ContactUCC {
       contact.setState("refusé");
       contact.setReasonRefusal(reasonForRefusal);
 
+      // contactDTO = contactDAO.turnDown(contactId, reasonForRefusal, version);
       contactDTO = contactDAO.updateContact(contact, version);
 
       if (contactDTO == null) {
@@ -277,6 +280,7 @@ public class ContactUCCImpl implements ContactUCC {
       int currentVersion = c.getVersion();
       c.setVersion(currentVersion + 1);
       c.setState("suspendu");
+      //contactDAO.putContactOnHold(c);
       contactDAO.updateContact(c, currentVersion);
     }
   }
@@ -310,6 +314,7 @@ public class ContactUCCImpl implements ContactUCC {
       contact.setVersion(version + 1);
       contact.setState("accepté");
 
+      //ContactDTO contactDTO = contactDAO.accept(contactId, version);
       ContactDTO contactDTO = contactDAO.updateContact(contact, version);
 
       if (contactDTO == null) {
