@@ -227,41 +227,6 @@ public class ContactDAOImpl implements ContactDAO {
     return newContactList;
   }
 
-
-  /**
-   * Put a contact on hold.
-   *
-   * @param contactDTO the contact to put on hold.
-   * @return the contact putted on hold.
-   */
-  public ContactDTO putContactOnHold(ContactDTO contactDTO) {
-    String requestSql = """
-        UPDATE proStage.contacts
-        SET contact_state = ? , version = ?
-        WHERE contact_id = ? AND version = ?
-        RETURNING *;
-        """;
-
-    try (PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql)) {
-      ps.setString(1, "suspendu");
-      ps.setInt(2, contactDTO.getVersion() + 1);
-      ps.setInt(3, contactDTO.getId());
-      ps.setInt(4, contactDTO.getVersion());
-      try (ResultSet rs = ps.executeQuery()) {
-        if (rs.next()) {
-          ContactDTO contact = findContactById(rs.getInt("contact_id"));
-
-          Logs.log(Level.DEBUG, "ContactDAO (unsupervise) : success!");
-          return contact;
-        }
-        return null;
-      }
-    } catch (SQLException e) {
-      Logs.log(Level.FATAL, "ContactDAO (unsupervise) : internal error");
-      throw new FatalException(e);
-    }
-  }
-
   @Override
   public ContactDTO accept(int contactId, int version) {
     Logs.log(Level.DEBUG, "ContactDAO (accept) : entrance");
