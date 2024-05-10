@@ -203,6 +203,49 @@ public class ContactDAOImpl implements ContactDAO {
   }
 
   @Override
+  public ContactDTO updateContact(ContactDTO contact, int contactCurrentVersion) {
+    Logs.log(Level.DEBUG, "ContactDAO (updateContact) : entrance");
+    String requestSql = """
+        UPDATE prostage.contacts
+                
+        SET contact_id = ?, company = ?, student = ?, meeting = ?,
+        contact_state = ?, reason_for_refusal = ?, school_year = ?,
+        version = ?
+                
+        WHERE contact_id = ? AND version = ?
+                
+        RETURNING *
+        """;
+
+    try (PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql)) {
+      ps.setInt(1, contact.getId());
+      ps.setInt(2, contact.getCompany().getId());
+      ps.setInt(3, contact.getStudent().getId());
+      ps.setString(4, contact.getMeeting());
+      ps.setString(5, contact.getState());
+      ps.setString(6, contact.getReasonRefusal());
+      ps.setString(7, contact.getSchoolYear());
+      ps.setInt(8, contact.getVersion());
+
+      ps.setInt(9, contact.getId());
+      ps.setInt(10, contactCurrentVersion);
+
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          Logs.log(Level.DEBUG, "ContactDAO (admit) : success!");
+          return findContactById(rs.getInt("contact_id"));
+        }
+        return null;
+      }
+
+    } catch (SQLException e) {
+      Logs.log(Level.FATAL, "ContactDAO (updateContact) : internal error");
+      e.printStackTrace();
+      throw new FatalException(e);
+    }
+  }
+
+  @Override
   public ContactDTO admitContact(int contactId, String meeting, int version) {
     Logs.log(Level.DEBUG, "ContactDAO (admit) : entrance");
     String requestSql = """

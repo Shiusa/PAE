@@ -141,7 +141,7 @@ public class ContactResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize
-  public ObjectNode admit(@Context ContainerRequest request, JsonNode json) {
+  public ContactDTO admit(@Context ContainerRequest request, JsonNode json) {
     Logs.log(Level.INFO, "ContactResource (admit) : entrance");
     if (!json.hasNonNull("contactId") || !json.hasNonNull("meeting") || json.get("contactId")
         .asText().isBlank() || json.get("meeting").asText().isBlank()) {
@@ -157,7 +157,8 @@ public class ContactResource {
     ContactDTO contactDTO = contactUCC.admit(contactId, meeting, studentId, version);
     Logs.log(Level.DEBUG, "ContactResource (admit) : success!");
 
-    return jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
+    // return jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
+    return contactDTO;
   }
 
   /**
@@ -172,7 +173,7 @@ public class ContactResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize
-  public ObjectNode unsupervise(@Context ContainerRequest request, JsonNode json) {
+  public ContactDTO unsupervise(@Context ContainerRequest request, JsonNode json) {
     Logs.log(Level.INFO, "ContactResource (unsupervise) : entrance");
     UserDTO userDTO = (UserDTO) request.getProperty("user");
     if (!json.hasNonNull("contactId")) {
@@ -188,8 +189,9 @@ public class ContactResource {
     int studentId = userDTO.getId();
 
     Logs.log(Level.DEBUG, "ContactResource (unsupervise) : success!");
-    ContactDTO contactDTO = contactUCC.unsupervise(contactId, studentId, version);
-    return jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
+    /*ContactDTO contactDTO = contactUCC.unsupervise(contactId, studentId, version);
+    return jsonMapper.createObjectNode().putPOJO("contact", contactDTO);*/
+    return contactUCC.unsupervise(contactId, studentId, version);
   }
 
   /**
@@ -205,7 +207,7 @@ public class ContactResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize
-  public ObjectNode turnDown(@Context ContainerRequest request, JsonNode json) {
+  public ContactDTO turnDown(@Context ContainerRequest request, JsonNode json) {
     Logs.log(Level.INFO, "ContactResource (turnDown) : entrance");
     if (!json.hasNonNull("contactId") || json.get("contactId").asText().isBlank()
         || !json.hasNonNull("reasonForRefusal") || json.get("reasonForRefusal").asText()
@@ -222,11 +224,11 @@ public class ContactResource {
     int studentId = userDTO.getId();
 
     ContactDTO contactDTO = contactUCC.turnDown(contactId, reasonForRefusal, studentId, version);
-    ObjectNode contact = jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
+    // ObjectNode contact = jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
 
     Logs.log(Level.DEBUG, "ContactResource (turnDown) : success!");
 
-    return contact;
+    return contactDTO;
   }
 
 

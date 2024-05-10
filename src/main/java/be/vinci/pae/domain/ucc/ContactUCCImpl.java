@@ -139,18 +139,26 @@ public class ContactUCCImpl implements ContactUCC {
             "ContactUCC (unsupervise) : contact not found");
         throw new ResourceNotFoundException();
       }
-
+      if (contact.getVersion() != version) {
+        Logs.log(Level.ERROR,
+            "ContactUCC (unsupervise) : different version");
+        throw new DuplicateException("User looking at old version");
+      }
       if (!contact.isStarted() && !contact.isAdmitted()) {
         throw new NotAllowedException();
       } else if (contact.getStudent().getId() != student) {
         throw new NotAllowedException();
       }
 
-      contactDTO = contactDAO.unsupervise(contactId, version);
+      contact.setVersion(version + 1);
+      contact.setState("non suivi");
 
-      if (contactDTO.getVersion() != version + 1) {
+      // contactDTO = contactDAO.unsupervise(contactId, version);
+      contactDTO = contactDAO.updateContact(contact, version);
+
+      if (contactDTO == null) {
         Logs.log(Level.ERROR, "ContactUCC (unsupervise) : the contact's version isn't matching");
-        throw new InvalidRequestException();
+        throw new DuplicateException("Someone updated before us");
       }
 
       dalServices.commitTransaction();
@@ -174,6 +182,11 @@ public class ContactUCCImpl implements ContactUCC {
         Logs.log(Level.ERROR, "ContactUCC (admit) : contact not found");
         throw new ResourceNotFoundException();
       }
+      if (contact.getVersion() != version) {
+        Logs.log(Level.ERROR,
+            "ContactUCC (unsupervise) : different version");
+        throw new DuplicateException("User looking at old version");
+      }
       if (contact.getStudent().getId() != studentId) {
         Logs.log(Level.ERROR,
             "ContactUCC (admit) : the student of the contact isn't the student from the token");
@@ -187,11 +200,17 @@ public class ContactUCCImpl implements ContactUCC {
         Logs.log(Level.ERROR, "ContactUCC (admit) : contact's state isn't started");
         throw new InvalidRequestException();
       }
-      contactDTO = contactDAO.admitContact(contactId, meeting, version);
 
-      if (contactDTO.getVersion() != version + 1) {
+      contact.setVersion(version + 1);
+      contact.setState("pris");
+      contact.setMeeting(meeting);
+
+      // contactDTO = contactDAO.admitContact(contactId, meeting, version);
+      contactDTO = contactDAO.updateContact(contact, version);
+
+      if (contactDTO == null) {
         Logs.log(Level.ERROR, "ContactUCC (admit) : the contact's version isn't matching");
-        throw new InvalidRequestException();
+        throw new DuplicateException("Someone updated before us");
       }
 
       dalServices.commitTransaction();
@@ -216,7 +235,11 @@ public class ContactUCCImpl implements ContactUCC {
         Logs.log(Level.ERROR, "ContactUCC (turnDown) : contact not found");
         throw new ResourceNotFoundException();
       }
-
+      if (contact.getVersion() != version) {
+        Logs.log(Level.ERROR,
+            "ContactUCC (turnDown) : different version");
+        throw new DuplicateException("User looking at old version");
+      }
       if (contact.getStudent().getId() != studentId) {
         Logs.log(Level.ERROR,
             "ContactUCC (turnDown) : the student of the contact isn't the student from the token");
@@ -227,11 +250,16 @@ public class ContactUCCImpl implements ContactUCC {
         throw new NotAllowedException();
       }
 
-      contactDTO = contactDAO.turnDown(contactId, reasonForRefusal, version);
+      contact.setVersion(version + 1);
+      contact.setState("refusé");
+      contact.setReasonRefusal(reasonForRefusal);
 
-      if (contactDTO.getVersion() != version + 1) {
+      // contactDTO = contactDAO.turnDown(contactId, reasonForRefusal, version);
+      contactDTO = contactDAO.updateContact(contact, version);
+
+      if (contactDTO == null) {
         Logs.log(Level.ERROR, "ContactUCC (turndown) : the contact's version isn't matching");
-        throw new InvalidRequestException();
+        throw new DuplicateException("Someone updated before us");
       }
 
       dalServices.commitTransaction();
@@ -249,7 +277,11 @@ public class ContactUCCImpl implements ContactUCC {
     List<ContactDTO> contactDTOList =
         contactDAO.getAllContactsByStudentStartedOrAdmitted(studentId);
     for (ContactDTO c : contactDTOList) {
-      contactDAO.putContactOnHold(c);
+      int currentVersion = c.getVersion();
+      c.setVersion(currentVersion + 1);
+      c.setState("suspendu");
+      //contactDAO.putContactOnHold(c);
+      contactDAO.updateContact(c, currentVersion);
     }
   }
 
@@ -267,17 +299,27 @@ public class ContactUCCImpl implements ContactUCC {
             "ContactUCC (accept) : contact not found");
         throw new ResourceNotFoundException();
       }
-
+      if (contact.getVersion() != version) {
+        Logs.log(Level.ERROR,
+            "ContactUCC (accept) : different version");
+        throw new DuplicateException("User looking at old version");
+      }
       if (!contact.isAdmitted()) {
         Logs.log(Level.ERROR, "ContactUCC (accept) : contact's state not admitted");
         throw new NotAllowedException();
       } else if (contact.getStudent().getId() != studentId) {
         throw new NotAllowedException();
       }
-      ContactDTO contactDTO = contactDAO.accept(contactId, version);
-      if (contactDTO.getVersion() != version + 1) {
+
+      contact.setVersion(version + 1);
+      contact.setState("accepté");
+
+      //ContactDTO contactDTO = contactDAO.accept(contactId, version);
+      ContactDTO contactDTO = contactDAO.updateContact(contact, version);
+
+      if (contactDTO == null) {
         Logs.log(Level.ERROR, "ContactUCC (accept) : the contact's version isn't matching");
-        throw new InvalidRequestException();
+        throw new DuplicateException("Someone updated before us");
       }
       InternshipDTO internshipDTO1 = internshipUCC.createInternship(internshipDTO, studentId);
       putStudentContactsOnHold(studentId);
