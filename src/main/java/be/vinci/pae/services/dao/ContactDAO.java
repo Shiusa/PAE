@@ -46,16 +46,6 @@ public interface ContactDAO {
   ContactDTO findContactById(int contactId);
 
   /**
-   * admit the contact.
-   *
-   * @param contactId the id of the contact.
-   * @param meeting   the way how they met.
-   * @param version   the version of the objet
-   * @return the contact updated.
-   */
-  ContactDTO admitContact(int contactId, String meeting, int version);
-
-  /**
    * Unsupervise the contact.
    *
    * @param contactId the contact id.

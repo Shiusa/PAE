@@ -205,7 +205,6 @@ public class ContactUCCImpl implements ContactUCC {
       contact.setState("pris");
       contact.setMeeting(meeting);
 
-      // contactDTO = contactDAO.admitContact(contactId, meeting, version);
       contactDTO = contactDAO.updateContact(contact, version);
 
       if (contactDTO == null) {

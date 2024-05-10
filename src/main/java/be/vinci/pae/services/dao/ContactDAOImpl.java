@@ -246,38 +246,6 @@ public class ContactDAOImpl implements ContactDAO {
   }
 
   @Override
-  public ContactDTO admitContact(int contactId, String meeting, int version) {
-    Logs.log(Level.DEBUG, "ContactDAO (admit) : entrance");
-    String requestSql = """
-        UPDATE proStage.contacts
-        SET meeting = ?, contact_state = ?, version = ?
-        WHERE contact_id = ? AND version = ?
-        RETURNING *;
-        """;
-
-    try (PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql)) {
-      ps.setString(1, meeting);
-      ps.setString(2, "pris");
-      ps.setInt(3, version + 1);
-      ps.setInt(4, contactId);
-      ps.setInt(5, version);
-      try (ResultSet rs = ps.executeQuery()) {
-        if (rs.next()) {
-          ContactDTO contact = findContactById(rs.getInt("contact_id"));
-
-          Logs.log(Level.DEBUG, "ContactDAO (admit) : success!");
-          return contact;
-        }
-        return null;
-      }
-    } catch (SQLException e) {
-      Logs.log(Level.FATAL, "ContactDAO (admit) : internal error");
-      e.printStackTrace();
-      throw new FatalException(e);
-    }
-  }
-
-  @Override
   public ContactDTO turnDown(int contactId, String reasonForRefusal, int version) {
     Logs.log(Level.DEBUG, "ContactDAO (turnDown) : entrance");
     String requestSql = """
