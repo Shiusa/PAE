@@ -74,7 +74,7 @@ public class ContactUCCImpl implements ContactUCC {
       } else {
         schoolYear = date.getYear() + "-" + date.getYear() + 1;
       }
-      System.out.println(schoolYear);
+
       ContactDTO contactFound = contactDAO
           .findContactByCompanyStudentSchoolYear(company, studentId, schoolYear);
       if (contactFound != null) {
