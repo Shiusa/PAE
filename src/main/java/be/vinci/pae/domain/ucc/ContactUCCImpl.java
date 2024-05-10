@@ -16,6 +16,7 @@ import be.vinci.pae.utils.exceptions.InvalidRequestException;
 import be.vinci.pae.utils.exceptions.NotAllowedException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
 import jakarta.inject.Inject;
+import java.time.LocalDate;
 import java.util.List;
 import org.apache.logging.log4j.Level;
 
@@ -66,7 +67,14 @@ public class ContactUCCImpl implements ContactUCC {
         throw new InvalidRequestException();
       }
 
-      String schoolYear = studentDTO.getSchoolYear();
+      LocalDate date = LocalDate.now();
+      String schoolYear;
+      if (date.getMonthValue() < 9) {
+        schoolYear = date.getYear() - 1 + "-" + date.getYear();
+      } else {
+        schoolYear = date.getYear() + "-" + date.getYear() + 1;
+      }
+
       ContactDTO contactFound = contactDAO
           .findContactByCompanyStudentSchoolYear(company, studentId, schoolYear);
       if (contactFound != null) {
@@ -145,7 +153,6 @@ public class ContactUCCImpl implements ContactUCC {
       contact.setVersion(version + 1);
       contact.setState("non suivi");
 
-      // contactDTO = contactDAO.unsupervise(contactId, version);
       contactDTO = contactDAO.updateContact(contact, version);
 
       if (contactDTO == null) {
@@ -197,7 +204,6 @@ public class ContactUCCImpl implements ContactUCC {
       contact.setState("pris");
       contact.setMeeting(meeting);
 
-      // contactDTO = contactDAO.admitContact(contactId, meeting, version);
       contactDTO = contactDAO.updateContact(contact, version);
 
       if (contactDTO == null) {
@@ -246,7 +252,6 @@ public class ContactUCCImpl implements ContactUCC {
       contact.setState("refusé");
       contact.setReasonRefusal(reasonForRefusal);
 
-      // contactDTO = contactDAO.turnDown(contactId, reasonForRefusal, version);
       contactDTO = contactDAO.updateContact(contact, version);
 
       if (contactDTO == null) {
@@ -272,7 +277,7 @@ public class ContactUCCImpl implements ContactUCC {
       int currentVersion = c.getVersion();
       c.setVersion(currentVersion + 1);
       c.setState("suspendu");
-      //contactDAO.putContactOnHold(c);
+
       contactDAO.updateContact(c, currentVersion);
     }
   }
@@ -306,7 +311,6 @@ public class ContactUCCImpl implements ContactUCC {
       contact.setVersion(version + 1);
       contact.setState("accepté");
 
-      //ContactDTO contactDTO = contactDAO.accept(contactId, version);
       ContactDTO contactDTO = contactDAO.updateContact(contact, version);
 
       if (contactDTO == null) {

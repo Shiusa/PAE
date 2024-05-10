@@ -512,7 +512,8 @@ public class ContactUCCImplTest {
     Mockito.when(contactDAOMock.getAllContactsByStudentStartedOrAdmitted(1))
         .thenReturn(List.of(contactDTO));
     contactDTO.setState("suspendu");
-    Mockito.when(contactDAOMock.putContactOnHold(contactDTO)).thenReturn(contactDTO);
+    contactDTO.setVersion(1);
+    Mockito.when(contactDAOMock.updateContact(contactDTO, 1)).thenReturn(contactDTO);
     contactUCC.putStudentContactsOnHold(1);
     assertEquals("suspendu", contactDTO.getState());
   }
