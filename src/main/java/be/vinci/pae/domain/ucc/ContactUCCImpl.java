@@ -16,6 +16,7 @@ import be.vinci.pae.utils.exceptions.InvalidRequestException;
 import be.vinci.pae.utils.exceptions.NotAllowedException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
 import jakarta.inject.Inject;
+import java.time.LocalDate;
 import java.util.List;
 import org.apache.logging.log4j.Level;
 
@@ -66,7 +67,14 @@ public class ContactUCCImpl implements ContactUCC {
         throw new InvalidRequestException();
       }
 
-      String schoolYear = studentDTO.getSchoolYear();
+      LocalDate date = LocalDate.now();
+      String schoolYear;
+      if (date.getMonthValue() < 9) {
+        schoolYear = date.getYear() - 1 + "-" + date.getYear();
+      } else {
+        schoolYear = date.getYear() + "-" + date.getYear() + 1;
+      }
+      System.out.println(schoolYear);
       ContactDTO contactFound = contactDAO
           .findContactByCompanyStudentSchoolYear(company, studentId, schoolYear);
       if (contactFound != null) {
