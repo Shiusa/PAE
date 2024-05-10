@@ -215,37 +215,6 @@ public class ContactDAOImpl implements ContactDAO {
   }
 
   @Override
-  public ContactDTO turnDown(int contactId, String reasonForRefusal, int version) {
-    Logs.log(Level.DEBUG, "ContactDAO (turnDown) : entrance");
-    String requestSql = """
-        UPDATE proStage.contacts
-        SET reason_for_refusal = ?, contact_state = ?, version = ?
-        WHERE contact_id = ? AND version = ?
-        RETURNING *;
-        """;
-
-    try (PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql)) {
-      ps.setString(1, reasonForRefusal);
-      ps.setString(2, "refusé");
-      ps.setInt(3, version + 1);
-      ps.setInt(4, contactId);
-      ps.setInt(5, version);
-      try (ResultSet rs = ps.executeQuery()) {
-        if (rs.next()) {
-          ContactDTO contact = findContactById(rs.getInt("contact_id"));
-
-          Logs.log(Level.DEBUG, "ContactDAO (turnDown) : success!");
-          return contact;
-        }
-        return null;
-      }
-    } catch (SQLException e) {
-      Logs.log(Level.FATAL, "ContactDAO (turnDown) : internal error");
-      throw new FatalException(e);
-    }
-  }
-
-  @Override
   public List<ContactDTO> getAllContactsByStudentStartedOrAdmitted(int student) {
     List<ContactDTO> contactDTOList = getAllContactsByStudent(student);
     List<ContactDTO> newContactList = new ArrayList<>();

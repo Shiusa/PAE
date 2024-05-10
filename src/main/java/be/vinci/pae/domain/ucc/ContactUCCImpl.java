@@ -252,7 +252,6 @@ public class ContactUCCImpl implements ContactUCC {
       contact.setState("refusé");
       contact.setReasonRefusal(reasonForRefusal);
 
-      // contactDTO = contactDAO.turnDown(contactId, reasonForRefusal, version);
       contactDTO = contactDAO.updateContact(contact, version);
 
       if (contactDTO == null) {
