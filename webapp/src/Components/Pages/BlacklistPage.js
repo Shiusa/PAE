@@ -112,7 +112,7 @@ const BlacklistPage = async (companyId) => {
         }
 
       } catch (error) {
-        errorMessage.innerText = "Cette entreprise est déjà blacklistée";
+        errorMessage.innerText = "Veuillez entrer une raison de blacklist !";
       }
     });
   }

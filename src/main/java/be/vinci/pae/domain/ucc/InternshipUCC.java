@@ -11,12 +11,12 @@ public interface InternshipUCC {
 
 
   /**
-   * Get an internship by a student id.
+   * Get an internship by a student id for the current school year.
    *
    * @param student the student id.
    * @return the internship found.
    */
-  InternshipDTO getOneByStudent(int student);
+  InternshipDTO getOneByStudentCurrentSchoolYear(int student);
 
 
   /**

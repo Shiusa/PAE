@@ -126,7 +126,8 @@ public class ContactUCCImplTest {
   public void testStartWithUserWithInternship() {
     Mockito.when(userDAOMock.getOneUserById(1)).thenReturn(userDTO);
     Mockito.when(companyDAOMock.getOneCompanyById(1)).thenReturn(companyDTO);
-    Mockito.when(internshipDAOMock.getOneInternshipByIdUser(1)).thenReturn(internshipDTO);
+    Mockito.when(internshipDAOMock.getOneInternshipByIdUserSchoolYear(1, "2023-2024"))
+        .thenReturn(internshipDTO);
     assertThrows(InvalidRequestException.class, () -> contactUCC.start(1, 1));
   }
 
@@ -619,7 +620,8 @@ public class ContactUCCImplTest {
     Mockito.when(contactDAOMock.findContactById(1)).thenReturn(contactDTO);
     Mockito.when(contactDAOMock.updateContact(contactDTO, 1))
         .thenReturn(contactDTO);
-    Mockito.when(internshipDAOMock.getOneInternshipByIdUser(1)).thenReturn(null);
+    Mockito.when(internshipDAOMock.getOneInternshipByIdUserSchoolYear(1, "2023-2024"))
+        .thenReturn(null);
     Mockito.when(internshipDAOMock.createInternship(internshipDTO)).thenReturn(internshipCreated);
     Mockito.when(internshipUCCMock.createInternship(internshipDTO, 1))
         .thenReturn(internshipCreated);

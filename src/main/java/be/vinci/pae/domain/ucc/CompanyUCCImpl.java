@@ -1,9 +1,11 @@
 package be.vinci.pae.domain.ucc;
 
 import be.vinci.pae.domain.dto.CompanyDTO;
+import be.vinci.pae.domain.dto.ContactDTO;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.CompanyDAO;
+import be.vinci.pae.services.dao.ContactDAO;
 import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.utils.Logs;
 import be.vinci.pae.utils.exceptions.DuplicateException;
@@ -11,6 +13,7 @@ import be.vinci.pae.utils.exceptions.FatalException;
 import be.vinci.pae.utils.exceptions.InvalidRequestException;
 import be.vinci.pae.utils.exceptions.ResourceNotFoundException;
 import jakarta.inject.Inject;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import org.apache.logging.log4j.Level;
@@ -26,6 +29,8 @@ public class CompanyUCCImpl implements CompanyUCC {
   private UserDAO userDAO;
   @Inject
   private DalServices dalServices;
+  @Inject
+  private ContactDAO contactDAO;
 
   @Override
   public CompanyDTO findOneById(int id) {
@@ -80,7 +85,14 @@ public class CompanyUCCImpl implements CompanyUCC {
         Logs.log(Level.ERROR, "CompanyUCC (getAllCompaniesByUser) : user not found");
         throw new ResourceNotFoundException();
       }
-      companyList = companyDAO.getAllCompaniesByUserId(userId);
+      LocalDate date = LocalDate.now();
+      String schoolYear;
+      if (date.getMonthValue() < 9) {
+        schoolYear = date.getYear() - 1 + "-" + date.getYear();
+      } else {
+        schoolYear = date.getYear() + "-" + date.getYear() + 1;
+      }
+      companyList = companyDAO.getAllCompaniesByUserIdSchoolYear(userId, schoolYear);
       dalServices.commitTransaction();
       Logs.log(Level.DEBUG, "CompanyUCC (getAllCompaniesByUser) : success!");
       return companyList;
@@ -158,6 +170,11 @@ public class CompanyUCCImpl implements CompanyUCC {
       if (companyDTO.getVersion() != version + 1) {
         Logs.log(Level.ERROR, "CompanyUCC (blacklist) : the company's version isn't matching");
         throw new InvalidRequestException();
+      }
+      List<ContactDTO> contactDTOList = contactDAO.getAllContactsByCompanyStartedOrAdmitted(
+          companyId);
+      for (ContactDTO contactDTO : contactDTOList) {
+        contactDAO.putContactOnHold(contactDTO);
       }
     } catch (FatalException e) {
       dalServices.rollbackTransaction();

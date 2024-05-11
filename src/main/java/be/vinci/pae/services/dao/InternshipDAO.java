@@ -11,12 +11,13 @@ public interface InternshipDAO {
 
 
   /**
-   * Get one internship by id then set the internshipDTO if intership exist.
+   * Get one internship by student id and school yearthen set the internshipDTO if intership exist.
    *
-   * @param student student's id.
+   * @param student    student's id.
+   * @param schoolYear school year.
    * @return internshipDTO with setter corresponding to the id, null otherwise.
    */
-  InternshipDTO getOneInternshipByIdUser(int student);
+  InternshipDTO getOneInternshipByIdUserSchoolYear(int student, String schoolYear);
 
 
   /**

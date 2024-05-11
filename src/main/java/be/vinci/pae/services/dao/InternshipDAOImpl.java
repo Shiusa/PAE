@@ -76,7 +76,7 @@ public class InternshipDAOImpl implements InternshipDAO {
   }
 
   @Override
-  public InternshipDTO getOneInternshipByIdUser(int student) {
+  public InternshipDTO getOneInternshipByIdUserSchoolYear(int student, String schoolYear) {
     String requestSql = """
         SELECT i.internship_id, i.contact, i.supervisor, i.signature_date, i.project, i.school_year,
         i.version,
@@ -98,11 +98,12 @@ public class InternshipDAOImpl implements InternshipDAO {
         prostage.supervisors su, prostage.users us
         WHERE i.contact = ct.contact_id AND i.supervisor = su.supervisor_id
         AND ct.company = cm.company_id AND ct.student = us.user_id
-        AND ct.student = ?
+        AND ct.student = ? AND i.school_year = ?
         """;
 
     try (PreparedStatement ps = dalServices.getPreparedStatement(requestSql)) {
       ps.setInt(1, student);
+      ps.setString(2, schoolYear);
       return buildInternshipDTO(ps);
     } catch (SQLException e) {
       throw new FatalException(e);

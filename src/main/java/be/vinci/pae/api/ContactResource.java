@@ -157,7 +157,6 @@ public class ContactResource {
     ContactDTO contactDTO = contactUCC.admit(contactId, meeting, studentId, version);
     Logs.log(Level.DEBUG, "ContactResource (admit) : success!");
 
-    // return jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
     return contactDTO;
   }
 
@@ -189,8 +188,6 @@ public class ContactResource {
     int studentId = userDTO.getId();
 
     Logs.log(Level.DEBUG, "ContactResource (unsupervise) : success!");
-    /*ContactDTO contactDTO = contactUCC.unsupervise(contactId, studentId, version);
-    return jsonMapper.createObjectNode().putPOJO("contact", contactDTO);*/
     return contactUCC.unsupervise(contactId, studentId, version);
   }
 
@@ -224,7 +221,6 @@ public class ContactResource {
     int studentId = userDTO.getId();
 
     ContactDTO contactDTO = contactUCC.turnDown(contactId, reasonForRefusal, studentId, version);
-    // ObjectNode contact = jsonMapper.createObjectNode().putPOJO("contact", contactDTO);
 
     Logs.log(Level.DEBUG, "ContactResource (turnDown) : success!");
 

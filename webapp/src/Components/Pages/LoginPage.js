@@ -105,33 +105,43 @@ const LoginPage = async () => {
           <div class="box-register d-flex justify-content-center align-items-center">
             <p class="btn-register">Inscription</p>
           </div>
-          <div class="box-login d-flex justify-content-center align-items-center">
+          <div class="box-login d-flex justify-content-center align-items-center login-slide-in">
             <div class="box-in-login d-flex justify-content-center align-items-center flex-column">
-              <h1>Connexion</h1>
-              <div class="input-group mb-3">
+              <h1 class="opacity-animation">Connexion</h1>
+              <div class="input-group mb-3 opacity-animation">
                 <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-envelope"></i></span>
                 <input type="text" class="form-control" id="input-email" placeholder="Adresse email" aria-label="Adresse email" aria-describedby="basic-addon1">
               </div>
-              <div class="input-group mb-3">
+              <div class="input-group mb-3 opacity-animation">
                 <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-key"></i></span>
                 <input type="password" class="form-control" id="input-pwd" placeholder="Mot de passe" aria-label="Mot de passe" aria-describedby="basic-addon1">
               </div>
-              <div class="form-check mb-3">
+              <div class="form-check mb-3 opacity-animation">
+                <input class="form-check-input" type="checkbox" value="" id="showPwd">
+                <label class="form-check-label" for="showPwd">
+                  Afficher le mot de passe
+                </label>
+              </div>
+              <div class="form-check mb-3 opacity-animation">
                 <input class="form-check-input" type="checkbox" value="" id="stayconnected">
                 <label class="form-check-label" for="stayconnected">
                   Se souvenir de moi
                 </label>
               </div>
               <h2 id="error-message">L'adresse email ou<br>le mot de passe est incorrect !</h2>
-              <p class="btn-login" id="login-btn">Se connecter</p>
+              <p class="btn-login opacity-animation" id="login-btn">Se connecter</p>
             </div>
           </div>
         </div>
     `;
-
   const registerBtn = document.querySelector(".btn-register");
   registerBtn.addEventListener('click', () => {
     Navigate("/register");
+  });
+
+  document.getElementById('showPwd').addEventListener('change', function() {
+    const inputPwd = document.getElementById('input-pwd');
+    inputPwd.type = this.checked ? 'text' : 'password';
   });
 
   showNavStyle("login");

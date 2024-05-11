@@ -78,15 +78,18 @@ public class InternshipUCCImplTest {
   @Test
   @DisplayName("Test getOneByStudent student has no internship")
   public void testGetOneByStudentStudentNoInternship() {
-    Mockito.when(internshipDAOMock.getOneInternshipByIdUser(1)).thenReturn(null);
-    assertThrows(ResourceNotFoundException.class, () -> internshipUCC.getOneByStudent(1));
+    Mockito.when(internshipDAOMock.getOneInternshipByIdUserSchoolYear(1, "2023-2024"))
+        .thenReturn(null);
+    assertThrows(ResourceNotFoundException.class,
+        () -> internshipUCC.getOneByStudentCurrentSchoolYear(1));
   }
 
   @Test
   @DisplayName("Test getOneByStudent correct")
   public void testGetOneByStudentCorrect() {
-    Mockito.when(internshipDAOMock.getOneInternshipByIdUser(1)).thenReturn(internshipDTO);
-    assertNotNull(internshipUCC.getOneByStudent(1));
+    Mockito.when(internshipDAOMock.getOneInternshipByIdUserSchoolYear(1, "2023-2024"))
+        .thenReturn(internshipDTO);
+    assertNotNull(internshipUCC.getOneByStudentCurrentSchoolYear(1));
   }
 
   @Test
@@ -183,7 +186,8 @@ public class InternshipUCCImplTest {
     contactDTO.setSchoolYear("ee");
     contactDTO.setState("pris");
     internshipDTO.setContact(contactDTO);
-    Mockito.when(internshipDAOMock.getOneInternshipByIdUser(1)).thenReturn(internshipDTO);
+    Mockito.when(internshipDAOMock.getOneInternshipByIdUserSchoolYear(1, "2023-2024"))
+        .thenReturn(internshipDTO);
     assertThrows(DuplicateException.class, () -> internshipUCC.createInternship(internshipDTO, 1));
   }
 
@@ -195,7 +199,8 @@ public class InternshipUCCImplTest {
     contactDTO.setSchoolYear("ee");
     contactDTO.setState("pris");
     internshipDTO.setContact(contactDTO);
-    Mockito.when(internshipDAOMock.getOneInternshipByIdUser(1)).thenReturn(null);
+    Mockito.when(internshipDAOMock.getOneInternshipByIdUserSchoolYear(1, "2023-2024"))
+        .thenReturn(null);
     Mockito.when(internshipDAOMock.createInternship(internshipDTO)).thenReturn(internshipDTO);
     assertEquals(internshipDTO, internshipUCC.createInternship(internshipDTO, 1));
   }
@@ -211,7 +216,7 @@ public class InternshipUCCImplTest {
         .when(dalServicesMock).startTransaction();
     assertAll(
         () -> assertThrows(FatalException.class, () -> {
-          internshipUCC.getOneByStudent(1);
+          internshipUCC.getOneByStudentCurrentSchoolYear(1);
         }),
         () -> assertThrows(FatalException.class, () -> {
           internshipUCC.getOneById(1, 1);

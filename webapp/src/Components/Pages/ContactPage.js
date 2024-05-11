@@ -263,25 +263,26 @@ function showCompaniesList(companies) {
 
     if (companies[u].designation === null || companies[u].designation
         === '') {
-      designation = "Appellation";
+      designation = "Aucune appellation";
     } else {
       designation = companies[u].designation;
     }
 
     if (companies[u].email === null || companies[u].email === '') {
-      email = "Email";
+      email = "Aucun email";
     } else {
       email = companies[u].email;
     }
 
     if (companies[u].phoneNumber === null || companies[u].phoneNumber
         === '') {
-      phone = "Numéro de téléphone";
+      phone = "Aucun téléphone";
     } else {
       phone = companies[u].phoneNumber;
     }
     info += `
-            <div data-${companies[u].id} class="w-100 d-flex justify-content-center align-items-center mt-2 py-2 border rounded-3 adminCompanyListTile">
+            <div data-${companies[u].id} class="w-100 d-flex justify-content-center align-items-center mt-2 py-2 border rounded-3 adminCompanyListTile" style="--orderCM:${u
+    + 1}">
               <div class="d-flex align-items-center justify-content-center h-75" style="width: 25%; border-right: 2px solid white;">
                 <p class="p-0 m-0 text-center">${companies[u].name}</p>
               </div>

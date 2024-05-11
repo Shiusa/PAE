@@ -123,6 +123,37 @@ public class ContactDAOImpl implements ContactDAO {
     }
   }
 
+
+  @Override
+  public ContactDTO unsupervise(int contactId, int version) {
+    Logs.log(Level.DEBUG, "ContactDAO (unsupervise) : entrance");
+    String requestSql = """
+        UPDATE proStage.contacts
+        SET contact_state = ? , version = ?
+        WHERE contact_id = ? AND version = ?
+        RETURNING *;
+        """;
+
+    try (PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql)) {
+      ps.setString(1, "non suivi");
+      ps.setInt(2, version + 1);
+      ps.setInt(3, contactId);
+      ps.setInt(4, version);
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          ContactDTO contact = findContactById(rs.getInt("contact_id"));
+
+          Logs.log(Level.DEBUG, "ContactDAO (unsupervise) : success!");
+          return contact;
+        }
+        return null;
+      }
+    } catch (SQLException e) {
+      Logs.log(Level.FATAL, "ContactDAO (unsupervise) : internal error");
+      throw new FatalException(e);
+    }
+  }
+
   @Override
   public List<ContactDTO> getAllContactsByStudent(int student) {
     List<ContactDTO> contactDTOList = new ArrayList<>();
@@ -215,8 +246,85 @@ public class ContactDAOImpl implements ContactDAO {
   }
 
   @Override
+  public ContactDTO admitContact(int contactId, String meeting, int version) {
+    Logs.log(Level.DEBUG, "ContactDAO (admit) : entrance");
+    String requestSql = """
+        UPDATE proStage.contacts
+        SET meeting = ?, contact_state = ?, version = ?
+        WHERE contact_id = ? AND version = ?
+        RETURNING *;
+        """;
+
+    try (PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql)) {
+      ps.setString(1, meeting);
+      ps.setString(2, "pris");
+      ps.setInt(3, version + 1);
+      ps.setInt(4, contactId);
+      ps.setInt(5, version);
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          ContactDTO contact = findContactById(rs.getInt("contact_id"));
+
+          Logs.log(Level.DEBUG, "ContactDAO (admit) : success!");
+          return contact;
+        }
+        return null;
+      }
+    } catch (SQLException e) {
+      Logs.log(Level.FATAL, "ContactDAO (admit) : internal error");
+      e.printStackTrace();
+      throw new FatalException(e);
+    }
+  }
+
+  @Override
+  public ContactDTO turnDown(int contactId, String reasonForRefusal, int version) {
+    Logs.log(Level.DEBUG, "ContactDAO (turnDown) : entrance");
+    String requestSql = """
+        UPDATE proStage.contacts
+        SET reason_for_refusal = ?, contact_state = ?, version = ?
+        WHERE contact_id = ? AND version = ?
+        RETURNING *;
+        """;
+
+    try (PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql)) {
+      ps.setString(1, reasonForRefusal);
+      ps.setString(2, "refusé");
+      ps.setInt(3, version + 1);
+      ps.setInt(4, contactId);
+      ps.setInt(5, version);
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          ContactDTO contact = findContactById(rs.getInt("contact_id"));
+
+          Logs.log(Level.DEBUG, "ContactDAO (turnDown) : success!");
+          return contact;
+        }
+        return null;
+      }
+    } catch (SQLException e) {
+      Logs.log(Level.FATAL, "ContactDAO (turnDown) : internal error");
+      throw new FatalException(e);
+    }
+  }
+
+  @Override
   public List<ContactDTO> getAllContactsByStudentStartedOrAdmitted(int student) {
-    List<ContactDTO> contactDTOList = getAllContactsByStudent(student);
+    return sortAllContactStartedOrAdmitted(getAllContactsByStudent(student));
+  }
+
+  @Override
+  public List<ContactDTO> getAllContactsByCompanyStartedOrAdmitted(int company) {
+    return sortAllContactStartedOrAdmitted(getAllContactsByCompany(company));
+  }
+
+  /**
+   * Get all the contacts that are admitted or started from a list.
+   *
+   * @param contactDTOList the list to sort.
+   * @return a sorted list.
+   */
+  private List<ContactDTO> sortAllContactStartedOrAdmitted(List<ContactDTO> contactDTOList) {
     List<ContactDTO> newContactList = new ArrayList<>();
     for (int i = 0; i < contactDTOList.size(); i++) {
       Contact contact = (Contact) contactDTOList.get(i);
@@ -225,6 +333,69 @@ public class ContactDAOImpl implements ContactDAO {
       }
     }
     return newContactList;
+  }
+
+  /**
+   * Put a contact on hold.
+   *
+   * @param contactDTO the contact to put on hold.
+   * @return the contact putted on hold.
+   */
+  public ContactDTO putContactOnHold(ContactDTO contactDTO) {
+    String requestSql = """
+        UPDATE proStage.contacts
+        SET contact_state = ? , version = ?
+        WHERE contact_id = ? AND version = ?
+        RETURNING *;
+        """;
+
+    try (PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql)) {
+      ps.setString(1, "suspendu");
+      ps.setInt(2, contactDTO.getVersion() + 1);
+      ps.setInt(3, contactDTO.getId());
+      ps.setInt(4, contactDTO.getVersion());
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          ContactDTO contact = findContactById(rs.getInt("contact_id"));
+
+          Logs.log(Level.DEBUG, "ContactDAO (unsupervise) : success!");
+          return contact;
+        }
+        return null;
+      }
+    } catch (SQLException e) {
+      Logs.log(Level.FATAL, "ContactDAO (unsupervise) : internal error");
+      throw new FatalException(e);
+    }
+  }
+
+  @Override
+  public ContactDTO accept(int contactId, int version) {
+    Logs.log(Level.DEBUG, "ContactDAO (accept) : entrance");
+    String requestSql = """
+        UPDATE proStage.contacts
+        SET contact_state = ? , version = ?
+        WHERE contact_id = ? AND version = ?
+        RETURNING *;
+        """;
+
+    try (PreparedStatement ps = dalBackendServices.getPreparedStatement(requestSql)) {
+      ps.setString(1, "accepté");
+      ps.setInt(2, version + 1);
+      ps.setInt(3, contactId);
+      ps.setInt(4, version);
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          ContactDTO contact = findContactById(rs.getInt("contact_id"));
+          Logs.log(Level.DEBUG, "ContactDAO (accept) : success!");
+          return contact;
+        }
+        return null;
+      }
+    } catch (SQLException e) {
+      Logs.log(Level.FATAL, "ContactDAO (accept) : internal error");
+      throw new FatalException(e);
+    }
   }
 
   @Override

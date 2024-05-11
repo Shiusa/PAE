@@ -156,7 +156,7 @@ const DashboardPage = async () => {
                 </div>
             </div>
             <div class="dash-right d-flex justify-content-center align-items-center flex-column ms-3 me-3">
-                <div class="dash-stage d-flex justify-content-center align-items-center py-1 px-3">
+                <div class="dash-stage d-flex justify-content-center align-items-center py-1 px-3 overflow-x-hidden">
                     
                 </div>
                 <div class="dash-en-container mt-4 d-flex justify-content-center align-items-center overflow-hidden">
@@ -164,6 +164,9 @@ const DashboardPage = async () => {
                         <div class="table-title d-flex justify-content-center align-items-center mt-3 font-weight-bold">
                                 <div class="title-col-1 mt-3">
                                     <p>Nom</p>
+                                </div>
+                                <div class="title-col-4 mt-3">
+                                  <p>Année académique</p>
                                 </div>
                                 <div class="title-col-2 mt-3">
                                     <p>Etat</p>
@@ -216,13 +219,15 @@ const DashboardPage = async () => {
                 <p class="me-4"><i class="fa fa-calendar-check-o"></i> ${stageInfo.signatureDate}</p>
               </div>
           </div>
-          <div class="respo-bloc py-3 px-4">
+          <div class="respo-bloc p-1" style="position: relative">
+            <div class="w-100 h-100 py-3 px-4" style="background: #119DB8; border-radius: 8px;">
               <h1 class="mt-0">Votre responsable</h1>
               <p class="mt-2 mb-0"><i class="fa-solid fa-user me-3"></i> ${firstname} ${lastname}</p>
               <div class="d-flex flex-wrap">
                 <span class="mt-2 me-3"><i class="fa-solid fa-phone"></i>${phoneNumber}</span>
                 <span class="mt-2 me-3"><i class="fa-solid fa-at"></i>${email}</span>
               </div>
+            </div>
           </div>
       `;
   } else {
@@ -247,6 +252,7 @@ const DashboardPage = async () => {
   }
 
   function showContacts(contactsTable) {
+    console.log(contactsTable);
     if (!contactsTable) {
       return;
     }
@@ -287,12 +293,15 @@ const DashboardPage = async () => {
       }
 
       info += `
-                <div class="table-line d-flex align-items-center mt-2 mb-2 rounded-3">
+                <div class="table-line d-flex align-items-center mt-2 mb-2 rounded-3" style="--orderCT:${u}">
                     <div class="d-flex justify-content-center align-items-center position-relative" style="width: 60%;">
                       <i class="line-info fa-solid fa-circle-info position-absolute" style="left: 0;" id="${contactsTable[u].id}"></i>
                       <div class="line-col-1" >
                           <p class="mx-auto mt-3" style="color: #119DB8">${contactsTable[u].company.name}<br>${designation}</p>
                       </div>
+                    </div>
+                    <div class="line-col-4">
+                      <p>${contactsTable[u].schoolYear}</p>
                     </div>
                     
                     <div class="line-col-2 d-flex flex-column align-items-center justify-content-center" style="width: 20%;">
@@ -300,7 +309,7 @@ const DashboardPage = async () => {
                     </div>
                     
                     <div class="${contactsTable[u].state === 'pris' ? 'd-block'
-          : 'd-none'}" style="width: 20%;">
+          : 'd-none'} line-col-3">
                       <button data-id="${contactsTable[u].id}" class="accept-contact-btn rounded-1 px-0 py-2 w-50">Accepter</button>
                     </div>
                 </div>
@@ -403,7 +412,7 @@ const DashboardPage = async () => {
         contactInfoJSON.state === 'pris' ? 'visible' : 'invisible'}" type="submit">Mettre à jour</button>
                             </div>
                             
-                            <h2 id="error-message" class="mt-2"></h2>
+                            <h2 id="error-message" class="mt-0"></h2>
                         </div>
                     </div>
         `
@@ -591,6 +600,7 @@ const DashboardPage = async () => {
         default:
           errorMessage.innerHTML = "Veuillez entrer un contact ou vérifiez que vous pouvez effectuer ce changement.";
           errorMessage.style.display = "block";
+          return;
       }
       contacts = await readAllContactsByStudent();
       showContacts(contacts);

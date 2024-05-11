@@ -62,17 +62,17 @@ public class ContactUCCImpl implements ContactUCC {
         throw new InvalidRequestException();
       }
 
-      if (internshipDAO.getOneInternshipByIdUser(studentId) != null) {
-        Logs.log(Level.INFO, "ContactUCC (start) : student already has an internship");
-        throw new InvalidRequestException();
-      }
-
       LocalDate date = LocalDate.now();
       String schoolYear;
       if (date.getMonthValue() < 9) {
         schoolYear = date.getYear() - 1 + "-" + date.getYear();
       } else {
         schoolYear = date.getYear() + "-" + date.getYear() + 1;
+      }
+
+      if (internshipDAO.getOneInternshipByIdUserSchoolYear(studentId, schoolYear) != null) {
+        Logs.log(Level.INFO, "ContactUCC (start) : student already has an internship");
+        throw new InvalidRequestException();
       }
 
       ContactDTO contactFound = contactDAO
