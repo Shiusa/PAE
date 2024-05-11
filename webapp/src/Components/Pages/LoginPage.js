@@ -117,6 +117,12 @@ const LoginPage = async () => {
                 <input type="password" class="form-control" id="input-pwd" placeholder="Mot de passe" aria-label="Mot de passe" aria-describedby="basic-addon1">
               </div>
               <div class="form-check mb-3 opacity-animation">
+                <input class="form-check-input" type="checkbox" value="" id="showPwd">
+                <label class="form-check-label" for="showPwd">
+                  Afficher le mot de passe
+                </label>
+              </div>
+              <div class="form-check mb-3 opacity-animation">
                 <input class="form-check-input" type="checkbox" value="" id="stayconnected">
                 <label class="form-check-label" for="stayconnected">
                   Se souvenir de moi
@@ -128,10 +134,14 @@ const LoginPage = async () => {
           </div>
         </div>
     `;
-
   const registerBtn = document.querySelector(".btn-register");
   registerBtn.addEventListener('click', () => {
     Navigate("/register");
+  });
+
+  document.getElementById('showPwd').addEventListener('change', function() {
+    const inputPwd = document.getElementById('input-pwd');
+    inputPwd.type = this.checked ? 'text' : 'password';
   });
 
   showNavStyle("login");

@@ -130,7 +130,7 @@ public class CompanyDAOImpl implements CompanyDAO {
   }
 
   @Override
-  public List<CompanyDTO> getAllCompaniesByUserId(int userId) {
+  public List<CompanyDTO> getAllCompaniesByUserIdSchoolYear(int userId, String schoolYear) {
     Logs.log(Level.DEBUG, "CompanyDAO (getAllCompaniesByUserId) : entrance");
 
     String requestSql = """
@@ -141,13 +141,14 @@ public class CompanyDAOImpl implements CompanyDAO {
         WHERE cm.company_id NOT IN (
           SELECT DISTINCT company
           FROM prostage.contacts
-          WHERE student = ?
+          WHERE student = ? AND school_year = ?
         )
         ORDER BY cm.name, cm.company_id
         """;
 
     try (PreparedStatement ps = dalServices.getPreparedStatement(requestSql)) {
       ps.setInt(1, userId);
+      ps.setString(2, schoolYear);
       List<CompanyDTO> companyDTOList = buildCompanyList(ps);
 
       Logs.log(Level.DEBUG, "CompanyDAO (getAllCompaniesByUserId) : success!");

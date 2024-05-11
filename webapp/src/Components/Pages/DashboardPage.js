@@ -165,6 +165,9 @@ const DashboardPage = async () => {
                                 <div class="title-col-1 mt-3">
                                     <p>Nom</p>
                                 </div>
+                                <div class="title-col-4 mt-3">
+                                  <p>Année académique</p>
+                                </div>
                                 <div class="title-col-2 mt-3">
                                     <p>Etat</p>
                                 </div>
@@ -249,6 +252,7 @@ const DashboardPage = async () => {
   }
 
   function showContacts(contactsTable) {
+    console.log(contactsTable);
     if (!contactsTable) {
       return;
     }
@@ -296,13 +300,16 @@ const DashboardPage = async () => {
                           <p class="mx-auto mt-3" style="color: #119DB8">${contactsTable[u].company.name}<br>${designation}</p>
                       </div>
                     </div>
+                    <div class="line-col-4">
+                      <p>${contactsTable[u].schoolYear}</p>
+                    </div>
                     
                     <div class="line-col-2 d-flex flex-column align-items-center justify-content-center" style="width: 20%;">
                       <p class="m-0 rounded-1 py-1 w-50 ${stateColor}">${contactsTable[u].state}</p>
                     </div>
                     
                     <div class="${contactsTable[u].state === 'pris' ? 'd-block'
-          : 'd-none'}" style="width: 20%;">
+          : 'd-none'} line-col-3">
                       <button data-id="${contactsTable[u].id}" class="accept-contact-btn rounded-1 px-0 py-2 w-50">Accepter</button>
                     </div>
                 </div>

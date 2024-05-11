@@ -263,20 +263,20 @@ function showCompaniesList(companies) {
 
     if (companies[u].designation === null || companies[u].designation
         === '') {
-      designation = "Appellation";
+      designation = "Aucune appellation";
     } else {
       designation = companies[u].designation;
     }
 
     if (companies[u].email === null || companies[u].email === '') {
-      email = "Email";
+      email = "Aucun email";
     } else {
       email = companies[u].email;
     }
 
     if (companies[u].phoneNumber === null || companies[u].phoneNumber
         === '') {
-      phone = "Numéro de téléphone";
+      phone = "Aucun téléphone";
     } else {
       phone = companies[u].phoneNumber;
     }

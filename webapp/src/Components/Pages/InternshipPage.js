@@ -66,7 +66,7 @@ const InternshipPage = async () => {
       <div class="dash d-flex justify-content-center align-items-center mt-5 mb-5 mx-auto">
         <div class="dash-content d-flex justify-content-center align-items-center flex-column">
           <div class="dash-info mt-4 d-flex justify-content-center align-items-center flex-column">
-              <h1 class="noInternship mt-2 mb-5">Vous n'avez pas de stage.</h1>
+              <h1 class="noInternship mt-2 mb-5">Vous n'avez pas de stage cette année.</h1>
               <span id="btn-info-change" class="btn btn-primary mt-4">Voir mes contacts</span>
           </div>
         </div>
@@ -91,7 +91,7 @@ const InternshipPage = async () => {
 
     // title
     const title = document.createElement("h1");
-    title.innerHTML = "Votre Stage";
+    title.innerHTML = `Votre stage : ${internship.schoolYear}`;
     title.className = "text-center textCSS"
     divInternshipChild.appendChild(title);
 

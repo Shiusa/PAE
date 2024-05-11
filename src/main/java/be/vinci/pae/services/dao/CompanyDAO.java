@@ -34,12 +34,13 @@ public interface CompanyDAO {
   Map<Integer, Map<CompanyDTO, Map<String, Integer>>> getAllCompanies();
 
   /**
-   * Get all companies that the user has not a contact with.
+   * Get all companies that the user has not a contact with this school year.
    *
-   * @param userId the user id.
+   * @param userId     the user id.
+   * @param schoolYear the school year.
    * @return a list of all companies that the user has not a contact with.
    */
-  List<CompanyDTO> getAllCompaniesByUserId(int userId);
+  List<CompanyDTO> getAllCompaniesByUserIdSchoolYear(int userId, String schoolYear);
 
   /**
    * Get all companies by company name.
