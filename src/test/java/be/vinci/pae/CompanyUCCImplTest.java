@@ -5,12 +5,15 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import be.vinci.pae.domain.CompanyFactory;
+import be.vinci.pae.domain.ContactFactory;
 import be.vinci.pae.domain.UserFactory;
 import be.vinci.pae.domain.dto.CompanyDTO;
+import be.vinci.pae.domain.dto.ContactDTO;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.domain.ucc.CompanyUCC;
 import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.CompanyDAO;
+import be.vinci.pae.services.dao.ContactDAO;
 import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.utils.exceptions.DuplicateException;
 import be.vinci.pae.utils.exceptions.FatalException;
@@ -36,16 +39,19 @@ public class CompanyUCCImplTest {
 
   private static ServiceLocator serviceLocator;
   private static CompanyDAO companyDAOMock;
+  private static ContactDAO contactDAOMock;
   private static UserDAO userDAOMock;
   private static DalServices dalServicesMock;
   private CompanyUCC companyUCC;
   private CompanyDTO companyDTO;
+  private ContactDTO contactDTO;
   private UserDTO userDTO;
 
   @BeforeAll
   static void init() {
     serviceLocator = ServiceLocatorUtilities.bind(new BinderTest());
     userDAOMock = serviceLocator.getService(UserDAO.class);
+    contactDAOMock = serviceLocator.getService(ContactDAO.class);
     companyDAOMock = serviceLocator.getService(CompanyDAO.class);
     dalServicesMock = serviceLocator.getService(DalServices.class);
   }
@@ -55,8 +61,10 @@ public class CompanyUCCImplTest {
     companyUCC = serviceLocator.getService(CompanyUCC.class);
     CompanyFactory companyFactory = serviceLocator.getService(CompanyFactory.class);
     UserFactory userFactory = serviceLocator.getService(UserFactory.class);
+    ContactFactory contactFactory = serviceLocator.getService(ContactFactory.class);
     companyDTO = companyFactory.getCompanyDTO();
     userDTO = userFactory.getUserDTO();
+    contactDTO = contactFactory.getContactDTO();
     Mockito.doNothing().when(dalServicesMock).startTransaction();
     Mockito.doNothing().when(dalServicesMock).commitTransaction();
     Mockito.doNothing().when(dalServicesMock).rollbackTransaction();
@@ -256,6 +264,9 @@ public class CompanyUCCImplTest {
     companyDTO.setIsBlacklisted(false);
     companyDTO.setId(1);
     companyDTO.setVersion(2);
+    Mockito.when(contactDAOMock.getAllContactsByCompanyStartedOrAdmitted(1))
+        .thenReturn(List.of(contactDTO));
+    Mockito.when(contactDAOMock.putContactOnHold(contactDTO)).thenReturn(contactDTO);
     Mockito.when(companyDAOMock.getOneCompanyById(1)).thenReturn(companyDTO);
     Mockito.when(companyDAOMock.blacklist(1, "l'entreprise pratique la fraude", 1))
         .thenReturn(companyDTO);
