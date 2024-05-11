@@ -160,3 +160,11 @@ INSERT INTO proStage.internships VALUES (DEFAULT, 27, 6, '2022-10-19', 'Un méti
 INSERT INTO proStage.internships VALUES (DEFAULT, 28, 6, '2022-10-19', 'Un métier : chef de projet', '2022-2023', 1);
 INSERT INTO proStage.internships VALUES (DEFAULT, 29, 6, '2022-10-19', 'Un métier : chef de projet', '2022-2023', 1);
 INSERT INTO proStage.internships VALUES (DEFAULT, 33, 2, '2022-10-17', 'sBMS project - Java Development', '2022-2023', 1);
+
+SELECT COUNT(*) AS nombre_utilisateur, us.role AS role_utilisateur, us.school_year AS annee_academique FROM proStage.users us GROUP BY us.role, us.school_year;
+SELECT int.school_year AS annee_academique, COUNT(*) AS nombre_stages FROM proStage.internships int GROUP BY int.school_year;
+SELECT co.company_id AS id_entreprise, co.name AS nom_entreprise, COUNT(int.internship_id) AS nombre_stages, int.school_year AS annee_academique FROM proStage.companies co, proStage.internships int, proStage.contacts cn WHERE co.company_id = cn.company AND cn.contact_id = int.contact GROUP BY co.company_id, co.name, int.school_year;
+SELECT ct.school_year AS annee_academique, COUNT(*) AS nombre_stages FROM proStage.contacts ct GROUP BY ct.school_year;
+SELECT ct.contact_state AS etat_contact, COUNT(*) AS nombre_contacts FROM proStage.contacts ct GROUP BY ct.contact_state;
+SELECT ct.school_year AS annee_academique, ct.contact_state AS etat_contact, COUNT(*) AS nombre_contacts FROM proStage.contacts ct GROUP BY ct.school_year, ct.contact_state;
+SELECT co.company_id AS id_entreprise, co.name AS nom_entreprise, ct.contact_state AS etat_contact, COUNT(ct.contact_id) AS nombre_contacts FROM proStage.companies co, proStage.contacts ct WHERE co.company_id = ct.company GROUP BY co.company_id, co.name, ct.contact_state;
