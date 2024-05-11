@@ -14,7 +14,7 @@ const Navbar = () => {
       if (userRole === "Etudiant") {
         navbar = `
         <nav class="d-flex justify-content-center align-items-center flex-wrap">
-          <a class="nav-link nav-btn d-flex justify-content-center align-items-center" id="home" href="#" data-uri="/info" style="border-color: #E6C060;">
+          <a class="nav-link nav-btn d-flex justify-content-center align-items-center" id="home" href="#" data-uri="/info" style="border-color: var(--ma-couleur-foncée);">
             <p data-uri="/info">${userConnected.firstname}<br>${userConnected.lastname}</p>
           </a>
           <a class="nav-link nav-btn d-flex justify-content-center align-items-center" id="dashboard" href="#" data-uri="/dashboard">
@@ -36,7 +36,7 @@ const Navbar = () => {
       if (userRole === "Professeur" || userRole === "Administratif") {
         navbar = `
         <nav class="d-flex justify-content-center align-items-center flex-wrap">
-          <a class="nav-link nav-btn d-flex justify-content-center align-items-center" id="home" href="#" data-uri="/info" style="border-color: #E6C060;">
+          <a class="nav-link nav-btn d-flex justify-content-center align-items-center" id="home" href="#" data-uri="/info" style="border-color: var(--ma-couleur-foncée);">
             <p data-uri="/info">${userConnected.firstname}<br>${userConnected.lastname}</p>
           </a>
           <a class="nav-link nav-btn d-flex justify-content-center align-items-center" id="dashboard" href="#" data-uri="/adminBoard">
