@@ -113,7 +113,8 @@ public class CompanyUCCImplTest {
   public void testGetAllCompaniesByExistingUser() {
     userDTO.setId(1);
     Mockito.when(userDAOMock.getOneUserById(1)).thenReturn(userDTO);
-    Mockito.when(companyDAOMock.getAllCompaniesByUserId(1)).thenReturn(List.of(companyDTO));
+    Mockito.when(companyDAOMock.getAllCompaniesByUserIdSchoolYear(1, "2023-2024"))
+        .thenReturn(List.of(companyDTO));
     List<CompanyDTO> companyDTOList = companyUCC.getAllCompaniesByUser(1);
     assertNotNull(companyDTOList);
   }
@@ -124,7 +125,8 @@ public class CompanyUCCImplTest {
   public void testGetAllCompaniesByNonExistingUser() {
     userDTO.setId(1);
     Mockito.when(userDAOMock.getOneUserById(1)).thenReturn(null);
-    Mockito.when(companyDAOMock.getAllCompaniesByUserId(1)).thenReturn(List.of(companyDTO));
+    Mockito.when(companyDAOMock.getAllCompaniesByUserIdSchoolYear(1, "2023-2024"))
+        .thenReturn(List.of(companyDTO));
     assertThrows(ResourceNotFoundException.class, () -> companyUCC.getAllCompaniesByUser(1));
   }
 

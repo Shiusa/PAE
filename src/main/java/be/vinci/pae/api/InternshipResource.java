@@ -75,7 +75,7 @@ public class InternshipResource {
       Logs.log(Level.ERROR, "InternshipResource (getOneInternshipByIdUser) : unauthorized");
       throw new WebApplicationException("unauthorized", Status.FORBIDDEN);
     }
-    return internshipUCC.getOneByStudent(idUser);
+    return internshipUCC.getOneByStudentCurrentSchoolYear(idUser);
   }
 
   /**
