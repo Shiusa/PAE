@@ -310,7 +310,21 @@ public class ContactDAOImpl implements ContactDAO {
 
   @Override
   public List<ContactDTO> getAllContactsByStudentStartedOrAdmitted(int student) {
-    List<ContactDTO> contactDTOList = getAllContactsByStudent(student);
+    return sortAllContactStartedOrAdmitted(getAllContactsByStudent(student));
+  }
+
+  @Override
+  public List<ContactDTO> getAllContactsByCompanyStartedOrAdmitted(int company) {
+    return sortAllContactStartedOrAdmitted(getAllContactsByCompany(company));
+  }
+
+  /**
+   * Get all the contacts that are admitted or started from a list.
+   *
+   * @param contactDTOList the list to sort.
+   * @return a sorted list.
+   */
+  private List<ContactDTO> sortAllContactStartedOrAdmitted(List<ContactDTO> contactDTOList) {
     List<ContactDTO> newContactList = new ArrayList<>();
     for (int i = 0; i < contactDTOList.size(); i++) {
       Contact contact = (Contact) contactDTOList.get(i);
@@ -320,7 +334,6 @@ public class ContactDAOImpl implements ContactDAO {
     }
     return newContactList;
   }
-
 
   /**
    * Put a contact on hold.

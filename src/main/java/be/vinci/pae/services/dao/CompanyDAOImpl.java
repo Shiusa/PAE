@@ -246,7 +246,6 @@ public class CompanyDAOImpl implements CompanyDAO {
   private CompanyDTO buildCompanyDTO(PreparedStatement ps) {
     try (ResultSet rs = ps.executeQuery()) {
       if (rs.next()) {
-        /*return buildCompanyDTO(rs);*/
         return DTOSetServices.setCompanyDTO(companyFactory.getCompanyDTO(), rs);
       }
       return null;

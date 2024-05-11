@@ -1,9 +1,11 @@
 package be.vinci.pae.domain.ucc;
 
 import be.vinci.pae.domain.dto.CompanyDTO;
+import be.vinci.pae.domain.dto.ContactDTO;
 import be.vinci.pae.domain.dto.UserDTO;
 import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.CompanyDAO;
+import be.vinci.pae.services.dao.ContactDAO;
 import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.utils.Logs;
 import be.vinci.pae.utils.exceptions.DuplicateException;
@@ -26,6 +28,8 @@ public class CompanyUCCImpl implements CompanyUCC {
   private UserDAO userDAO;
   @Inject
   private DalServices dalServices;
+  @Inject
+  private ContactDAO contactDAO;
 
   @Override
   public CompanyDTO findOneById(int id) {
@@ -158,6 +162,11 @@ public class CompanyUCCImpl implements CompanyUCC {
       if (companyDTO.getVersion() != version + 1) {
         Logs.log(Level.ERROR, "CompanyUCC (blacklist) : the company's version isn't matching");
         throw new InvalidRequestException();
+      }
+      List<ContactDTO> contactDTOList = contactDAO.getAllContactsByCompanyStartedOrAdmitted(
+          companyId);
+      for (ContactDTO contactDTO : contactDTOList) {
+        contactDAO.putContactOnHold(contactDTO);
       }
     } catch (FatalException e) {
       dalServices.rollbackTransaction();
