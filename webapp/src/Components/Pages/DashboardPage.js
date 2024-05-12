@@ -252,7 +252,6 @@ const DashboardPage = async () => {
   }
 
   function showContacts(contactsTable) {
-    console.log(contactsTable);
     if (!contactsTable) {
       return;
     }
