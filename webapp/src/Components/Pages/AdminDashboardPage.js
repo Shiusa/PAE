@@ -583,36 +583,36 @@ const AdminDashboardPage = async () => {
                   <div data-sort class="sort-header d-flex align-items-center justify-content-center position-relative" style="width: 30%">
                       <p class="p-2 m-0 text-center">Nom</p>
                       <div class="d-flex flex-column position-absolute" style="right: 10%;">
-                        <span class="triangle-up h-25" style="font-size: 10px;">&#9650;</span>
-                        <span class="triangle-down h-25" style="font-size: 10px;">&#9660;</span>
+                        <span class="triangle-up h-25" style="font-size: 10px; color: white;">&#9650;</span>
+                        <span class="triangle-down h-25" style="font-size: 10px; color: white;">&#9660;</span>
                       </div>
                   </div>
                   <div data-sort class="sort-header d-flex align-items-center justify-content-center position-relative" style="width: 30%">
                       <p class="p-2 m-0 text-center">Appellation</p>
                       <div class="d-flex flex-column position-absolute" style="right: 10%;">
-                        <span class="triangle-up h-25" style="font-size: 10px;">&#9650;</span>
-                        <span class="triangle-down h-25" style="font-size: 10px;">&#9660;</span>
+                        <span class="triangle-up h-25" style="font-size: 10px; color: white;">&#9650;</span>
+                        <span class="triangle-down h-25" style="font-size: 10px; color: white;">&#9660;</span>
                       </div>
                   </div>
                   <div data-sort class="sort-header d-flex align-items-center justify-content-center position-relative" style="width: 20%">
                       <p class="p-2 m-0 text-center">Numéro de téléphone</p>
                       <div class="d-flex flex-column position-absolute" style="right: 10%;">
-                        <span class="triangle-up h-25" style="font-size: 10px;">&#9650;</span>
-                        <span class="triangle-down h-25" style="font-size: 10px;">&#9660;</span>
+                        <span class="triangle-up h-25" style="font-size: 10px; color: white;">&#9650;</span>
+                        <span class="triangle-down h-25" style="font-size: 10px; color: white;">&#9660;</span>
                       </div>
                   </div>
                   <div data-sort class="sort-header d-flex align-items-center justify-content-center position-relative" style="width: 10%">
                       <p class="p-2 m-0 text-center">Pris en stage</p>
                       <div class="d-flex flex-column position-absolute" style="right: 10%;">
-                        <span class="triangle-up h-25" style="font-size: 10px;">&#9650;</span>
-                        <span class="triangle-down h-25" style="font-size: 10px;">&#9660;</span>
+                        <span class="triangle-up h-25" style="font-size: 10px; color: white;">&#9650;</span>
+                        <span class="triangle-down h-25" style="font-size: 10px; color: white;">&#9660;</span>
                       </div>
                   </div>
                   <div data-sort class="sort-header d-flex align-items-center justify-content-center position-relative" style="width: 10%">
                       <p class="p-2 m-0 text-center">Black-listé</p>
                       <div class="d-flex flex-column position-absolute" style="right: 10%;">
-                        <span class="triangle-up h-25" style="font-size: 10px;">&#9650;</span>
-                        <span class="triangle-down h-25" style="font-size: 10px;">&#9660;</span>
+                        <span class="triangle-up h-25" style="font-size: 10px; color: white;">&#9650;</span>
+                        <span class="triangle-down h-25" style="font-size: 10px; color: white;">&#9660;</span>
                       </div>
                   </div>
                 </div>

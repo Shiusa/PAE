@@ -82,7 +82,7 @@ const getAuthenticatedUser = async () => {
     }
   };
 
-  const response = await fetch("/api/users/login", options);
+  const response = await fetch("/api/users/checkToken", options);
   if (!response.ok) {
     currentUser = undefined;
   } else {
