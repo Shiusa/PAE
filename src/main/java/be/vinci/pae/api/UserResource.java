@@ -89,16 +89,16 @@ public class UserResource {
   }
 
   /**
-   * Login route with remember me.
+   * Check if a token is correct.
    *
    * @param request the token.
    * @return a new token.
    */
   @GET
-  @Path("login")
+  @Path("checkToken")
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize
-  public ObjectNode rememberMe(@Context ContainerRequest request) {
+  public ObjectNode checkToken(@Context ContainerRequest request) {
     Logs.log(Level.INFO, "UserResource (rememberMe) : entrance");
     UserDTO userDTO = (UserDTO) request.getProperty("user");
     Logs.log(Level.DEBUG, "UserResource (rememberMe) : success!");
