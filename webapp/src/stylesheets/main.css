@@ -1183,7 +1183,7 @@
 .adminCompanyListHover:hover {
   background: var(--ma-couleur-foncée);
   cursor: pointer;
-  color: var(--accent-color-dark);
+  /*color: var(--accent-color-dark);*/
 }
 
 .sort-header:hover {
