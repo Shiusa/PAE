@@ -139,7 +139,7 @@ const LoginPage = async () => {
     Navigate("/register");
   });
 
-  document.getElementById('showPwd').addEventListener('change', () => {
+  document.getElementById('showPwd').addEventListener('change', function () {
     const inputPwd = document.getElementById('input-pwd');
     inputPwd.type = this.checked ? 'text' : 'password';
   });
