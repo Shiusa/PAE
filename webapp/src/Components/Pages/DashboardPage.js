@@ -206,7 +206,9 @@ const DashboardPage = async () => {
     if (email === null) {
       email = "";
     }
-
+    const dateSignatureSql = stageInfo.signatureDate.substring(0, 10);
+    const dateSignature = new Date(dateSignatureSql);
+    dateSignature.setDate(dateSignature.getDate() + 1);
     stageBox.innerHTML = `        
           <div class="stage-bloc">
               <h1 class="mb-3">Votre stage</h1>
@@ -216,7 +218,7 @@ const DashboardPage = async () => {
               </div>
               <div class="d-flex flex-wrap">
                 <p class="me-4"><i class="fa-solid fa-list"></i> ${project}</p>
-                <p class="me-4"><i class="fa fa-calendar-check-o"></i> ${stageInfo.signatureDate}</p>
+                <p class="me-4"><i class="fa fa-calendar-check-o"></i> ${dateSignature.getFullYear()}-${(dateSignature.getMonth()+1).toString().padStart(2, '0')}-${(dateSignature.getDate()).toString().padStart(2, '0')}</p>
               </div>
           </div>
           <div class="respo-bloc p-1" style="position: relative">
