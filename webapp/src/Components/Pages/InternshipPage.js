@@ -455,11 +455,11 @@ const CreateInternshipPage = async (contact) => {
         <h1 class="mb-5">${contact.company.name}<br>${desi}</h1>
         <div class="input-group mb-3">
             <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-eye"></i></span>
-            <input type="text" class="form-control" id="input-supervisor" placeholder="Recherchez..." aria-label="nom" aria-describedby="basic-addon1" required>
+            <input type="text" class="form-control" id="input-supervisor" placeholder="Responsable" aria-label="nom" aria-describedby="basic-addon1" required>
         </div>
         <div class="input-group mb-3">
             <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-eye"></i></span>
-            <input type="date" class="form-control" id="input-date" placeholder="Date" aria-label="date" aria-describedby="basic-addon1" required>
+            <input type="date" class="form-control" id="input-date" placeholder="Date" aria-label="date" aria-describedby="basic-addon1" title="Date de signature de la convention" required>
         </div>
         <div class="input-group mb-3">
             <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-signature"></i></span>
