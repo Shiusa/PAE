@@ -15,10 +15,10 @@ const attachRenderStudentEvent = () => {
   const studentTiles = document.querySelectorAll('[data-student]');
   studentTiles.forEach(studentTile => {
     studentTile.addEventListener('click', async () => {
-      setTimeout(() => {
+      /* setTimeout(() => {
         const loadContainer = document.querySelector(".load-container");
         loadContainer.style.visibility = "visible";
-      }, 350);
+      }, 350); */
 
       await StudentPage(studentTile.dataset.student);
     })
@@ -199,7 +199,7 @@ const UserListPage = async () => {
 
   while (p < yearsTable.length) {
 
-    if (yearsTable[p] === "2023-2024") {
+    if (yearsTable[p] === "2024-2025") {
       yearAdd += `<option value="${yearsTable[p]}" selected>${yearsTable[p]}</option>`;
     } else {
       yearAdd += `<option value="${yearsTable[p]}">${yearsTable[p]}</option>`;
@@ -250,6 +250,8 @@ const UserListPage = async () => {
       userTable.innerHTML = userLine;
     }
     attachRenderStudentEvent();
+    const loadContainer = document.querySelector(".load-container");
+    loadContainer.style.visibility = "hidden";
   }
 
   function allUsers() {
