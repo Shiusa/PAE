@@ -65,9 +65,9 @@ public class ContactUCCImpl implements ContactUCC {
       LocalDate date = LocalDate.now();
       String schoolYear;
       if (date.getMonthValue() < 9) {
-        schoolYear = date.getYear() - 1 + "-" + date.getYear();
+        schoolYear = date.minusYears(1).getYear() + "-" + date.getYear();
       } else {
-        schoolYear = date.getYear() + "-" + date.getYear() + 1;
+        schoolYear = date.getYear() + "-" + date.plusYears(1).getYear();
       }
 
       if (internshipDAO.getOneInternshipByIdUserSchoolYear(studentId, schoolYear) != null) {

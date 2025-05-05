@@ -2,9 +2,12 @@
   --ma-couleur: #119DB8;
   --ma-couleur-opacité: #119cb8c7;
   --ma-couleur-foncée: #1489a0;
-  --accent-color: #1489a0;
+/*  --accent-color: #1489a0;
   --accent-color-dark: #119cb8c7;
-  --accent-color-contrast: white;
+  --accent-color-contrast: white;*/
+  --accent-color: #E6C060;
+  --accent-color-dark: #CFAD57;
+  --accent-color-contrast: #F7D154;
   --spacing-color: #eef7f9;
 }
 
@@ -484,7 +487,7 @@
   /*background: var(--ma-couleur);*/
   /*animation: circling 400ms linear;*/
   animation: circling 800ms ease-in-out;
-  animation-delay: 1200ms;
+  animation-delay: 600ms;
   /*border-radius: 10px;*/
 }
 
@@ -1183,7 +1186,7 @@
 .adminCompanyListHover:hover {
   background: var(--ma-couleur-foncée);
   cursor: pointer;
-  /*color: var(--accent-color-dark);*/
+  color: var(--accent-color-dark);
 }
 
 .sort-header:hover {
